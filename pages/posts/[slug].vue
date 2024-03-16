@@ -18,7 +18,7 @@
 
           <v-divider class="mx-[-20px] my-3 border-opacity-75" />
 
-          <v-card-text>
+          <v-card-text tag="article" class="prose max-w-none">
             <content-renderer :value="post">
               <template #empty>
                 <p>No content found.</p>
