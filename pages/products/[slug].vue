@@ -18,19 +18,34 @@
           </content-renderer>
         </v-card-text>
 
-        <v-divider class="mx-[-20px] my-3 border-opacity-75" />
+        <v-divider class="mx-[-20px] my-4 border-opacity-75" />
 
-        <div class="mt-3 flex justify-end">
-          <nuxt-link v-if="product?.source" :to="product?.source" target="_blank">
-            <v-btn variant="text" color="info" prepend-icon="mdi-code-tags">
+        <div class="mt-3 flex justify-between items-center">
+          <p class="ps-3.5 text-sm">
+            {{ new Date(product?.date).toLocaleString() }}
+          </p>
+
+          <div>
+            <v-btn
+              v-if="product?.source"
+              variant="text"
+              color="info"
+              prepend-icon="mdi-code-tags"
+              target="_blank"
+              :href="product?.source"
+            >
               Source code
             </v-btn>
-          </nuxt-link>
-          <nuxt-link :to="product?.link" target="_blank">
-            <v-btn variant="text" color="teal" prepend-icon="mdi-launch">
+            <v-btn
+              variant="text"
+              color="teal"
+              prepend-icon="mdi-launch"
+              target="_blank"
+              :href="product?.link"
+            >
               Launch
             </v-btn>
-          </nuxt-link>
+          </div>
         </div>
       </v-card>
     </div>

@@ -96,7 +96,7 @@
         <div class="mt-4 flex justify-center gap-2">
           <v-tooltip v-for="item in products" location="top">
             <template #activator="{ props }">
-              <v-card v-bind="props" hover class="w-24 h-24">
+              <v-card v-bind="props" hover class="w-24 h-24" :href="'/products/' + item.slug">
                 <div class="h-full w-full flex justify-center items-center">
                   <img :src="item.icon" width="64" height="64" class="block" />
                 </div>

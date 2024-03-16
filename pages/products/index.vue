@@ -11,16 +11,22 @@
             <p class="font-mono text-sm">{{ item.code }}</p>
             <p class="mt-3 opacity-80">{{ item.description }}</p>
             <div class="mt-3 flex justify-end">
-              <nuxt-link :to="item.link" target="_blank">
-                <v-btn variant="text" color="teal" prepend-icon="mdi-launch">
-                  Launch
-                </v-btn>
-              </nuxt-link>
-              <nuxt-link :to="'/products/' + item.slug">
-                <v-btn variant="text" prepend-icon="mdi-page-next">
-                  Learn more
-                </v-btn>
-              </nuxt-link>
+              <v-btn
+                variant="text"
+                color="teal"
+                prepend-icon="mdi-launch"
+                target="_blank"
+                :href="item.link"
+              >
+                Launch
+              </v-btn>
+              <v-btn
+                variant="text"
+                prepend-icon="mdi-page-next"
+                :href="'/products/' + item.slug"
+              >
+                Learn more
+              </v-btn>
             </div>
           </v-col>
         </v-row>
