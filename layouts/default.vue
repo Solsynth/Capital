@@ -22,5 +22,8 @@
 </template>
 
 <script setup lang="ts">
-const navbars = [{ label: "Home", to: "/" }];
+const navbars = [
+  { label: "Home", to: "/" },
+  { label: "Products", to: "/products" },
+];
 </script>
