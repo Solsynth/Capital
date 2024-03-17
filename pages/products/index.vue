@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div class="max-w-[720px] mx-auto flex flex-col gap-2">
+    <div class="max-w-[720px] mx-auto flex flex-col gap-3">
       <v-card v-for="item in products">
         <v-row class="pa-5">
           <v-col :xs="12" :md="3">

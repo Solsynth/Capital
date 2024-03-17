@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <div class="max-w-[720px] mx-auto flex flex-col gap-2">
+    <div class="max-w-[720px] mx-auto flex flex-col gap-3">
       <v-card v-for="item in posts">
         <v-img
           v-if="item.thumbnail"

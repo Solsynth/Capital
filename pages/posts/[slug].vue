@@ -16,7 +16,7 @@
             <p class="opacity-80">{{ post?.description }}</p>
           </v-card-text>
 
-          <v-divider class="mx-[-20px] my-3 border-opacity-75" />
+          <v-divider class="mx-[-20px] mt-3 border-opacity-75" />
 
           <v-card-text tag="article" class="prose max-w-none">
             <content-renderer :value="post">
@@ -26,7 +26,7 @@
             </content-renderer>
           </v-card-text>
 
-          <v-divider class="mx-[-20px] my-4 border-opacity-75" />
+          <v-divider class="mx-[-20px] mb-4 border-opacity-75" />
 
           <div class="mt-3 flex justify-between items-center">
             <p class="ps-3.5 text-sm">
