@@ -1,6 +1,6 @@
 ---
 slug: "solarplaza"
-icon: "https://co.solsynth.dev/favicon.svg"
+icon: "https://co.solsynth.dev/favicon.png"
 name: "Solarplaza"
 code: "Hydrogen.Interactive"
 description: "Elevating Social Media with Quality Content and Developer-Friendly APIs."
@@ -16,3 +16,4 @@ Unlike conventional social media platforms that often succumb to the allure of c
 Moreover, Hydrogen.Interactive goes beyond offering a user-centric experience; it also extends its functionality to developers through a comprehensive set of RESTful APIs. These APIs empower developers to seamlessly integrate Hydrogen.Interactive's features into their own applications, enabling them to build custom communities and leverage our platform to manage their content effectively. By providing developers with the tools they need, Hydrogen.Interactive accelerates site development and facilitates the creation of vibrant online communities.
 
 By prioritizing quality content, meaningful interactions, and developer-friendly APIs, Hydrogen.Interactive aims to elevate the social media landscape. Join Hydrogen.Interactive today and be part of a community that values substance over superficiality while offering developers the flexibility to innovate and create tailored experiences for their users.
+
