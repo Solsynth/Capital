@@ -45,4 +45,8 @@ const route = useRoute();
 const { data: post } = await useAsyncData("post", () =>
   queryContent("posts").where({ slug: route.params.slug }).findOne()
 );
+
+definePageMeta({
+  alias: ["/posts/:slug", "/n/:slug"]
+})
 </script>

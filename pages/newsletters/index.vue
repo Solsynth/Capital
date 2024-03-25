@@ -31,4 +31,8 @@
 const { data: posts } = await useAsyncData("posts", () =>
   queryContent("posts").find()
 );
+
+definePageMeta({
+  alias: ["/posts"]
+})
 </script>

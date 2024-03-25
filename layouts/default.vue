@@ -24,11 +24,9 @@
 </template>
 
 <script setup lang="ts">
-import RouterLink from "~/components/RouterLink.vue";
-
 const navbars = [
   { label: "Home", to: "/" },
-  { label: "Posts", to: "/posts" },
+  { label: "Newsletters", to: "/newsletters" },
   { label: "Products", to: "/products" },
 ];
 </script>
