@@ -1,6 +1,6 @@
 ---
 slug: "solarpass"
-icon: "https://id.solsynth.dev/favicon.png"
+icon: "https://git.solsynth.dev/repo-avatars/5fdf4c0ba6f015786482817a3738042a043e56117378293c2e8d8bade8efe25c"
 name: "Solarpass"
 code: "Hydrogen.Identity"
 description: "Unified Authentication Service and Seamless Access to Solar Network. The All in One Authentication Service for Solar Network."

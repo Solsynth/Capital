@@ -1,6 +1,6 @@
 ---
 slug: "solarplaza"
-icon: "https://co.solsynth.dev/favicon.png"
+icon: "https://git.solsynth.dev/repo-avatars/59efd759b0ecca9241ea9899c2bdb3faf997dbbe341fa494788f855aa34b395c"
 name: "Solarplaza"
 code: "Hydrogen.Interactive"
 description: "Elevating Social Media with Quality Content and Developer-Friendly APIs."
