@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row class="h-fullpage" align-content="center" id="landing">
-      <v-col :xs="12" :sm="6" class="max-md:text-center">
+      <v-col :cols="12" :sm="6" class="max-md:text-center">
         <img
           src="/assets/products/solar.svg"
           class="w-[180px] h-[192px] max-md:mx-auto"
@@ -26,7 +26,7 @@
       </v-col>
 
       <v-col
-        :xs="12"
+        :cols="12"
         :sm="6"
         class="flex items-center max-md:justify-center md:justify-end"
       >
@@ -37,7 +37,7 @@
     </v-row>
 
     <v-row class="h-fullpage" align-content="center" id="about">
-      <v-col :xs="12" :sm="6" class="max-md:text-center">
+      <v-col :cols="12" :sm="6" class="max-md:text-center">
         <v-icon
           icon="mdi-information-slab-symbol"
           size="48"
@@ -65,7 +65,7 @@
       </v-col>
 
       <v-col
-        :xs="12"
+        :cols="12"
         :sm="6"
         class="flex flex-col gap-2 max-md:items-center md:items-end"
       >
