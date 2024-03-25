@@ -71,7 +71,7 @@
       >
         <v-card hover class="pa-5">
           <template #text>
-            <img src="/favicon.svg" width="128" height="128" />
+            <img src="/favicon.png" width="128" height="128" />
           </template>
         </v-card>
         <p class="uppercase caption">Crystal Lotus</p>

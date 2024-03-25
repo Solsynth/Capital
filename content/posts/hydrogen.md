@@ -1,6 +1,6 @@
 ---
 slug: "hy"
-title: "Projecy Hydrogen"
+title: "「Project Hydrogen」项目氢"
 description: "关于我们最新项目，Hydrogen 的详细介绍。"
 thumbnail: "https://files.solsynth.dev/d/media01/image/202403170109556.jpg"
 date: "2024-03-16T15:50:16.202Z"

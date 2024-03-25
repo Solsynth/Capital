@@ -5,7 +5,7 @@
         class="me-4"
         color="transparent"
         size="32"
-        image="/favicon.svg"
+        image="/favicon.png"
       ></v-avatar>
 
       <v-btn v-for="link in navbars" variant="text" :href="link.to">

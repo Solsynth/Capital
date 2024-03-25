@@ -14,7 +14,7 @@ export default defineNuxtConfig({
             "Solsynth LLC official website. We build amazing, wonderful, open-source software.",
         },
       ],
-      link: [{ rel: "icon", type: "image/xml+svg", href: "/favicon.svg" }],
+      link: [{ rel: "icon", type: "image/png", href: "/favicon.png" }],
     },
   },
   content: {},
