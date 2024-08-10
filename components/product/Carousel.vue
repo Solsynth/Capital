@@ -1,7 +1,7 @@
 <template>
   <v-carousel class="carousel-section" show-arrows="hover" cycle hide-delimiters>
     <v-carousel-item v-for="(item, i) in props.products" :key="i" :src="item?.thumbnail" cover>
-      <v-sheet color="rgba(0, 0, 0, .4)" height="calc(100% + 24px)">
+      <v-sheet color="rgba(0, 0, 0, .4)" height="calc(100% + 24px)" class="p-5">
         <v-row class="fill-height" align="center" justify="center">
           <v-col class="text-center">
             <h1 class="text-4xl font-bold text-white" :class="item?.archived ? 'line-through' : null">

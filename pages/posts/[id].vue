@@ -15,14 +15,7 @@
     </article>
 
     <v-card v-if="post.body?.attachments?.length > 0" class="mb-5">
-      <v-carousel hide-delimiter-background hide-delimiters progress show-arrows="hover">
-        <v-carousel-item
-          v-for="attachment in post.body?.attachments"
-          :src="getAttachmentUrl(attachment)"
-          :aspect-ratio="16 / 9"
-          cover
-        />
-      </v-carousel>
+      <attachment-carousel :attachments="post.body?.attachments" />
     </v-card>
 
     <div class="mb-3 text-sm flex flex-col">
@@ -38,6 +31,10 @@
         {{ post.type.startsWith("a") ? "An" : "A" }} {{ post.type }} posted on
         {{ new Date(post.published_at).toLocaleString() }}
       </span>
+    </div>
+
+    <div v-if="post.tags?.length > 0" class="text-xs text-grey flex flex-row gap-1 mb-3">
+      <span v-for="tag in post.tags">#{{ tag.alias }}</span>
     </div>
 
     <div class="text-xs text-grey flex flex-col">
@@ -69,10 +66,6 @@ useHead({
 })
 
 const externalOpenLink = computed(() => `${config.public.solianUrl}/posts/view/${route.params.id}`)
-
-function getAttachmentUrl(id: number) {
-  return `${config.public.solarNetworkApi}/cgi/files/attachments/${id}`
-}
 </script>
 
 <style scoped>
