@@ -10,6 +10,14 @@
       </div>
     </div>
 
+    <v-card v-if="post.body?.thumbnail" class="mb-5">
+      <v-img
+        :src="`${config.public.solarNetworkApi}/cgi/files/attachments/${post.body?.thumbnail}`"
+        :aspect-ratio="16 / 9"
+        cover
+      />
+    </v-card>
+
     <article class="text-base prose xl:text-lg mx-auto">
       <m-d-c :value="post.body?.content"></m-d-c>
     </article>
@@ -51,7 +59,7 @@ const config = useRuntimeConfig()
 const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/interactive/posts/${route.params.id}`)
 
 useHead({
-  title: post.value.body?.title ?? `Post #${route.params.id}`,
+  title: post.value.body?.title ? `${post.value.body?.title} from ${post.value.author.nick}` : `Post from ${post.value.author.nick}`,
   titleTemplate: "%s on Solar Network",
   link: [
     { rel: "icon", type: "image/png", href: "/favicon-solian.png" },
@@ -60,11 +68,15 @@ useHead({
 })
 
 useSeoMeta({
-  title: post.value.body?.title ?? `Post #${route.params.id}`,
+  author: post.value.author.nick,
+  title: post.value.body?.title ? `${post.value.body?.title} from ${post.value.author.nick}` : `Post from ${post.value.author.nick}`,
+  publisher: "Solar Network",
+  articlePublishedTime: post.value.publishedAt,
   description: post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim(),
   ogTitle: post.value.body?.title ?? `Post #${route.params.id}`,
   ogDescription: post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim(),
   ogUrl: `${useRuntimeConfig().public.siteUrl}/${route.fullPath}`,
+  ogImage: post.value.body?.thumbnail ? `${config.public.solarNetworkApi}/cgi/files/attachments/${post.value.body?.thumbnail}` : null,
 })
 
 const externalOpenLink = computed(() => `${config.public.solianUrl}/posts/view/${route.params.id}`)
