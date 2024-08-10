@@ -10,7 +10,7 @@
             <p class="text-lg text-white">{{ item?.description }}</p>
 
             <div class="flex justify-center mt-3">
-              <v-btn variant="text" color="white" prepend-icon="mdi-school" text="Learn more" />
+              <v-btn variant="text" color="white" prepend-icon="mdi-school" text="Learn more" :to="item._path" />
               <v-btn
                 v-if="item?.url"
                 variant="text"

@@ -1,5 +1,30 @@
 <template>
-  <v-container>
+  <v-container class="content-container mx-auto">
+    <v-card v-if="page" class="mb-5" :to="page._path">
+      <v-card-text>
+        <v-row>
+          <v-col cols="12" md="4">
+            <v-img :src="page.thumbnail" :aspect-ratio="16/9" class="rounded-md" cover />
+          </v-col>
+          <v-col cols="12" md="8" class="flex flex-col">
+            <h2 class="text-xl">{{ page.title }}</h2>
+            <span>{{ page.description }}</span>
+            <v-chip
+              v-if="page?.archived"
+              label
+              prepend-icon="mdi-archive"
+              variant="text"
+              color="warning"
+              size="small"
+              class="mx-[-6px]"
+            >
+              Archived
+            </v-chip>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
+
     <article class="text-base prose prose-truegray xl:text-lg mx-auto">
       <content-doc>
         <template #empty>
@@ -37,5 +62,14 @@
   max-height: 64rem;
 }
 </style>
+
 <script setup lang="ts">
+const route = useRoute();
+const { data: page } = await useAsyncData('page', queryContent(route.path).findOne)
 </script>
+
+<style scoped>
+.content-container {
+  max-width: 65ch !important;
+}
+</style>
