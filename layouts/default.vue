@@ -6,6 +6,7 @@
       </nuxt-link>
 
       <v-btn variant="text" text="Products" to="/products" exact />
+      <v-btn variant="text" text="Activity" to="/activity" exact />
 
       <v-spacer></v-spacer>
 
