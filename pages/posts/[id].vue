@@ -45,8 +45,6 @@
 </template>
 
 <script setup lang="ts">
-import { createSEOHead } from "~/utils/seo"
-
 const route = useRoute()
 const config = useRuntimeConfig()
 
@@ -54,15 +52,19 @@ const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi
 
 useHead({
   title: post.value.body?.title ?? `Post #${route.params.id}`,
-  meta: [
-    ...createSEOHead(
-      post.value.body?.title ?? `Post #${route.params.id}`,
-      post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim(),
-      route.fullPath,
-    ),
-  ],
   titleTemplate: "%s on Solar Network",
-  link: [{ rel: "icon", type: "image/png", href: "/favicon-solian.png" }],
+  link: [
+    { rel: "icon", type: "image/png", href: "/favicon-solian.png" },
+    { rel: "apple-touch-icon", type: "image/png", href: "/favicon-solian.png" },
+  ],
+})
+
+useSeoMeta({
+  title: post.value.body?.title ?? `Post #${route.params.id}`,
+  description: post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim(),
+  ogTitle: post.value.body?.title ?? `Post #${route.params.id}`,
+  ogDescription: post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim(),
+  ogUrl: `${useRuntimeConfig().public.siteUrl}/${route.fullPath}`,
 })
 
 const externalOpenLink = computed(() => `${config.public.solianUrl}/posts/view/${route.params.id}`)
