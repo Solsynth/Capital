@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-const { data: products } = await useAsyncData("products", () => queryContent("/products").limit(5).find())
+const { data: products } = await useAsyncData("products", () => queryContent("/products").where({ archived: { $ne: true } }).limit(5).find())
 </script>
 
 <style scoped>
