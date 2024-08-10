@@ -56,10 +56,13 @@
 const route = useRoute()
 const config = useRuntimeConfig()
 
+// TODO FIX 500 WHEN DATA NOT FOUND
 const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/interactive/posts/${route.params.id}`)
 
+const title = computed(() => post.value.body?.title ? `${post.value.body?.title} from ${post.value.author.nick}` : `Post from ${post.value.author.nick}`)
+
 useHead({
-  title: post.value.body?.title ? `${post.value.body?.title} from ${post.value.author.nick}` : `Post from ${post.value.author.nick}`,
+  title: title.value,
   titleTemplate: "%s on Solar Network",
   link: [
     { rel: "icon", type: "image/png", href: "/favicon-solian.png" },
@@ -69,11 +72,11 @@ useHead({
 
 useSeoMeta({
   author: post.value.author.nick,
-  title: post.value.body?.title ? `${post.value.body?.title} from ${post.value.author.nick}` : `Post from ${post.value.author.nick}`,
+  title: title.value,
   publisher: "Solar Network",
   articlePublishedTime: post.value.publishedAt,
   description: post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim(),
-  ogTitle: post.value.body?.title ?? `Post #${route.params.id}`,
+  ogTitle: title.value,
   ogDescription: post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim(),
   ogUrl: `${useRuntimeConfig().public.siteUrl}/${route.fullPath}`,
   ogImage: post.value.body?.thumbnail ? `${config.public.solarNetworkApi}/cgi/files/attachments/${post.value.body?.thumbnail}` : null,
