@@ -32,7 +32,7 @@ const { data: products } = await useAsyncData("products", () => queryContent("/p
 }
 
 .content-section {
-  margin-top: 7.5rem;
-  margin-bottom: 7.5rem;
+  margin-top: 3rem;
+  margin-bottom: 8rem;
 }
 </style>

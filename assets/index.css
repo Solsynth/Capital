@@ -5,4 +5,9 @@ html, body {
 
 html, body, #app, .v-application {
     overflow: auto !important;
+
+    font-family: "Comfortaa", "Noto Sans SC", "Noto Sans TC", "Noto Sans JP", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 500;
+    font-style: normal;
 }
