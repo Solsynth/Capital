@@ -14,7 +14,7 @@ export function createSEOHead(title: string, description: string, url: string) {
     {
       hid: 'og:url',
       property: 'og:url',
-      content: useRuntimeConfig().public.baseUrl + '/' + url,
+      content: useRuntimeConfig().public.siteUrl + '/' + url,
     },
   ]
 }

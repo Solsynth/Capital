@@ -12,7 +12,7 @@
         </div>
       </div>
 
-      <article v-if="post.type == 'story'" class="text-base prose prose-truegray mx-auto">
+      <article v-if="post.type == 'story'" class="text-base prose mx-auto">
         <m-d-c :value="post.body?.content"></m-d-c>
       </article>
 

@@ -10,7 +10,7 @@
       </div>
     </div>
 
-    <article class="text-base prose prose-truegray xl:text-lg mx-auto">
+    <article class="text-base prose xl:text-lg mx-auto">
       <m-d-c :value="post.body?.content"></m-d-c>
     </article>
 

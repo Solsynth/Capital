@@ -25,7 +25,7 @@
       </v-card-text>
     </v-card>
 
-    <article class="text-base prose prose-truegray xl:text-lg mx-auto">
+    <article class="text-base prose xl:text-lg mx-auto">
       <content-doc>
         <template #empty>
           <v-empty-state

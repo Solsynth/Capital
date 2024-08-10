@@ -17,9 +17,21 @@ export default defineNuxtPlugin((app) => {
       ...labsComponents,
     },
     theme: {
-      defaultTheme: "original",
+      defaultTheme: "light",
       themes: {
-        original: {
+        light: {
+          colors: {
+            primary: "#4a5099",
+            secondary: "#2196f3",
+            accent: "#009688",
+            error: "#f44336",
+            warning: "#ff9800",
+            info: "#03a9f4",
+            success: "#4caf50",
+          },
+        },
+        dark: {
+          dark: true,
           colors: {
             primary: "#4a5099",
             secondary: "#2196f3",

@@ -4,11 +4,21 @@ import vuetify, { transformAssetUrls } from "vite-plugin-vuetify"
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  site: {
+    url: "https://solsynth.dev",
+    name: "Solsynth LLC",
+  },
+  sitemap: {
+    sources: [
+      "/api/sitemap/posts",
+    ],
+  },
+
   css: ["@/assets/index.css"],
 
   runtimeConfig: {
     public: {
-      baseUrl: "https://solsynth.dev",
+      siteUrl: "https://solsynth.dev",
       solarRealmId: 2,
       solarNetworkApi: "https://api.sn.solsynth.dev",
       solianUrl: "https://sn.solsynth.dev",
@@ -48,6 +58,7 @@ export default defineNuxtConfig({
     "@unocss/nuxt",
     "@nuxt/content",
     "@nuxt/image",
+    "@nuxtjs/sitemap",
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         // @ts-expect-error
