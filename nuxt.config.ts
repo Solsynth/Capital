@@ -4,6 +4,8 @@ import vuetify, { transformAssetUrls } from "vite-plugin-vuetify"
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
+  css: ["@/assets/index.css"],
+
   app: {
     head: {
       title: "Solsynth LLC",
