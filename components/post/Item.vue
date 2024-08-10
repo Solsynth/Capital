@@ -12,6 +12,15 @@
         </div>
       </div>
 
+      <div v-if="post.body?.thumbnail" class="mb-5">
+        <v-img
+          :src="`${config.public.solarNetworkApi}/cgi/files/attachments/${post.body?.thumbnail}`"
+          :aspect-ratio="16 / 9"
+          class="rounded-md"
+          cover
+        />
+      </div>
+
       <article v-if="post.type == 'story'" class="text-base prose mx-auto">
         <m-d-c :value="post.body?.content"></m-d-c>
       </article>
@@ -44,4 +53,5 @@
 
 <script setup lang="ts">
 const props = defineProps<{ post: any }>()
+const config = useRuntimeConfig()
 </script>
