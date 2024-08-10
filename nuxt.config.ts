@@ -3,6 +3,7 @@ import vuetify, { transformAssetUrls } from "vite-plugin-vuetify"
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
+
   app: {
     head: {
       title: "Solsynth LLC",
@@ -10,6 +11,7 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/png", href: "/favicon.png" }],
     },
   },
+
   content: {
     api: {
       baseURL: "/api/content",
@@ -18,9 +20,11 @@ export default defineNuxtConfig({
       theme: "github-dark",
     },
   },
+
   build: {
     transpile: ["vuetify"],
   },
+
   modules: [
     "@unocss/nuxt",
     "@nuxt/content",
@@ -33,6 +37,7 @@ export default defineNuxtConfig({
     },
     //...
   ],
+
   vite: {
     vue: {
       template: {
@@ -40,4 +45,6 @@ export default defineNuxtConfig({
       },
     },
   },
+
+  compatibilityDate: "2024-08-10",
 })
