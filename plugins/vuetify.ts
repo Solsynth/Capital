@@ -1,4 +1,3 @@
-import '@fontsource/roboto/latin.css';
 import '@mdi/font/css/materialdesignicons.css'
 
 import 'vuetify/styles'
