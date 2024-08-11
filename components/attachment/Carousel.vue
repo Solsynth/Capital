@@ -2,7 +2,7 @@
   <v-carousel
     hide-delimiter-background
     hide-delimiters
-    :progress="attachments.length > 1"
+    :progress="attachments.length > 1 ? 'primary' : false"
     :show-arrows="attachments.length > 1 ? 'hover' : false"
     height="auto"
   >
