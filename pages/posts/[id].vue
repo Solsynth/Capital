@@ -23,7 +23,7 @@
     </article>
 
     <v-card v-if="post.body?.attachments?.length > 0" class="mb-5">
-      <attachment-carousel :attachments="post.body?.attachments" />
+      <attachment-carousel :attachments="post.body?.attachments" @update:metadata="args => attachments = args" />
     </v-card>
 
     <div class="mb-3 text-sm flex flex-col">
@@ -56,16 +56,34 @@
 const route = useRoute()
 const config = useRuntimeConfig()
 
+const attachments = ref<any[]>([])
+const firstImage = ref<string|null>()
+const firstVideo = ref<string|null>()
+
 const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/interactive/posts/${route.params.id}`)
 
 if (!post.value) {
   throw createError({
     statusCode: 404,
-    statusMessage: 'Post Not Found'
+    statusMessage: "Post Not Found",
   })
 }
 
 const title = computed(() => post.value.body?.title ? `${post.value.body?.title} from ${post.value.author.nick}` : `Post from ${post.value.author.nick}`)
+const description = computed(() => post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim())
+
+watch(attachments, (value) => {
+  if (post.value.body?.thumbnail) {
+    firstImage.value = `${config.public.solarNetworkApi}/cgi/files/attachments/${post.value.body?.thumbnail}`
+  }
+  if (value.length > 0 && value[0].mimetype.split("/")[0] == "image") {
+    firstImage.value = `${config.public.solarNetworkApi}/cgi/files/attachments/${attachments.value[0].id}`
+  }
+
+  if (value.length > 0 && value[0].mimetype.split("/")[0] == "video") {
+    firstVideo.value = `${config.public.solarNetworkApi}/cgi/files/attachments/${attachments.value[0].id}`
+  }
+}, { immediate: true, deep: true })
 
 useHead({
   title: title.value,
@@ -78,14 +96,15 @@ useHead({
 
 useSeoMeta({
   author: post.value.author.nick,
-  title: title.value,
+  title: title,
   publisher: "Solar Network",
   articlePublishedTime: post.value.publishedAt,
-  description: post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim(),
-  ogTitle: title.value,
-  ogDescription: post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim(),
-  ogUrl: `${useRuntimeConfig().public.siteUrl}/${route.fullPath}`,
-  ogImage: post.value.body?.thumbnail ? `${config.public.solarNetworkApi}/cgi/files/attachments/${post.value.body?.thumbnail}` : null,
+  description: description,
+  ogTitle: title,
+  ogDescription: description,
+  ogUrl: `${useRuntimeConfig().public.siteUrl}${route.fullPath}`,
+  ogImage: firstImage,
+  ogVideo: firstVideo,
 })
 
 const externalOpenLink = computed(() => `${config.public.solianUrl}/posts/view/${route.params.id}`)
