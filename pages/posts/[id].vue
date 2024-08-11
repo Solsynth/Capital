@@ -57,8 +57,8 @@ const route = useRoute()
 const config = useRuntimeConfig()
 
 const attachments = ref<any[]>([])
-const firstImage = ref<string|null>()
-const firstVideo = ref<string|null>()
+const firstImage = ref<string | null>()
+const firstVideo = ref<string | null>()
 
 const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/interactive/posts/${route.params.id}`)
 
