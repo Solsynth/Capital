@@ -8,7 +8,7 @@
   >
     <v-carousel-item v-for="item in metadata" class="fill-height">
       <v-img v-if="item.mimetype.split('/')[0] == 'image'" :src="getAttachmentUrl(item.id)" class="fill-height" cover />
-      <video v-if="item.mimetype.split('/')[0] == 'video'" :src="getAttachmentUrl(item.id)" class="fill-height"
+      <video v-else-if="item.mimetype.split('/')[0] == 'video'" :src="getAttachmentUrl(item.id)" class="fill-height"
              controls />
       <v-sheet v-else color="rgba(0, 0, 0, .4)" height="calc(100% + 24px)" class="p-5">
         <v-row class="fill-height" align="center" justify="center">

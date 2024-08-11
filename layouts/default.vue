@@ -7,6 +7,7 @@
 
       <v-btn variant="text" text="Products" to="/products" exact />
       <v-btn variant="text" text="Activity" to="/activity" exact />
+      <v-btn variant="text" text="Gallery" to="/gallery" exact />
 
       <v-spacer></v-spacer>
 
