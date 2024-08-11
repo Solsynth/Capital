@@ -97,7 +97,6 @@ useHead({
 useSeoMeta({
   author: post.value.author.nick,
   title: title,
-  publisher: "Solar Network",
   articlePublishedTime: post.value.publishedAt,
   description: description,
   ogTitle: title,
@@ -105,6 +104,9 @@ useSeoMeta({
   ogUrl: `${useRuntimeConfig().public.siteUrl}${route.fullPath}`,
   ogImage: firstImage,
   ogVideo: firstVideo,
+  ogType: "article",
+  publisher: "Solar Network",
+  ogSiteName: "Solsynth Capital",
 })
 
 const externalOpenLink = computed(() => `${config.public.solianUrl}/posts/view/${route.params.id}`)
