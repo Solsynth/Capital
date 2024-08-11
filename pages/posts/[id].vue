@@ -56,8 +56,14 @@
 const route = useRoute()
 const config = useRuntimeConfig()
 
-// TODO FIX 500 WHEN DATA NOT FOUND
 const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/interactive/posts/${route.params.id}`)
+
+if (!post.value) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: 'Post Not Found'
+  })
+}
 
 const title = computed(() => post.value.body?.title ? `${post.value.body?.title} from ${post.value.author.nick}` : `Post from ${post.value.author.nick}`)
 
