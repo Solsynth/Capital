@@ -28,6 +28,10 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  title: 'Products',
+})
+
 const { data: products } = await useAsyncData("products", () => queryContent("/products").find())
 </script>
 

@@ -29,7 +29,7 @@
         <attachment-carousel :attachments="post.body?.attachments" />
       </v-card>
 
-      <div class="mb-3 text-sm flex flex-col">
+      <div class="text-sm flex flex-col">
       <span class="flex flex-row gap-1">
       <span>
         {{ post.metric.reply_count }} {{ post.metric.reply_count > 1 ? "replies" : "reply" }},
@@ -44,7 +44,7 @@
       </span>
       </div>
 
-      <div v-if="post.tags?.length > 0" class="text-xs text-grey flex flex-row gap-1">
+      <div v-if="post.tags?.length > 0" class="text-xs text-grey flex flex-row gap-1 mt-3">
         <span v-for="tag in post.tags">#{{ tag.alias }}</span>
       </div>
     </v-card-text>

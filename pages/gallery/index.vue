@@ -44,6 +44,10 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  title: 'Gallery',
+})
+
 const config = useRuntimeConfig()
 
 const items = ref<any[]>([])

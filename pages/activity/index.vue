@@ -14,6 +14,10 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  title: 'Activity',
+})
+
 const config = useRuntimeConfig()
 
 const items = ref<any[]>([])
