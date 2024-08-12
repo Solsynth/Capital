@@ -17,6 +17,15 @@ export function useAtk() {
   return useCookie("__hydrogen_atk", { watch: "shallow" })
 }
 
+export function useRtk() {
+  return useCookie("__hydrogen_rtk", { watch: "shallow" })
+}
+
+export function setTokenSet(atk: string, rtk: string) {
+  useAtk().value = atk
+  useRtk().value = rtk
+}
+
 export function useLoggedInState() {
   return computed(() => useAtk().value != null)
 }
@@ -34,7 +43,6 @@ export const useUserinfo = defineStore("userinfo", () => {
 
     const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/users/me`, {
       headers: { Authorization: `Bearer ${useAtk().value}` },
-      credentials: "include",
     })
 
     if (res.status !== 200) {
