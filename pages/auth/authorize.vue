@@ -69,6 +69,7 @@
 
 <script setup lang="ts">
 import { ref } from "vue"
+import { solarFetch } from "~/utils/request"
 
 definePageMeta({
   middleware: ["auth"],
@@ -86,9 +87,7 @@ const metadata = ref<any>(null)
 const panel = ref("confirm")
 
 async function tryAuthorize() {
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth/o/authorize` + window.location.search, {
-    headers: { Authorization: `Bearer ${useAtk().value}` },
-  })
+  const res = await solarFetch(`/cgi/auth/auth/o/authorize${window.location.search}`)
 
   if (res.status !== 200) {
     error.value = await res.text()
@@ -117,9 +116,8 @@ function decline() {
 
 async function approve() {
   loading.value = true
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth/o/authorize` + window.location.search, {
+  const res = await solarFetch(`/cgi/auth/auth/o/authorize${window.location.search}`, {
     method: "POST",
-    headers: { Authorization: `Bearer ${useAtk().value}` },
   })
 
   if (res.status !== 200) {

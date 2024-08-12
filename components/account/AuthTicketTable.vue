@@ -87,6 +87,8 @@
 </template>
 
 <script setup lang="ts">
+import { solarFetch } from "~/utils/request"
+
 const config = useRuntimeConfig()
 
 const error = ref<string | null>(null)
@@ -123,15 +125,12 @@ async function readTickets({ page, itemsPerPage }: { page?: number; itemsPerPage
   if (page) pagination.tickets.page = page
 
   reverting.sessions = true
-  const res = await fetch(
-    `${config.public.solarNetworkApi}/cgi/auth/users/me/tickets?` +
+  const res = await solarFetch(
+    "/cgi/auth/users/me/tickets?" +
     new URLSearchParams({
       take: pagination.tickets.pageSize.toString(),
       offset: ((pagination.tickets.page - 1) * pagination.tickets.pageSize).toString(),
     }),
-    {
-      headers: { Authorization: `Bearer ${useAtk().value}` },
-    },
   )
   if (res.status !== 200) {
     error.value = await res.text()
@@ -148,15 +147,12 @@ async function readEvents({ page, itemsPerPage }: { page?: number; itemsPerPage?
   if (page) pagination.events.page = page
 
   reverting.events = true
-  const res = await fetch(
-    `${config.public.solarNetworkApi}/cgi/auth/users/me/events?` +
+  const res = await solarFetch(
+    "/cgi/auth/users/me/events?" +
     new URLSearchParams({
       take: pagination.events.pageSize.toString(),
       offset: ((pagination.events.page - 1) * pagination.events.pageSize).toString(),
     }),
-    {
-      headers: { Authorization: `Bearer ${useAtk().value}` },
-    },
   )
   if (res.status !== 200) {
     error.value = await res.text()
@@ -172,9 +168,8 @@ Promise.all([readTickets({}), readEvents({})])
 
 async function killTicket(item: any) {
   reverting.sessions = true
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/users/me/tickets/${item.id}`, {
+  const res = await solarFetch(`/cgi/auth/users/me/tickets/${item.id}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${useAtk().value}` },
   })
   if (res.status !== 200) {
     error.value = await res.text()

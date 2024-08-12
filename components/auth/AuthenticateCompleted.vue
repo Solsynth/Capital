@@ -16,7 +16,6 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue"
 import { useRoute, useRouter } from "vue-router"
-import { setTokenSet } from "~/stores/userinfo"
 
 const config = useRuntimeConfig()
 
@@ -53,7 +52,7 @@ async function getToken(tk: string) {
     throw new Error(err)
   } else {
     const out = await res.json()
-    setTokenSet(out["access_token"], out["refresh_token"])
+    auth.setTokenSet(out["access_token"], out["refresh_token"])
     error.value = null
   }
 }
