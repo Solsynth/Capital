@@ -19,7 +19,6 @@ export default defineNuxtConfig({
     public: {
       siteUrl: "https://solsynth.dev",
       solarRealmId: 2,
-      solarpassUrl: "https://id.solsynth.dev",
       solarNetworkApi: "https://api.sn.solsynth.dev",
       solianUrl: "https://sn.solsynth.dev",
     },

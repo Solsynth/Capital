@@ -11,7 +11,7 @@ export default defineEventHandler((event) => {
     "id_token_signing_alg_values_supported": [
       "HS512",
     ],
-    "issuer": config.public.solarpassUrl,
+    "issuer": config.public.siteUrl,
     "response_types_supported": [
       "code",
       "token",
