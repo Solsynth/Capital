@@ -90,6 +90,7 @@ const panel = ref("confirm")
 async function tryAuthorize() {
   const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth/o/authorize` + window.location.search, {
     headers: { Authorization: `Bearer ${getAtk()}` },
+    credentials: "include",
   })
 
   if (res.status !== 200) {
@@ -123,6 +124,7 @@ async function approve() {
   const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth/o/authorize` + window.location.search, {
     method: "POST",
     headers: { Authorization: `Bearer ${getAtk()}` },
+    credentials: "include",
   })
 
   if (res.status !== 200) {

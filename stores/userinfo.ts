@@ -40,6 +40,7 @@ export const useUserinfo = defineStore("userinfo", () => {
 
     const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/users/me`, {
       headers: { Authorization: `Bearer ${getAtk()}` },
+      credentials: "include",
     })
 
     if (res.status !== 200) {

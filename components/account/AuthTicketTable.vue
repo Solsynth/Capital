@@ -131,6 +131,7 @@ async function readTickets({ page, itemsPerPage }: { page?: number; itemsPerPage
     }),
     {
       headers: { Authorization: `Bearer ${getAtk()}` },
+      credentials: "include",
     },
   )
   if (res.status !== 200) {
@@ -156,6 +157,7 @@ async function readEvents({ page, itemsPerPage }: { page?: number; itemsPerPage?
     }),
     {
       headers: { Authorization: `Bearer ${getAtk()}` },
+      credentials: "include",
     },
   )
   if (res.status !== 200) {
@@ -175,6 +177,7 @@ async function killTicket(item: any) {
   const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/users/me/tickets/${item.id}`, {
     method: "DELETE",
     headers: { Authorization: `Bearer ${getAtk()}` },
+    credentials: "include",
   })
   if (res.status !== 200) {
     error.value = await res.text()
