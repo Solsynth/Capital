@@ -14,7 +14,10 @@
     "@nuxt/content": "^2.13.2",
     "@nuxt/image": "^1.7.0",
     "@nuxtjs/sitemap": "^6.0.0-beta.1",
+    "@pinia/nuxt": "^0.5.3",
     "nuxt": "^3.12.4",
+    "pinia": "^2.2.1",
+    "universal-cookie": "^7.2.0",
     "vue": "latest"
   },
   "devDependencies": {

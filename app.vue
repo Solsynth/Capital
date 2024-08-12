@@ -11,6 +11,7 @@ import { useTheme } from "vuetify"
 import "@unocss/reset/tailwind.css"
 
 const theme = useTheme()
+const userinfo = useUserinfo()
 
 onMounted(() => {
   theme.global.name.value = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
@@ -18,5 +19,9 @@ onMounted(() => {
   window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", event => {
     theme.global.name.value = event.matches ? "dark" : "light"
   })
+
+  if (checkLoggedIn()) {
+    userinfo.readProfiles()
+  }
 })
 </script>

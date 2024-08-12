@@ -1,7 +1,7 @@
 <template>
   <v-container class="flex flex-col gap-[4rem] my-[2rem]">
     <v-row class="content-section">
-      <v-col cols="12" md="4" class="d-flex align-center">
+      <v-col cols="12" md="4" class="flex justify-start">
         <div>
           <h1 class="text-4xl font-bold">Solsynth</h1>
           <p class="text-lg mt-3">
@@ -21,11 +21,11 @@
     </v-row>
     <v-row class="content-section">
       <v-col cols="12" md="8">
-        <v-card>
+        <v-card class="max-h-[500px]">
           <activity-carousel class="carousel-section" />
         </v-card>
       </v-col>
-      <v-col cols="12" md="4" class="d-flex align-center" order="first" order-md="last">
+      <v-col cols="12" md="4" class="flex justify-end" order="first" order-md="last">
         <div class="text-right">
           <h1 class="text-4xl font-bold">Activities</h1>
           <p class="text-lg mt-3">
@@ -34,7 +34,7 @@
           </p>
           <p class="text-grey mt-2">
             <v-icon icon="mdi-arrow-left" size="16" class="mb-0.5" />
-            See some posts of our realm just here
+            See some posts in our realm just here
           </p>
         </div>
       </v-col>

@@ -1,6 +1,5 @@
 import vuetify, { transformAssetUrls } from "vite-plugin-vuetify"
 
-// https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
 
@@ -50,6 +49,10 @@ export default defineNuxtConfig({
     },
   },
 
+  pinia: {
+    storesDirs: ['./stores/**'],
+  },
+
   build: {
     transpile: ["vuetify"],
   },
@@ -59,6 +62,7 @@ export default defineNuxtConfig({
     "@nuxt/content",
     "@nuxt/image",
     "@nuxtjs/sitemap",
+    "@pinia/nuxt",
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         // @ts-expect-error

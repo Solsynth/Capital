@@ -13,9 +13,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn href="https://id.solsynth.dev" target="_blank" icon slim>
-        <v-avatar size="small" color="transparent" icon="mdi-account-circle" />
-      </v-btn>
+      <user-menu />
     </v-container>
   </v-app-bar>
 

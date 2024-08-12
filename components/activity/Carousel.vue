@@ -6,7 +6,7 @@
       </v-sheet>
     </v-carousel-item>
   </v-carousel>
-  <div v-else class="w-full flex items-center justify-center">
+  <div v-else class="w-full h-full flex items-center justify-center">
     <v-progress-circular indeterminate />
   </div>
 </template>
