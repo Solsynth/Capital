@@ -21,7 +21,7 @@ const config = useRuntimeConfig()
 
 const route = useRoute()
 const router = useRouter()
-const userinfo = useUserinfo()
+const auth = useUserinfo()
 
 const props = defineProps<{ loading?: boolean; currentFactor?: any; ticket?: any }>()
 const emits = defineEmits(["update:loading"])
@@ -31,7 +31,7 @@ const error = ref<string | null>(null)
 async function load() {
   emits("update:loading", true)
   await getToken(props.ticket.grant_token)
-  await userinfo.readProfiles()
+  await auth.readProfiles()
   setTimeout(() => callback(), 1850)
 }
 
