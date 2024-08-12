@@ -16,7 +16,7 @@
       <v-divider class="border-opacity-50 my-2" />
 
       <v-list-item title="Dashboard" prepend-icon="mdi-account-supervisor" exact to="/users/me" />
-      <v-list-item title="Sign out" prepend-icon="mdi-logout" @click="signout"></v-list-item>
+      <v-list-item title="Sign out" prepend-icon="mdi-logout" @click="signOut"></v-list-item>
     </v-list>
   </v-menu>
 </template>
@@ -24,7 +24,6 @@
 <script setup lang="ts">
 import { defaultUserinfo, useUserinfo } from "@/stores/userinfo"
 import { computed } from "vue"
-import Cookie from "universal-cookie"
 
 const config = useRuntimeConfig()
 
@@ -48,11 +47,10 @@ const avatar = computed(() => {
   return id.userinfo.data?.avatar ? `${config.public.solarNetworkApi}/cgi/files/attachments/${id.userinfo.data?.avatar}` : void 0
 })
 
-function signout() {
-  const ck = new Cookie()
-  ck.remove("__hydrogen_atk")
-  ck.remove("__hydrogen_rtk")
+function signOut() {
+  useCookie("__hydrogen_atk", { watch: "shallow" }).value = null
+  useCookie("__hydrogen_rtk", { watch: "shallow" }).value = null
   id.userinfo = defaultUserinfo
-  window.location.reload()
+  reloadNuxtApp()
 }
 </script>

@@ -51,8 +51,6 @@ async function getToken(tk: string) {
     error.value = err
     throw new Error(err)
   } else {
-    const out = await res.json()
-    setTokenSet(out["access_token"], out["refresh_token"])
     error.value = null
   }
 }

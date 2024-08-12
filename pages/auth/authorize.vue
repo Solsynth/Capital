@@ -68,28 +68,26 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
-import { useRoute } from "vue-router"
+import { ref } from "vue"
+
+definePageMeta({
+  middleware: ["auth"],
+})
 
 const config = useRuntimeConfig()
 
 const route = useRoute()
 
 const error = ref<string | null>(null)
-
 const loading = ref(false)
 
 const metadata = ref<any>(null)
-const requestedClaims = computed(() => {
-  const scope: string = (route.query["scope"] as string) ?? ""
-  return scope.split(" ")
-})
 
 const panel = ref("confirm")
 
 async function tryAuthorize() {
   const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth/o/authorize` + window.location.search, {
-    headers: { Authorization: `Bearer ${getAtk()}` },
+    headers: { Authorization: `Bearer ${useAtk().value}` },
     credentials: "include",
   })
 
@@ -102,7 +100,6 @@ async function tryAuthorize() {
       panel.value = "callback"
       callback(data["ticket"])
     } else {
-      document.title = `Solarpass | Connect to ${data["client"]?.name}`
       metadata.value = data["client"]
       loading.value = false
     }
@@ -123,7 +120,7 @@ async function approve() {
   loading.value = true
   const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth/o/authorize` + window.location.search, {
     method: "POST",
-    headers: { Authorization: `Bearer ${getAtk()}` },
+    headers: { Authorization: `Bearer ${useAtk().value}` },
     credentials: "include",
   })
 

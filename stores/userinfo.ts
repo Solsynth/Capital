@@ -1,4 +1,3 @@
-import Cookie from "universal-cookie"
 import { defineStore } from "pinia"
 import { ref } from "vue"
 
@@ -14,17 +13,12 @@ export const defaultUserinfo: Userinfo = {
   data: null,
 }
 
-export function getAtk(): string {
-  return new Cookie().get("__hydrogen_atk")
+export function useAtk() {
+  return useCookie("__hydrogen_atk", { watch: "shallow" })
 }
 
-export function checkLoggedIn(): boolean {
-  return new Cookie().get("__hydrogen_rtk")
-}
-
-export function setTokenSet(atk: string, rtk: string) {
-  new Cookie().set("__hydrogen_atk", atk, { path: "/" })
-  new Cookie().set("__hydrogen_rtk", rtk, { path: "/" })
+export function useLoggedInState() {
+  return computed(() => useAtk().value != null)
 }
 
 export const useUserinfo = defineStore("userinfo", () => {
@@ -32,14 +26,14 @@ export const useUserinfo = defineStore("userinfo", () => {
   const isReady = ref(false)
 
   async function readProfiles() {
-    if (!checkLoggedIn()) {
+    if (!useLoggedInState().value) {
       isReady.value = true
     }
 
     const config = useRuntimeConfig()
 
     const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/users/me`, {
-      headers: { Authorization: `Bearer ${getAtk()}` },
+      headers: { Authorization: `Bearer ${useAtk().value}` },
       credentials: "include",
     })
 

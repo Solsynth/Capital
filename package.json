@@ -17,7 +17,6 @@
     "@pinia/nuxt": "^0.5.3",
     "nuxt": "^3.12.4",
     "pinia": "^2.2.1",
-    "universal-cookie": "^7.2.0",
     "vue": "latest"
   },
   "devDependencies": {

@@ -20,8 +20,6 @@ onMounted(() => {
     theme.global.name.value = event.matches ? "dark" : "light"
   })
 
-  if (checkLoggedIn()) {
-    auth.readProfiles()
-  }
+  auth.readProfiles()
 })
 </script>

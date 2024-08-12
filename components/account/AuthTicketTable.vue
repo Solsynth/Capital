@@ -130,7 +130,7 @@ async function readTickets({ page, itemsPerPage }: { page?: number; itemsPerPage
       offset: ((pagination.tickets.page - 1) * pagination.tickets.pageSize).toString(),
     }),
     {
-      headers: { Authorization: `Bearer ${getAtk()}` },
+      headers: { Authorization: `Bearer ${useAtk().value}` },
       credentials: "include",
     },
   )
@@ -156,7 +156,7 @@ async function readEvents({ page, itemsPerPage }: { page?: number; itemsPerPage?
       offset: ((pagination.events.page - 1) * pagination.events.pageSize).toString(),
     }),
     {
-      headers: { Authorization: `Bearer ${getAtk()}` },
+      headers: { Authorization: `Bearer ${useAtk().value}` },
       credentials: "include",
     },
   )
@@ -176,7 +176,7 @@ async function killTicket(item: any) {
   reverting.sessions = true
   const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/users/me/tickets/${item.id}`, {
     method: "DELETE",
-    headers: { Authorization: `Bearer ${getAtk()}` },
+    headers: { Authorization: `Bearer ${useAtk().value}` },
     credentials: "include",
   })
   if (res.status !== 200) {
