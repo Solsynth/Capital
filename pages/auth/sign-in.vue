@@ -32,6 +32,10 @@ import FactorApplicator from "~/components/auth/FactorApplicator.vue"
 import AccountAuthenticate from "~/components/auth/Authenticate.vue"
 import AuthenticateCompleted from "~/components/auth/AuthenticateCompleted.vue"
 
+definePageMeta({
+  alias: ["/auth/mfa"],
+})
+
 const route = useRoute()
 
 const loading = ref(false)
