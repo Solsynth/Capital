@@ -19,8 +19,15 @@ export default defineNuxtConfig({
     public: {
       siteUrl: "https://solsynth.dev",
       solarRealmId: 2,
+      solarpassUrl: "https://id.solsynth.dev",
       solarNetworkApi: "https://api.sn.solsynth.dev",
       solianUrl: "https://sn.solsynth.dev",
+    },
+  },
+
+  routeRules: {
+    "/.well-known/openid-configuration": {
+      proxy: "/api/well-known/openid-configuration",
     },
   },
 
@@ -28,6 +35,7 @@ export default defineNuxtConfig({
     head: {
       title: "Solsynth LLC",
       titleTemplate: "%s | Solsynth",
+      meta: [],
       link: [
         { rel: "icon", type: "image/png", href: "/favicon.png" },
         { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -50,7 +58,7 @@ export default defineNuxtConfig({
   },
 
   pinia: {
-    storesDirs: ['./stores/**'],
+    storesDirs: ["./stores/**"],
   },
 
   build: {

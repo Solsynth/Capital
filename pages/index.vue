@@ -1,5 +1,5 @@
 <template>
-  <v-container class="flex flex-col gap-[4rem] my-[2rem]">
+  <v-container class="flex flex-col my-2 gap-[4rem]">
     <v-row class="content-section">
       <v-col cols="12" md="4" class="flex justify-start">
         <div>
