@@ -12,12 +12,12 @@
 
       <v-divider class="border-opacity-50 my-2" />
 
-      <v-list-item title="Dashboard" prepend-icon="mdi-account-supervisor" exact to="/users/me" />
-      <v-list-item title="Sign out" prepend-icon="mdi-logout" @click="signOut"></v-list-item>
+      <v-list-item :title="t('userMenuDashboard')" prepend-icon="mdi-account-supervisor" exact to="/users/me" />
+      <v-list-item :title="t('userMenuSignOut')" prepend-icon="mdi-logout" @click="signOut"></v-list-item>
     </v-list>
     <v-list density="compact" v-else>
-      <v-list-item title="Sign in" prepend-icon="mdi-login-variant" to="/auth/sign-in" />
-      <v-list-item title="Create account" prepend-icon="mdi-account-plus" to="/auth/sign-up" />
+      <v-list-item :title="t('userMenuSignIn')" prepend-icon="mdi-login-variant" to="/auth/sign-in" />
+      <v-list-item :title="t('userMenuSignUp')" prepend-icon="mdi-account-plus" to="/auth/sign-up" />
     </v-list>
   </v-menu>
 </template>
@@ -26,6 +26,7 @@
 import { defaultUserinfo, useUserinfo } from "@/stores/userinfo"
 import { computed } from "vue"
 
+const {t} = useI18n()
 const config = useRuntimeConfig()
 
 const id = useUserinfo()

@@ -6,8 +6,8 @@
       <v-card-text class="card-grid pa-9">
         <div>
           <v-avatar color="accent" icon="mdi-login-variant" size="large" class="card-rounded mb-2" />
-          <h1 class="text-2xl">Create an account</h1>
-          <p>Create an account on Solar Network. Then enjoy all our services.</p>
+          <h1 class="text-2xl">{{ t("signUpTitle") }}</h1>
+          <p class="max-w-5/6">{{ t("signUpCaption") }}</p>
         </div>
 
         <div class="flex items-center">
@@ -16,7 +16,7 @@
               <v-col :cols="6">
                 <v-text-field
                   hide-details
-                  label="Name"
+                  :label="t('username')"
                   autocomplete="username"
                   variant="solo"
                   density="comfortable"
@@ -26,7 +26,7 @@
               <v-col :cols="6">
                 <v-text-field
                   hide-details
-                  label="Nick"
+                  :label="t('nickname')"
                   autocomplete="nickname"
                   variant="solo"
                   density="comfortable"
@@ -36,7 +36,7 @@
               <v-col :cols="12">
                 <v-text-field
                   hide-details
-                  label="Email Address"
+                  :label="t('email')"
                   type="email"
                   variant="solo"
                   density="comfortable"
@@ -46,7 +46,7 @@
               <v-col :cols="12">
                 <v-text-field
                   hide-details
-                  label="Password"
+                  :label="t('password')"
                   type="password"
                   autocomplete="new-password"
                   variant="solo"
@@ -58,17 +58,17 @@
 
             <v-expand-transition>
               <v-alert v-show="error" variant="tonal" type="error" class="text-xs mb-3">
-                Something went wrong... {{ error }}
+                {{ t("errorOccurred", [error]) }}
               </v-alert>
             </v-expand-transition>
 
             <div class="flex justify-between">
               <v-btn type="button" variant="plain" color="grey-darken-3" to="/auth/sign-in">
-                Sign in
+                {{ t("userMenuSignIn") }}
               </v-btn>
 
               <v-btn type="submit" variant="text" color="primary" append-icon="mdi-arrow-right" :disabled="loading">
-                Next
+                {{ t("next") }}
               </v-btn>
             </div>
           </v-form>
@@ -79,11 +79,11 @@
     <v-dialog v-model="done" class="max-w-[560px]">
       <v-card title="Congratulations">
         <template #text>
-          You successfully created an account on Solar Network. Now sign in to your account and start exploring!
+          {{ t("signUpCompleted") }}
         </template>
         <template #actions>
           <div class="flex flex-grow-1 justify-end">
-            <v-btn @click="callback">Let's go</v-btn>
+            <v-btn @click="callback">{{ t("signUpCompletedAction") }}</v-btn>
           </div>
         </template>
       </v-card>
@@ -99,6 +99,7 @@ import { useRoute, useRouter } from "vue-router"
 
 const error = ref<string | null>(null)
 
+const { t } = useI18n()
 const config = useRuntimeConfig()
 
 const route = useRoute()
@@ -137,7 +138,7 @@ function callback() {
   if (route.params["closable"]) {
     window.close()
   } else {
-    router.push({ name: "auth.sign-in" })
+    router.push("/auth/sign-in")
   }
 }
 </script>

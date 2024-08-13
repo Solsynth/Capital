@@ -2,7 +2,7 @@
   <div class="flex items-center">
     <v-form class="flex-grow-1" @submit.prevent="submit">
       <div v-if="inputType === 'one-time-password'" class="text-center">
-        <p class="text-xs opacity-90">Check your inbox!</p>
+        <p class="text-xs opacity-90">{{ t("multiFactorHint") }}</p>
         <v-otp-input
           class="pt-0"
           variant="solo"
@@ -15,7 +15,7 @@
       </div>
       <v-text-field
         v-else
-        label="Password"
+        :label="t('password')"
         type="password"
         variant="solo"
         density="comfortable"
@@ -25,7 +25,7 @@
 
       <v-expand-transition>
         <v-alert v-show="error" variant="tonal" type="error" class="text-xs mb-3">
-          Something went wrong... {{ error }}
+          {{ t("errorOccurred", [error]) }}
         </v-alert>
       </v-expand-transition>
 
@@ -38,7 +38,7 @@
           append-icon="mdi-arrow-right"
           :disabled="loading"
         >
-          Next
+          {{ t("next") }}
         </v-btn>
       </div>
     </v-form>
@@ -46,8 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue"
-
+const { t } = useI18n()
 const config = useRuntimeConfig()
 
 const password = ref("")

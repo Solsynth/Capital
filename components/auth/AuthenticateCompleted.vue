@@ -2,21 +2,19 @@
   <div>
     <v-icon icon="mdi-lan-check" size="32" color="grey-darken-3" class="mb-3" />
 
-    <h1 class="font-bold text-xl">All Done!</h1>
-    <p>Welcome back! You just signed in right now! We're going to direct you to dashboard...</p>
+    <h1 class="font-bold text-xl">{{ t("signInCompleted") }}</h1>
+    <p>{{ t("signInCompletedCaption") }}</p>
 
     <v-expand-transition>
       <v-alert v-show="error" variant="tonal" type="error" class="text-xs mb-3">
-        Something went wrong... {{ error }}
+        {{ t("errorOccurred", [error]) }}
       </v-alert>
     </v-expand-transition>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
-import { useRoute, useRouter } from "vue-router"
-
+const { t } = useI18n()
 const config = useRuntimeConfig()
 
 const route = useRoute()

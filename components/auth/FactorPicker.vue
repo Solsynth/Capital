@@ -17,13 +17,13 @@
 
       <v-expand-transition>
         <v-alert v-show="error" variant="tonal" type="error" class="text-xs mb-3">
-          Something went wrong... {{ error }}
+          {{ t("errorOccurred", [error]) }}
         </v-alert>
       </v-expand-transition>
 
       <div class="flex justify-end">
         <v-btn variant="text" color="primary" class="justify-self-end" append-icon="mdi-arrow-right" @click="submit">
-          Next
+          {{ t("next") }}
         </v-btn>
       </div>
     </div>
@@ -31,8 +31,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref } from "vue"
-
+const { t } = useI18n()
 const config = useRuntimeConfig()
 
 const focus = ref<number | null>(null)
@@ -78,7 +77,7 @@ async function submit() {
 function getFactorType(item: any) {
   switch (item.type) {
     case 1:
-      return { icon: "mdi-email-fast", label: "Email Validation" }
+      return { icon: "mdi-email-fast", label: t('multiFactorTypeEmail') }
   }
 }
 

@@ -6,9 +6,9 @@
       <v-card-text class="card-grid pa-9">
         <div>
           <v-avatar color="accent" icon="mdi-login-variant" size="large" class="card-rounded mb-2" />
-          <h1 class="text-2xl">Sign in</h1>
-          <p v-if="ticket">We need to verify that the person trying to access your account is you.</p>
-          <p v-else>Sign in via your Solar ID to access the entire Solar Network.</p>
+          <h1 class="text-2xl">{{ t("signInTitle") }}</h1>
+          <p v-if="ticket" class="max-w-5/6">{{ t("multiFactorCaption") }}</p>
+          <p v-else class="max-w-5/6">{{ t("signInCaption") }}</p>
         </div>
 
         <v-window :touch="false" :model-value="panel" class="pa-2 mx-[-0.5rem]">
@@ -26,11 +26,12 @@
 
 <script setup lang="ts">
 import { type Component, onMounted, ref } from "vue"
-import { useRoute } from "vue-router"
 import FactorPicker from "~/components/auth/FactorPicker.vue"
 import FactorApplicator from "~/components/auth/FactorApplicator.vue"
 import AccountAuthenticate from "~/components/auth/Authenticate.vue"
 import AuthenticateCompleted from "~/components/auth/AuthenticateCompleted.vue"
+
+const { t } = useI18n()
 
 definePageMeta({
   alias: ["/auth/mfa"],

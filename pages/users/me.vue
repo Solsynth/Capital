@@ -36,7 +36,7 @@
       </div>
 
       <div class="mb-5 mx-[2.5ch]">
-        <copyright service="passport" :centered="false" />
+        <copyright service="passport" no-centered />
       </div>
     </div>
   </v-container>

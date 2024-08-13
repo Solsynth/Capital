@@ -1,19 +1,20 @@
 <template>
   <div class="flex items-center">
     <v-form class="flex-grow-1" @submit.prevent="submit">
-      <v-text-field label="Username" variant="solo" density="comfortable" class="mb-3" :hide-details="true"
+      <v-text-field :label="t('username')" variant="solo" density="comfortable" class="mb-3" :hide-details="true"
                     :disabled="props.loading" v-model="probe" />
-      <v-text-field label="Password" variant="solo" density="comfortable" type="password" :disabled="props.loading"
+      <v-text-field :label="t('password')" variant="solo" density="comfortable" type="password"
+                    :disabled="props.loading"
                     v-model="password" />
 
       <v-expand-transition>
         <v-alert v-show="error" variant="tonal" type="error" class="text-xs mb-3">
-          Something went wrong... {{ error }}
+          {{ t("errorOccurred", [error]) }}
         </v-alert>
       </v-expand-transition>
 
       <div class="flex justify-between">
-        <v-btn type="button" variant="plain" color="grey-darken-3" to="/auth/sign-up">Sign up</v-btn>
+        <v-btn type="button" variant="plain" color="grey-darken-3" to="/auth/sign-up">{{ t("userMenuSignUp") }}</v-btn>
 
         <v-btn
           type="submit"
@@ -23,7 +24,7 @@
           append-icon="mdi-arrow-right"
           :disabled="props.loading"
         >
-          Next
+          {{ t("next") }}
         </v-btn>
       </div>
     </v-form>
@@ -31,8 +32,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
-
+const { t } = useI18n()
 const config = useRuntimeConfig()
 
 const probe = ref("")

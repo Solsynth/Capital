@@ -19,7 +19,7 @@ export default defineNuxtConfig({
       useCookie: true,
       cookieCrossOrigin: true,
       cookieKey: "__capital_i18n",
-      redirectOn: "root",
+      redirectOn: "no prefix",
     },
     locales: [
       { code: "en", name: "English", file: "en-US.json" },
