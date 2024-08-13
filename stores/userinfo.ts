@@ -2,18 +2,6 @@ import { defineStore } from "pinia"
 import { ref } from "vue"
 import { solarFetch } from "~/utils/request"
 
-export interface Userinfo {
-  isLoggedIn: boolean
-  displayName: string
-  data: any
-}
-
-export const defaultUserinfo: Userinfo = {
-  isLoggedIn: false,
-  displayName: "Citizen",
-  data: null,
-}
-
 export function useAtk() {
   return useCookie("__hydrogen_atk", { watch: "shallow" })
 }
@@ -31,6 +19,9 @@ export const useUserinfo = defineStore("userinfo", () => {
   const isReady = ref(false)
   const isLoggedIn = ref(false)
 
+  let fetchCompleter: Completer<boolean> | null = null
+  let refreshCompleter: Completer<string> | null = null
+
   const lastRefreshedAt = ref<Date | null>(null)
 
   function setTokenSet(atk: string, rtk: string) {
@@ -43,6 +34,12 @@ export const useUserinfo = defineStore("userinfo", () => {
     if (!useLoggedInState().value) return useAtk().value
     if (lastRefreshedAt.value != null && Math.floor(Math.abs(Date.now() - lastRefreshedAt.value.getTime()) / 60000) < 3) {
       return useAtk().value
+    }
+
+    if (refreshCompleter != null) {
+      return await refreshCompleter.promise
+    } else {
+      refreshCompleter = new Completer<string>()
     }
 
     const config = useRuntimeConfig()
@@ -62,18 +59,28 @@ export const useUserinfo = defineStore("userinfo", () => {
       const out = await res.json()
       console.log("[PASSPORT] Access token has been refreshed now.")
       setTokenSet(out["access_token"], out["refresh_token"])
+      refreshCompleter.complete(out["access_token"])
       return out["access_token"]
     }
   }
 
   async function readProfiles() {
+    if (fetchCompleter != null) {
+      await fetchCompleter.promise
+      return
+    } else {
+      fetchCompleter = new Completer<boolean>()
+    }
+
     if (!useLoggedInState().value) {
+      fetchCompleter.complete(true)
       isReady.value = true
     }
 
     const res = await solarFetch("/cgi/auth/users/me")
 
     if (res.status !== 200) {
+      fetchCompleter.complete(true)
       isReady.value = true
       return
     }
@@ -83,7 +90,21 @@ export const useUserinfo = defineStore("userinfo", () => {
     isLoggedIn.value = true
     isReady.value = true
     userinfo.value = data
+    fetchCompleter.complete(true)
   }
 
-  return { userinfo, lastRefreshedAt, isLoggedIn, isReady, setTokenSet, getAtk, readProfiles }
+  return { userinfo, lastRefreshedAt, isLoggedIn, isReady, fetchCompleter, setTokenSet, getAtk, readProfiles }
 })
+
+export class Completer<T> {
+  public readonly promise: Promise<T>
+  public complete: (value: (PromiseLike<T> | T)) => void
+  private reject: (reason?: any) => void
+
+  public constructor() {
+    this.promise = new Promise<T>((resolve, reject) => {
+      this.complete = resolve
+      this.reject = reject
+    })
+  }
+}

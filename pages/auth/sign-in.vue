@@ -59,6 +59,21 @@ async function pickUpTicket() {
 
 onMounted(() => pickUpTicket())
 
+const id = useUserinfo()
+const router = useRouter()
+
+watch(id, (value) => {
+  if (value.isLoggedIn) {
+    if (route.query["close"]) {
+      window.close()
+    } else if (route.query["redirect_uri"]) {
+      window.open((route.query["redirect_uri"] as string) ?? "/", "_self")
+    } else {
+      router.push("/users/me")
+    }
+  }
+}, { deep: true, immediate: true })
+
 const panel = ref("authenticate")
 
 const panels: { [id: string]: Component } = {

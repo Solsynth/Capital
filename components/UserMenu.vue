@@ -23,7 +23,7 @@
 </template>
 
 <script setup lang="ts">
-import { defaultUserinfo, useUserinfo } from "@/stores/userinfo"
+import { useUserinfo } from "@/stores/userinfo"
 import { computed } from "vue"
 
 const {t} = useI18n()
@@ -52,7 +52,7 @@ const avatar = computed(() => {
 function signOut() {
   useCookie("__hydrogen_atk", { watch: "shallow" }).value = null
   useCookie("__hydrogen_rtk", { watch: "shallow" }).value = null
-  id.userinfo = defaultUserinfo
+  id.userinfo = null
   reloadNuxtApp()
 }
 </script>

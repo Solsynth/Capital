@@ -40,5 +40,6 @@
   "securityCaption": "Guard your Solar Network account.",
   "userActivity": "Activity",
   "userActivityCaption": "Recent posts of this user.",
-  "productArchived": "Archived"
+  "productArchived": "Archived",
+  "callbackHint": "You need to sign in before access that page. After you signed in, you will be redirected to:"
 }

@@ -40,5 +40,6 @@
   "securityCaption": "保护您的 Solar Network 账户。",
   "userActivity": "活动",
   "userActivityCaption": "此用户的最新帖子。",
-  "productArchived": "已归档"
+  "productArchived": "已归档",
+  "callbackHint": "访问该页面前，您需要先登录。登录后，我们会将把您重定向到："
 }
