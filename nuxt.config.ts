@@ -71,6 +71,8 @@ export default defineNuxtConfig({
     highlight: {
       theme: "github-dark",
     },
+    locales: ["en", "zh-CN"],
+    defaultLocale: "en",
   },
 
   pinia: {

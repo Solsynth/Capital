@@ -42,9 +42,13 @@
 </template>
 
 <script setup lang="ts">
+import { getLocale } from "~/utils/locale"
+
 const { t } = useI18n()
 
-const { data: products } = await useAsyncData("products", () => queryContent("/products").where({ archived: { $ne: true } }).limit(5).find())
+const { data: products } = await useAsyncData("products", () => {
+  return queryContent("/products").where({ _locale: getLocale(), archived: { $ne: true } }).limit(5).find()
+})
 </script>
 
 <style scoped>

@@ -28,13 +28,17 @@
 </template>
 
 <script setup lang="ts">
+import { getLocale } from "~/utils/locale"
+
 useHead({
   title: "Products",
 })
 
 const { t } = useI18n()
 
-const { data: products } = await useAsyncData("products", () => queryContent("/products").find())
+const { data: products } = await useAsyncData("products", () => {
+  return queryContent("/products").where({ _locale: getLocale() }).find()
+})
 </script>
 
 <style scoped>
