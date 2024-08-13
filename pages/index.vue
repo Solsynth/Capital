@@ -2,13 +2,13 @@
   <v-container class="flex flex-col my-2 gap-[4rem]">
     <v-row class="content-section">
       <v-col cols="12" md="4" class="flex justify-start">
-        <div>
-          <h1 class="text-4xl font-bold">Solsynth</h1>
-          <p class="text-lg mt-3">
-            An energetic software company that create wonderful software which everyone love.
+        <div class="flex flex-col items-start">
+          <h1 class="text-4xl font-bold">{{ t("brandName") }}</h1>
+          <p class="text-lg mt-3 max-w-2/3">
+            {{ t("indexIntroduce") }}
           </p>
           <p class="text-grey mt-2">
-            See some of our products just there
+            {{ t("indexProductListHint") }}
             <v-icon icon="mdi-arrow-right" size="16" class="mb-0.5" />
           </p>
         </div>
@@ -26,15 +26,14 @@
         </v-card>
       </v-col>
       <v-col cols="12" md="4" class="flex justify-end" order="first" order-md="last">
-        <div class="text-right">
-          <h1 class="text-4xl font-bold">Activities</h1>
-          <p class="text-lg mt-3">
-            Keep in touch, <br />
-            and learn what we doing recently.
+        <div class="text-right flex flex-col items-end">
+          <h1 class="text-4xl font-bold">{{ t("indexActivities") }}</h1>
+          <p class="text-lg mt-3 max-w-2/3">
+            {{ t("indexActivitiesCaption") }}
           </p>
           <p class="text-grey mt-2">
             <v-icon icon="mdi-arrow-left" size="16" class="mb-0.5" />
-            See some posts in our realm just here
+            {{ t("indexActivitiesHint") }}
           </p>
         </div>
       </v-col>
@@ -43,6 +42,8 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
+
 const { data: products } = await useAsyncData("products", () => queryContent("/products").where({ archived: { $ne: true } }).limit(5).find())
 </script>
 

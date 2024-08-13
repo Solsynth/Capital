@@ -1,5 +1,6 @@
 <template>
   <v-app>
+    <nuxt-loading-indicator color="white" />
     <nuxt-layout>
       <nuxt-page />
     </nuxt-layout>

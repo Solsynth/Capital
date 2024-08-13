@@ -13,6 +13,23 @@ export default defineNuxtConfig({
     ],
   },
 
+  i18n: {
+    strategy: "no_prefix",
+    detectBrowserLanguage: {
+      useCookie: true,
+      cookieCrossOrigin: true,
+      cookieKey: "__capital_i18n",
+      redirectOn: "root",
+    },
+    locales: [
+      { code: "en", name: "English", file: "en-US.json" },
+      { code: "zh-CN", name: "简体中文", file: "zh-CN.json" },
+    ],
+    lazy: true,
+    langDir: "lang",
+    defaultLocale: "en",
+  },
+
   css: ["@/assets/index.css"],
 
   runtimeConfig: {
@@ -70,6 +87,7 @@ export default defineNuxtConfig({
     "@nuxt/image",
     "@nuxtjs/sitemap",
     "@pinia/nuxt",
+    "@nuxtjs/i18n",
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         // @ts-expect-error
