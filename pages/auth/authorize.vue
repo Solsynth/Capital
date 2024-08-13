@@ -4,8 +4,8 @@
       <v-card-text class="card-grid pa-9">
         <div>
           <v-avatar color="accent" icon="mdi-connection" size="large" class="card-rounded mb-2" />
-          <h1 class="text-2xl">Connect to third-party</h1>
-          <p>One Solarpass, entire internet.</p>
+          <h1 class="text-2xl">{{ t("authorizeTitle") }}</h1>
+          <p>{{ t("authorizeCaption") }}</p>
         </div>
 
         <v-window :touch="false" :model-value="panel" class="pa-2 mx-[-0.5rem]">
@@ -13,12 +13,11 @@
             <div class="flex flex-col gap-2">
               <v-expand-transition>
                 <v-alert v-show="error" variant="tonal" type="error" class="text-xs mb-3">
-                  <p>Something went wrong... {{ error }}</p>
+                  <p>{{ t("errorOccurred", [error]) }}</p>
                   <br />
 
                   <p class="font-bold">
-                    It's usually not our fault. Try bringing this link to give feedback to the developer of the app you
-                    came from.
+                    {{ t("authorizeErrorHint") }}
                   </p>
                 </v-alert>
               </v-expand-transition>
@@ -30,15 +29,15 @@
                 <div class="mt-3">
                   <div class="mt-5 flex justify-between">
                     <v-btn prepend-icon="mdi-close" variant="text" color="error" :disabled="loading" @click="decline">
-                      Decline
+                      {{ t("decline") }}
                     </v-btn>
                     <v-btn append-icon="mdi-check" variant="tonal" color="success" :disabled="loading" @click="approve">
-                      Approve
+                      {{ t("approve") }}
                     </v-btn>
                   </div>
 
                   <div class="mt-5 text-xs text-center opacity-75">
-                    <p>After approve their request, you will be redirect to</p>
+                    <p>{{ t("authorizeRedirectHint") }}</p>
                     <p class="text-mono">{{ route.query["redirect_uri"] }}</p>
                   </div>
                 </div>
@@ -50,12 +49,12 @@
             <div>
               <v-icon icon="mdi-fire" size="32" color="grey-darken-3" class="mb-3" />
 
-              <h1 class="font-bold text-xl">Authorized</h1>
-              <p>You're done! We successfully established connection between you and {{ metadata?.name }}.</p>
+              <h1 class="font-bold text-xl">{{ t("authorizeCompleted") }}</h1>
+              <p>{{ t("authorizeCompletedCaption", [metadata?.name]) }}</p>
 
-              <p class="mt-3">Now you can continue your their app, we will redirect you soon.</p>
+              <p class="mt-3">{{ t("authorizeCompletedRedirect") }}</p>
 
-              <p class="mt-3">Teleporting you to...</p>
+              <p class="mt-3">{{ t("authorizeCompletedRedirectHint") }}</p>
               <p class="text-xs text-mono">{{ route.query["redirect_uri"] }}</p>
             </div>
           </v-window-item>
@@ -68,13 +67,13 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue"
 import { solarFetch } from "~/utils/request"
 
 definePageMeta({
   middleware: ["auth"],
 })
 
+const { t } = useI18n()
 const route = useRoute()
 
 const error = ref<string | null>(null)

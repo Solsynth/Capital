@@ -41,5 +41,15 @@
   "userActivity": "活动",
   "userActivityCaption": "此用户的最新帖子。",
   "productArchived": "已归档",
-  "callbackHint": "访问该页面前，您需要先登录。登录后，我们会将把您重定向到："
+  "callbackHint": "访问该页面前，您需要先登录。登录后，我们会将把您重定向到：",
+  "authorizeTitle": "连接到第三方",
+  "authorizeCaption": "一个 Solar Network 账户，连接整个互联网。",
+  "authorizeErrorHint": "通常这不是我们的错误。尝试将此链接反馈给您来源应用的开发者。",
+  "authorizeRedirectHint": "在批准他们的请求后，您将被重定向到",
+  "authorizeCompleted": "已授权",
+  "authorizeCompletedCaption": "完成！我们已成功在您与 {0} 之间建立连接。",
+  "authorizeCompletedRedirect": "现在您可以继续使用他们的应用，我们会很快将您重定向。",
+  "authorizeCompletedRedirectHint": "正在传送到…",
+  "decline": "拒绝",
+  "approve": "批准"
 }
