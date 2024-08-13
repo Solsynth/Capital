@@ -27,8 +27,9 @@ export function useLoggedInState() {
 }
 
 export const useUserinfo = defineStore("userinfo", () => {
-  const userinfo = ref(defaultUserinfo)
+  const userinfo = ref<any>(null)
   const isReady = ref(false)
+  const isLoggedIn = ref(false)
 
   const lastRefreshedAt = ref<Date | null>(null)
 
@@ -39,6 +40,7 @@ export const useUserinfo = defineStore("userinfo", () => {
   }
 
   async function getAtk() {
+    if (!useLoggedInState().value) return useAtk().value
     if (lastRefreshedAt.value != null && Math.floor(Math.abs(Date.now() - lastRefreshedAt.value.getTime()) / 60000) < 3) {
       return useAtk().value
     }
@@ -69,23 +71,19 @@ export const useUserinfo = defineStore("userinfo", () => {
       isReady.value = true
     }
 
-    const config = useRuntimeConfig()
-
     const res = await solarFetch("/cgi/auth/users/me")
 
     if (res.status !== 200) {
+      isReady.value = true
       return
     }
 
     const data = await res.json()
 
+    isLoggedIn.value = true
     isReady.value = true
-    userinfo.value = {
-      isLoggedIn: true,
-      displayName: data["nick"],
-      data: data,
-    }
+    userinfo.value = data
   }
 
-  return { userinfo, lastRefreshedAt, isReady, setTokenSet, getAtk, readProfiles }
+  return { userinfo, lastRefreshedAt, isLoggedIn, isReady, setTokenSet, getAtk, readProfiles }
 })

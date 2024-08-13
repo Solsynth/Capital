@@ -6,8 +6,8 @@
       <div class="my-5 flex flex-row gap-4">
         <v-avatar :image="urlOfAvatar" />
         <div class="flex flex-col">
-          <span>{{ auth.userinfo.data?.nick }} <span class="text-xs">@{{ auth.userinfo.data?.name }}</span></span>
-          <span class="text-sm">{{ auth.userinfo.data?.description }}</span>
+          <span>{{ auth.userinfo?.nick }} <span class="text-xs">@{{ auth.userinfo?.name }}</span></span>
+          <span class="text-sm">{{ auth.userinfo?.description }}</span>
         </div>
       </div>
 
@@ -51,6 +51,6 @@ const config = useRuntimeConfig()
 
 const auth = useUserinfo()
 
-const urlOfAvatar = computed(() => auth.userinfo.data?.avatar ? `${config.public.solarNetworkApi}/cgi/files/attachments/${auth.userinfo.data.avatar}` : void 0)
-const urlOfBanner = computed(() => auth.userinfo.data?.banner ? `${config.public.solarNetworkApi}/cgi/files/attachments/${auth.userinfo.data.banner}` : void 0)
+const urlOfAvatar = computed(() => auth.userinfo?.avatar ? `${config.public.solarNetworkApi}/cgi/files/attachments/${auth.userinfo.avatar}` : void 0)
+const urlOfBanner = computed(() => auth.userinfo?.banner ? `${config.public.solarNetworkApi}/cgi/files/attachments/${auth.userinfo.banner}` : void 0)
 </script>
