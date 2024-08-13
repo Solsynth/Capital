@@ -24,6 +24,7 @@ export default defineNuxtConfig({
     locales: [
       { code: "en", name: "English", file: "en-US.json" },
       { code: "zh-CN", name: "简体中文", file: "zh-CN.json" },
+      { code: "ml-SG", name: "羊语", file: "ml-SG.json" },
     ],
     lazy: true,
     langDir: "lang",
