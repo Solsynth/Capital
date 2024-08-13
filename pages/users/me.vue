@@ -13,8 +13,8 @@
 
       <div class="mb-5">
         <div class="mx-[2.5ch]">
-          <h2 class="text-xl">Personalize</h2>
-          <span class="text-sm">Bring your own color to the Solar Network.</span>
+          <h2 class="text-xl">{{ t("personalize") }}</h2>
+          <span class="text-sm">{{ t("personalizeCaption") }}</span>
         </div>
 
         <v-alert
@@ -22,14 +22,14 @@
           type="info"
           variant="tonal"
           density="comfortable"
-          text="This part of the functionality has been transferred to our application Solian, please download it or open it in your browser. To learn more, please visit the project description page."
+          :text="t('transferredToSolianHint')"
         />
       </div>
 
       <div class="mb-5">
         <div class="mx-[2.5ch]">
-          <h2 class="text-xl">Security</h2>
-          <span class="text-sm">Guard your Solar Network account.</span>
+          <h2 class="text-xl">{{ t("security") }}</h2>
+          <span class="text-sm">{{ t("securityCaption") }}</span>
         </div>
 
         <account-auth-ticket-table class="mt-3" />
@@ -47,6 +47,7 @@ definePageMeta({
   middleware: ["auth"],
 })
 
+const { t } = useI18n()
 const config = useRuntimeConfig()
 
 const auth = useUserinfo()

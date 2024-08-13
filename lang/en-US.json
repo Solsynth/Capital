@@ -32,5 +32,13 @@
   "multiFactorHint": "Check your inbox",
   "multiFactorTypeEmail": "Email One-time-password",
   "signInCompleted": "All Done",
-  "signInCompletedCaption": "Welcome back! You just signed in right now! We're going to direct you to dashboard..."
+  "signInCompletedCaption": "Welcome back! You just signed in right now! We're going to direct you to dashboard...",
+  "transferredToSolianHint": "This part of the functionality has been transferred to our application Solian, please download it or open it in your browser. To learn more, please visit the project description page.",
+  "personalize": "Personalize",
+  "personalizeCaption": "Bring your own color to the Solar Network.",
+  "security": "Security",
+  "securityCaption": "Guard your Solar Network account.",
+  "userActivity": "Activity",
+  "userActivityCaption": "Recent posts of this user.",
+  "productArchived": "Archived"
 }

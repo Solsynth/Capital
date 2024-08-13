@@ -18,7 +18,7 @@
               size="small"
               class="mx-[-6px]"
             >
-              Archived
+              {{ t("productArchived") }}
             </v-chip>
           </v-col>
         </v-row>
@@ -29,8 +29,10 @@
 
 <script setup lang="ts">
 useHead({
-  title: 'Products',
+  title: "Products",
 })
+
+const { t } = useI18n()
 
 const { data: products } = await useAsyncData("products", () => queryContent("/products").find())
 </script>
