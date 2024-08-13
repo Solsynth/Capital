@@ -1,6 +1,11 @@
 {
   "brandName": "索尔辛茨",
   "brandNameFormal": "索尔辛茨实业有限公司",
+  "navProducts": "制品",
+  "navActivity": "动态",
+  "navActivityCaption": "了解我们官方近期的活动。",
+  "navGallery": "相簿",
+  "navGalleryCaption": "探索整个 Solar Network 上的文件。",
   "indexIntroduce": "一家充满活力的软件公司，创造了人人喜爱的精彩软件。",
   "indexProductListHint": "在这里看看我们的一些产品",
   "indexActivities": "动态",

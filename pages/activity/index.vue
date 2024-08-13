@@ -1,8 +1,8 @@
 <template>
   <v-container class="content-container mx-auto">
     <div class="my-3 mx-[3.5ch]">
-      <h1 class="text-2xl">Activity</h1>
-      <span>Explore our official recent activities.</span>
+      <h1 class="text-2xl">{{ t("navActivity") }}</h1>
+      <span>{{ t("navActivityCaption") }}</span>
     </div>
 
     <v-infinite-scroll :items="items" :onLoad="load">
@@ -14,8 +14,18 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
+
 useHead({
-  title: 'Activity',
+  title: t("navActivity"),
+})
+
+useSeoMeta({
+  title: t("navActivity"),
+  ogTitle: t("navActivity"),
+  description: t("navActivityCaption"),
+  ogDescription: t("navActivityCaption"),
+  ogType: "website",
 })
 
 const config = useRuntimeConfig()

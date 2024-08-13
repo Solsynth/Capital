@@ -1,8 +1,8 @@
 <template>
   <v-container fluid>
     <div class="mt-3 mb-6.5 mx-[3.5ch] text-center">
-      <h1 class="text-2xl">Gallery</h1>
-      <span>Explore files that uploaded by Solar Network users.</span>
+      <h1 class="text-2xl">{{ t("navGallery") }}</h1>
+      <span>{{ t("navGalleryCaption") }}</span>
     </div>
 
     <div class="album">
@@ -18,14 +18,23 @@
 </template>
 
 <script setup lang="ts">
+const { t } = useI18n()
+
 useHead({
-  title: 'Gallery',
+  title: t("navGallery"),
+})
+
+useSeoMeta({
+  title: t("navGallery"),
+  ogTitle: t("navGallery"),
+  description: t("navGalleryCaption"),
+  ogDescription: t("navGalleryCaption"),
+  ogType: "website",
 })
 
 const config = useRuntimeConfig()
 
 const items = ref<any[]>([])
-
 const loading = ref(false)
 
 async function load() {
@@ -37,10 +46,6 @@ async function load() {
   items.value.push(...result.data)
 
   loading.value = false
-}
-
-function getAttachmentUrl(id: number) {
-  return `${config.public.solarNetworkApi}/cgi/files/attachments/${id}`
 }
 
 onMounted(() => {

@@ -6,9 +6,9 @@
       </nuxt-link>
 
       <div class="nav-links overflow-y-auto flex">
-        <v-btn variant="text" text="Products" to="/products" exact />
-        <v-btn variant="text" text="Activity" to="/activity" exact />
-        <v-btn variant="text" text="Gallery" to="/gallery" exact />
+        <v-btn variant="text" :text="t('navProducts')" to="/products" exact />
+        <v-btn variant="text" :text="t('navActivity')" to="/activity" exact />
+        <v-btn variant="text" :text="t('navGallery')" to="/gallery" exact />
       </div>
 
       <v-spacer></v-spacer>
@@ -48,7 +48,7 @@
 <script setup lang="ts">
 import Logo from "../assets/logo-w-shadow.png"
 
-const { locale, locales, setLocale } = useI18n()
+const { locale, locales, setLocale, t } = useI18n()
 </script>
 
 <style scoped>
