@@ -75,18 +75,18 @@ definePageMeta({
   middleware: ["auth"],
 })
 
-const config = useRuntimeConfig()
-
 const route = useRoute()
 
 const error = ref<string | null>(null)
-const loading = ref(false)
+const loading = ref(true)
 
 const metadata = ref<any>(null)
 
 const panel = ref("confirm")
 
 async function tryAuthorize() {
+  loading.value = true
+
   const res = await solarFetch(`/cgi/auth/auth/o/authorize${window.location.search}`)
 
   if (res.status !== 200) {
@@ -104,7 +104,7 @@ async function tryAuthorize() {
   }
 }
 
-tryAuthorize()
+onMounted(() => tryAuthorize())
 
 function decline() {
   if (window.history.length > 0) {
