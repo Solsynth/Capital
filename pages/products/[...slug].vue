@@ -1,6 +1,6 @@
 <template>
   <v-container class="content-container mx-auto">
-    <v-card v-if="page" class="mb-5" :to="page._path">
+    <v-card v-if="page" class="mb-5">
       <v-card-text>
         <v-row>
           <v-col cols="12" md="4">

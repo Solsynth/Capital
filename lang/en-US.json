@@ -51,5 +51,6 @@
   "userActivity": "Activity",
   "userActivityCaption": "Recent posts of this user.",
   "productArchived": "Archived",
-  "callbackHint": "You need to sign in before access that page. After you signed in, you will be redirected to:"
+  "callbackHint": "You need to sign in before access that page. After you signed in, you will be redirected to:",
+  "lastUpdatedAt": "Last updated at {0}"
 }
