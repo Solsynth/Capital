@@ -25,6 +25,18 @@ if (page.value == null) {
     statusMessage: "Term Not Found",
   })
 }
+
+useHead({
+  title: page.value.title,
+})
+
+useSeoMeta({
+  title: page.value.title,
+  ogTitle: page.value.title,
+  ogUrl: `${useRuntimeConfig().public.siteUrl}${route.fullPath}`,
+  publisher: "Solar Network",
+  ogSiteName: "Solsynth Capital",
+})
 </script>
 
 <style scoped>

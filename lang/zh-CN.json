@@ -52,5 +52,7 @@
   "authorizeCompletedRedirectHint": "正在传送到…",
   "decline": "拒绝",
   "approve": "批准",
-  "lastUpdatedAt": "最后更新于 {0}"
+  "lastUpdatedAt": "最后更新于 {0}",
+  "learnMore": "了解更多",
+  "open": "打开"
 }

@@ -10,13 +10,13 @@
             <p class="text-lg text-white">{{ item?.description }}</p>
 
             <div class="flex justify-center mt-3">
-              <v-btn variant="text" color="white" prepend-icon="mdi-school" text="Learn more" :to="item._path" />
+              <v-btn variant="text" color="white" prepend-icon="mdi-school" :text="t('learnMore')" :to="item._path" />
               <v-btn
                 v-if="item?.url"
                 variant="text"
                 color="white"
                 prepend-icon="mdi-launch"
-                text="Open"
+                :text="t('open')"
                 :href="item?.url"
                 target="_blank"
               />
@@ -30,7 +30,7 @@
                 color="warning"
                 size="small"
               >
-                Archived
+                {{ t("productArchived") }}
               </v-chip>
             </div>
           </v-col>
@@ -42,4 +42,6 @@
 
 <script setup lang="ts">
 const props = defineProps<{ products: any[] }>()
+
+const { t } = useI18n()
 </script>

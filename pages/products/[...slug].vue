@@ -65,6 +65,20 @@ if (page.value == null) {
     statusMessage: "Product Not Found",
   })
 }
+
+useHead({
+  title: page.value.title,
+})
+
+useSeoMeta({
+  title: page.value.title,
+  description: page.value.description,
+  ogTitle: page.value.title,
+  ogDescription: page.value.description,
+  ogUrl: `${useRuntimeConfig().public.siteUrl}${route.fullPath}`,
+  publisher: "Solar Network",
+  ogSiteName: "Solsynth Capital",
+})
 </script>
 
 <style scoped>
