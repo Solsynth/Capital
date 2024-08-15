@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar flat color="primary">
+  <v-app-bar flat color="primary" scroll-behavior="hide">
     <v-container fluid class="mx-auto d-flex align-center justify-center px-8">
       <nuxt-link to="/" exact>
         <v-avatar class="me-4 ms-1" color="transparent" size="32" :image="Logo" />
