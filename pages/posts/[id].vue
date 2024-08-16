@@ -41,8 +41,18 @@
       </span>
     </div>
 
-    <div v-if="post.tags?.length > 0" class="text-xs text-grey flex flex-row gap-1 mb-3">
-      <span v-for="tag in post.tags">#{{ tag.alias }}</span>
+    <div
+      v-if="post.tags?.length > 0"
+      class="text-xs text-grey flex flex-row gap-1 mb-3"
+    >
+      <nuxt-link
+        v-for="tag in post.tags"
+        :to="`/posts/tags/${tag.alias}`"
+        class="hover:underline hover:underline-dotted"
+        @click.stop
+      >
+        #{{ tag.alias }}
+      </nuxt-link>
     </div>
 
     <div class="text-xs text-grey flex flex-col mb-5">

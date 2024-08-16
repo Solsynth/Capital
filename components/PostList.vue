@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ author?: string, realmId?: number }>()
+const props = defineProps<{ author?: string, tag?: string, category?: string, realmId?: number }>()
 
 const config = useRuntimeConfig()
 
@@ -24,6 +24,13 @@ async function loadPost({ done }: any) {
   }
   if (props.realmId) {
     searchQueries.set("realmId", props.realmId.toString())
+  }
+
+  if (props.tag) {
+    searchQueries.set("tag", props.tag)
+  }
+  if (props.category) {
+    searchQueries.set("category", props.category)
   }
 
   const res = await fetch(`${config.public.solarNetworkApi}/cgi/interactive/posts?` + searchQueries)
