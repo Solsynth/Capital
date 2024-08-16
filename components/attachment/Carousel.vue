@@ -7,13 +7,19 @@
     height="auto"
   >
     <v-carousel-item v-for="item in metadata" class="fill-height">
-      <attachment-renderer :item="item" />
+      <nuxt-link v-if="item.mimetype.split('/')[0] == 'image' && !props.noClickableAttachment"
+                 :to="`/gallery/${item.id}`">
+        <attachment-renderer :item="item" />
+      </nuxt-link>
+      <div v-else>
+        <attachment-renderer :item="item" />
+      </div>
     </v-carousel-item>
   </v-carousel>
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ attachments: number[] }>()
+const props = defineProps<{ attachments: number[], noClickableAttachment?: boolean }>()
 const emits = defineEmits(["update:metadata"])
 
 const config = useRuntimeConfig()

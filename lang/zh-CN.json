@@ -6,6 +6,8 @@
   "navActivityCaption": "了解我们官方近期的活动。",
   "navGallery": "相簿",
   "navGalleryCaption": "探索整个 Solar Network 上的文件。",
+  "navPosts": "帖子",
+  "navPostsCaption": "探索整个 Solar Network 上的帖子。",
   "indexIntroduce": "一家充满活力的软件公司，创造了人人喜爱的精彩软件。",
   "indexProductListHint": "在这里看看我们的一些产品",
   "indexActivities": "动态",
@@ -54,5 +56,7 @@
   "approve": "批准",
   "lastUpdatedAt": "最后更新于 {0}",
   "learnMore": "了解更多",
-  "open": "打开"
+  "open": "打开",
+  "postReplies": "回复",
+  "postRepliesCaption": "该帖子的全部回复"
 }

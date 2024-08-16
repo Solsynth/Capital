@@ -20,7 +20,7 @@
   <v-img v-else-if="item.mimetype.split('/')[0] == 'image'" :src="getAttachmentUrl(item.id)" :alt="item.alt"
          class="w-full h-full" cover />
   <video v-else-if="item.mimetype.split('/')[0] == 'video'" :src="getAttachmentUrl(item.id)" class="w-full h-full"
-         controls />
+         controls @click.stop />
   <v-sheet v-else color="rgba(0, 0, 0, .4)" height="calc(100% + 24px)" class="p-5">
     <v-row class="fill-height" align="center" justify="center">
       <v-col class="text-center">

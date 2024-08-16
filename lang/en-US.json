@@ -6,6 +6,8 @@
   "navActivityCaption": "Explore our official recent activities.",
   "navGallery": "Gallery",
   "navGalleryCaption": "Explore files that uploaded by Solar Network users.",
+  "navPosts": "Posts",
+  "navPostsCaption": "Explore posts that posted by Solar Network users.",
   "indexIntroduce": "An energetic software company that create wonderful software which everyone love.",
   "indexProductListHint": "See some of our products just there",
   "indexActivities": "Activities",
@@ -54,5 +56,7 @@
   "callbackHint": "You need to sign in before access that page. After you signed in, you will be redirected to:",
   "lastUpdatedAt": "Last updated at {0}",
   "learnMore": "Learn more",
-  "open": "Open"
+  "open": "Open",
+  "postReplies": "Replies",
+  "postRepliesCaption": "All replies of this post"
 }

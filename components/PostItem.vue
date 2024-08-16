@@ -27,7 +27,7 @@
       </article>
 
       <v-card v-if="post.body?.attachments?.length > 0" class="mb-5">
-        <attachment-carousel :attachments="post.body?.attachments" />
+        <attachment-carousel :no-clickable-attachment="props.noClickableAttachment" :attachments="post.body?.attachments" />
       </v-card>
 
       <div class="text-sm flex flex-col">
@@ -53,6 +53,6 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ post: any, forceShowContent?: boolean }>()
+const props = defineProps<{ post: any, forceShowContent?: boolean, noClickableAttachment?: boolean }>()
 const config = useRuntimeConfig()
 </script>

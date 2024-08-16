@@ -24,11 +24,7 @@
       </div>
     </div>
 
-    <v-infinite-scroll :items="posts" :onLoad="loadPost">
-      <template v-for="item in posts" :key="item">
-        <post-item :post="item" />
-      </template>
-    </v-infinite-scroll>
+    <post-list v-if="account" :author="account.name" />
   </v-container>
 </template>
 

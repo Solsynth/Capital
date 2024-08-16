@@ -45,9 +45,15 @@
       <span v-for="tag in post.tags">#{{ tag.alias }}</span>
     </div>
 
-    <div class="text-xs text-grey flex flex-col">
+    <div class="text-xs text-grey flex flex-col mb-5">
       <span>Solar Network Post Web Preview</span>
       <span>To get full view of this post, open it on <a class="underline" :href="externalOpenLink">Solian</a></span>
+    </div>
+
+    <div v-if="post.metric.reply_count" class="mb-5">
+      <v-card variant="outlined" :title="t('postReplies')" :subtitle="t('postRepliesCaption')">
+        <post-reply-list class="mt-[-20px] mx-[-1ch] mb-3" :post-id="post.id" />
+      </v-card>
     </div>
   </v-container>
 </template>
@@ -59,6 +65,8 @@ const config = useRuntimeConfig()
 const attachments = ref<any[]>([])
 const firstImage = ref<string | null>()
 const firstVideo = ref<string | null>()
+
+const { t } = useI18n()
 
 const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/interactive/posts/${route.params.id}`)
 

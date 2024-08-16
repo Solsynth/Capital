@@ -1,11 +1,11 @@
 <template>
   <v-container class="content-container mx-auto">
     <div class="my-3 mx-[3.5ch]">
-      <h1 class="text-2xl">{{ t("navActivity") }}</h1>
-      <span>{{ t("navActivityCaption") }}</span>
+      <h1 class="text-2xl">{{ t("navPosts") }}</h1>
+      <span>{{ t("navPostsCaption") }}</span>
     </div>
 
-    <post-list :realm-id="config.public.solarRealmId" />
+    <post-list />
   </v-container>
 </template>
 
@@ -23,8 +23,6 @@ useSeoMeta({
   ogDescription: t("navActivityCaption"),
   ogType: "website",
 })
-
-const config = useRuntimeConfig()
 </script>
 
 <style scoped>
