@@ -16,7 +16,7 @@ export default defineNuxtConfig({
           "/api/sitemap/posts",
         ],
       },
-    }
+    },
   },
 
   i18n: {
@@ -71,6 +71,11 @@ export default defineNuxtConfig({
     },
     highlight: {
       theme: "github-dark",
+      langs: ["json", "yaml", "toml", "java", "javascript", "astro", "css", "scss", "dart", "go", "typescript", "c", "csharp",
+        "cpp", "bat", "bash", "sh", "dockerfile", "dotenv", "erlang", "fsharp", "markdown", "log",
+        "lua", "objc", "swift", "regex", "ruby", "rust", "postcss", "blade", "asciidoc", "cmake", "cobol", "pascal",
+        "nginx", "angular-html", "angular-ts", "gdscript", "gdshader", "gdresource", "groovy", "gql", "python",
+        "crystal", "sql", "plsql", "kotlin", "html", "vue", "gleam", "julia", "lisp", "xml", "csv"],
     },
     locales: ["en", "zh-CN"],
     defaultLocale: "en",

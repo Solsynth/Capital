@@ -6,8 +6,8 @@
       <div class="my-5 flex flex-row gap-4">
         <v-avatar :image="urlOfAvatar" />
         <div class="flex flex-col">
-          <span>{{ account.nick }} <span class="text-xs">@{{ account.name }}</span></span>
-          <span class="text-sm">{{ account.description }}</span>
+          <span>{{ account?.nick }} <span class="text-xs">@{{ account?.name }}</span></span>
+          <span class="text-sm">{{ account?.description }}</span>
         </div>
       </div>
 
@@ -45,8 +45,15 @@ const posts = ref<any[]>([])
 
 const { data: account } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/auth/users/${route.params.name}`)
 
-const urlOfAvatar = computed(() => account.value.avatar ? `${config.public.solarNetworkApi}/cgi/files/attachments/${account.value.avatar}` : void 0)
-const urlOfBanner = computed(() => account.value.banner ? `${config.public.solarNetworkApi}/cgi/files/attachments/${account.value.banner}` : void 0)
+if (account.value == null) {
+  throw createError({
+    statusCode: 404,
+    statusMessage: "User Not Found",
+  })
+}
+
+const urlOfAvatar = computed(() => account.value?.avatar ? `${config.public.solarNetworkApi}/cgi/files/attachments/${account.value.avatar}` : void 0)
+const urlOfBanner = computed(() => account.value?.banner ? `${config.public.solarNetworkApi}/cgi/files/attachments/${account.value.banner}` : void 0)
 
 const externalOpenLink = computed(() => `${config.public.solianUrl}/accounts/view/${route.params.name}`)
 
