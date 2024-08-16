@@ -17,8 +17,8 @@
       </v-col>
     </v-row>
   </v-sheet>
-  <v-img v-else-if="item.mimetype.split('/')[0] == 'image'" :src="getAttachmentUrl(item.id)" class="w-full h-full"
-         cover />
+  <v-img v-else-if="item.mimetype.split('/')[0] == 'image'" :src="getAttachmentUrl(item.id)" :alt="item.alt"
+         class="w-full h-full" cover />
   <video v-else-if="item.mimetype.split('/')[0] == 'video'" :src="getAttachmentUrl(item.id)" class="w-full h-full"
          controls />
   <v-sheet v-else color="rgba(0, 0, 0, .4)" height="calc(100% + 24px)" class="p-5">

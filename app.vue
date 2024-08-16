@@ -14,6 +14,16 @@ import "@unocss/reset/tailwind.css"
 const theme = useTheme()
 const auth = useUserinfo()
 
+const { locale } = useI18n()
+
+watch(locale, (value) => {
+  useHead({
+    htmlAttrs: {
+      lang: value,
+    },
+  })
+}, { deep: true, immediate: true })
+
 onMounted(() => {
   theme.global.name.value = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
 

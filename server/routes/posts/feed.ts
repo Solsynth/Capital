@@ -66,12 +66,11 @@ export default defineEventHandler(async (event) => {
     })
   }
 
-  setResponseHeader(event, "Content-Type", "application/rss+xml")
-
   switch (queries.type) {
     case "json":
       return feed.json1()
     case "rss":
+      setResponseHeader(event, "Content-Type", "application/rss+xml; charset=utf-8")
       return feed.rss2()
     default:
       return feed.atom1()

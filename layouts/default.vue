@@ -2,7 +2,7 @@
   <v-app-bar flat color="primary" scroll-behavior="hide">
     <v-container fluid class="mx-auto d-flex align-center justify-center px-8">
       <nuxt-link to="/" exact>
-        <v-avatar class="me-4 ms-1" color="transparent" size="32" :image="Logo" />
+        <v-img class="me-4 ms-1" width="32" height="32" alt="Logo" :src="Logo" />
       </nuxt-link>
 
       <div class="nav-links overflow-y-auto flex">

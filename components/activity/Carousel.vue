@@ -2,7 +2,7 @@
   <v-carousel v-if="!loading" show-arrows="hover" cycle hide-delimiters progress="primary">
     <v-carousel-item v-for="(item, i) in items" :key="i">
       <v-sheet color="rgba(0, 0, 0, .4)"  class="h-full w-full flex items-center justify-center post-container overflow-scroll">
-        <post-item class="mt-5 mb-2" :post="item" />
+        <post-item class="mt-5 mb-2" force-show-content :post="item" />
       </v-sheet>
     </v-carousel-item>
   </v-carousel>

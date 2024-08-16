@@ -27,7 +27,7 @@
       </v-col>
       <v-col cols="12" md="4" class="flex justify-end" order="first" order-md="last">
         <div class="text-right flex flex-col items-end">
-          <h1 class="text-4xl font-bold">{{ t("indexActivities") }}</h1>
+          <h2 class="text-4xl font-bold">{{ t("indexActivities") }}</h2>
           <p class="text-lg mt-3 max-w-2/3">
             {{ t("indexActivitiesCaption") }}
           </p>
@@ -45,6 +45,20 @@
 import { getLocale } from "~/utils/locale"
 
 const { t } = useI18n()
+
+useHead({
+  title: t("brandName"),
+})
+
+useSeoMeta({
+  title: t("brandName"),
+  description: t("indexIntroduce"),
+  ogTitle: t("brandName"),
+  ogDescription: t("indexIntroduce"),
+  ogUrl: useRuntimeConfig().public.siteUrl,
+  ogType: "website",
+  ogSiteName: "Solsynth Capital",
+})
 
 const { data: products } = await useAsyncData("products", () => {
   return queryContent("/products").where({ _locale: getLocale(), archived: { $ne: true } }).limit(5).find()
