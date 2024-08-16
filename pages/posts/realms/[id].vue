@@ -2,10 +2,10 @@
   <v-container class="content-container mx-auto">
     <div class="my-3 mx-[3.5ch]">
       <h1 class="text-2xl">{{ t("navPosts") }}</h1>
-      <span>{{ t("navPostsCaptionWithTag", [`#${route.params.slug}`]) }}</span>
+      <span>{{ t("navPostsCaptionWithRealm", [`#${route.params.id}`]) }}</span>
     </div>
 
-    <post-list :tag="route.params.slug?.toString()" />
+    <post-list :realm-id="parseInt(route.params.id?.toString())" />
   </v-container>
 </template>
 
@@ -13,6 +13,13 @@
 const { t } = useI18n()
 
 const route = useRoute()
+
+if(Number.isNaN(parseInt(route.params.id?.toString()))) {
+  throw createError({
+    statusCode: 400,
+    statusMessage: "Realm ID must be a Number",
+  })
+}
 
 useHead({
   title: t("navPosts"),

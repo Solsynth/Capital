@@ -13,14 +13,14 @@
 const { t } = useI18n()
 
 useHead({
-  title: t("navActivity"),
+  title: t("navPosts"),
 })
 
 useSeoMeta({
-  title: t("navActivity"),
-  ogTitle: t("navActivity"),
-  description: t("navActivityCaption"),
-  ogDescription: t("navActivityCaption"),
+  title: t("navPosts"),
+  ogTitle: t("navPosts"),
+  description: t("navPostsCaption"),
+  ogDescription: t("navPostsCaption"),
   ogType: "website",
 })
 </script>

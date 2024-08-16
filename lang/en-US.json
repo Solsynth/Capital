@@ -10,6 +10,7 @@
   "navPostsCaption": "Explore posts that posted by Solar Network users.",
   "navPostsCaptionWithTag": "Explore posts with tag {0}.",
   "navPostsCaptionWithCategory": "Explore posts in category {0}.",
+  "navPostsCaptionWithRealm": "Explore posts in realm {0}.",
   "indexIntroduce": "An energetic software company that create wonderful software which everyone love.",
   "indexProductListHint": "See some of our products just there",
   "indexActivities": "Activities",
@@ -59,6 +60,9 @@
   "lastUpdatedAt": "Last updated at {0}",
   "learnMore": "Learn more",
   "open": "Open",
+  "openInSite": "Open in Website",
   "postReplies": "Replies",
-  "postRepliesCaption": "All replies of this post"
+  "postRepliesCaption": "All replies of this post",
+  "language": "Language",
+  "embedWidget": "Solar Network Embed Widget"
 }

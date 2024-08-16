@@ -10,6 +10,7 @@
   "navPostsCaption": "探索整个 Solar Network 上的帖子。",
   "navPostsCaptionWithTag": "探索带有 {0} 标签的帖子",
   "navPostsCaptionWithCategory": "探索被分类为 {0} 的帖子",
+  "navPostsCaptionWithRealm": "探索在领域 {0} 内的帖子",
   "indexIntroduce": "一家充满活力的软件公司，创造了人人喜爱的精彩软件。",
   "indexProductListHint": "在这里看看我们的一些产品",
   "indexActivities": "动态",
@@ -59,6 +60,9 @@
   "lastUpdatedAt": "最后更新于 {0}",
   "learnMore": "了解更多",
   "open": "打开",
+  "openInSite": "在站点里打开",
   "postReplies": "回复",
-  "postRepliesCaption": "该帖子的全部回复"
+  "postRepliesCaption": "该帖子的全部回复",
+  "language": "语言",
+  "embedWidget": "Solar Network 嵌入式组件"
 }
