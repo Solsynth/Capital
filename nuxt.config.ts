@@ -8,9 +8,15 @@ export default defineNuxtConfig({
     name: "Solsynth LLC",
   },
   sitemap: {
-    sources: [
-      "/api/sitemap/posts",
-    ],
+    cacheMaxAgeSeconds: 3600,
+    sitemapsPathPrefix: "/sitemap",
+    sitemaps: {
+      posts: {
+        sources: [
+          "/api/sitemap/posts",
+        ],
+      },
+    }
   },
 
   i18n: {
@@ -85,6 +91,7 @@ export default defineNuxtConfig({
     "@nuxtjs/sitemap",
     "@pinia/nuxt",
     "@nuxtjs/i18n",
+    "nuxt-schema-org",
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         // @ts-expect-error
