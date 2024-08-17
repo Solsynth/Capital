@@ -50,9 +50,11 @@ export default defineEventHandler(async (event) => {
       .use(rehypeStringify)
       .process(post.body.content)
 
+    const slug = post.alias ? `/posts/${post.area_alias}:${post.alias}` : `/posts/${post.id}`
+
     feed.addItem({
       date: new Date(post.published_at),
-      link: `https://solsynth.dev/posts/${post.id}`,
+      link: `https://solsynth.dev/${slug}`,
       title: post.body.title ?? `Post #${post.id}`,
       description: post.body.description,
       content: String(content),
