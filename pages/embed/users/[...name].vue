@@ -1,5 +1,5 @@
 <template>
-  <v-container class="content-container mx-auto">
+  <div>
     <v-img v-if="urlOfBanner" :src="urlOfBanner" :aspect-ratio="16 / 5" class="rounded-md mb-3" cover />
 
     <div class="mx-[2.5ch]">
@@ -25,12 +25,13 @@
     </div>
 
     <post-list v-if="account" :author="account.name" />
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
 definePageMeta({
-  alias: ["/@:name(.*)*"],
+  layout: "embed",
+  alias: ["/embed/@:name(.*)*"],
 })
 
 const { t } = useI18n()
@@ -51,9 +52,3 @@ const urlOfBanner = computed(() => account.value?.banner ? `${config.public.sola
 
 const externalOpenLink = computed(() => `${config.public.solianUrl}/accounts/view/${route.params.name}`)
 </script>
-
-<style scoped>
-.content-container {
-  max-width: 70ch !important;
-}
-</style>
