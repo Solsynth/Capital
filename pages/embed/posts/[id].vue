@@ -12,7 +12,7 @@
 
     <v-card v-if="post.body?.thumbnail" class="mb-5">
       <v-img
-        :src="`${config.public.solarNetworkApi}/cgi/files/attachments/${post.body?.thumbnail}`"
+        :src="`${config.public.solarNetworkApi}/cgi/uc/attachments/${post.body?.thumbnail}`"
         :aspect-ratio="16 / 9"
         cover
       />
@@ -91,7 +91,7 @@ const slug = computed(() => {
 
 const { t } = useI18n()
 
-const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/interactive/posts/${slug.value}`)
+const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/co/posts/${slug.value}`)
 
 if (!post.value) {
   throw createError({
@@ -105,14 +105,14 @@ const description = computed(() => post.value.body?.description ?? post.value.bo
 
 watch(attachments, (value) => {
   if (post.value.body?.thumbnail) {
-    firstImage.value = `${config.public.solarNetworkApi}/cgi/files/attachments/${post.value.body?.thumbnail}`
+    firstImage.value = `${config.public.solarNetworkApi}/cgi/uc/attachments/${post.value.body?.thumbnail}`
   }
   if (value.length > 0 && value[0].mimetype.split("/")[0] == "image") {
-    firstImage.value = `${config.public.solarNetworkApi}/cgi/files/attachments/${attachments.value[0].id}`
+    firstImage.value = `${config.public.solarNetworkApi}/cgi/uc/attachments/${attachments.value[0].id}`
   }
 
   if (value.length > 0 && value[0].mimetype.split("/")[0] == "video") {
-    firstVideo.value = `${config.public.solarNetworkApi}/cgi/files/attachments/${attachments.value[0].id}`
+    firstVideo.value = `${config.public.solarNetworkApi}/cgi/uc/attachments/${attachments.value[0].id}`
   }
 }, { immediate: true, deep: true })
 

@@ -52,6 +52,6 @@ const config = useRuntimeConfig()
 
 const auth = useUserinfo()
 
-const urlOfAvatar = computed(() => auth.userinfo?.avatar ? `${config.public.solarNetworkApi}/cgi/files/attachments/${auth.userinfo.avatar}` : void 0)
-const urlOfBanner = computed(() => auth.userinfo?.banner ? `${config.public.solarNetworkApi}/cgi/files/attachments/${auth.userinfo.banner}` : void 0)
+const urlOfAvatar = computed(() => auth.userinfo?.avatar ? `${config.public.solarNetworkApi}/cgi/uc/attachments/${auth.userinfo.avatar}` : void 0)
+const urlOfBanner = computed(() => auth.userinfo?.banner ? `${config.public.solarNetworkApi}/cgi/uc/attachments/${auth.userinfo.banner}` : void 0)
 </script>

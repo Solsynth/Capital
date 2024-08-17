@@ -47,7 +47,7 @@ async function submit() {
   if (!probe.value || !password.value) return
 
   emits("update:loading", true)
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth`, {
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/auth`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ username: probe.value, password: password.value }),

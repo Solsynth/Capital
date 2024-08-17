@@ -44,7 +44,7 @@ const loading = ref(false)
 async function load() {
   loading.value = true
 
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/files/attachments?take=20&offset=${items.value.length}&original=true`)
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/uc/attachments?take=20&offset=${items.value.length}&original=true`)
   const result = await res.json()
 
   items.value.push(...result.data)

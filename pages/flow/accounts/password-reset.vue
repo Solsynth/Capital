@@ -84,7 +84,7 @@ async function confirm() {
     return
   }
 
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/users/me/password-reset`, {
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/users/me/password-reset`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

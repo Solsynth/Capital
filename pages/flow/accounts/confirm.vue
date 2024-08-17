@@ -63,7 +63,7 @@ async function confirm() {
     return
   }
 
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/users/me/confirm`, {
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/users/me/confirm`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

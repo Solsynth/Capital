@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
     searchQuery.set("author", queries.author)
   }
 
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/interactive/posts?` + searchQuery)
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/co/posts?` + searchQuery)
   const posts: any[] = (await res.json())["data"]
 
   for (const post of posts) {
@@ -64,7 +64,7 @@ export default defineEventHandler(async (event) => {
           link: `https://solsynth.dev/@${post.author.name}`,
         },
       ],
-      image: post.body.thumbnail ? `${config.public.solarNetworkApi}/cgi/files/attachments/${post.body.thumbnail}` : void 0,
+      image: post.body.thumbnail ? `${config.public.solarNetworkApi}/cgi/uc/attachments/${post.body.thumbnail}` : void 0,
     })
   }
 

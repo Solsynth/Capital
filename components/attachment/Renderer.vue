@@ -56,6 +56,6 @@ const item = computed(() => props.item)
 const showMature = ref(false)
 
 function getAttachmentUrl(id: number) {
-  return `${config.public.solarNetworkApi}/cgi/files/attachments/${id}`
+  return `${config.public.solarNetworkApi}/cgi/uc/attachments/${id}`
 }
 </script>

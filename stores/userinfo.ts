@@ -44,7 +44,7 @@ export const useUserinfo = defineStore("userinfo", () => {
 
     const config = useRuntimeConfig()
 
-    const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth/token`, {
+    const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/auth/token`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -77,7 +77,7 @@ export const useUserinfo = defineStore("userinfo", () => {
       isReady.value = true
     }
 
-    const res = await solarFetch("/cgi/auth/users/me")
+    const res = await solarFetch("/cgi/id/users/me")
 
     if (res.status !== 200) {
       fetchCompleter.complete(true)

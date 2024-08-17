@@ -60,7 +60,7 @@ const config = useRuntimeConfig()
 const firstImage = ref<string | null>()
 const firstVideo = ref<string | null>()
 
-const { data: attachment } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/files/attachments/${route.params.id}/meta`)
+const { data: attachment } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/uc/attachments/${route.params.id}/meta`)
 
 if (!attachment.value) {
   throw createError({
@@ -73,11 +73,11 @@ const title = computed(() => `Attachment from ${attachment.value.account.nick}`)
 
 watch(attachment, (value) => {
   if (value.mimetype.split("/")[0] == "image") {
-    firstImage.value = `${config.public.solarNetworkApi}/cgi/files/attachments/${value.id}`
+    firstImage.value = `${config.public.solarNetworkApi}/cgi/uc/attachments/${value.id}`
   }
 
   if (value.mimetype.split("/")[0] == "video") {
-    firstVideo.value = `${config.public.solarNetworkApi}/cgi/files/attachments/${value.id}`
+    firstVideo.value = `${config.public.solarNetworkApi}/cgi/uc/attachments/${value.id}`
   }
 }, { immediate: true, deep: true })
 

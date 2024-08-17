@@ -19,7 +19,7 @@ async function loadPost({ done }: any) {
     offset: posts.value.length.toString(),
   })
 
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/interactive/posts/${props.postId}/replies?` + searchQueries)
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/co/posts/${props.postId}/replies?` + searchQueries)
   const result = await res.json()
 
   if (result.data.length > 0) {

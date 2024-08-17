@@ -19,13 +19,13 @@ export default defineEventHandler((event) => {
     "subject_types_supported": [
       "public",
     ],
-    "token_endpoint": `${config.public.solarNetworkApi}/cgi/auth/auth/token`,
+    "token_endpoint": `${config.public.solarNetworkApi}/cgi/id/auth/token`,
     "token_endpoint_auth_methods_supported": [
       "client_secret_post",
     ],
     "token_endpoint_auth_signing_alg_values_supported": [
       "HS512",
     ],
-    "userinfo_endpoint": `${config.public.solarNetworkApi}/cgi/auth/users/me`,
+    "userinfo_endpoint": `${config.public.solarNetworkApi}/cgi/id/users/me`,
   }
 })

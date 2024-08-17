@@ -14,7 +14,7 @@
 
       <div v-if="post.body?.thumbnail" class="mb-5">
         <v-img
-          :src="`${config.public.solarNetworkApi}/cgi/files/attachments/${post.body?.thumbnail}`"
+          :src="`${config.public.solarNetworkApi}/cgi/uc/attachments/${post.body?.thumbnail}`"
           :aspect-ratio="16 / 9"
           alt="Post thumbnail"
           class="rounded-md"

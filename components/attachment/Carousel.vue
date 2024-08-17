@@ -24,7 +24,7 @@ const emits = defineEmits(["update:metadata"])
 
 const config = useRuntimeConfig()
 
-const { data } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/files/attachments?take=${props.attachments.length}&id=${props.attachments.join(",")}`)
+const { data } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/uc/attachments?take=${props.attachments.length}&id=${props.attachments.join(",")}`)
 const metadata = computed(() => data.value.data)
 
 watch(metadata, (value) => {
@@ -32,6 +32,6 @@ watch(metadata, (value) => {
 }, { deep: true, immediate: true })
 
 function getAttachmentUrl(id: number) {
-  return `${config.public.solarNetworkApi}/cgi/files/attachments/${id}`
+  return `${config.public.solarNetworkApi}/cgi/uc/attachments/${id}`
 }
 </script>

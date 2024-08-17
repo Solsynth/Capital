@@ -36,7 +36,7 @@ async function load() {
 onMounted(() => load())
 
 async function getToken(tk: string) {
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth/token`, {
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/auth/token`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

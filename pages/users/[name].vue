@@ -37,7 +37,7 @@ const { t } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
 
-const { data: account } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/auth/users/${route.params.name}`)
+const { data: account } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/id/users/${route.params.name}`)
 
 if (account.value == null) {
   throw createError({
@@ -46,8 +46,8 @@ if (account.value == null) {
   })
 }
 
-const urlOfAvatar = computed(() => account.value?.avatar ? `${config.public.solarNetworkApi}/cgi/files/attachments/${account.value.avatar}` : void 0)
-const urlOfBanner = computed(() => account.value?.banner ? `${config.public.solarNetworkApi}/cgi/files/attachments/${account.value.banner}` : void 0)
+const urlOfAvatar = computed(() => account.value?.avatar ? `${config.public.solarNetworkApi}/cgi/uc/attachments/${account.value.avatar}` : void 0)
+const urlOfBanner = computed(() => account.value?.banner ? `${config.public.solarNetworkApi}/cgi/uc/attachments/${account.value.banner}` : void 0)
 
 const externalOpenLink = computed(() => `${config.public.solianUrl}/accounts/view/${route.params.name}`)
 </script>

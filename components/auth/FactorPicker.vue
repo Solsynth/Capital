@@ -44,7 +44,7 @@ const emits = defineEmits(["swap", "update:loading", "update:currentFactor"])
 
 async function load() {
   emits("update:loading", true)
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth/factors?ticketId=${props.ticket.id}`)
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/auth/factors?ticketId=${props.ticket.id}`)
   if (res.status !== 200) {
     error.value = await res.text()
   } else {
@@ -59,7 +59,7 @@ async function submit() {
   if (!focus.value) return
 
   emits("update:loading", true)
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/auth/factors/${focus.value}`, {
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/auth/factors/${focus.value}`, {
     method: "POST",
   })
   if (res.status !== 200 && res.status !== 204) {

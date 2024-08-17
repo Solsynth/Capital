@@ -126,7 +126,7 @@ async function readTickets({ page, itemsPerPage }: { page?: number; itemsPerPage
 
   reverting.sessions = true
   const res = await solarFetch(
-    "/cgi/auth/users/me/tickets?" +
+    "/cgi/id/users/me/tickets?" +
     new URLSearchParams({
       take: pagination.tickets.pageSize.toString(),
       offset: ((pagination.tickets.page - 1) * pagination.tickets.pageSize).toString(),
@@ -148,7 +148,7 @@ async function readEvents({ page, itemsPerPage }: { page?: number; itemsPerPage?
 
   reverting.events = true
   const res = await solarFetch(
-    "/cgi/auth/users/me/events?" +
+    "/cgi/id/users/me/events?" +
     new URLSearchParams({
       take: pagination.events.pageSize.toString(),
       offset: ((pagination.events.page - 1) * pagination.events.pageSize).toString(),
@@ -168,7 +168,7 @@ Promise.all([readTickets({}), readEvents({})])
 
 async function killTicket(item: any) {
   reverting.sessions = true
-  const res = await solarFetch(`/cgi/auth/users/me/tickets/${item.id}`, {
+  const res = await solarFetch(`/cgi/id/users/me/tickets/${item.id}`, {
     method: "DELETE",
   })
   if (res.status !== 200) {

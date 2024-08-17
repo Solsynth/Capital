@@ -46,7 +46,7 @@ const nickname = computed(() => {
   }
 })
 const avatar = computed(() => {
-  return id.userinfo?.avatar ? `${config.public.solarNetworkApi}/cgi/files/attachments/${id.userinfo?.avatar}` : void 0
+  return id.userinfo?.avatar ? `${config.public.solarNetworkApi}/cgi/uc/attachments/${id.userinfo?.avatar}` : void 0
 })
 
 function signOut() {

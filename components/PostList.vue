@@ -33,7 +33,7 @@ async function loadPost({ done }: any) {
     searchQueries.set("category", props.category)
   }
 
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/interactive/posts?` + searchQueries)
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/co/posts?` + searchQueries)
   const result = await res.json()
 
   if (result.data.length > 0) {

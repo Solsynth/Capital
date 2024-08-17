@@ -86,7 +86,7 @@ const panel = ref("confirm")
 async function tryAuthorize() {
   loading.value = true
 
-  const res = await solarFetch(`/cgi/auth/auth/o/authorize${window.location.search}`)
+  const res = await solarFetch(`/cgi/id/auth/o/authorize${window.location.search}`)
 
   if (res.status !== 200) {
     error.value = await res.text()
@@ -115,7 +115,7 @@ function decline() {
 
 async function approve() {
   loading.value = true
-  const res = await solarFetch(`/cgi/auth/auth/o/authorize${window.location.search}`, {
+  const res = await solarFetch(`/cgi/id/auth/o/authorize${window.location.search}`, {
     method: "POST",
   })
 

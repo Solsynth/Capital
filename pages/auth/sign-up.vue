@@ -120,7 +120,7 @@ async function submit() {
   if (!payload.name || !payload.nick || !payload.email || !payload.password) return
 
   loading.value = true
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/auth/users`, {
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/users`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(payload),

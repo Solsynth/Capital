@@ -14,7 +14,7 @@ const { t } = useI18n()
 
 const config = useRuntimeConfig()
 
-const { status, data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/interactive/posts/${props.id}`)
+const { status, data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/co/posts/${props.id}`)
 </script>
 
 <style scoped>
