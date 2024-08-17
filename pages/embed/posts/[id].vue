@@ -1,5 +1,5 @@
 <template>
-  <v-container class="content-container mx-auto">
+  <div>
     <div class="my-3 flex flex-row gap-4">
       <v-avatar :image="post.author?.avatar" />
       <div class="flex flex-col">
@@ -18,7 +18,7 @@
       />
     </v-card>
 
-    <article class="text-base prose xl:text-lg mx-auto">
+    <article class="text-base prose xl:text-lg mx-auto max-w-none">
       <m-d-c :value="post.body?.content"></m-d-c>
     </article>
 
@@ -65,10 +65,15 @@
         <post-reply-list class="mt-[-20px] mx-[-1ch] mb-3" :post-id="post.id" />
       </v-card>
     </div>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  layout: "embed",
+  alias: ["/embed/posts/:area/:id"],
+})
+
 const route = useRoute()
 const config = useRuntimeConfig()
 
@@ -76,9 +81,17 @@ const attachments = ref<any[]>([])
 const firstImage = ref<string | null>()
 const firstVideo = ref<string | null>()
 
+const slug = computed(() => {
+  if (route.params.area) {
+    return `${route.params.area}:${route.params.id}`
+  } else {
+    return route.params.id
+  }
+})
+
 const { t } = useI18n()
 
-const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/interactive/posts/${route.params.id}`)
+const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/interactive/posts/${slug.value}`)
 
 if (!post.value) {
   throw createError({
@@ -125,13 +138,8 @@ useSeoMeta({
   ogType: "article",
   publisher: "Solar Network",
   ogSiteName: "Solsynth Capital",
+  generator: "Solar Network Open Project · Embed Widget",
 })
 
-const externalOpenLink = computed(() => `${config.public.solianUrl}/posts/view/${route.params.id}`)
+const externalOpenLink = computed(() => `${config.public.solianUrl}/posts/view/${slug.value}`)
 </script>
-
-<style scoped>
-.content-container {
-  max-width: 65ch !important;
-}
-</style>
