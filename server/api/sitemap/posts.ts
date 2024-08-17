@@ -7,7 +7,7 @@ export default defineSitemapEventHandler(async () => {
   return result.data.map((item: any) => asSitemapUrl({
     loc: `/posts/${item.id}`,
     lastmod: item.edited_at ?? item.published_at,
-    priority: 0.9,
+    priority: 0.7,
     _sitemap: "posts",
   }));
 })

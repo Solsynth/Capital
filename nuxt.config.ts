@@ -8,10 +8,17 @@ export default defineNuxtConfig({
     name: "Solsynth LLC",
   },
   sitemap: {
+    strictNuxtContentPaths: true,
     cacheMaxAgeSeconds: 3600,
     sitemapsPathPrefix: "/sitemap",
     sitemaps: {
+      pages: {
+        includeAppSources: true,
+        exclude: ["/flow/**"],
+        defaults: { priority: 0.8 },
+      },
       posts: {
+        includeAppSources: false,
         sources: [
           "/api/sitemap/posts",
         ],
