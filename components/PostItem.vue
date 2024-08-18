@@ -1,5 +1,5 @@
 <template>
-  <v-card :to="`/posts/${props.post.id}`" class="mx-[2.5ch] mb-3">
+  <v-card :to="url" class="mx-[2.5ch] mb-3">
     <v-card-text>
       <div class="mb-3 flex flex-row gap-4">
         <v-avatar :image="post.author?.avatar" />
@@ -68,4 +68,6 @@
 <script setup lang="ts">
 const props = defineProps<{ post: any, forceShowContent?: boolean, noClickableAttachment?: boolean }>()
 const config = useRuntimeConfig()
+
+const url = computed(() => props.post.alias ? `/posts/${props.post.area_alias}/${props.post.alias}` : `/posts/${props.post.id}`)
 </script>

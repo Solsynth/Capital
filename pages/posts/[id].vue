@@ -93,10 +93,17 @@ const { t } = useI18n()
 const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/co/posts/${slug.value}`)
 
 if (!post.value) {
+  const { data: publisher } = await $fetch<any>(`${config.public.solarNetworkApi}/cgi/co/publishers/${route.params.id}`)
+  if (publisher) {
+    navigateTo(`/posts/publishers/${route.params.id}`)
+  }
+
   throw createError({
     statusCode: 404,
     statusMessage: "Post Not Found",
   })
+} else if (post.value.alias) {
+  navigateTo(`/posts/${post.value.area_alias}/${post.value.alias}`)
 }
 
 const title = computed(() => post.value.body?.title ? `${post.value.body?.title} from ${post.value.author.nick}` : `Post from ${post.value.author.nick}`)

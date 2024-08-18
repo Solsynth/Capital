@@ -2,10 +2,11 @@
   <v-container class="content-container mx-auto">
     <div class="my-3 mx-[3.5ch]">
       <h1 class="text-2xl">{{ t("navPosts") }}</h1>
-      <span>{{ t("navPostsCaptionWithRealm", [`#${route.params.id}`]) }}</span>
+      <span>{{ t("navPostsCaptionWithPublisher", [publisher.data.name]) }}</span>
     </div>
 
-    <post-list :realm="route.params.id?.toString()" />
+    <post-list v-if="publisher.type == 'realm'" :realm="route.params.id?.toString()" />
+    <post-list v-else :author="route.params.id?.toString()" />
   </v-container>
 </template>
 
@@ -13,13 +14,9 @@
 const { t } = useI18n()
 
 const route = useRoute()
+const config = useRuntimeConfig()
 
-if(Number.isNaN(parseInt(route.params.id?.toString()))) {
-  throw createError({
-    statusCode: 400,
-    statusMessage: "Realm ID must be a Number",
-  })
-}
+const { data: publisher } = useFetch<any>(`${config.public.solarNetworkApi}/cgi/co/publishers/${route.params.id}`)
 
 useHead({
   title: t("navPosts"),

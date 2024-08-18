@@ -2,10 +2,11 @@
   <div>
     <div class="my-3" v-if="!route.query['no-title']">
       <h1 class="text-2xl">{{ route.query["title"] ?? t("navPosts") }}</h1>
-      <span>{{ route.query["caption"] ??  t("navPostsCaptionWithRealm", [`#${route.params.id}`]) }}</span>
+      <span>{{ route.query["caption"] ??  t("navPostsCaptionWithPublisher", [publisher.data.name]) }}</span>
     </div>
 
-    <post-list class="mx-[-2.5ch]" :realm-id="parseInt(route.params.id?.toString())" />
+    <post-list v-if="publisher.type == 'realm'" class="mx-[-2.5ch]" :realm="route.params.id?.toString()" />
+    <post-list v-else class="mx-[-2.5ch]" :author="route.params.id?.toString()" />
   </div>
 </template>
 
@@ -17,13 +18,9 @@ definePageMeta({
 const { t } = useI18n()
 
 const route = useRoute()
+const config = useRuntimeConfig()
 
-if(Number.isNaN(parseInt(route.params.id?.toString()))) {
-  throw createError({
-    statusCode: 400,
-    statusMessage: "Realm ID must be a Number",
-  })
-}
+const { data: publisher } = useFetch<any>(`${config.public.solarNetworkApi}/cgi/co/publishers/${route.params.id}`)
 
 useHead({
   title: t("navPosts"),
