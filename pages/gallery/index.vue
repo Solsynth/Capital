@@ -6,7 +6,7 @@
     </div>
 
     <div class="album">
-      <v-card v-for="item in items" class="album-item mb-3" :to="`/gallery/${item.id}`">
+      <v-card v-for="item in items" class="album-item mb-3" :to="`/gallery/${item.rid}`">
         <attachment-renderer :item="item" />
       </v-card>
 

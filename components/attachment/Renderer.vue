@@ -17,9 +17,9 @@
       </v-col>
     </v-row>
   </v-sheet>
-  <v-img v-else-if="item.mimetype.split('/')[0] == 'image'" :src="getAttachmentUrl(item.id)" :alt="item.alt"
+  <v-img v-else-if="item.mimetype.split('/')[0] == 'image'" :src="getAttachmentUrl(item.rid)" :alt="item.alt"
          class="w-full h-full" cover />
-  <video v-else-if="item.mimetype.split('/')[0] == 'video'" :src="getAttachmentUrl(item.id)" class="w-full h-full"
+  <video v-else-if="item.mimetype.split('/')[0] == 'video'" :src="getAttachmentUrl(item.rid)" class="w-full h-full"
          controls @click.stop />
   <v-sheet v-else color="rgba(0, 0, 0, .4)" height="calc(100% + 24px)" class="p-5">
     <v-row class="fill-height" align="center" justify="center">
@@ -55,7 +55,7 @@ const item = computed(() => props.item)
 
 const showMature = ref(false)
 
-function getAttachmentUrl(id: number) {
+function getAttachmentUrl(id: string) {
   return `${config.public.solarNetworkApi}/cgi/uc/attachments/${id}`
 }
 </script>

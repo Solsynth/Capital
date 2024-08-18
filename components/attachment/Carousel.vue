@@ -8,7 +8,7 @@
   >
     <v-carousel-item v-for="item in metadata" class="fill-height">
       <nuxt-link v-if="item.mimetype.split('/')[0] == 'image' && !props.noClickableAttachment"
-                 :to="`/gallery/${item.id}`">
+                 :to="`/gallery/${item.rid}`">
         <attachment-renderer :item="item" />
       </nuxt-link>
       <div v-else>
@@ -19,7 +19,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ attachments: number[], noClickableAttachment?: boolean }>()
+const props = defineProps<{ attachments: string[], noClickableAttachment?: boolean }>()
 const emits = defineEmits(["update:metadata"])
 
 const config = useRuntimeConfig()
@@ -30,8 +30,4 @@ const metadata = computed(() => data.value.data)
 watch(metadata, (value) => {
   emits("update:metadata", value)
 }, { deep: true, immediate: true })
-
-function getAttachmentUrl(id: number) {
-  return `${config.public.solarNetworkApi}/cgi/uc/attachments/${id}`
-}
 </script>
