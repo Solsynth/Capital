@@ -5,7 +5,7 @@
       <span>{{ t("navActivityCaption") }}</span>
     </div>
 
-    <post-list :realm-id="config.public.solarRealmId" />
+    <post-list :realm="config.public.solarRealm" />
   </v-container>
 </template>
 

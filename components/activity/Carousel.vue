@@ -21,7 +21,7 @@ const loading = ref(false)
 async function load() {
   loading.value = true
 
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/co/posts?take=5&realmId=${config.public.solarRealmId}`)
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/co/posts?take=5&realm=${config.public.solarRealm}`)
   const result = await res.json()
 
   items.value.push(...result.data)

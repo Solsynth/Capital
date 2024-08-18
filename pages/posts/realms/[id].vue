@@ -5,7 +5,7 @@
       <span>{{ t("navPostsCaptionWithRealm", [`#${route.params.id}`]) }}</span>
     </div>
 
-    <post-list :realm-id="parseInt(route.params.id?.toString())" />
+    <post-list :realm="route.params.id?.toString()" />
   </v-container>
 </template>
 

@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
     take?: number,
     offset?: number,
     type?: "atom" | "json" | "rss",
-    realmId?: number,
+    realm?: string,
     author?: string,
   }>(event)
 
@@ -32,8 +32,8 @@ export default defineEventHandler(async (event) => {
     "offset": (queries.offset ?? 0).toString(),
   })
 
-  if (queries.realmId) {
-    searchQuery.set("realmId", queries.realmId.toString())
+  if (queries.realm) {
+    searchQuery.set("realm", queries.realm.toString())
   }
   if (queries.author) {
     searchQuery.set("author", queries.author)

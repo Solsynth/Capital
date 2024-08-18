@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ author?: string, tag?: string, category?: string, realmId?: number }>()
+const props = defineProps<{ author?: string, tag?: string, category?: string, realm?: string }>()
 
 const config = useRuntimeConfig()
 
@@ -22,8 +22,8 @@ async function loadPost({ done }: any) {
   if (props.author) {
     searchQueries.set("author", props.author)
   }
-  if (props.realmId) {
-    searchQueries.set("realmId", props.realmId.toString())
+  if (props.realm) {
+    searchQueries.set("realm", props.realm)
   }
 
   if (props.tag) {

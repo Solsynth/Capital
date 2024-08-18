@@ -49,7 +49,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       siteUrl: "https://solsynth.dev",
-      solarRealmId: 2,
+      solarRealm: "solar-network",
       solarNetworkApi: "https://api.sn.solsynth.dev",
       solianUrl: "https://sn.solsynth.dev",
     },
