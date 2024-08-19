@@ -67,7 +67,7 @@ export default defineNuxtConfig({
       titleTemplate: "%s | Solsynth",
       meta: [],
       link: [
-        { rel: "icon", type: "image/png", href: "/favicon.png" },
+        { rel: "icon", type: "image/png", href: "/icon.png" },
       ],
     },
   },

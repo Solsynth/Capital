@@ -127,8 +127,8 @@ useHead({
   title: title.value,
   titleTemplate: "%s on Solar Network",
   link: [
-    { rel: "icon", type: "image/png", href: "/favicon-solian.png" },
-    { rel: "apple-touch-icon", type: "image/png", href: "/favicon-solian.png" },
+    { rel: "icon", type: "image/png", href: "/icon-solar-network.png" },
+    { rel: "apple-touch-icon", type: "image/png", href: "/icon-solar-network.png" },
   ],
 })
 
