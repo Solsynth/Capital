@@ -103,7 +103,7 @@ if (!post.value) {
     statusCode: 404,
     statusMessage: "Post Not Found",
   })
-} else if (post.value.alias) {
+} else if (post.value.alias && !route.params.area) {
   navigateTo(`/posts/${post.value.area_alias}/${post.value.alias}`)
 }
 

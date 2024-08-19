@@ -7,8 +7,9 @@
           <span>{{ post.author?.nick }} <span class="text-xs">@{{ post.author?.name }}</span></span>
           <span v-if="post.body?.title" class="text-md">{{ post.body?.title }}</span>
           <span v-if="post.body?.description" class="text-sm">{{ post.body?.description }}</span>
-          <span v-if="!post.body?.title && !post.body?.description" class="text-sm">{{ post.author?.description
-            }}</span>
+          <span v-if="!post.body?.title && !post.body?.description" class="text-sm">
+            {{ post.author?.description }}
+          </span>
         </div>
       </div>
 
