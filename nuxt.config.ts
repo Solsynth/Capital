@@ -77,7 +77,7 @@ export default defineNuxtConfig({
       baseURL: "/api/content",
     },
     highlight: {
-      theme: "github-dark",
+      theme: { default: "github-light", dark: "github-dark" },
       langs: ["json", "yaml", "toml", "java", "javascript", "astro", "css", "scss", "dart", "go", "typescript", "c", "csharp",
         "cpp", "bat", "bash", "sh", "dockerfile", "erlang", "fsharp", "markdown", "log",
         "lua", "objc", "swift", "regex", "ruby", "rust", "postcss", "blade", "asciidoc", "cmake", "cobol", "pascal",
@@ -114,7 +114,7 @@ export default defineNuxtConfig({
   ],
 
   gtag: {
-    id: 'G-ZFJ7RX0JXF'
+    id: "G-ZFJ7RX0JXF",
   },
 
   vite: {
