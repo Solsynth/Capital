@@ -104,14 +104,18 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/i18n",
     "nuxt-schema-org",
+    "nuxt-gtag",
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         // @ts-expect-error
         config.plugins.push(vuetify({ autoImport: true }))
       })
     },
-    //...
   ],
+
+  gtag: {
+    id: 'G-ZFJ7RX0JXF'
+  },
 
   vite: {
     vue: {

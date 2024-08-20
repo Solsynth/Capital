@@ -18,6 +18,7 @@
     "@pinia/nuxt": "^0.5.3",
     "feed": "^4.2.2",
     "nuxt": "^3.12.4",
+    "nuxt-gtag": "^2.1.0",
     "nuxt-schema-org": "^3.3.9",
     "pinia": "^2.2.1",
     "rehype-sanitize": "^6.0.0",
