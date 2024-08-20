@@ -2,17 +2,20 @@
   <v-container fluid>
     <div class="mt-3 mb-6.5 mx-[3.5ch] text-center">
       <h1 class="text-2xl">{{ t("navGallery") }}</h1>
-      <span>{{ t("navGalleryCaption") }}</span>
+      <p>{{ t("navGalleryCaption") }}</p>
+      <v-btn slim size="x-small" prepend-icon="mdi-upload" variant="text" color="info" to="/gallery/new">
+        <span>Upload new</span>
+      </v-btn>
     </div>
 
     <div class="album">
       <v-card v-for="item in items" class="album-item mb-3" :to="`/gallery/${item.rid}`">
         <attachment-renderer :item="item" />
       </v-card>
+    </div>
 
-      <div class="flex p-5 justify-center items-center">
-        <v-btn variant="outlined" text="Load more" :loading="loading" @click="load" />
-      </div>
+    <div class="flex p-5 justify-center items-center">
+      <v-btn variant="outlined" text="Load more" :loading="loading" @click="load" />
     </div>
   </v-container>
 </template>

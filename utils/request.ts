@@ -1,8 +1,12 @@
-export async function solarFetch(input: string | URL | globalThis.Request, init?: RequestInit) {
+export async function solarFetch(input: string, init?: RequestInit) {
   const auth = useUserinfo()
   const config = useRuntimeConfig()
 
-  return await fetch(`${config.public.solarNetworkApi}${input}`, {
+  if (!input.startsWith("http")) {
+    input = `${config.public.solarNetworkApi}${input}`
+  }
+
+  return await fetch(input, {
     ...init,
     headers: {
       ...init?.headers,
