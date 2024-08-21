@@ -37,7 +37,7 @@
             color="white"
             prepend-icon="mdi-launch"
             text="Open in browser"
-            :href="getAttachmentUrl(item.id)"
+            :href="getAttachmentUrl(item.rid)"
             target="_blank"
           />
         </div>

@@ -5,13 +5,31 @@
 
     <div class="my-5 w-[640px]">
       <v-expand-transition>
-        <v-file-input
-          label="File input"
-          variant="solo"
-          :hide-details="true"
-          v-if="!multipartProgress.value"
-          v-model="content"
-        ></v-file-input>
+        <div v-if="!multipartProgress.value">
+          <v-file-input
+            label="File input"
+            variant="solo"
+            :hide-details="true"
+            v-model="content"
+          ></v-file-input>
+
+          <v-select
+            label="Storage pool"
+            variant="underlined"
+            :items="poolOptions"
+            item-title="label"
+            item-value="value"
+            density="comfortable"
+            prepend-icon="mdi-database"
+            :hide-details="true"
+            class="mt-5"
+            v-model="pool"
+          >
+            <template v-slot:item="{ props, item }">
+              <v-list-item v-bind="props" :subtitle="item.raw.description" :disabled="item.raw.disabled" />
+            </template>
+          </v-select>
+        </div>
       </v-expand-transition>
 
       <v-expand-transition>
@@ -28,9 +46,9 @@
 
       <v-expand-transition>
         <div v-if="success">
-          <div class="mt-3">
+          <v-card class="mt-3">
             <attachment-carousel :attachments="[multipartInfo.rid]" />
-          </div>
+          </v-card>
         </div>
       </v-expand-transition>
 
@@ -62,7 +80,14 @@ useHead({
 
 const { t } = useI18n()
 
+const poolOptions = [
+  { label: "Interactive", description: "Public indexable, no lifecycle.", value: "interactive" },
+  { label: "Messaging", description: "Has lifecycle, will delete after 14 days.", value: "messaging" },
+  { label: "Dedicated Pool", description: "Your own configuration, coming soon.", value: "dedicated", disabled: true },
+]
+
 const content = ref<File | null>(null)
+const pool = ref("interactive")
 
 const error = ref<string | null>(null)
 const success = ref(false)
@@ -82,22 +107,30 @@ async function submit() {
 
   loading.value = true
 
+  const limit = 3
+
   try {
     await createMultipartPlaceholder()
     console.log(`[PAPERCLIP] Multipart placeholder has been created with rid ${multipartInfo.value.rid}`)
-    let taskIdx = 0
+
     multipartProgress.value = 0
-    multipartProgress.current = taskIdx
-    if (multipartInfo.value["file_chunks"]) {
-      multipartProgress.total = Object.keys(multipartInfo.value["file_chunks"] ?? {}).length
-    }
-    for (const chunk in multipartInfo.value["file_chunks"]) {
+    multipartProgress.current = 0
+
+    const chunks = Object.keys(multipartInfo.value["file_chunks"] ?? {})
+    multipartProgress.total = chunks.length
+
+    const uploadChunks = async (chunk: string) => {
       await uploadSingleMultipart(chunk)
-      taskIdx++
-      console.log(`[PAPERCLIP] Uploaded multipart ${taskIdx}/${multipartProgress.total}`)
-      multipartProgress.value = taskIdx / multipartProgress.total
-      multipartProgress.current = taskIdx
+      multipartProgress.current++
+      console.log(`[PAPERCLIP] Uploaded multipart ${multipartProgress.current}/${multipartProgress.total}`)
+      multipartProgress.value = multipartProgress.current / multipartProgress.total
     }
+
+    for (let i = 0; i < chunks.length; i += limit) {
+      const chunkSlice = chunks.slice(i, i + limit)
+      await Promise.all(chunkSlice.map(uploadChunks))
+    }
+
     if (multipartInfo.value["is_uploaded"]) {
       console.log(`[PAPERCLIP] Entire file has been uploaded in ${multipartProgress.total} chunk(s)`)
       success.value = true
@@ -113,6 +146,12 @@ async function submit() {
 async function createMultipartPlaceholder() {
   if (!content.value) return
 
+  const mimetypeMap: { [id: string]: string } = {
+    "mp4": "video/mp4",
+    "mov": "video/quicktime",
+  }
+  const mimetype = mimetypeMap[content.value.name.split(".").pop() as string]
+
   const nameArray = content.value.name.split(".")
   nameArray.pop()
 
@@ -120,10 +159,11 @@ async function createMultipartPlaceholder() {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      pool: "interactive",
+      pool: pool.value,
       size: content.value.size,
       name: content.value.name,
       alt: nameArray.join("."),
+      mimetype: mimetype,
     }),
   })
   if (resp.status != 200) throw new Error(await resp.text())
