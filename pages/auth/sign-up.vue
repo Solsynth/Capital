@@ -102,6 +102,10 @@ const error = ref<string | null>(null)
 const { t } = useI18n()
 const config = useRuntimeConfig()
 
+useHead({
+  title: t('signUpTitle'),
+})
+
 const route = useRoute()
 const router = useRouter()
 

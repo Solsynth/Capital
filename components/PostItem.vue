@@ -10,6 +10,10 @@
           <span v-if="!post.body?.title && !post.body?.description" class="text-sm">
             {{ post.author?.description }}
           </span>
+
+          <div v-if="post.type != 'story'" class="mt-1">
+            <v-btn size="x-small" variant="flat" append-icon="mdi-arrow-right" :text="t('continueReading')" />
+          </div>
         </div>
       </div>
 
@@ -69,6 +73,8 @@
 <script setup lang="ts">
 const props = defineProps<{ post: any, forceShowContent?: boolean, noClickableAttachment?: boolean }>()
 const config = useRuntimeConfig()
+
+const { t } = useI18n()
 
 const url = computed(() => props.post.alias ? `/posts/${props.post.area_alias}/${props.post.alias}` : `/posts/${props.post.id}`)
 </script>

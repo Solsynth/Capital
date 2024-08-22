@@ -43,6 +43,17 @@
         <content-renderer-markdown :value="page" />
       </content-renderer>
     </article>
+
+    <div class="flex justify-start mt-5">
+      <v-btn
+        v-if="page?.url"
+        variant="plain"
+        prepend-icon="mdi-launch"
+        :text="t('open')"
+        :href="page?.url"
+        target="_blank"
+      />
+    </div>
   </v-container>
 </template>
 

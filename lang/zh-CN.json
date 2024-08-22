@@ -64,5 +64,8 @@
   "postReplies": "回复",
   "postRepliesCaption": "该帖子的全部回复",
   "language": "语言",
-  "embedWidget": "Solar Network 嵌入式组件"
+  "embedWidget": "Solar Network 嵌入式组件",
+  "continueReading": "继续阅读",
+  "download": "下载",
+  "downloadDescription": "选择适合你的版本下载"
 }

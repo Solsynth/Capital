@@ -37,6 +37,10 @@ definePageMeta({
   alias: ["/auth/mfa"],
 })
 
+useHead({
+  title: t('signInTitle'),
+})
+
 const route = useRoute()
 
 const loading = ref(false)

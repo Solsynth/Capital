@@ -64,5 +64,8 @@
   "postReplies": "Replies",
   "postRepliesCaption": "All replies of this post",
   "language": "Language",
-  "embedWidget": "Solar Network Embed Widget"
+  "embedWidget": "Solar Network Embed Widget",
+  "continueReading": "Continue Reading",
+  "download": "Download",
+  "downloadDescription": "Pick the right version for you"
 }
