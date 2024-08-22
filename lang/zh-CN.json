@@ -67,5 +67,12 @@
   "embedWidget": "Solar Network 嵌入式组件",
   "continueReading": "继续阅读",
   "download": "下载",
-  "downloadDescription": "选择适合你的版本下载"
+  "downloadDescription": "选择适合你的版本下载",
+  "attachmentUpload": "新传附件",
+  "attachmentCreate": "新建附件",
+  "attachmentCreateCaption": "使用 Solar Network 来托管你的文件",
+  "attachmentUploadProgress": "上传中",
+  "attachmentUploadCompleted": "上传完成",
+  "upload": "上传",
+  "cancel": "取消"
 }

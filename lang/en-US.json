@@ -67,5 +67,12 @@
   "embedWidget": "Solar Network Embed Widget",
   "continueReading": "Continue Reading",
   "download": "Download",
-  "downloadDescription": "Pick the right version for you"
+  "downloadDescription": "Pick the right version for you",
+  "attachmentUpload": "Upload new",
+  "attachmentCreate": "Create Attachment",
+  "attachmentCreateCaption": "Use Solar Network host your files",
+  "attachmentUploadProgress": "Uploading",
+  "attachmentUploadCompleted": "Uploaded",
+  "upload": "Upload",
+  "cancel": "Cancel"
 }

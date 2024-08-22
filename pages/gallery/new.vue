@@ -1,7 +1,7 @@
 <template>
   <div class="h-[calc(100vh-80px)] flex flex-col justify-center items-center">
-    <h1 class="text-2xl font-bold">Create Attachment</h1>
-    <p>Use Solar Network host your files</p>
+    <h1 class="text-2xl font-bold">{{ t("attachmentCreate") }}</h1>
+    <p>{{ t("attachmentCreateCaption") }}</p>
 
     <div class="my-5 w-[640px]">
       <v-expand-transition>
@@ -35,7 +35,7 @@
       <v-expand-transition>
         <div v-if="multipartProgress.value" class="text-center flex flex-col">
           <span class="text-sm">
-            {{ success ? "Uploaded" : "Uploading" }}
+            {{ success ? t("attachmentUploadCompleted") : t("attachmentUploadProgress") }}
             {{ multipartProgress.current }}/{{ multipartProgress.total }}
             {{ (multipartProgress.value * 100).toFixed(2) }}%
           </span>
@@ -60,8 +60,8 @@
     </div>
 
     <div class="flex">
-      <v-btn text="Upload" prepend-icon="mdi-upload" variant="plain" :loading="loading" @click="submit" />
-      <v-btn text="Cancel" color="grey" append-icon="mdi-exit-to-app" variant="plain" to="/gallery"
+      <v-btn :text="t('upload')" prepend-icon="mdi-upload" variant="plain" :loading="loading" @click="submit" />
+      <v-btn :text="t('cancel')" color="grey" append-icon="mdi-exit-to-app" variant="plain" to="/gallery"
              :disabled="loading" />
     </div>
 

@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar flat color="primary" scroll-behavior="hide">
+  <v-app-bar flat color="primary" scroll-behavior="hide" scroll-threshold="800">
     <v-container fluid class="mx-auto d-flex align-center justify-center px-8">
       <nuxt-link to="/" exact>
         <v-img class="me-4 ms-1" width="32" height="32" alt="Logo" :src="Logo" />

@@ -4,7 +4,7 @@
       <h1 class="text-2xl">{{ t("navGallery") }}</h1>
       <p>{{ t("navGalleryCaption") }}</p>
       <v-btn slim size="x-small" prepend-icon="mdi-upload" variant="text" color="info" to="/gallery/new">
-        <span>Upload new</span>
+        {{ t("attachmentUpload") }}
       </v-btn>
     </div>
 
