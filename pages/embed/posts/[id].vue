@@ -115,11 +115,11 @@ watch(attachments, (value) => {
     firstImage.value = `${config.public.solarNetworkApi}/cgi/uc/attachments/${post.value.body?.thumbnail}`
   }
   if (value.length > 0 && value[0].mimetype.split("/")[0] == "image") {
-    firstImage.value = `${config.public.solarNetworkApi}/cgi/uc/attachments/${attachments.value[0].id}`
+    firstImage.value = `${config.public.solarNetworkApi}/cgi/uc/attachments/${attachments.value[0].rid}`
   }
 
   if (value.length > 0 && value[0].mimetype.split("/")[0] == "video") {
-    firstVideo.value = `${config.public.solarNetworkApi}/cgi/uc/attachments/${attachments.value[0].id}`
+    firstVideo.value = `${config.public.solarNetworkApi}/cgi/uc/attachments/${attachments.value[0].rid}`
   }
 }, { immediate: true, deep: true })
 
