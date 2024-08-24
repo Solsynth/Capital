@@ -3,11 +3,11 @@ import { ref } from "vue"
 import { solarFetch } from "~/utils/request"
 
 export function useAtk() {
-  return useCookie("__hydrogen_atk", { watch: "shallow" })
+  return useCookie("__hydrogen_atk", { watch: "shallow", maxAge: 31556952000 })
 }
 
 export function useRtk() {
-  return useCookie("__hydrogen_rtk", { watch: "shallow" })
+  return useCookie("__hydrogen_rtk", { watch: "shallow", maxAge: 31556952000 })
 }
 
 export function useLoggedInState() {
@@ -74,13 +74,16 @@ export const useUserinfo = defineStore("userinfo", () => {
 
     if (!useLoggedInState().value) {
       fetchCompleter.complete(true)
+      fetchCompleter = null
       isReady.value = true
+      return
     }
 
     const res = await solarFetch("/cgi/id/users/me")
 
     if (res.status !== 200) {
       fetchCompleter.complete(true)
+      fetchCompleter = null
       isReady.value = true
       return
     }
@@ -91,6 +94,7 @@ export const useUserinfo = defineStore("userinfo", () => {
     isReady.value = true
     userinfo.value = data
     fetchCompleter.complete(true)
+    fetchCompleter = null
   }
 
   return { userinfo, lastRefreshedAt, isLoggedIn, isReady, fetchCompleter, setTokenSet, getAtk, readProfiles }
