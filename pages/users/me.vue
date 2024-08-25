@@ -18,7 +18,7 @@
         </div>
 
         <div class="flex gap-5 mt-3 flex-wrap max-sm:justify-center">
-          <v-card class="w-28 aspect-square cursor-not-allowed" disabled>
+          <v-card class="w-28 aspect-square cursor-not-allowed" disabled v-if="auth.userinfo?.perm_nodes['AdminView']">
             <v-card-text class="flex flex-col justify-center items-center text-center h-full">
               <v-icon icon="mdi-cog" size="32" />
               <span class="text-sm mt-1.75">Admin Center</span>
