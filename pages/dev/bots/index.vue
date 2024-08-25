@@ -37,6 +37,18 @@
               <td>{{ item.name }}</td>
               <td>{{ new Date(item.created_at).toLocaleString() }}</td>
               <td>
+                <dev-bot-token-dialog :item="item">
+                  <template #activator="{ props }">
+                    <v-btn
+                      v-bind="props"
+                      variant="text"
+                      size="x-small"
+                      color="info"
+                      icon="mdi-key"
+                    />
+                  </template>
+                </dev-bot-token-dialog>
+
                 <v-dialog max-width="480">
                   <template #activator="{ props }">
                     <v-btn

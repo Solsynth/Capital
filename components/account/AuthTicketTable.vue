@@ -12,6 +12,7 @@
             v-model:items-per-page="pagination.tickets.pageSize"
             @update:options="readTickets"
             item-value="id"
+            class="overflow-y-auto text-no-wrap"
           >
             <template v-slot:item="{ item }: { item: any }">
               <tr>
@@ -60,6 +61,7 @@
             v-model:items-per-page="pagination.events.pageSize"
             @update:options="readEvents"
             item-value="id"
+            class="overflow-y-auto text-no-wrap"
           >
             <template v-slot:item="{ item }: { item: any }">
               <tr>
