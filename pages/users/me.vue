@@ -17,30 +17,30 @@
           <span class="text-sm">Everything you need to access.</span>
         </div>
 
-        <div class="flex gap-5 mt-3">
+        <div class="flex gap-5 mt-3 flex-wrap max-sm:justify-center">
           <v-card class="w-28 aspect-square cursor-not-allowed" disabled>
-            <v-card-text class="flex flex-col justify-center items-center text-center">
+            <v-card-text class="flex flex-col justify-center items-center text-center h-full">
               <v-icon icon="mdi-cog" size="32" />
               <span class="text-sm mt-1.75">Admin Center</span>
             </v-card-text>
           </v-card>
 
           <v-card class="w-28 aspect-square cursor-not-allowed" disabled>
-            <v-card-text class="flex flex-col justify-center items-center text-center">
+            <v-card-text class="flex flex-col justify-center items-center text-center h-full">
               <v-icon icon="mdi-code-tags" size="32" />
               <span class="text-sm mt-1.75">Dev Portal</span>
             </v-card-text>
           </v-card>
 
           <v-card class="w-28 aspect-square cursor-not-allowed" disabled>
-            <v-card-text class="flex flex-col justify-center items-center text-center">
+            <v-card-text class="flex flex-col justify-center items-center text-center h-full">
               <v-icon icon="mdi-pencil" size="32" />
               <span class="text-sm mt-1.75">Creator Hub</span>
             </v-card-text>
           </v-card>
 
           <v-card class="w-28 aspect-square" href="https://kb.solsynth.dev" target="_blank">
-            <v-card-text class="flex flex-col justify-center items-center text-center">
+            <v-card-text class="flex flex-col justify-center items-center text-center h-full">
               <v-icon icon="mdi-library" size="32" />
               <span class="text-sm mt-1.75">Knowledge Base</span>
             </v-card-text>
