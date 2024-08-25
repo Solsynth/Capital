@@ -89,8 +89,6 @@
 <script setup lang="ts">
 import { solarFetch } from "~/utils/request"
 
-const config = useRuntimeConfig()
-
 const error = ref<string | null>(null)
 
 const dataDefinitions: { [id: string]: any[] } = {
@@ -114,7 +112,7 @@ const dataDefinitions: { [id: string]: any[] } = {
 const tickets = ref<any>([])
 const events = ref<any>([])
 
-const reverting = reactive({ tickets: false, sessions: false, events: false })
+const reverting = reactive({ tickets: false, events: false })
 const pagination = reactive({
   tickets: { page: 1, pageSize: 5, total: 0 },
   events: { page: 1, pageSize: 5, total: 0 },
@@ -124,7 +122,7 @@ async function readTickets({ page, itemsPerPage }: { page?: number; itemsPerPage
   if (itemsPerPage) pagination.tickets.pageSize = itemsPerPage
   if (page) pagination.tickets.page = page
 
-  reverting.sessions = true
+  reverting.tickets = true
   const res = await solarFetch(
     "/cgi/id/users/me/tickets?" +
     new URLSearchParams({
@@ -139,7 +137,7 @@ async function readTickets({ page, itemsPerPage }: { page?: number; itemsPerPage
     tickets.value = data["data"]
     pagination.tickets.total = data["count"]
   }
-  reverting.sessions = false
+  reverting.tickets = false
 }
 
 async function readEvents({ page, itemsPerPage }: { page?: number; itemsPerPage?: number }) {
@@ -167,7 +165,7 @@ async function readEvents({ page, itemsPerPage }: { page?: number; itemsPerPage?
 Promise.all([readTickets({}), readEvents({})])
 
 async function killTicket(item: any) {
-  reverting.sessions = true
+  reverting.tickets = true
   const res = await solarFetch(`/cgi/id/users/me/tickets/${item.id}`, {
     method: "DELETE",
   })
@@ -177,6 +175,6 @@ async function killTicket(item: any) {
     await readTickets({})
     error.value = null
   }
-  reverting.sessions = false
+  reverting.tickets = false
 }
 </script>
