@@ -149,6 +149,9 @@ async function createMultipartPlaceholder() {
   const mimetypeMap: { [id: string]: string } = {
     "mp4": "video/mp4",
     "mov": "video/quicktime",
+    "mp3": "audio/mp3",
+    "wav": "audio/wav",
+    "m4a": "audio/m4a",
   }
   const mimetype = mimetypeMap[content.value.name.split(".").pop() as string]
 
