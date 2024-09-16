@@ -36,6 +36,7 @@
   "multiFactorCaption": "我们需要验证试图访问您账户的人是您本人。",
   "multiFactorHint": "检查您的收件箱",
   "multiFactorTypeEmail": "电子邮件一次性密码",
+  "multiFactorTypePassword": "账号密码",
   "signInCompleted": "完成",
   "signInCompletedCaption": "欢迎回来！您刚刚登录成功！我们将引导您进入仪表板...",
   "transferredToSolianHint": "此部分功能已转移到我们的应用程序 Solian，请下载或在浏览器中打开。如需了解更多信息，请访问项目描述页面。",

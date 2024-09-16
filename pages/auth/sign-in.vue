@@ -13,8 +13,13 @@
 
         <v-window :touch="false" :model-value="panel" class="pa-2 mx-[-0.5rem]">
           <v-window-item v-for="(k, idx) in Object.keys(panels)" :key="idx" :value="k">
-            <component :is="panels[k]" @swap="(val: string) => (panel = val)" v-model:loading="loading"
-                       v-model:currentFactor="currentFactor" v-model:ticket="ticket" />
+            <component
+              :is="panels[k]"
+              @swap="(val: string) => (panel = val)"
+              v-model:loading="loading"
+              v-model:currentFactor="currentFactor"
+              v-model:ticket="ticket"
+            />
           </v-window-item>
         </v-window>
       </v-card-text>
@@ -33,12 +38,8 @@ import AuthenticateCompleted from "~/components/auth/AuthenticateCompleted.vue"
 
 const { t } = useI18n()
 
-definePageMeta({
-  alias: ["/auth/mfa"],
-})
-
 useHead({
-  title: t('signInTitle'),
+  title: t("signInTitle"),
 })
 
 const route = useRoute()
@@ -66,17 +67,21 @@ onMounted(() => pickUpTicket())
 const id = useUserinfo()
 const router = useRouter()
 
-watch(id, (value) => {
-  if (value.isLoggedIn) {
-    if (route.query["close"]) {
-      window.close()
-    } else if (route.query["redirect_uri"]) {
-      window.open((route.query["redirect_uri"] as string) ?? "/", "_self")
-    } else {
-      router.push("/users/me")
+watch(
+  id,
+  (value) => {
+    if (value.isLoggedIn) {
+      if (route.query["close"]) {
+        window.close()
+      } else if (route.query["redirect_uri"]) {
+        window.open((route.query["redirect_uri"] as string) ?? "/", "_self")
+      } else {
+        router.push("/users/me")
+      }
     }
-  }
-}, { deep: true, immediate: true })
+  },
+  { deep: true, immediate: true },
+)
 
 const panel = ref("authenticate")
 

@@ -58,8 +58,8 @@ const emits = defineEmits(["swap", "update:ticket", "update:loading"])
 
 async function submit() {
   emits("update:loading", true)
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/auth/mfa`, {
-    method: "POST",
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/auth`, {
+    method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       ticket_id: props.ticket?.id,

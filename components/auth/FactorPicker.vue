@@ -48,7 +48,7 @@ async function load() {
   if (res.status !== 200) {
     error.value = await res.text()
   } else {
-    factors.value = (await res.json()).filter((e: any) => e.type != 0)
+    factors.value = await res.json()
   }
   emits("update:loading", false)
 }
@@ -76,13 +76,15 @@ async function submit() {
 
 function getFactorType(item: any) {
   switch (item.type) {
+    case 0:
+      return { icon: "mdi-form-textbox-password", label: t("multiFactorTypePassword") }
     case 1:
-      return { icon: "mdi-email-fast", label: t('multiFactorTypeEmail') }
+      return { icon: "mdi-email-fast", label: t("multiFactorTypeEmail") }
   }
 }
 
 function getFactorAvailable(factor: any) {
-  const blacklist: number[] = props.ticket?.blacklist_factors ?? []
+  const blacklist: number[] = props.ticket?.factor_trail ?? []
   return blacklist.includes(factor.id)
 }
 </script>

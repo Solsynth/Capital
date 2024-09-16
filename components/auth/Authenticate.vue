@@ -1,11 +1,15 @@
 <template>
   <div class="flex items-center">
     <v-form class="flex-grow-1" @submit.prevent="submit">
-      <v-text-field :label="t('username')" variant="solo" density="comfortable" class="mb-3" :hide-details="true"
-                    :disabled="props.loading" v-model="probe" />
-      <v-text-field :label="t('password')" variant="solo" density="comfortable" type="password"
-                    :disabled="props.loading"
-                    v-model="password" />
+      <v-text-field
+        :label="t('username')"
+        variant="solo"
+        density="comfortable"
+        class="mb-3"
+        :hide-details="true"
+        :disabled="props.loading"
+        v-model="probe"
+      />
 
       <v-expand-transition>
         <v-alert v-show="error" variant="tonal" type="error" class="text-xs mb-3">
@@ -36,7 +40,6 @@ const { t } = useI18n()
 const config = useRuntimeConfig()
 
 const probe = ref("")
-const password = ref("")
 
 const error = ref<string | null>(null)
 
@@ -44,13 +47,13 @@ const props = defineProps<{ loading?: boolean }>()
 const emits = defineEmits(["swap", "update:loading", "update:ticket"])
 
 async function submit() {
-  if (!probe.value || !password.value) return
+  if (!probe.value) return
 
   emits("update:loading", true)
   const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/auth`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username: probe.value, password: password.value }),
+    body: JSON.stringify({ username: probe.value }),
   })
   if (res.status !== 200) {
     error.value = await res.text()

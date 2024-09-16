@@ -36,6 +36,7 @@
   "multiFactorCaption": "We need to verify that the person trying to access your account is you.",
   "multiFactorHint": "Check your inbox",
   "multiFactorTypeEmail": "Email One-time-password",
+  "multiFactorTypePassword": "Password",
   "signInCompleted": "All Done",
   "signInCompletedCaption": "Welcome back! You just signed in right now! We're going to direct you to dashboard...",
   "authorizeTitle": "Connect to third-party",
