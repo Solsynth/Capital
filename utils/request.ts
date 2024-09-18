@@ -10,7 +10,7 @@ export async function solarFetch(input: string, init?: RequestInit) {
     ...init,
     headers: {
       ...init?.headers,
-      "Authorization": `Bearer ${await auth.getAtk()}`,
+      Authorization: `Bearer ${await auth.getAtk()}`,
     },
   })
 }

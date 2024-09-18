@@ -6,12 +6,7 @@
     <div class="my-5 w-[640px]">
       <v-expand-transition>
         <div v-if="!multipartProgress.value">
-          <v-file-input
-            label="File input"
-            variant="solo"
-            :hide-details="true"
-            v-model="content"
-          ></v-file-input>
+          <v-file-input label="File input" variant="solo" :hide-details="true" v-model="content"></v-file-input>
 
           <v-select
             label="Storage pool"
@@ -61,8 +56,14 @@
 
     <div class="flex">
       <v-btn :text="t('upload')" prepend-icon="mdi-upload" variant="plain" :loading="loading" @click="submit" />
-      <v-btn :text="t('cancel')" color="grey" append-icon="mdi-exit-to-app" variant="plain" to="/gallery"
-             :disabled="loading" />
+      <v-btn
+        :text="t('cancel')"
+        color="grey"
+        append-icon="mdi-exit-to-app"
+        variant="plain"
+        to="/gallery"
+        :disabled="loading"
+      />
     </div>
 
     <copyright class="mt-4" service="paperclip" />
@@ -94,7 +95,7 @@ const success = ref(false)
 
 const multipartSize = ref(0)
 const multipartInfo = ref<any>(null)
-const multipartProgress = reactive<{ value: number | null, current: number, total: number }>({
+const multipartProgress = reactive<{ value: number | null; current: number; total: number }>({
   value: null,
   current: 0,
   total: 0,
@@ -147,11 +148,11 @@ async function createMultipartPlaceholder() {
   if (!content.value) return
 
   const mimetypeMap: { [id: string]: string } = {
-    "mp4": "video/mp4",
-    "mov": "video/quicktime",
-    "mp3": "audio/mp3",
-    "wav": "audio/wav",
-    "m4a": "audio/m4a",
+    mp4: "video/mp4",
+    mov: "video/quicktime",
+    mp3: "audio/mp3",
+    wav: "audio/wav",
+    m4a: "audio/m4a",
   }
   const mimetype = mimetypeMap[content.value.name.split(".").pop() as string]
 
@@ -189,6 +190,7 @@ async function uploadSingleMultipart(chunkId: string) {
   const resp = await solarFetch(`/cgi/uc/attachments/multipart/${multipartInfo.value.rid}/${chunkId}`, {
     method: "POST",
     body: data,
+    signal: AbortSignal.timeout(3 * 60 * 1000),
   })
   if (resp.status != 200) throw new Error(await resp.text())
   multipartInfo.value = await resp.json()
