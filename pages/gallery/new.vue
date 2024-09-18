@@ -121,16 +121,45 @@ async function submit() {
     multipartProgress.total = chunks.length
 
     const uploadChunks = async (chunk: string) => {
-      await uploadSingleMultipart(chunk)
-      multipartProgress.current++
-      console.log(`[PAPERCLIP] Uploaded multipart ${multipartProgress.current}/${multipartProgress.total}`)
-      multipartProgress.value = multipartProgress.current / multipartProgress.total
+      try {
+        await uploadSingleMultipart(chunk)
+        multipartProgress.current++
+        console.log(`[PAPERCLIP] Uploaded multipart ${multipartProgress.current}/${multipartProgress.total}`)
+        multipartProgress.value = multipartProgress.current / multipartProgress.total
+      } catch (err) {
+        console.log(`[PAPERCLIP] Upload multipart ${chunk} failed, retrying in 3 seconds...`)
+        await new Promise((r) => setTimeout(r, 3000))
+        await uploadChunks(chunk)
+      }
     }
 
-    for (let i = 0; i < chunks.length; i += limit) {
-      const chunkSlice = chunks.slice(i, i + limit)
-      await Promise.all(chunkSlice.map(uploadChunks))
+    const queue = []
+    const limit = 3 // Set the concurrency limit
+
+    for (let i = 0; i < chunks.length; i++) {
+      // Wrap the promise with an object that holds the promise itself
+      const task = uploadChunks(chunks[i]).then(
+        () => ({ chunk: chunks[i], status: "fulfilled" }),
+        () => ({ chunk: chunks[i], status: "rejected" }),
+      )
+
+      queue.push(task)
+
+      // If the number of running tasks exceeds the limit, wait for one to finish
+      if (queue.length >= limit) {
+        // Wait for any one task to finish
+        const finishedTask = await Promise.race(queue)
+
+        // Find and remove the finished task's promise from the queue
+        queue.splice(
+          queue.findIndex((p) => p === task),
+          1,
+        )
+      }
     }
+
+    // Await remaining tasks after the loop finishes
+    await Promise.all(queue)
 
     if (multipartInfo.value["is_uploaded"]) {
       console.log(`[PAPERCLIP] Entire file has been uploaded in ${multipartProgress.total} chunk(s)`)
