@@ -133,33 +133,10 @@ async function submit() {
       }
     }
 
-    const queue = []
-    const limit = 3 // Set the concurrency limit
-
-    for (let i = 0; i < chunks.length; i++) {
-      // Wrap the promise with an object that holds the promise itself
-      const task = uploadChunks(chunks[i]).then(
-        () => ({ chunk: chunks[i], status: "fulfilled" }),
-        () => ({ chunk: chunks[i], status: "rejected" }),
-      )
-
-      queue.push(task)
-
-      // If the number of running tasks exceeds the limit, wait for one to finish
-      if (queue.length >= limit) {
-        // Wait for any one task to finish
-        const finishedTask = await Promise.race(queue)
-
-        // Find and remove the finished task's promise from the queue
-        queue.splice(
-          queue.findIndex((p) => p === task),
-          1,
-        )
-      }
+    for (let i = 0; i < chunks.length; i += limit) {
+      const chunkSlice = chunks.slice(i, i + limit)
+      await Promise.all(chunkSlice.map(uploadChunks))
     }
-
-    // Await remaining tasks after the loop finishes
-    await Promise.all(queue)
 
     if (multipartInfo.value["is_uploaded"]) {
       console.log(`[PAPERCLIP] Entire file has been uploaded in ${multipartProgress.total} chunk(s)`)
