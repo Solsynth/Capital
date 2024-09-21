@@ -3,24 +3,19 @@
     <v-card class="w-full max-w-[720px] overflow-auto" :loading="loading">
       <v-card-text class="card-grid pa-9">
         <div>
-          <v-avatar color="accent" icon="mdi-lock-reset" size="large" class="card-rounded mb-2" />
-          <h1 class="text-2xl">Reset password</h1>
-          <p>Reset password to get back access of your account.</p>
+          <v-avatar color="accent" icon="mdi-delete" size="large" class="card-rounded mb-2" />
+          <h1 class="text-2xl">Delete account</h1>
+          <p>Delete all the data and your account on Solar Network.</p>
         </div>
 
         <v-window :touch="false" :model-value="panel" class="pa-2 mx-[-0.5rem]">
           <v-window-item value="confirm">
             <div class="flex items-center">
               <v-form class="flex-grow-1" @submit.prevent="confirm">
-                <v-text-field
-                  label="New Password"
-                  type="password"
-                  autocomplete="new-password"
-                  variant="solo"
-                  density="comfortable"
-                  :disabled="loading"
-                  v-model="newPassword"
-                />
+                <v-alert variant="tonal" type="warning" class="text-xs mb-3">
+                  <p><b>Are you sure to delete your account?</b></p>
+                  This action cannot be undone. And all the delete related to your account will be deleted also.
+                </v-alert>
 
                 <v-expand-transition>
                   <v-alert v-show="error" variant="tonal" type="error" class="text-xs mb-3">
@@ -47,10 +42,10 @@
             <div>
               <v-icon icon="mdi-fire" size="32" color="grey-darken-3" class="mb-3" />
 
-              <h1 class="font-bold text-xl">Applied</h1>
-              <p>The password of your account has updated successfully.</p>
+              <h1 class="font-bold text-xl">Deleted</h1>
+              <p>Your account has been deleted successfully.</p>
 
-              <p class="mt-3">Now you can continue to use Solarpass, we will redirect you to sign-in soon.</p>
+              <p class="mt-3">You're no longer be able to sign in into your account.</p>
             </div>
           </v-window-item>
         </v-window>
@@ -76,20 +71,17 @@ const loading = ref(false)
 
 const panel = ref("confirm")
 
-const newPassword = ref("")
-
 async function confirm() {
   if (!route.query["code"]) {
     error.value = "code was not exists"
     return
   }
 
-  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/users/me/password-reset`, {
+  const res = await fetch(`${config.public.solarNetworkApi}/cgi/id/users/me/deletion`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       code: route.query["code"],
-      new_password: newPassword.value,
     }),
   })
   if (res.status !== 200) {
