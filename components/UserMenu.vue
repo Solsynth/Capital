@@ -26,7 +26,7 @@
 import { useUserinfo } from "@/stores/userinfo"
 import { computed } from "vue"
 
-const {t} = useI18n()
+const { t } = useI18n()
 const config = useRuntimeConfig()
 
 const id = useUserinfo()
@@ -50,9 +50,9 @@ const avatar = computed(() => {
 })
 
 function signOut() {
-  useCookie("__hydrogen_atk", { watch: "shallow" }).value = null
-  useCookie("__hydrogen_rtk", { watch: "shallow" }).value = null
-  id.userinfo = null
+  useAtk().value = null
+  useRtk().value = null
+  id.userinfo.value = null
   reloadNuxtApp()
 }
 </script>

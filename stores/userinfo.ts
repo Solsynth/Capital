@@ -3,11 +3,11 @@ import { ref } from "vue"
 import { solarFetch } from "~/utils/request"
 
 export function useAtk() {
-  return useCookie("__hydrogen_atk", { watch: "shallow", maxAge: 31556952000 })
+  return useCookie("__hydrogen_atk", { path: "/", maxAge: 31556952000 })
 }
 
 export function useRtk() {
-  return useCookie("__hydrogen_rtk", { watch: "shallow", maxAge: 31556952000 })
+  return useCookie("__hydrogen_rtk", { path: "/", maxAge: 31556952000 })
 }
 
 export function useLoggedInState() {
