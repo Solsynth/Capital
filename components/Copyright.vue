@@ -1,7 +1,7 @@
 <template>
   <div class="text-xs text-grey" :class="props.noCentered ? 'text-left' : 'text-center'">
     <p>{{ t("copyright") }} © {{ new Date().getFullYear() }} {{ t("brandNameFormal") }}</p>
-    <p v-if="services" class="flex justify-center">
+    <p v-if="services" class="flex" :class="props.noCentered ? 'justify-start' : 'justify-center'">
       <span>Powered by</span>
       <span class="flex services-list ms-1">
         <a class="service underline" v-for="item in services" :href="projects[item][1]">

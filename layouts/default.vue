@@ -1,15 +1,19 @@
 <template>
-  <v-app-bar flat color="primary" scroll-behavior="hide" scroll-threshold="800">
+  <v-app-bar flat color="primary">
     <v-container fluid class="mx-auto d-flex align-center justify-center px-8">
-      <nuxt-link to="/" exact>
-        <v-img class="me-4 ms-1" width="32" height="32" alt="Logo" :src="Logo" />
-      </nuxt-link>
+      <v-tooltip>
+        <template #activator="{ props }">
+          <div @click="openDrawer = !openDrawer" v-bind="props" class="cursor-pointer">
+            <v-img class="me-4 ms-1" width="32" height="32" alt="Logo" :src="Logo" />
+          </div>
+        </template>
+        Open / close drawer
+      </v-tooltip>
 
-      <div class="nav-links overflow-y-auto flex">
-        <v-btn variant="text" :text="t('navProducts')" to="/products" exact />
-        <v-btn variant="text" :text="t('navActivity')" to="/activity" exact />
-        <v-btn variant="text" :text="t('navGallery')" to="/gallery" exact />
-      </div>
+
+      <nuxt-link to="/" exact>
+        <h2 class="mt-1">Solsynth LLC</h2>
+      </nuxt-link>
 
       <v-spacer></v-spacer>
 
@@ -40,6 +44,25 @@
     </v-container>
   </v-app-bar>
 
+  <v-navigation-drawer v-model="openDrawer" location="left" width="300" floating>
+    <v-list density="compact" nav color="primary">
+      <v-list-item :title="t('navProducts')" prepend-icon="mdi-shape" to="/products" exact />
+      <v-list-item :title="t('navActivity')" prepend-icon="mdi-newspaper" to="/activity" exact />
+      <v-list-item :title="t('navGallery')" prepend-icon="mdi-album" to="/gallery" exact />
+    </v-list>
+
+    <v-divider class="border-opacity-50 mb-4" />
+
+    <copyright no-centered service="capital" class="px-5" />
+
+    <div class="px-5 mt-3 text-xs text-grey sidebar-footer transition-opacity duration-500">
+      <div class="flex footer-links flex-wrap">
+        <nuxt-link to="/terms/privacy-policy" class="hover:underline">Privacy Policy</nuxt-link>
+        <nuxt-link to="/terms/user-agreement" class="hover:underline">Term of Service</nuxt-link>
+      </div>
+    </div>
+  </v-navigation-drawer>
+
   <v-main>
     <slot />
   </v-main>
@@ -49,15 +72,27 @@
 import Logo from "../assets/logo-w-shadow.png"
 
 const { locale, locales, setLocale, t } = useI18n()
+
+const openDrawer = ref(false)
 </script>
 
 <style scoped>
-.nav-links::-webkit-scrollbar {
-  display: none;
+.sidebar-footer {
+  opacity: 0.3;
 }
 
-.nav-links {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
+.sidebar-footer:hover {
+  opacity: 1;
+}
+
+.footer-links *:not(:last-child):after {
+  content: "·";
+  font-family: monospace;
+  font-weight: bold;
+  text-align: center;
+  margin-left: 4px;
+  margin-right: 4px;
+  text-decoration: none !important;
+  display: inline-block;
 }
 </style>
