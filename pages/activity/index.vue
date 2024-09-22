@@ -1,6 +1,6 @@
 <template>
   <v-container class="content-container mx-auto">
-    <div class="my-3 mx-[3.5ch]">
+    <div class="my-3 mx-[1.5ch]">
       <div class="flex gap-1">
         <h1 class="text-2xl">{{ t("navActivity") }}</h1>
         <v-btn size="x-small" variant="text" icon="mdi-rss" slim to="/activity/feed" />
@@ -8,7 +8,7 @@
       <span>{{ t("navActivityCaption") }}</span>
     </div>
 
-    <post-list :realm="config.public.solarRealm" />
+    <post-list class="mx-[-2.5ch]" :realm="config.public.solarRealm" />
   </v-container>
 </template>
 
