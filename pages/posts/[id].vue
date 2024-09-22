@@ -106,8 +106,8 @@ if (!post.value) {
   navigateTo(`/posts/${post.value.area_alias}/${post.value.alias}`)
 }
 
-const title = computed(() => post.value.body?.title ? `${post.value.body?.title} from ${post.value.author.nick}` : `Post from ${post.value.author.nick}`)
-const description = computed(() => post.value.body?.description ?? post.value.body?.content.substring(0, 160).trim())
+const title = computed(() => post.value.body?.title ? `${post.value.body?.title} by @${post.value.author.name}` : `Post by @${post.value.author.name}`)
+const description = computed(() => post.value.body?.description ?? post.value.body?.content.substring(0, 280).trim())
 
 watch(attachments, (value) => {
   if (post.value.body?.thumbnail) {
@@ -124,7 +124,7 @@ watch(attachments, (value) => {
 
 useHead({
   title: title.value,
-  titleTemplate: "%s on Solar Network",
+  titleTemplate: "%s",
   link: [
     { rel: "icon", type: "image/png", href: "/icon-solar-network.png" },
     { rel: "apple-touch-icon", type: "image/png", href: "/icon-solar-network.png" },
