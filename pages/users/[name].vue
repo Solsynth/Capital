@@ -11,13 +11,6 @@
         </div>
       </div>
 
-      <div class="mb-5 text-xs text-grey flex flex-col">
-        <span>Solar Network User Web Preview</span>
-        <span>
-          To get full view of this user's profile, open it on <a class="underline" :href="externalOpenLink">Solian</a>
-        </span>
-      </div>
-
       <div>
         <h1 class="text-xl">{{ t("userActivity") }}</h1>
         <span>{{ t("userActivityCaption") }}</span>

@@ -1,11 +1,11 @@
 <template>
   <v-container class="content-container mx-auto">
-    <div class="my-3 mx-[3.5ch]">
+    <div class="my-3 mx-[1.5ch]">
       <h1 class="text-2xl">{{ t("navPosts") }}</h1>
       <span>{{ t("navPostsCaption") }}</span>
     </div>
 
-    <post-list />
+    <post-list class="mx-[-2.5ch]" />
   </v-container>
 </template>
 

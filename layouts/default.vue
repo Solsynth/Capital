@@ -47,15 +47,16 @@
   <v-navigation-drawer v-model="openDrawer" location="left" width="300" floating>
     <v-list density="compact" nav color="primary">
       <v-list-item :title="t('navProducts')" prepend-icon="mdi-shape" to="/products" exact />
-      <v-list-item :title="t('navActivity')" prepend-icon="mdi-newspaper" to="/activity" exact />
-      <v-list-item :title="t('navGallery')" prepend-icon="mdi-album" to="/gallery" exact />
+      <v-list-item :title="t('navPosts')" prepend-icon="mdi-note-text" to="/posts" exact />
+      <v-list-item :title="t('navActivity')" prepend-icon="mdi-newspaper-variant-multiple-outline" to="/activity" exact />
+      <v-list-item :title="t('navGallery')" prepend-icon="mdi-image-multiple" to="/gallery" exact />
     </v-list>
 
     <v-divider class="border-opacity-50 my-1" />
 
     <v-list density="compact" nav color="primary">
       <v-list-item title="Developer Portal" prepend-icon="mdi-code-tags" to="/dev" exact />
-      <v-list-item title="Creator Hub" prepend-icon="mdi-pencil" to="#" exact />
+      <v-list-item title="Creator Hub" prepend-icon="mdi-pencil" disabled exact />
     </v-list>
 
     <v-divider class="border-opacity-50 mb-4 mt-0.5" />
