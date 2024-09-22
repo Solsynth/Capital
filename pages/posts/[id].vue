@@ -1,7 +1,9 @@
 <template>
   <v-container class="content-container mx-auto">
     <div class="my-3 flex flex-row gap-4">
-      <v-avatar :image="post.author?.avatar" />
+      <nuxt-link :to="`/users/${post.author?.name}`">
+        <v-avatar :image="post.author?.avatar" />
+      </nuxt-link>
       <div class="flex flex-col">
         <span>{{ post.author?.nick }} <span class="text-xs">@{{ post.author?.name }}</span></span>
         <span v-if="post.body?.title" class="text-md">{{ post.body?.title }}</span>

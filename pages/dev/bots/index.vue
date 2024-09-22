@@ -1,5 +1,5 @@
 <template>
-  <v-container>
+  <v-container class="px-12">
     <div class="flex justify-between items-center mt-5">
       <div class="flex items-end gap-2">
         <h1 class="text-2xl">Bots</h1>

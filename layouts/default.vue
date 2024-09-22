@@ -51,16 +51,18 @@
       <v-list-item :title="t('navGallery')" prepend-icon="mdi-album" to="/gallery" exact />
     </v-list>
 
-    <v-divider class="border-opacity-50 mb-4" />
+    <v-divider class="border-opacity-50 my-1" />
+
+    <v-list density="compact" nav color="primary">
+      <v-list-item title="Developer Portal" prepend-icon="mdi-code-tags" to="/dev" exact />
+      <v-list-item title="Creator Hub" prepend-icon="mdi-pencil" to="#" exact />
+    </v-list>
+
+    <v-divider class="border-opacity-50 mb-4 mt-0.5" />
 
     <copyright no-centered service="capital" class="px-5" />
 
-    <div class="px-5 mt-3 text-xs text-grey sidebar-footer transition-opacity duration-500">
-      <div class="flex footer-links flex-wrap">
-        <nuxt-link to="/terms/privacy-policy" class="hover:underline">Privacy Policy</nuxt-link>
-        <nuxt-link to="/terms/user-agreement" class="hover:underline">Term of Service</nuxt-link>
-      </div>
-    </div>
+    <footer-links class="px-5 mt-3" />
   </v-navigation-drawer>
 
   <v-main>
@@ -75,24 +77,3 @@ const { locale, locales, setLocale, t } = useI18n()
 
 const openDrawer = ref(false)
 </script>
-
-<style scoped>
-.sidebar-footer {
-  opacity: 0.3;
-}
-
-.sidebar-footer:hover {
-  opacity: 1;
-}
-
-.footer-links *:not(:last-child):after {
-  content: "·";
-  font-family: monospace;
-  font-weight: bold;
-  text-align: center;
-  margin-left: 4px;
-  margin-right: 4px;
-  text-decoration: none !important;
-  display: inline-block;
-}
-</style>
