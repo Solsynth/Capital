@@ -1,7 +1,9 @@
 <template>
   <v-container class="content-container mx-auto">
     <div class="mt-3 mb-4.5 mx-[2.5ch] flex flex-row gap-4 items-center">
-      <v-avatar :image="attachment.account?.avatar" />
+      <nuxt-link :to="`/users/${attachment.account?.name}`">
+        <v-avatar :image="attachment.account?.avatar" />
+      </nuxt-link>
       <div class="flex flex-col">
         <span class="text-xs">Uploaded by</span>
         <span>{{ attachment.account?.nick }} <span class="text-xs">@{{ attachment.account?.name }}</span></span>
