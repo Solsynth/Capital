@@ -11,7 +11,7 @@
       </v-tooltip>
 
       <nuxt-link to="/dev" exact>
-        <h2 class="mt-1">Developer Portal</h2>
+        <h2 class="mt-1">Creator Hub</h2>
       </nuxt-link>
 
       <v-spacer></v-spacer>
@@ -29,7 +29,7 @@
     <v-divider class="border-opacity-50 my-1" />
 
     <v-list density="compact" nav color="primary">
-      <v-list-item title="Bots" prepend-icon="mdi-robot" to="/dev/bots" exact />
+      <v-list-item title="Stickers" prepend-icon="mdi-sticker-emoji" to="/creator/stickers" exact />
     </v-list>
 
     <v-divider class="border-opacity-50 mb-4 mt-1" />
@@ -51,6 +51,6 @@ const { t } = useI18n()
 const openDrawer = ref(false)
 
 useHead({
-  titleTemplate: "%s | Solsynth Dev Portal"
+  titleTemplate: "%s | Solsynth Creator Hub"
 })
 </script>

@@ -99,6 +99,7 @@ import { solarFetch } from "~/utils/request"
 
 definePageMeta({
   layout: "dev-portal",
+  middleware: ["auth"],
 })
 
 useHead({

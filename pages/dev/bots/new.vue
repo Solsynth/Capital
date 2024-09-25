@@ -61,6 +61,7 @@
 <script setup lang="ts">
 definePageMeta({
   layout: "dev-portal",
+  middleware: ["auth"],
 })
 
 useHead({

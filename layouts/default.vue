@@ -17,29 +17,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-menu>
-        <template v-slot:activator="{ props }">
-          <v-btn
-            size="small"
-            icon="mdi-translate"
-            v-bind="props"
-          />
-        </template>
-        <v-list>
-          <v-list-item
-            class="w-48"
-            density="compact"
-            v-for="item in locales"
-            :key="item.code"
-            :value="item.code"
-            :active="locale == item.code"
-            @click.prevent.stop="setLocale(item.code)"
-          >
-            <v-list-item-title>{{ item.name }}</v-list-item-title>
-          </v-list-item>
-        </v-list>
-      </v-menu>
-
+      <locale-select />
       <user-menu />
     </v-container>
   </v-app-bar>
@@ -56,7 +34,7 @@
 
     <v-list density="compact" nav color="primary">
       <v-list-item title="Developer Portal" prepend-icon="mdi-code-tags" to="/dev" exact />
-      <v-list-item title="Creator Hub" prepend-icon="mdi-pencil" disabled exact />
+      <v-list-item title="Creator Hub" prepend-icon="mdi-pencil" to="/creator" exact />
     </v-list>
 
     <v-divider class="border-opacity-50 mb-4 mt-0.5" />
@@ -74,7 +52,7 @@
 <script setup lang="ts">
 import Logo from "../assets/logo-w-shadow.png"
 
-const { locale, locales, setLocale, t } = useI18n()
+const {  t } = useI18n()
 
 const openDrawer = ref(false)
 </script>
