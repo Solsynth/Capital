@@ -4,9 +4,11 @@
       <nuxt-link to="/terms/privacy-policy" class="hover:underline">Privacy Policy</nuxt-link>
       <nuxt-link to="/terms/user-agreement" class="hover:underline">Term of Service</nuxt-link>
     </div>
+    <div class="flex footer-links flex-wrap">
+      <nuxt-link to="https://status.solsynth.dev" target="_blank" class="hover:underline">Status of Service</nuxt-link>
+    </div>
   </div>
 </template>
-
 <style scoped>
 .sidebar-footer {
   opacity: 0.3;
@@ -27,3 +29,5 @@
   display: inline-block;
 }
 </style>
+<script setup lang="ts">
+</script>
