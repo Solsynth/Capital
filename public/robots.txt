@@ -1,5 +1,8 @@
 User-agent: *
 Disallow: /embed
+Disallow: /dev
+Disallow: /creator
+Disallow: /users/me
 Allow: /
 
 Sitemap: https://solsynth.dev/sitemap.xml

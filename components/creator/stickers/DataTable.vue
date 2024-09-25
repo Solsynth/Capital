@@ -1,4 +1,10 @@
 <template>
+  <v-expand-transition>
+    <v-alert v-if="error" variant="tonal" type="error" class="text-xs mb-3">
+      {{ t("errorOccurred", [error]) }}
+    </v-alert>
+  </v-expand-transition>
+
   <v-data-table-server
     density="compact"
     :headers="dataDefinitions.stickers"
@@ -22,7 +28,7 @@
             rounded="sm"
             :src="`${config.public.solarNetworkApi}/cgi/uc/attachments/${item.attachment.rid}`"
           >
-            <template v-slot:placeholder>
+            <template #placeholder>
               <div class="d-flex align-center justify-center fill-height">
                 <v-progress-circular
                   size="x-small"
@@ -37,7 +43,13 @@
         <td>{{ item.name }}</td>
         <td>{{ props.packPrefix + item.alias }}</td>
         <td>
-
+          <v-btn
+            v-bind="props"
+            variant="text"
+            size="x-small"
+            color="warning"
+            icon="mdi-pencil"
+          />
         </td>
       </tr>
     </template>
@@ -48,6 +60,7 @@
 import { solarFetch } from "~/utils/request"
 
 const config = useRuntimeConfig()
+const { t } = useI18n()
 
 const props = defineProps<{ packId: number, packPrefix?: string }>()
 
