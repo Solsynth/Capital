@@ -10,7 +10,7 @@
 
           <v-select
             label="Storage pool"
-            variant="underlined"
+            variant="solo"
             :items="poolOptions"
             item-title="label"
             item-value="value"
@@ -80,10 +80,21 @@ useHead({
 })
 
 const { t } = useI18n()
+const route = useRoute()
+
+onMounted(() => {
+  if (route.query.pool) {
+    pool.value = atob(decodeURIComponent(route.query.pool.toString()))
+    if (pool.value == "dedicated") {
+      pool.value = poolOptions[0].value
+    }
+  }
+})
 
 const poolOptions = [
   { label: "Interactive", description: "Public indexable, no lifecycle.", value: "interactive" },
   { label: "Messaging", description: "Has lifecycle, will delete after 14 days.", value: "messaging" },
+  { label: "Sticker", description: "Public indexable, privilege required.", value: "sticker", disabled: true },
   { label: "Dedicated Pool", description: "Your own configuration, coming soon.", value: "dedicated", disabled: true },
 ]
 

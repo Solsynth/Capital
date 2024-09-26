@@ -45,6 +45,7 @@
                       size="x-small"
                       color="info"
                       icon="mdi-key"
+                      class="ms-[-8px]"
                     />
                   </template>
                 </dev-bot-token-dialog>

@@ -19,26 +19,32 @@
       <tr>
         <td>{{ item.id }}</td>
         <td>
-          <v-img
-            cover
-            aspect-ratio="1"
-            width="28"
-            height="28"
-            color="grey-lighten-2"
-            rounded="sm"
-            :src="`${config.public.solarNetworkApi}/cgi/uc/attachments/${item.attachment.rid}`"
-          >
-            <template #placeholder>
-              <div class="d-flex align-center justify-center fill-height">
-                <v-progress-circular
-                  size="x-small"
-                  width="3"
-                  color="grey-lighten-4"
-                  indeterminate
-                ></v-progress-circular>
-              </div>
-            </template>
-          </v-img>
+          <div class="item-texture-cell">
+            <v-img
+              cover
+              aspect-ratio="1"
+              width="28"
+              height="28"
+              color="grey-lighten-2"
+              rounded="sm"
+              :src="`${config.public.solarNetworkApi}/cgi/uc/attachments/${item.attachment.rid}`"
+            >
+              <template #placeholder>
+                <div class="d-flex align-center justify-center fill-height">
+                  <v-progress-circular
+                    size="x-small"
+                    width="3"
+                    color="grey-lighten-4"
+                    indeterminate
+                  ></v-progress-circular>
+                </div>
+              </template>
+            </v-img>
+
+            <v-code class="px-2 w-fit font-mono">
+              {{ item.attachment.rid }}
+            </v-code>
+          </div>
         </td>
         <td>{{ item.name }}</td>
         <td>{{ props.packPrefix + item.alias }}</td>
@@ -49,7 +55,47 @@
             size="x-small"
             color="warning"
             icon="mdi-pencil"
+            class="ms-[-8px]"
+            :to="`/creator/stickers/${item.pack_id}/${item.id}/edit`"
           />
+
+          <v-dialog max-width="480">
+            <template #activator="{ props }">
+              <v-btn
+                v-bind="props"
+                variant="text"
+                size="x-small"
+                color="error"
+                icon="mdi-delete"
+                :disabled="submitting"
+              />
+            </template>
+
+            <template v-slot:default="{ isActive }">
+              <v-card :title="`Delete sticker #${item.id}?`">
+                <v-card-text>
+                  This action will delete this sticker, all content used it will no longer show your sticker.
+                  But the attachment will still exists.
+                </v-card-text>
+
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+
+                  <v-btn
+                    text="Cancel"
+                    color="grey"
+                    @click="isActive.value = false"
+                  ></v-btn>
+
+                  <v-btn
+                    text="Delete"
+                    color="error"
+                    @click="() => { deleteSticker(item); isActive.value = false }"
+                  />
+                </v-card-actions>
+              </v-card>
+            </template>
+          </v-dialog>
         </td>
       </tr>
     </template>
@@ -107,4 +153,30 @@ async function readStickers({ page, itemsPerPage }: { page?: number; itemsPerPag
 }
 
 onMounted(() => readStickers({}))
+
+const submitting = ref(false)
+
+async function deleteSticker(item: any) {
+  submitting.value = true
+
+  const res = await solarFetch(`/cgi/uc/stickers/${item.id}`, {
+    method: "DELETE",
+  })
+  if (res.status !== 200) {
+    error.value = await res.text()
+  } else {
+    await readStickers({})
+  }
+
+  submitting.value = false
+}
 </script>
+
+<style scoped>
+.item-texture-cell {
+  display: grid;
+  grid-template-columns: 28px auto;
+  gap: 6px;
+  width: fit-content;
+}
+</style>

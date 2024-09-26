@@ -54,9 +54,16 @@
                   <v-btn
                     variant="text"
                     size="x-small"
+                    color="info"
+                    icon="mdi-sticker-plus"
+                    :to="`/creator/stickers/${item.id}/new`"
+                  />
+                  <v-btn
+                    variant="text"
+                    size="x-small"
                     color="warning"
                     icon="mdi-pencil"
-                    :to="`/creator/stickers/edit/${item.id}`"
+                    :to="`/creator/stickers/${item.id}/edit`"
                   />
 
                   <v-dialog max-width="480">
