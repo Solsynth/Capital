@@ -143,7 +143,7 @@ async function submit(evt: SubmitEvent) {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      pack_id: route.params.id,
+      pack_id: parseInt(route.params.id.toString()),
       ...data,
     }),
   })
