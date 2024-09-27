@@ -62,10 +62,20 @@ useSeoMeta({
   position: relative;
 }
 
-.docs-container {
-  display: flex;
-  flex-direction: row;
-  gap: 1rem;
+@media (min-width: 768px) {
+  .docs-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .docs-container {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 1rem;
+  }
 }
 
 .docs-content {
