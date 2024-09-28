@@ -39,7 +39,7 @@
             </v-card-text>
           </v-card>
 
-          <v-card class="w-28 aspect-square" href="https://kb.solsynth.dev" target="_blank">
+          <v-card class="w-28 aspect-square" to="/docs">
             <v-card-text class="flex flex-col justify-center items-center text-center h-full">
               <v-icon icon="mdi-library" size="32" />
               <span class="text-sm mt-1.75">Knowledge Base</span>

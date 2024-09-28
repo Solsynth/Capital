@@ -22,9 +22,6 @@
           <v-tab :value="1">
             <v-icon icon="mdi-table-of-contents" />
           </v-tab>
-          <v-tab :value="2">
-            <v-icon icon="mdi-information" />
-          </v-tab>
         </v-tabs>
 
         <v-divider class="border-opacity-50 mb-1" />
@@ -33,13 +30,6 @@
           <v-tabs-window-item :value="1">
             <docs-table-of-contents v-if="page.body.toc.links?.length > 0" :links="page.body.toc.links" />
             <v-empty-state v-else text="No Headers Available" />
-          </v-tabs-window-item>
-          <v-tabs-window-item :value="2">
-            <div class="flex flex-col gap-2">
-              <div>
-                <p><b>Created By</b></p>
-              </div>
-            </div>
           </v-tabs-window-item>
         </v-tabs-window>
       </v-navigation-drawer>
@@ -109,6 +99,12 @@ useSeoMeta({
 <style>
 .docs-article img {
   border-radius: 8px;
+  border: 1px solid #eee;
+  transition: box-shadow .3s ease-in-out;
+}
+
+.docs-article img:hover {
+  box-shadow: 2px 2px 2px rgba(0, 0, 0, .2);;
 }
 
 

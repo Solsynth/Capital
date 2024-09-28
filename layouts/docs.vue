@@ -74,7 +74,7 @@ const route = useRoute()
 const navNotRoot = computed(() => route.path.split("/").length > 2)
 const navQuery = computed(() => ({
   where: {
-    _path: new RegExp("^\\" + route.path + ".*"),
+    _path: new RegExp("^\\" + route.path + "\\/[^\\/]+\\/?$"),
     _locale: getLocale(locale),
   },
 }))

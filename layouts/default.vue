@@ -33,6 +33,7 @@
     <v-divider class="border-opacity-50 my-1" />
 
     <v-list density="compact" nav color="primary">
+      <v-list-item title="Knowledge Base" prepend-icon="mdi-library" to="/docs" exact />
       <v-list-item title="Developer Portal" prepend-icon="mdi-code-tags" to="/dev" exact />
       <v-list-item title="Creator Hub" prepend-icon="mdi-pencil" to="/creator" exact />
     </v-list>
