@@ -17,12 +17,14 @@
         </article>
       </div>
 
-      <v-navigation-drawer app v-model="drawerOpen" floating location="right" width="320">
-        <v-tabs v-model="drawerTab" hide-slider align-tabs="center">
-          <v-tab :value="1">
-            <v-icon icon="mdi-table-of-contents" />
-          </v-tab>
-        </v-tabs>
+      <v-navigation-drawer app v-model="drawerOpen" floating location="right" width="300">
+        <div class="h-[60px] flex justify-center items-center">
+          <v-tabs v-model="drawerTab" hide-slider align-tabs="center">
+            <v-tab :value="1">
+              <v-icon icon="mdi-table-of-contents" />
+            </v-tab>
+          </v-tabs>
+        </div>
 
         <v-divider class="border-opacity-50 mb-1" />
 

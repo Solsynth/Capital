@@ -61,6 +61,13 @@
   </v-navigation-drawer>
 
   <v-main>
+    <v-sheet color="grey-lighten-8" v-if="breadcrumb.length >= 1">
+      <div class="flex items-center justify-center h-[60px] px-5">
+        <v-breadcrumbs :items="breadcrumb" density="compact"></v-breadcrumbs>
+      </div>
+      <v-divider class="border-opacity-50" />
+    </v-sheet>
+
     <slot />
   </v-main>
 </template>
@@ -71,10 +78,19 @@ import Logo from "../assets/logo-w-shadow.png"
 const { locale } = useI18n()
 const route = useRoute()
 
+const breadcrumb = computed(() => {
+  const arr = route.path.replace(/^\/|\/$/g, "").split("/")
+  arr.shift()
+  return arr.map((x, idx) => ({
+    title: x,
+    to: `/docs/${arr.slice(0, idx+1).join("/")}`,
+  }))
+})
+
 const navNotRoot = computed(() => route.path.split("/").length > 2)
 const navQuery = computed(() => ({
   where: {
-    _path: new RegExp("^\\" + route.path + "\\/[^\\/]+\\/?$"),
+    _path: new RegExp("^\\/" + route.path.replace(/^\/|\/$/g, '') + "\\/[^\\/]+\\/?$"),
     _locale: getLocale(locale),
   },
 }))
