@@ -1,7 +1,9 @@
-export function getLocale() {
+export function getLocale(locale?: any) {
   const fallbackLocale = "en"
   const supportedLocales = ["en", "zh-CN"]
-  const { locale } = useI18n()
+  if (locale == null) {
+    locale = useI18n().locale
+  }
 
-  return supportedLocales.includes(locale.value) ? locale.value : fallbackLocale;
+  return supportedLocales.includes(locale.value) ? locale.value : fallbackLocale
 }
