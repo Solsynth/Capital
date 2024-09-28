@@ -1,0 +1,71 @@
+---
+icon: mdi-pencil-ruler
+title: API Standards
+description: The guidelines we follow when designing Solar Network service APIs
+---
+
+This article covers the paradigms we follow when designing Solar Network APIs, helping you better interact with our APIs for secondary development.
+
+## Minimization
+
+Our APIs aim to be minimalistic. Unlike some major platforms, where the response includes not only data but also a bunch of status codes, messages, and request IDs, we keep such information in the HTTP headers. The HTTP response body contains only the raw data, with no extra information (for paginated endpoints, an additional field for total count will be included).
+
+## CRUD Operations
+
+Our APIs generally follow RESTful design patterns. If you're unfamiliar with RESTful principles, here’s how we practice it:
+
+### Request Methods
+
+- `GET` for fetching data
+- `POST` for creating or performing some operations
+- `PUT` for updating (though in RESTful principles it's also defined for creation, we don’t use it that way)
+- `PATCH` for updating (rarely used)
+- `DELETE` for removing data
+
+### Path Mapping
+
+If you use `POST` to create data at an endpoint, using `GET` on the same endpoint will typically list the data.
+Appending `/<id>` to the path will fetch a specific data entry. Switching the request method to `PUT` updates the entry, and using `DELETE` removes it.
+If additional actions are needed, append paths after `/<id>`, usually for operations handled via `POST`.
+
+Here’s an example of path mapping for posts:
+
+*Note: `:id` is a path parameter.*
+
+- `GET /posts` - Retrieves a list of posts (paginated)
+- `GET /posts/:id` - Retrieves a specific post
+- `GET /posts/:id/replies` - Retrieves replies for a specific post (paginated)
+- `POST /posts` - ~~Creates a post~~ (removed in the new version due to post types; use the specific post type creation endpoint)
+- `PUT /posts/:id` - ~~Updates a post~~ (removed in the new version due to post types; use the specific post type update endpoint)
+- `DELETE /posts/:id` - Deletes a post
+- `POST /posts/:id/pin` - Pins a post
+- `POST /posts/:id/react` - Reacts to a post
+
+## Error Handling
+
+We don’t understand why, despite HTTP providing a complete set of status codes, other large companies still create their own. For HTTP status codes, here’s a summary of common meanings:
+
+- `500` - Internal Server Error — No need to worry; just file an issue if it happens frequently.
+- `400` - Bad Request — Check the documentation and request body.
+- `404` - Data not found or incorrect API path.
+- `403` - Forbidden — You don’t have permission.
+- `401` - Unauthorized — API token required but not provided.
+- `200` - Success
+- `204` - No Content — Common for delete operations (though often forgotten during API development).
+
+If the response status is not `2xx`, we usually return a `plain/text` response instead of `application/json`, providing a simple line of text indicating the error.
+
+> If you’re not good at English, don’t keep asking us about errors — use a translator! Why else would we write error messages?
+
+## Super Gateway
+
+The Super Gateway refers to our [Hydrogen.Dealer](https://git.solsynth.dev/Hydrogen/Dealer). In most cases, you won’t directly access our services; requests are forwarded through the Dealer gateway. We’re not even sure why we created this.
+
+Our API base URL is `api.sn.solsynth.dev`. How do you use it? It’s simple. Access `/cgi/<service name>`, and this path will be forwarded to the corresponding service’s `/api` endpoint. In the latest version, we also introduced aliases for these services, making the URLs more readable.
+
+- `/cgi/id` or `/cgi/auth` — Authentication service [Hydrogen.Passport](https://git.solsynth.dev/Hydrogen/Passport)
+- `/cgi/uc` or `/cgi/files` — Attachment service [Hydrogen.Paperclip](https://git.solsynth.dev/Hydrogen/Paperclip)
+- `/cgi/co` or `/cgi/interactive` — Post service [Hydrogen.Interactive](https://git.solsynth.dev/Hydrogen/Interactive)
+- `/cgi/im` or `/cgi/messaging` — Messaging service [Hydrogen.Messaging](https://git.solsynth.dev/Hydrogen/Messaging)
+
+> Fun fact: You might have noticed that the new aliases are actually the subdomains used before we had the Super Gateway.

@@ -1,0 +1,23 @@
+---
+icon: mdi-web
+title: Solar Network
+description: The Next-Generation Social Network by Solsynth LLC
+---
+
+![Solar Archive Thumbnail](/thumbnails/docs/solar-network-user-manual.webp)
+
+Solar Network is a social network developed by Solsynth LLC, aiming to become the next-generation social network.
+
+## Tech Stack
+
+The Solar Network project follows the classic frontend-backend separation architecture, with the entire project divided into two parts: the frontend (Solian) and the backend (Hydrogen.Dealer, Hydrogen.Passport, etc.).
+
+### Frontend
+
+The frontend of Solar Network is a cross-platform client built with Flutter. For more details, check the [related page](solar-network/solian).
+
+### Backend
+
+The backend of Solar Network follows what we define as a "mid-service" architecture. Compared to microservices, each individual service is responsible for more tasks and is larger in scope, allowing us to maintain multiple projects more easily. At the same time, issues with a single service won't cause an overall outage.
+
+At the center of it all is our core service — Hydrogen.Dealer, which serves as both the service discovery system and mid-service gateway. It is also the only external interface for Solar Network, with `api.sn.solsynth.dev` being the gateway exposed by Hydrogen.Dealer.

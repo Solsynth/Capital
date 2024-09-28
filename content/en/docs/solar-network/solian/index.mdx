@@ -1,0 +1,104 @@
+---
+icon: mdi-open-in-app
+title: Solian Chain
+description: Solian is the official cross-platform client developed by Solsynth LLC.
+---
+
+Solian is the cross-platform Solar Network client built with Flutter, and currently, it’s our only frontend.
+
+# Usage
+
+To use Solian, you can either download the client or open it directly in your browser. Thanks to Flutter’s cross-platform support, you can access the web version of Solian at https://lian.solsynth.dev. However, due to browser limitations, some features may be missing or affected.
+
+## Download
+
+There are many ways to download Solsynth, but make sure to download from officially certified channels.
+
+1. The official release version from the repository: https://git.solsynth.dev/Hydrogen/Solian/releases
+2. The test version from the official file storage: https://files.solsynth.dev/production01/solian
+3. Official TestFlight (iOS and some macOS): https://testflight.apple.com/join/YJ0lmN6O
+
+The Windows version is a portable version. You can place it in a directory you're familiar with and run it directly.
+The web version also supports PWA (Progressive Web Application), which can replace some desktop usage.
+
+## Installation
+
+Below are the technical instructions for installing Solian on different platforms.
+
+### Android
+
+It is recommended to download the latest test version from the **file storage**. It has the latest fixes and is the most stable. ~~The test version is more stable than the stable version.~~
+
+You can open and install the downloaded APK file directly. For Chinese phones, additional steps may be required for verification, but please avoid searching for and downloading from built-in app stores.
+
+### iOS/macOS
+
+Use TestFlight for installation. First, click the link above to download the TestFlight app. Then, click "Start Testing" in the second step of the link to join the test.
+
+TestFlight has a limited number of testing slots. Once the time is right, we will release Solian on the App Store (non-China region), where you can search and download it.
+
+### Windows
+
+After downloading from any trusted source, extract it to a directory, and you can start using it.
+
+**Note:** It seems that, due to a potential Flutter support issue, the Windows version often freezes for a while during the first startup before displaying the main window. Please be patient and avoid clicking repeatedly, as it may take 5 to 30 seconds. Repeated clicking may open multiple windows.
+
+### Linux
+
+Please build it yourself. I believe you can do it — good luck!
+
+## Build It Yourself
+
+### Preparing the Environment
+
+Building Solian requires the Flutter SDK. Please download the latest version from the official site. Alternatively, you can download it from a China mirror.
+After installing Flutter, follow the official documentation to install other platform-specific dependencies (e.g., Windows requires VS2022, Android requires Android Studio, and for iOS/macOS, it’s better to use the official pre-built version).
+
+In addition to installing the Flutter SDK, we need Rust for system-level dependencies. Please download the latest version from the official Rust site.
+
+Now that we have Flutter and Rust, we need one more thing — SQLite3, to support local databases for chat and future modules.
+For Linux, you need to install the corresponding SQLite3 development dependencies:
+
+```sh
+# for ubuntu
+sudo apt-get -y install libsqlite3-0 libsqlite3-dev
+```
+
+For Windows, download the
+[sqlite3.dll](https://github.com/tekartik/sqflite/raw/master/sqflite_common_ffi/lib/src/windows/sqlite3.dll)
+and place it in the running directory.
+No additional steps are needed for macOS or mobile builds.
+
+### Building the Code
+
+Next, it’s time to build the code. Ensure that you have `git` installed on your build machine. Alternatively, you can download the code as a compressed archive.
+Once `git` is installed, use the following command to clone the code:
+
+```sh
+git clone https://git.solsynth.dev/Hydrogen/Solian.git
+```
+
+Navigate to the corresponding directory and install dependencies using the following command:
+
+```sh
+flutter pub get
+```
+
+This will download dependencies from [pub.dev](https://pub.dev), hosted by Google. Connectivity within mainland China might be questionable. Refer to mirror sites for solutions.
+
+Once the dependencies are installed, you can proceed with the build. Just one line of code:
+
+```sh
+# for windows
+flutter build windows
+# for macos
+flutter build macos
+# for linux
+flutter build linux
+# for ios
+flutter build ipa
+# for android
+flutter build apk
+```
+
+You can also build other formats for Android, such as `aab`, but please prepare the necessary signing materials yourself.
