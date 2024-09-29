@@ -162,10 +162,13 @@ async function submit(evt: SubmitEvent) {
 
   submitting.value = true
 
-  const res = await solarFetch(`/cgi/uc/stickers/packs/${route.params.id}`, {
+  const res = await solarFetch(`/cgi/uc/stickers/${route.params.sticker}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
+    body: JSON.stringify({
+      pack_id: parseInt(route.params.id.toString()),
+      ...data,
+    }),
   })
   if (res.status != 200) {
     error.value = await res.text()
