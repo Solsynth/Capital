@@ -1,0 +1,16 @@
+{
+  "sync": {
+    "region": "capital",
+    "configPath": "roadsign.toml"
+  },
+  "deployments": [
+    {
+      "region": "capital",
+      "site": "capital-app",
+      "path": ".output",
+      "postDeploy": {
+        "command": "apk add nodejs npm; cd server && npm install --platform=linux --arch=x64 sharp"
+      }
+    }
+  ]
+}

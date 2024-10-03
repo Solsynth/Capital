@@ -1,0 +1,15 @@
+id = "capital"
+
+[[locations]]
+id = "capital"
+hosts = ["solsynth.dev", "www.solsynth.dev"]
+paths = ["/"]
+[[locations.destinations]]
+id = "capital-destination"
+uri = "http://127.0.0.1:3000"
+
+[[applications]]
+id = "capital-app"
+workdir = "/workdir/capital"
+command = ["node", "server/index.mjs"]
+environment = []
