@@ -75,5 +75,6 @@
   "attachmentUploadProgress": "Uploading",
   "attachmentUploadCompleted": "Uploaded",
   "upload": "Upload",
-  "cancel": "Cancel"
+  "cancel": "Cancel",
+  "seeMore": "See more"
 }

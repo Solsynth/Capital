@@ -21,8 +21,8 @@
     </v-row>
     <v-row class="content-section">
       <v-col cols="12" md="8">
-        <v-card class="max-h-[500px]">
-          <activity-carousel class="carousel-section" />
+        <v-card class="h-[500px]">
+          <activity-list class="carousel-section" />
         </v-card>
       </v-col>
       <v-col cols="12" md="4" class="flex justify-end" order="first" order-md="last">

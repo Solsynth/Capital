@@ -62,6 +62,7 @@ export default defineNuxtConfig({
   },
 
   app: {
+    pageTransition: { name: "page", mode: "out-in" },
     head: {
       title: "Solsynth LLC",
       titleTemplate: "%s | Solsynth",

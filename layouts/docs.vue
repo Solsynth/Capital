@@ -1,36 +1,22 @@
 <template>
   <v-app-bar flat color="primary">
-    <v-container fluid class="mx-auto d-flex align-center justify-center px-8">
-      <v-tooltip>
-        <template #activator="{ props }">
-          <div @click="openDrawer = !openDrawer" v-bind="props" class="cursor-pointer">
-            <v-img class="me-4 ms-1" width="32" height="32" alt="Logo" :src="Logo" />
-          </div>
-        </template>
-        Open / close drawer
-      </v-tooltip>
-
+    <v-container fluid class="mx-auto d-flex align-center justify-center pe-8">
+      <v-app-bar-nav-icon class="me-1" @click="openDrawer = !openDrawer" />
 
       <nuxt-link to="/docs" exact>
-        <h2 class="mt-1">Solsynth Knowledge Base</h2>
+        <h2 class="mt-0.5">Solsynth Knowledge Base</h2>
       </nuxt-link>
 
       <v-spacer></v-spacer>
 
-      <locale-select />
+      <locale-select @update="reload" />
       <user-menu />
     </v-container>
   </v-app-bar>
 
   <v-navigation-drawer v-model="openDrawer" location="left" width="300" floating>
-    <v-list density="compact" nav color="primary">
-      <v-list-item title="Back" prepend-icon="mdi-arrow-left" to="/" exact />
-    </v-list>
-
-    <v-divider class="border-opacity-50 my-1" />
-
     <content-navigation v-slot="{ navigation }" :query="navQuery" :key="route.path">
-      <v-list density="compact" nav color="primary">
+      <v-list density="compact" nav color="primary" class="mt-1">
         <v-list-item
           v-if="navNotRoot"
           title="Previous"
@@ -60,21 +46,19 @@
     <footer-links class="px-5 mt-3" />
   </v-navigation-drawer>
 
-  <v-main>
-    <v-sheet color="grey-lighten-8" v-if="breadcrumb.length >= 1">
-      <div class="flex items-center justify-center h-[60px] px-5">
-        <v-breadcrumbs :items="breadcrumb" density="compact"></v-breadcrumbs>
-      </div>
-      <v-divider class="border-opacity-50" />
-    </v-sheet>
+  <v-app-bar color="transparent" density="compact" class="backdrop-blur-md">
+    <v-app-bar-nav-icon icon="mdi-home" to="/" class="ms-4" />
+    <div class="flex items-center justify-center h-[60px]">
+      <v-breadcrumbs :items="breadcrumb" density="compact" class="px-0 mt-0.5"></v-breadcrumbs>
+    </div>
+  </v-app-bar>
 
+  <v-main>
     <slot />
   </v-main>
 </template>
 
 <script setup lang="ts">
-import Logo from "../assets/logo-w-shadow.png"
-
 const { locale } = useI18n()
 const route = useRoute()
 
@@ -83,17 +67,18 @@ const breadcrumb = computed(() => {
   arr.shift()
   return arr.map((x, idx) => ({
     title: x,
-    to: `/docs/${arr.slice(0, idx+1).join("/")}`,
+    to: `/docs/${arr.slice(0, idx + 1).join("/")}`,
   }))
 })
 
 const navNotRoot = computed(() => route.path.split("/").length > 2)
 const navQuery = computed(() => ({
   where: {
-    _path: new RegExp("^\\/" + route.path.replace(/^\/|\/$/g, '') + "\\/[^\\/]+\\/?$"),
+    _path: new RegExp("^\\/" + route.path.replace(/^\/|\/$/g, "") + "\\/[^\\/]+\\/?$"),
     _locale: getLocale(locale),
   },
 }))
+console.log(navQuery.value)
 
 function previousNav() {
   const arr = route.path.split("/")
@@ -116,4 +101,8 @@ function fullyFlatMap(input: any): any[] {
 }
 
 const openDrawer = ref(false)
+
+function reload() {
+  window.location.reload()
+}
 </script>

@@ -17,33 +17,22 @@
         </article>
       </div>
 
-      <v-navigation-drawer app v-model="drawerOpen" floating location="right" width="300">
-        <div class="h-[60px] flex justify-center items-center">
-          <v-tabs v-model="drawerTab" hide-slider align-tabs="center">
-            <v-tab :value="1">
-              <v-icon icon="mdi-table-of-contents" />
-            </v-tab>
-          </v-tabs>
-        </div>
-
-        <v-divider class="border-opacity-50 mb-1" />
-
-        <v-tabs-window v-model="drawerTab">
-          <v-tabs-window-item :value="1">
+      <v-dialog max-width="540" v-model="dialogOpen" close-on-content-click>
+        <v-card title="Table of Contents" density="compact">
+          <div class="mt-[-12px]">
             <docs-table-of-contents v-if="page.body.toc.links?.length > 0" :links="page.body.toc.links" />
             <v-empty-state v-else text="No Headers Available" />
-          </v-tabs-window-item>
-        </v-tabs-window>
-      </v-navigation-drawer>
+          </div>
+        </v-card>
+      </v-dialog>
 
       <v-fab
         app
         appear
         location="bottom end"
-        variant="plain"
-        :key="'docs-fab-'+drawerOpen"
-        :icon="drawerOpen ? 'mdi-arrow-collapse-right' : 'mdi-menu'"
-        @click="drawerOpen = !drawerOpen"
+        :key="'docs-fab-'+dialogOpen"
+        :icon="dialogOpen ? 'mdi-arrow-collapse-right' : 'mdi-menu'"
+        @click="dialogOpen = !dialogOpen"
       />
     </div>
   </v-container>
@@ -58,7 +47,7 @@ const { t } = useI18n()
 const { data: page } = await useAsyncData<any>("page", queryContent(route.path).where({ _locale: getLocale() }).findOne)
 
 const drawerTab = ref(0)
-const drawerOpen = ref(false)
+const dialogOpen = ref(false)
 
 if (page.value == null) {
   throw createError({

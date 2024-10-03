@@ -15,7 +15,7 @@
         :key="item.code"
         :value="item.code"
         :active="locale == item.code"
-        @click.prevent.stop="setLocale(item.code)"
+        @click.prevent.stop="() => { setLocale(item.code); emits('update') }"
       >
         <v-list-item-title>{{ item.name }}</v-list-item-title>
       </v-list-item>
@@ -24,5 +24,6 @@
 </template>
 
 <script lang="ts" setup>
+const emits = defineEmits(['update'])
 const { locale, locales, setLocale } = useI18n()
 </script>
