@@ -40,7 +40,7 @@
 
     <v-divider class="border-opacity-50 mb-4 mt-0.5" />
 
-    <copyright no-centered service="capital" class="px-5" />
+    <copyright no-centered :service="['roadsign', 'capital']" class="px-5" />
 
     <footer-links class="px-5 mt-3" />
   </v-navigation-drawer>

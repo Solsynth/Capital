@@ -1,7 +1,47 @@
 ---
 thumbnail: /thumbnails/products/roadsign.webp
 title: RoadSign
-description: 为我们的网络提供动力的反向代理。功能强大，使用方便
+description: 为我们的网络提供动力的 HTTP 服务器。功能强大，使用方便
 author: [littlesheep]
-archived: true
 ---
+
+RoadSign 是由 Solsynth LLC 开发的 HTTP 服务器，其对 HTTP 协议的支持算不上优秀，
+但是对于加速你的项目部署，一定算得上趁手！甚至让我们抛弃了 Netlify 和 Vercel。
+
+## 特色
+
+- RoadSign CLI 一行命令部署项目
+- 完全控制你的流量
+- 特色的 Transformer 来修改请求
+- 内置 Warden 线程管理
+
+## 安装
+
+推荐使用 docker 进行安装，以下是示例 docker-compose.yml
+
+```yaml
+services:
+  roadsign:
+    image: xsheep2010/roadsign:delta
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+      - 81:81
+    volumes:
+      - "/srv/roadsign/config:/config"
+      - "/srv/roadsign/workdir:/workdir"
+      - "/srv/roadsign/settings.toml:/settings.toml"
+```
+
+推荐让 RoadSign 在一个真正的反向代理后，所以在此不监听 443 和 80，使用 8000 让反向代理做上流。
+其中 81 端口是侧载 API 需要使用的管理 API 端口，可以在设置内修改。
+
+同时推荐在本地机器上安装 RoadSign CLI
+
+```sh
+$ npm i -g roadsign-cli
+```
+
+## 使用
+
+在 Asciiema 观看完整的 RoadSign CLI 部署项目演示 👉 https://asciinema.org/a/678744

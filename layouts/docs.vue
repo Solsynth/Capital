@@ -72,13 +72,20 @@ const breadcrumb = computed(() => {
 })
 
 const navNotRoot = computed(() => route.path.split("/").length > 2)
-const navQuery = computed(() => ({
-  where: {
-    _path: new RegExp("^\\/" + route.path.replace(/^\/|\/$/g, "") + "\\/[^\\/]+\\/?$"),
-    _locale: getLocale(locale),
-  },
-}))
-console.log(navQuery.value)
+const navQuery = ref(calcNavQuery())
+
+function calcNavQuery(path?: string) {
+  return {
+    where: {
+      _path: new RegExp("^\\/" + (path ?? route.path).replace(/^\/|\/$/g, "") + "\\/[^\\/]+\\/?$"),
+      _locale: getLocale(locale),
+    },
+  }
+}
+
+watch(route, (value) => {
+  navQuery.value = calcNavQuery(value.path)
+}, { immediate: true, deep: true })
 
 function previousNav() {
   const arr = route.path.split("/")

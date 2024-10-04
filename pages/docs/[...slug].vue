@@ -29,9 +29,9 @@
       <v-fab
         app
         appear
+        size="large"
         location="bottom end"
-        :key="'docs-fab-'+dialogOpen"
-        :icon="dialogOpen ? 'mdi-arrow-collapse-right' : 'mdi-menu'"
+        icon="mdi-menu"
         @click="dialogOpen = !dialogOpen"
       />
     </div>

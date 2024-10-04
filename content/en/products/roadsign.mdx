@@ -1,7 +1,48 @@
 ---
 thumbnail: /thumbnails/products/roadsign.webp
 title: RoadSign
-description: The reserve proxy that powered our network. Powerful and easy to use.
+description: The HTTP server that powered us. Great ability, and easy to use
 author: [littlesheep]
-archived: true
 ---
+
+RoadSign is an HTTP server developed by Solsynth LLC.
+Its support for HTTP protocol is not excellent, but it is definitely handy for accelerating your project deployment!
+It even made us abandon Netlify and Vercel.
+
+## Highlight Features
+
+- RoadSign CLI deploys projects with one line of command
+- Full control over your traffic
+- Featured Transformer to modify requests
+- Built-in Warden thread management
+
+## Installation
+
+It is recommended to use docker for installation. The following is an example docker-compose.yml
+
+```yaml
+services:
+  roadsign:
+    image: xsheep2010/roadsign:delta
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+      - 81:81
+    volumes:
+      - "/srv/roadsign/config:/config"
+      - "/srv/roadsign/workdir:/workdir"
+      - "/srv/roadsign/settings.toml:/settings.toml"
+```
+
+It is recommended to have RoadSign behind a real reverse proxy, so do not listen to 443 and 80 here, use 8000 to let the reverse proxy do the upstream.
+Port 81 is the management API port that the side-loading API needs to use, which can be changed in the settings.
+
+It is also recommended to install RoadSign CLI on your local machine
+
+```sh
+$ npm i -g roadsign-cli
+```
+
+## 使用
+
+Watch the full RoadSign CLI deployment project demo at Asciiema 👉 https://asciinema.org/a/678744

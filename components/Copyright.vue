@@ -24,6 +24,7 @@ const projects: { [id: string]: [string, string] } = {
   "capital": ["Capital", "https://git.solsynth.dev/Goatworks/Capital"],
   "passport": ["Hydrogen.Passport", "https://git.solsynth.dev/Hydrogen/Passport"],
   "paperclip": ["Hydrogen.Paperclip", "https://git.solsynth.dev/Hydrogen/Paperclip"],
+  "roadsign": ["RoadSign", "https://git.solsynth.dev/Goatworks/RoadSign"],
 }
 </script>
 
