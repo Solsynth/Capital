@@ -1,14 +1,14 @@
 <template>
   <v-container class="content-container mx-auto">
     <div class="my-3 flex flex-row gap-4">
-      <nuxt-link :to="`/users/${post.author?.name}`">
-        <v-avatar :image="post.author?.avatar" />
+      <nuxt-link :to="`/users/${post.publisher?.name}`">
+        <v-avatar :image="post.publisher?.avatar" />
       </nuxt-link>
       <div class="flex flex-col">
-        <span>{{ post.author?.nick }} <span class="text-xs">@{{ post.author?.name }}</span></span>
+        <span>{{ post.publisher?.nick }} <span class="text-xs">@{{ post.publisher?.name }}</span></span>
         <span v-if="post.body?.title" class="text-md">{{ post.body?.title }}</span>
         <span v-if="post.body?.description" class="text-sm">{{ post.body?.description }}</span>
-        <span v-if="!post.body?.title && !post.body?.description" class="text-sm">{{ post.author?.description }}</span>
+        <span v-if="!post.body?.title && !post.body?.description" class="text-sm">{{ post.publisher?.description }}</span>
       </div>
     </div>
 
@@ -108,7 +108,7 @@ if (!post.value) {
   navigateTo(`/posts/${post.value.area_alias}/${post.value.alias}`)
 }
 
-const title = computed(() => post.value.body?.title ? `${post.value.body?.title} by @${post.value.author.name}` : `Post by @${post.value.author.name}`)
+const title = computed(() => post.value.body?.title ? `${post.value.body?.title} by @${post.value.publisher.name}` : `Post by @${post.value.publisher.name}`)
 const description = computed(() => post.value.body?.description ?? post.value.body?.content.substring(0, 280).trim())
 
 watch(attachments, (value) => {
@@ -134,7 +134,7 @@ useHead({
 })
 
 useSeoMeta({
-  author: post.value.author.nick,
+  author: post.value.publisher.nick,
   title: title,
   articlePublishedTime: post.value.publishedAt,
   description: description,

@@ -10,16 +10,6 @@
       </div>
     </v-col>
     <v-col cols="12" md="4" class="px-5 pt-3">
-      <div class="mt-3 mb-4.5 mx-[2.5ch] flex flex-row gap-4 items-center">
-        <nuxt-link :to="`/users/${attachment.account?.name}`">
-          <v-avatar :image="attachment.account?.avatar" />
-        </nuxt-link>
-        <div class="flex flex-col">
-          <span class="text-xs">Uploaded by</span>
-          <span>{{ attachment.account?.nick }} <span class="text-xs">@{{ attachment.account?.name }}</span></span>
-        </div>
-      </div>
-
       <v-card class="mb-5">
         <v-card-text class="flex flex-col gap-4">
           <div class="flex flex-col" v-if="attachment?.alt">
@@ -84,7 +74,7 @@ if (!attachment.value) {
   })
 }
 
-const title = computed(() => `Attachment from ${attachment.value.account.nick}`)
+const title = computed(() => `Attachment ${attachment.value?.id}`)
 
 watch(attachment, (value) => {
   if (value.mimetype.split("/")[0] == "image") {
@@ -106,7 +96,6 @@ useHead({
 })
 
 useSeoMeta({
-  author: attachment.value?.account.nick,
   title: title,
   description: attachment.value?.alt,
   ogTitle: title,

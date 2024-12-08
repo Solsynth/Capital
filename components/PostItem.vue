@@ -2,15 +2,15 @@
   <v-card :to="url" class="mx-[2.5ch] mb-3">
     <v-card-text>
       <div class="mb-3 flex flex-row gap-4">
-        <nuxt-link :to="`/users/${post.author?.name}`">
-          <v-avatar :image="post.author?.avatar" />
+        <nuxt-link :to="`/users/${post.publisher?.name}`">
+          <v-avatar :image="post.publisher?.avatar" />
         </nuxt-link>
         <div class="flex flex-col">
-          <span>{{ post.author?.nick }} <span class="text-xs">@{{ post.author?.name }}</span></span>
+          <span>{{ post.publisher?.nick }} <span class="text-xs">@{{ post.publisher?.name }}</span></span>
           <span v-if="post.body?.title" class="text-md">{{ post.body?.title }}</span>
           <span v-if="post.body?.description" class="text-sm">{{ post.body?.description }}</span>
           <span v-if="!post.body?.title && !post.body?.description" class="text-sm">
-            {{ post.author?.description }}
+            {{ post.publisher?.description }}
           </span>
 
           <div v-if="post.type != 'story'" class="mt-1">

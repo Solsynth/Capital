@@ -19,8 +19,8 @@ async function loadPost({ done }: any) {
     offset: posts.value.length.toString(),
   })
 
-  if (props.author) {
-    searchQueries.set("author", props.author)
+  if (props.publisher) {
+    searchQueries.set("author", props.publisher)
   }
   if (props.realm) {
     searchQueries.set("realm", props.realm)
