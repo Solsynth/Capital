@@ -1,0 +1,108 @@
+---
+export const prerender = false
+
+import sanitizeHtml from 'sanitize-html'
+import { Icon } from 'astro-icon/components'
+import { marked } from 'marked'
+
+import Layout from '../../layouts/Layout.astro'
+import { getAttachmentUrl, fetchAttachmentMeta } from '../../scripts/attachment'
+
+const { slug } = Astro.params
+
+const baseUrl = import.meta.env.PUBLIC_SOLAR_NETWORK_URL
+const resp = await fetch(`${baseUrl}/cgi/co/posts/${slug}`)
+
+if (resp.status !== 200) {
+  return new Response(null, { status: 404 })
+}
+
+const data = await resp.json()
+
+const rawContent = await marked(data.body.content as string, {
+  breaks: data.type == 'story',
+})
+const content = sanitizeHtml(rawContent)
+
+const attachments = await fetchAttachmentMeta(data.body.attachments)
+---
+
+<Layout title={data.body?.title ? data.body.title : `Post #${data.id}`}>
+  <div role="alert" class="alert shadow-lg px-12 m-0 rounded-none mb-5">
+    <Icon
+      name="material-symbols:ungroup"
+      class="stroke-info fill-info h-6 w-6 shrink-0"
+    />
+    <div>
+      <h3 class="font-bold">Open in the Solian</h3>
+      <div class="text-xs">
+        The most modern, user-friendly, and official Solar Network app.
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <a class="btn btn-sm" href="/products/solar-network">Get</a>
+      <a class="btn btn-sm" href={`https://sn.solsynth.dev/posts/${data.id}`}
+        >Open</a
+      >
+    </div>
+  </div>
+
+  <div class="container lg:max-w-[75ch] px-8 mx-auto">
+    <div class="flex gap-4 items-center mb-5">
+      <div class="avatar">
+        <div class="w-12 rounded-full">
+          <img src={getAttachmentUrl(data.publisher.avatar)} alt="avatar" />
+        </div>
+      </div>
+      <div class="userinfo flex flex-col">
+        <span class="flex gap-2 items-baseline">
+          <span class="text-md font-bold">{data.publisher.nick}</span>
+          <span class="text-xs font-mono">@{data.publisher.name}</span>
+        </span>
+        <span class="text-sm line-clamp-2 overflow-ellipsis"
+          >{data.publisher.description}</span
+        >
+      </div>
+    </div>
+
+    {
+      data.repost_id && (
+        <div role="alert" class="alert mb-5 py-2 mx-[-4px]">
+          <Icon
+            name="material-symbols:format-quote"
+            class="stroke-info fill-info h-6 w-6 shrink-0"
+          />
+          <span>
+            This post is reposting post{' '}
+            <span class="font-mono">#{data.repost_id}</span>
+          </span>
+          <div>
+            <a class="btn btn-sm" href={`/posts/${data.repost_id}`}>
+              See reposted post
+            </a>
+          </div>
+        </div>
+      )
+    }
+
+    <article class="prose max-w-none max-md:prose-lg" set:html={content} />
+
+    {
+      attachments && (
+        <div class="attachment-list mt-5 gap-4 grid grid-cols-1 md:grid-cols-2">
+          {attachments.map((attachment) => (
+            <div class="attachment">
+              <a href={getAttachmentUrl(attachment.rid)} target="_blank">
+                <img
+                  src={getAttachmentUrl(attachment.rid)}
+                  alt={attachment.alt}
+                  class="rounded-lg"
+                />
+              </a>
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
+</Layout>
