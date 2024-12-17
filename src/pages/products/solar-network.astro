@@ -1,7 +1,51 @@
 ---
-import Layout from "../../layouts/Layout.astro";
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
+
+import Layout from '../../layouts/Layout.astro'
+
+import AppStoreGetImage from '../../assets/images/app-store/get-it-on-black.svg'
+import ProductSnPreviewImage from '../../assets/images/products/solar-network-alpha.webp'
 ---
 
 <Layout title="Solar Network">
+  <div class="container mx-auto mt-[35vh]" id="intro">
+    <div class="text-center">
+      <h1 class="text-4xl font-bold">Solar Network</h1>
+      <p>The next generation Social Network platform.</p>
 
+      <div class="flex justify-center gap-2 mt-5">
+        <a class="btn btn-primary" href="#downloads">
+          Download <Icon name="material-symbols:download" size={20} />
+        </a>
+      </div>
+    </div>
+
+    <Image
+      src={ProductSnPreviewImage}
+      alt="solar network cross-platform preview"
+      class="mt-5"
+    />
+
+    <div id="downloads" class="mt-12">
+      <div class="flex flex-col text-center justify-center">
+        <h2 class="text-2xl font-bold">Downloads</h2>
+      </div>
+
+      <div class="flex items-center justify-center mt-5">
+        <a
+          href="https://apps.apple.com/us/app/solian/id6499032345?itscg=30200&itsct=apps_box_link&mttnsubad=6499032345"
+        >
+          <Image src={AppStoreGetImage} alt="get it on app store" />
+        </a>
+      </div>
+    </div>
+  </div>
 </Layout>
+
+<style>
+  html,
+  body {
+    scroll-behavior: smooth;
+  }
+</style>

@@ -1,13 +1,13 @@
 ---
-import { Image } from "astro:assets";
+import { Image } from 'astro:assets'
 
-import CompanyLogo from "../assets/images/company-logo.png";
+import CompanyLogo from '../assets/images/company-logo.png'
 
 interface Props {
-  title?: string;
+  title?: string
 }
 
-const { title } = Astro.props;
+const { title } = Astro.props
 ---
 
 <!doctype html>
@@ -16,7 +16,7 @@ const { title } = Astro.props;
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <title>{title ? `${title} | Solsynth LLC` : "Solsynth LLC"}</title>
+    <title>{title ? `${title} | Solsynth LLC` : 'Solsynth LLC'}</title>
   </head>
   <body>
     <div class="navbar backdrop-blur fixed top-0 left-0 right-0 z-10">
@@ -52,6 +52,50 @@ const { title } = Astro.props;
     <main class="mt-[68px]">
       <slot />
     </main>
+
+    <footer class="bg-neutral text-neutral-content p-10 mt-32">
+      <div class="container mx-auto footer">
+        <aside>
+          <Image
+            src={CompanyLogo}
+            alt="company logo"
+            class="h-12 w-12 p-1 bg-white rounded-lg shadow-sm"
+          />
+          <div class="flex flex-col">
+            <span class="font-bold text-lg">Solsynth LLC</span>
+            Building wonderful software since 2019.
+
+            <span class="font-mono text-xs mt-3">Powered by RoadSign v2</span>
+
+            <a href="https://status.solsynth.dev" class="mt-4">
+              <img
+                src="https://uptime.betterstack.com/status-badges/v1/monitor/1ki5r.svg"
+              />
+            </a>
+          </div>
+        </aside>
+        <nav>
+          <h6 class="footer-title">Services</h6>
+          <a class="link link-hover">Branding</a>
+          <a class="link link-hover">Design</a>
+          <a class="link link-hover">Marketing</a>
+          <a class="link link-hover">Advertisement</a>
+        </nav>
+        <nav>
+          <h6 class="footer-title">Company</h6>
+          <a class="link link-hover">About us</a>
+          <a class="link link-hover">Contact</a>
+          <a class="link link-hover">Jobs</a>
+          <a class="link link-hover">Press kit</a>
+        </nav>
+        <nav>
+          <h6 class="footer-title">Legal</h6>
+          <a class="link link-hover">Terms of use</a>
+          <a class="link link-hover">Privacy policy</a>
+          <a class="link link-hover">Cookie policy</a>
+        </nav>
+      </div>
+    </footer>
   </body>
 </html>
 

@@ -1,12 +1,12 @@
 ---
-import { Image } from "astro:assets";
-import { Icon } from "astro-icon/components";
+import { Image } from 'astro:assets'
+import { Icon } from 'astro-icon/components'
 
-import Layout from "../layouts/Layout.astro";
+import Layout from '../layouts/Layout.astro'
 
-import CompanyAsideImage from "../assets/images/company-aside.webp";
-import AppStoreGetImage from "../assets/images/app-store/get-it-on-black.svg";
-import ProductSnPreviewImage from "../assets/images/product-solar-network.webp";
+import CompanyAsideImage from '../assets/images/company-aside.webp'
+import AppStoreGetImage from '../assets/images/app-store/get-it-on-black.svg'
+import ProductSnPreviewImage from '../assets/images/products/solar-network.webp'
 ---
 
 <Layout>
@@ -33,7 +33,7 @@ import ProductSnPreviewImage from "../assets/images/product-solar-network.webp";
     </div>
   </div>
 
-  <div class="section-flex shadow-lg bg-base-300" id="work-featured">
+  <div class="section-flex py-12 shadow-lg bg-base-300" id="work-featured">
     <div class="section container mx-auto grid-cols-1 lg:grid-cols-3">
       <div
         class="sub-section flex flex-col items-start lg:items-end justify-center lg:col-span-1"
@@ -53,25 +53,31 @@ import ProductSnPreviewImage from "../assets/images/product-solar-network.webp";
           Social Network, Redefined.
         </blockquote>
 
-        <div class="flex gap-2 mt-4">
-          <a href="https://apps.apple.com/us/app/solian/id6499032345?itscg=30200&itsct=apps_box_link&mttnsubad=6499032345">
+        <div class="flex gap-3 mt-4 items-center text-right">
+          <span class="opacity-75 text-xs max-lg:order-last" style="line-height: 1">
+            Also supports Android, Windows, and any modern web browser
+          </span>
+          <a
+            href="https://apps.apple.com/us/app/solian/id6499032345?itscg=30200&itsct=apps_box_link&mttnsubad=6499032345"
+          >
             <Image src={AppStoreGetImage} alt="get it on app store" />
           </a>
         </div>
 
-        <a class="link flex items-center gap-1 mt-3" href="/products/solar-network">
+        <a
+          class="link flex items-center gap-1 mt-3"
+          href="/products/solar-network"
+        >
           <span>Learn more about Solar Network</span>
           <Icon name="material-symbols:arrow-right-alt" />
         </a>
       </div>
       <div class="sub-section flex items-center lg:col-span-2">
-        <div class="card">
-          <Image
-            src={ProductSnPreviewImage}
-            alt="solar network cross-platform preview"
-            class="rounded-lg shadow-xl"
-          />
-        </div>
+        <Image
+          src={ProductSnPreviewImage}
+          alt="solar network cross-platform preview"
+          class="rounded-lg shadow-xl"
+        />
       </div>
     </div>
   </div>
