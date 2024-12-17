@@ -6,6 +6,7 @@ import { Icon } from 'astro-icon/components'
 import { marked } from 'marked'
 
 import Layout from '../../layouts/Layout.astro'
+import AttachmentRenderer from '../../components/AttachmentRenderer.astro'
 import { getAttachmentUrl, fetchAttachmentMeta } from '../../scripts/attachment'
 
 const { slug } = Astro.params
@@ -85,24 +86,25 @@ const attachments = await fetchAttachmentMeta(data.body.attachments)
       )
     }
 
-    <article class="prose max-w-none max-md:prose-lg" set:html={content} />
+    <article>
+      <div class="prose max-w-none max-md:prose-lg" set:html={content} />
 
-    {
-      attachments && (
-        <div class="attachment-list mt-5 gap-4 grid grid-cols-1 md:grid-cols-2">
-          {attachments.map((attachment) => (
-            <div class="attachment">
-              <a href={getAttachmentUrl(attachment.rid)} target="_blank">
-                <img
-                  src={getAttachmentUrl(attachment.rid)}
-                  alt={attachment.alt}
-                  class="rounded-lg"
-                />
-              </a>
-            </div>
-          ))}
-        </div>
-      )
-    }
+      {
+        attachments && (
+          <div
+            class="attachment-list mt-5 gap-4 grid grid-cols-1"
+            class:list={
+              attachments.length >= 2 ? 'md:grid-cols-2' : 'md:grid-cols-1'
+            }
+          >
+            {attachments.map((attachment) => (
+              <div class="attachment">
+                <AttachmentRenderer data={attachment} />
+              </div>
+            ))}
+          </div>
+        )
+      }
+    </article>
   </div>
 </Layout>

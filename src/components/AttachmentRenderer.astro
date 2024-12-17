@@ -1,0 +1,29 @@
+---
+import { getAttachmentUrl } from '../scripts/attachment'
+
+interface Props {
+  data: any
+}
+
+const { data: attachment } = Astro.props
+---
+
+{
+  attachment.mimetype.startsWith('image') ? (
+    <a href={getAttachmentUrl(attachment.rid)} target="_blank">
+      <img
+        src={getAttachmentUrl(attachment.rid)}
+        alt={attachment.alt}
+        class="rounded-lg"
+      />
+    </a>
+  ) : attachment.mimetype.startsWith('video') ? (
+    <video src={getAttachmentUrl(attachment.rid)} controls class="rounded-lg" />
+  ) : attachment.mimetype.startsWith('audio') ? (
+    <audio src={getAttachmentUrl(attachment.rid)} controls class="rounded-lg" />
+  ) : (
+    <a href={getAttachmentUrl(attachment.rid)} target="_blank">
+      Unable to preview, but you can open it in your broswer.
+    </a>
+  )
+}
