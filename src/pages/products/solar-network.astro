@@ -4,7 +4,6 @@ import { Icon } from 'astro-icon/components'
 
 import Layout from '../../layouts/Layout.astro'
 
-import AppStoreGetImage from '../../assets/images/app-store/get-it-on-black.svg'
 import ProductSnPreviewImage from '../../assets/images/products/solar-network-alpha.webp'
 ---
 
@@ -27,17 +26,143 @@ import ProductSnPreviewImage from '../../assets/images/products/solar-network-al
       class="mt-5"
     />
 
-    <div id="downloads" class="mt-12">
-      <div class="flex flex-col text-center justify-center">
+    <div id="downloads" class="mt-24 text-center">
+      <div class="flex flex-col justify-center">
         <h2 class="text-2xl font-bold">Downloads</h2>
       </div>
 
-      <div class="flex items-center justify-center mt-5">
+      <div class="flex flex-wrap mx-8 items-center justify-center gap-4 my-5">
         <a
           href="https://apps.apple.com/us/app/solian/id6499032345?itscg=30200&itsct=apps_box_link&mttnsubad=6499032345"
+          class="btn btn-secondary max-md:btn-wide"
         >
-          <Image src={AppStoreGetImage} alt="get it on app store" />
+          <Icon name="simple-icons:appstore" />
+          iOS / macOS (App Store)
         </a>
+        <a
+          href="https://testflight.apple.com/join/YJ0lmN6O"
+          class="btn btn-secondary btn-outline max-md:btn-wide"
+        >
+          <Icon name="simple-icons:apple" />
+          iOS / macOS (TestFlight)
+        </a>
+        <a
+          href="https://files.solsynth.dev/production01/solian/app-arm64-v8a-release.apk"
+          class="btn btn-secondary max-md:btn-wide"
+        >
+          <Icon name="simple-icons:android" />
+          Android (apk file)
+        </a>
+        <a
+          href="https://files.solsynth.dev/production01/solian/windows-x86_64-release.zip"
+          class="btn btn-secondary max-md:btn-wide"
+        >
+          <Icon name="simple-icons:windows" />
+          Windows (executable)
+        </a>
+        <a
+          href="https://sn.solsynth.dev"
+          class="btn btn-secondary btn-outline max-md:btn-wide"
+        >
+          <Icon name="material-symbols:globe" />
+          Web (browser)
+        </a>
+      </div>
+
+      <div class="mx-8">
+        <p class="opacity-80 mb-2">
+          You will download Solian, which is the official app made for Solar
+          Network.
+        </p>
+        <p class="opacity-75 text-sm">
+          Explore more platform distribution files on the{' '}
+          <a class="link" href="https://files.solsynth.dev/production01/solian"
+            >Solarfiles</a
+          >
+        </p>
+        <p class="opacity-75 text-sm">
+          Check out the Solian source code on{' '}
+          <a class="link" href="https://git.solsynth.dev/HyperNet/Surface"
+            >Solargit</a
+          >
+        </p>
+      </div>
+    </div>
+
+    <div id="faq" class="mt-24">
+      <div class="flex text-center justify-center">
+        <h2 class="text-2xl font-bold">Frequently Asked Questions</h2>
+      </div>
+
+      <div
+        class="max-w-[85ch] mx-auto bg-neutral text-neutral-content shadow-lg rounded-lg p-2 mt-5"
+      >
+        <div class="join join-vertical w-full">
+          <div class="collapse collapse-arrow join-item">
+            <input type="radio" name="my-accordion-4" checked="checked" />
+            <div class="collapse-title text-xl font-medium">
+              What's the relationship between Solar Network and Solian?
+            </div>
+            <div class="collapse-content">
+              <p>
+                Solian is the official app made for Solar Network. And the Solar
+                Network is the official HyperNet instance hosted by Solsynth
+                LLC.
+              </p>
+              <p>
+                For simple, Solian is the app, and the Solar Network is the
+                platform.
+              </p>
+            </div>
+          </div>
+          <div class="collapse collapse-arrow join-item">
+            <input type="radio" name="my-accordion-4" checked="checked" />
+            <div class="collapse-title text-xl font-medium">
+              What's the relationship between Solar Network and HyperNet?
+            </div>
+            <div class="collapse-content">
+              <p>
+                HyperNet is the entire project including frontend app (also
+                knowns as Solian for public) and the backend server. And the
+                Solar Network is the official HyperNet instance which hosted and
+                managed by Solsynth LLC who developed the HyperNet Project.
+              </p>
+            </div>
+          </div>
+          <div class="collapse collapse-arrow join-item">
+            <input type="radio" name="my-accordion-4" />
+            <div class="collapse-title text-xl font-medium">
+              Which rules do I need to follow while using Solar Network?
+            </div>
+            <div class="collapse-content">
+              <p>
+                Check out our{' '}
+                <a href="/terms/user-agreements" class="link">
+                  User Agreements
+                </a>
+                for a detailed explanation of what you can do and cannot do on Solar
+                Network. If you violate any of these rules, we have the right to
+                suspend or terminate your account.
+              </p>
+            </div>
+          </div>
+          <div class="collapse collapse-arrow join-item">
+            <input type="radio" name="my-accordion-4" />
+            <div class="collapse-title text-xl font-medium">
+              If I have any question about Solar Network, where can I get help?
+            </div>
+            <div class="collapse-content">
+              <p>
+                Feel free to email us at{' '}
+                <a href="mailto:lily@solsynth.dev" class="link">
+                  <address>lily@solsynth.dev</address>
+                </a>
+                Our customer service team will try our best to help you solve your
+                issue.
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
