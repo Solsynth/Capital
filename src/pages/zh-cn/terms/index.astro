@@ -1,0 +1,39 @@
+---
+import Layout from '@/layouts/Layout.astro'
+---
+
+<Layout title="Terms & Conditions">
+  <div
+    class="container max-w-[85ch] mx-auto mt-[25vh] px-2 flex flex-col gap-4"
+  >
+    <h1 class="text-2xl font-bold">条款和条件</h1>
+
+    <p>这里罗列了您使用我们的产品将需要同意的所有条款和条件。</p>
+
+    <p>
+      我们正努力让事情尽可能简单。这对我们双方都有好处。通常情况下你不需要关心这件事。只是为了让我们的律师高兴。
+      <i>我们真的有律师吗？</i>
+    </p>
+
+    <p>此处的信息可能会不时更改。请刷新 查看此页面以获取最新版本。</p>
+
+    <div class="flex flex-col gap-4 mt-4 mx-[-16px]">
+      <a href="/terms/user-agreements">
+        <div class="card bg-base-100 w-full border-neutral border">
+          <div class="card-body">
+            <h2 class="card-title">用户协议</h2>
+            <p>使用 Solar Network 和 我们其他产品的用户须遵守的用户协议。</p>
+          </div>
+        </div>
+      </a>
+      <a href="/terms/privacy-policy">
+        <div class="card bg-base-100 w-full border-neutral border">
+          <div class="card-body">
+            <h2 class="card-title">隐私政策</h2>
+            <p>隐私政策向我们展示了如何处理和处理您提供的数据。</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</Layout>

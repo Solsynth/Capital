@@ -5,9 +5,9 @@ import sanitizeHtml from 'sanitize-html'
 import { Icon } from 'astro-icon/components'
 import { marked } from 'marked'
 
-import Layout from '../../layouts/Layout.astro'
-import AttachmentRenderer from '../../components/AttachmentRenderer.astro'
-import { getAttachmentUrl, fetchAttachmentMeta } from '../../scripts/attachment'
+import Layout from '@/layouts/Layout.astro'
+import AttachmentRenderer from '@/components/AttachmentRenderer.astro'
+import { getAttachmentUrl, fetchAttachmentMeta } from '@/scripts/attachment'
 
 const { slug } = Astro.params
 
