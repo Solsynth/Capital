@@ -1,0 +1,149 @@
+---
+export const prerender = false
+
+import sanitizeHtml from 'sanitize-html'
+import { Icon } from 'astro-icon/components'
+import { marked } from 'marked'
+
+import Layout from '@/layouts/Layout.astro'
+import AttachmentRenderer from '@/components/AttachmentRenderer.astro'
+import { getAttachmentUrl, fetchAttachmentMeta } from '@/scripts/attachment'
+
+const page = parseInt(Astro.url.searchParams.get('page') ?? '1') || 1
+
+async function getPosts() {
+  const baseUrl = import.meta.env.PUBLIC_SOLAR_NETWORK_URL
+  const res = await fetch(
+    `${baseUrl}/cgi/co/posts?take=10&offset=${Math.max(page - 1, 0) * 10}`
+  )
+  const data = await res.json()
+  const posts = await Promise.all(
+    data['data'].map(async (ele: any) => {
+      if (ele.body?.content) {
+        ele.body.content = await parseContent(
+          ele.body.content,
+          ele.type == 'story'
+        )
+      }
+      if (ele.body?.attachments) {
+        ele.body.attachments = await fetchAttachmentMeta(ele.body.attachments)
+      }
+      return ele
+    })
+  )
+
+  return posts
+}
+
+const posts = await getPosts()
+
+async function parseContent(data: string, useBreaks: boolean = false) {
+  const rawContent = await marked(data, {
+    breaks: useBreaks,
+  })
+  return sanitizeHtml(rawContent)
+}
+---
+
+<Layout title="Posts">
+  <div role="alert" class="alert shadow-lg px-12 m-0 rounded-none mb-5">
+    <Icon
+      name="material-symbols:ungroup"
+      class="stroke-info fill-info h-6 w-6 shrink-0"
+    />
+    <div>
+      <h3 class="font-bold">Open in the Solian</h3>
+      <div class="text-xs">
+        The most modern, user-friendly, and official Solar Network app.
+      </div>
+    </div>
+    <div class="flex gap-2">
+      <a class="btn btn-sm" href="/products/solar-network#downloads">Get</a>
+      <a class="btn btn-sm" href="https://sn.solsynth.dev/posts">Open</a>
+    </div>
+  </div>
+
+  <div
+    class="container max-w-[85ch] mx-auto mt-[15vh] px-12 flex flex-col gap-4"
+  >
+    <h1 class="text-2xl font-bold">Posts</h1>
+    <p>Explore the posts all over the Solar Network.</p>
+
+    <div class="flex flex-col gap-4 mt-4 mx-[-16px]">
+      {
+        posts.map((ele: any) => (
+          <a href={`/posts/${ele.id}`}>
+            <div class="card bg-base-100 w-full border-neutral border">
+              <div class="card-body">
+                <div class="flex gap-4 items-center mb-5">
+                  <div class="avatar">
+                    <div class="w-12 rounded-full">
+                      <img
+                        src={getAttachmentUrl(ele.publisher.avatar)}
+                        alt="avatar"
+                      />
+                    </div>
+                  </div>
+                  <div class="userinfo flex flex-col">
+                    <span class="flex gap-2 items-baseline">
+                      <span class="text-md font-bold">
+                        {ele.publisher.nick}
+                      </span>
+                      <span class="text-xs font-mono">
+                        @{ele.publisher.name}
+                      </span>
+                    </span>
+                    <span class="text-sm overflow-ellipsis">
+                      {new Date(ele.created_at).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+
+                {ele.body.title && (
+                  <h2 class="card-title">
+                    {ele.body?.title ?? `Post #${ele.id}`}
+                  </h2>
+                )}
+                <article>
+                  <div
+                    class="prose max-w-none max-md:prose-lg"
+                    set:html={ele.body?.content ?? ''}
+                  />
+
+                  {ele.body?.attachments && (
+                    <div
+                      class="attachment-list mt-5 gap-4 grid grid-cols-1"
+                      class:list={
+                        ele.body.attachments.length >= 2
+                          ? 'md:grid-cols-2'
+                          : 'md:grid-cols-1'
+                      }
+                    >
+                      {ele.body.attachments.map((attachment: any) => (
+                        <div class="attachment">
+                          <AttachmentRenderer data={attachment} />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </article>
+              </div>
+            </div>
+          </a>
+        ))
+      }
+
+      <div class="flex justify-center items-center mt-12">
+        <div class="join">
+          <a
+            class="join-item btn"
+            class:list={page == 1 ? 'btn-disabled' : ''}
+            href={`/posts?page=${page - 1}`}>«</a
+          >
+          <button class="join-item btn">Page {page}</button>
+          <a class="join-item btn" href={`/posts?page=${page + 1}`}>»</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</Layout>
