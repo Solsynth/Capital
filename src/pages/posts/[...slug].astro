@@ -47,10 +47,11 @@ const attachments = await fetchAttachmentMeta(data.body.attachments)
           }
         }}
         twitter={{
+          card: "summary_large_image",
           title: data.body?.title ? data.body.title : `Post #${data.id}`,
-            description: data.body?.content,
-            creator: "@"+data.publisher.name,
-            image: data.body?.thumbnail ? getAttachmentUrl(data.body.thumbnail) : getAttachmentUrl(attachments.find(a => a.mimetype.startsWith('image'))?.rid),
+          description: data.body?.content,
+          creator: "@"+data.publisher.name,
+          image: data.body?.thumbnail ? getAttachmentUrl(data.body.thumbnail) : getAttachmentUrl(attachments.find(a => a.mimetype.startsWith('image'))?.rid),
         }}
     />
 </head>
