@@ -32,7 +32,7 @@ const attachments = await fetchAttachmentMeta(data.body.attachments)
 <head>
   <SEO
     title={data.body?.title ? data.body.title : `Post #${data.id}`}
-    description={data.body?.content}
+    description={data.body?.description ?? data.body?.content?.substring(0, 200)}
     openGraph={{
       optional: {
         siteName: "Solar Network",
@@ -63,7 +63,7 @@ const attachments = await fetchAttachmentMeta(data.body.attachments)
     twitter={{
       card: 'summary_large_image',
       title: data.body?.title ? data.body.title : `Post #${data.id}`,
-      description: data.body?.description,
+        description: data.body?.description ?? data.body?.content?.substring(0, 200),
       creator: '@' + data.publisher.name,
       image: data.body?.thumbnail
         ? getAttachmentUrl(data.body.thumbnail)
