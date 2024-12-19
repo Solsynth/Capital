@@ -3,7 +3,7 @@ export const prerender = false
 
 import sanitizeHtml from 'sanitize-html'
 import { Icon } from 'astro-icon/components'
-import {SEO} from 'astro-seo'
+import { SEO } from 'astro-seo'
 import { marked } from 'marked'
 
 import Layout from '@/layouts/Layout.astro'
@@ -30,33 +30,54 @@ const attachments = await fetchAttachmentMeta(data.body.attachments)
 ---
 
 <head>
-    <SEO
-        title={data.body?.title ? data.body.title : `Post #${data.id}`}
-        description={data.body?.content}
-        openGraph={{
-          basic: {
-            title: data.body?.title ? data.body.title : `Post #${data.id}`,
-            type: "article",
-            image: data.body?.thumbnail ? getAttachmentUrl(data.body.thumbnail) : getAttachmentUrl(attachments.find(a => a.mimetype.startsWith('image'))?.rid),
-            url: `https://solsynth.dev/posts/${data.id}`
-          },
-          article: {
-            publishedTime: new Date(data.created_at).toISOString(),
-            modifiedTime: new Date(data.updated_at).toISOString(),
-            authors: ["@"+data.publisher.name],
-          }
-        }}
-        twitter={{
-          card: "summary_large_image",
-          title: data.body?.title ? data.body.title : `Post #${data.id}`,
-          description: data.body?.content,
-          creator: "@"+data.publisher.name,
-          image: data.body?.thumbnail ? getAttachmentUrl(data.body.thumbnail) : getAttachmentUrl(attachments.find(a => a.mimetype.startsWith('image'))?.rid),
-        }}
-    />
+  <SEO
+    title={data.body?.title ? data.body.title : `Post #${data.id}`}
+    description={data.body?.content}
+    openGraph={{
+      optional: {
+        siteName: "Solar Network",
+        description: data.body?.description ?? data.body?.content?.substring(0, 200),
+        video: getAttachmentUrl(
+          attachments.find((a) => a.mimetype.startsWith('video'))?.rid
+        ),
+        audio: getAttachmentUrl(
+          attachments.find((a) => a.mimetype.startsWith('audio'))?.rid
+        ),
+      },
+      basic: {
+        title: data.body?.title ? data.body.title : `Post #${data.id}`,
+        type: 'article',
+        image: data.body?.thumbnail
+          ? getAttachmentUrl(data.body.thumbnail)
+          : getAttachmentUrl(
+              attachments.find((a) => a.mimetype.startsWith('image'))?.rid
+            ),
+        url: `https://solsynth.dev/posts/${data.id}`,
+      },
+      article: {
+        publishedTime: new Date(data.created_at).toISOString(),
+        modifiedTime: new Date(data.updated_at).toISOString(),
+        authors: ['@' + data.publisher.name],
+      },
+    }}
+    twitter={{
+      card: 'summary_large_image',
+      title: data.body?.title ? data.body.title : `Post #${data.id}`,
+      description: data.body?.description,
+      creator: '@' + data.publisher.name,
+      image: data.body?.thumbnail
+        ? getAttachmentUrl(data.body.thumbnail)
+        : getAttachmentUrl(
+            attachments.find((a) => a.mimetype.startsWith('image'))?.rid
+          ),
+    }}
+  />
 </head>
 
-<Layout title={data.body?.title ? data.body.title : `Post #${data.id}`} trailingTitle='Solar Network'>
+<Layout
+  title={data.body?.title ? data.body.title : `Post #${data.id}`}
+  trailingTitle="Solar Network"
+>
   <div role="alert" class="alert shadow-lg px-12 m-0 rounded-none mb-5">
     <Icon
       name="material-symbols:ungroup"
