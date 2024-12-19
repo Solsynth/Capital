@@ -1,6 +1,4 @@
 ---
-export const prerender = false
-
 import { Image } from 'astro:assets'
 
 import { version } from '../../package.json'
@@ -10,9 +8,11 @@ import { getRelativeLocaleUrl } from 'astro:i18n'
 
 interface Props {
   title?: string
+  trailingTitle?: string
 }
 
-const { title } = Astro.props
+let { title, trailingTitle } = Astro.props
+if(trailingTitle == null) trailingTitle = 'Solsynth LLC'
 
 const locale = Astro.currentLocale ?? 'en'
 ---
@@ -23,7 +23,8 @@ const locale = Astro.currentLocale ?? 'en'
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/png" href="/favicon.png" />
-    <title>{title ? `${title} | Solsynth LLC` : 'Solsynth LLC'}</title>
+    <link rel="sitemap" href="/sitemap-index.xml" />
+    <title>{title ? `${title} | ${trailingTitle}` : trailingTitle}</title>
   </head>
   <body>
     <div class="navbar backdrop-blur fixed top-0 left-0 right-0 z-10">
@@ -41,16 +42,7 @@ const locale = Astro.currentLocale ?? 'en'
 
         <div class="flex-1 flex justify-end">
           <ul class="menu menu-horizontal px-1">
-            <li><a>Link</a></li>
-            <li>
-              <details>
-                <summary>Parent</summary>
-                <ul class="bg-base-100 rounded-t-none p-2">
-                  <li><a>Link 1</a></li>
-                  <li><a>Link 2</a></li>
-                </ul>
-              </details>
-            </li>
+            <li><a href="/posts">Explore</a></li>
           </ul>
         </div>
       </div>

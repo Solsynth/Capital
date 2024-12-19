@@ -7,9 +7,20 @@ import icon from 'astro-icon'
 
 import mdx from '@astrojs/mdx'
 
+import sitemap from '@astrojs/sitemap'
+
 // https://astro.build/config
 export default defineConfig({
-  integrations: [tailwind(), icon(), mdx()],
+  site: 'https://solsynth.dev',
+  integrations: [
+    tailwind(),
+    icon(),
+    mdx(),
+    sitemap({
+      xslURL: '/sitemap.xsl',
+      i18n: { defaultLocale: 'en', locales: { en: 'en-US', 'zh-cn': 'zh-CN' } },
+    }),
+  ],
   prefetch: true,
   i18n: {
     locales: ['en', 'zh-cn'],
