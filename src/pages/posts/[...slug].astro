@@ -13,7 +13,7 @@ import { getAttachmentUrl, fetchAttachmentMeta } from '@/scripts/attachment'
 const { slug } = Astro.params
 
 const baseUrl = import.meta.env.PUBLIC_SOLAR_NETWORK_URL
-const resp = await fetch(`${baseUrl}/cgi/co/posts/${slug}`)
+const resp = await fetch(`${baseUrl}/cgi/co/posts/${slug?.replace('/', ':')}`)
 
 if (resp.status !== 200) {
   return new Response(null, { status: 404 })
@@ -27,16 +27,27 @@ const rawContent = await marked(data.body.content as string, {
 const content = sanitizeHtml(rawContent)
 
 const attachments = await fetchAttachmentMeta(data.body.attachments)
+
+const title = data.body?.title ? data.body.title : `Post #${data.id}`
+const description =
+  data.body?.description ?? data.body?.content?.substring(0, 200) + '...'
+
+const url =
+  data.alias && data.alias_prefix
+    ? `https://solsynth.dev/posts/${data.alias_prefix}/${data.alias}`
+    : `https://solsynth.dev/posts/${data.id}`
 ---
 
 <head>
   <SEO
-    title={data.body?.title ? data.body.title : `Post #${data.id}`}
-    description={data.body?.description ?? data.body?.content?.substring(0, 200)}
+    title={`${title} | Solar Network`}
+    description={description}
+    canonical={url}
+    charset='UTF-8'
     openGraph={{
       optional: {
-        siteName: "Solar Network",
-        description: data.body?.description ?? data.body?.content?.substring(0, 200),
+        siteName: 'Solar Network',
+        description,
         video: getAttachmentUrl(
           attachments.find((a) => a.mimetype.startsWith('video'))?.rid
         ),
@@ -45,14 +56,14 @@ const attachments = await fetchAttachmentMeta(data.body.attachments)
         ),
       },
       basic: {
-        title: data.body?.title ? data.body.title : `Post #${data.id}`,
+        title,
         type: 'article',
         image: data.body?.thumbnail
           ? getAttachmentUrl(data.body.thumbnail)
           : getAttachmentUrl(
               attachments.find((a) => a.mimetype.startsWith('image'))?.rid
             ),
-        url: `https://solsynth.dev/posts/${data.id}`,
+        url,
       },
       article: {
         publishedTime: new Date(data.created_at).toISOString(),
@@ -62,8 +73,8 @@ const attachments = await fetchAttachmentMeta(data.body.attachments)
     }}
     twitter={{
       card: 'summary_large_image',
-      title: data.body?.title ? data.body.title : `Post #${data.id}`,
-        description: data.body?.description ?? data.body?.content?.substring(0, 200),
+      title,
+      description,
       creator: '@' + data.publisher.name,
       image: data.body?.thumbnail
         ? getAttachmentUrl(data.body.thumbnail)
@@ -74,10 +85,7 @@ const attachments = await fetchAttachmentMeta(data.body.attachments)
   />
 </head>
 
-<Layout
-  title={data.body?.title ? data.body.title : `Post #${data.id}`}
-  trailingTitle="Solar Network"
->
+<Layout title={title} trailingTitle="Solar Network">
   <div role="alert" class="alert shadow-lg px-12 m-0 rounded-none mb-5">
     <Icon
       name="material-symbols:ungroup"

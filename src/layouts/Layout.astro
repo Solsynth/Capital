@@ -12,7 +12,8 @@ interface Props {
 }
 
 let { title, trailingTitle } = Astro.props
-if(trailingTitle == null) trailingTitle = 'Solsynth LLC'
+if (!trailingTitle) trailingTitle = 'Solsynth LLC'
+console.log(title ? `${title} | ${trailingTitle}` : trailingTitle)
 
 const locale = Astro.currentLocale ?? 'en'
 ---
