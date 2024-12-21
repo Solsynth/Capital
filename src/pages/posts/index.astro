@@ -106,7 +106,7 @@ async function parseContent(data: string, useBreaks: boolean = false) {
                 )}
                 <article>
                   <div
-                    class="prose max-w-none max-md:prose-lg"
+                    class="prose max-w-none max-md:prose-lg max-w-0"
                     set:html={ele.body?.content ?? ''}
                   />
 
