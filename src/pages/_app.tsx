@@ -3,6 +3,8 @@ import type { AppProps } from 'next/app'
 import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { Roboto } from 'next/font/google'
 import { CapAppBar } from '@/components/CapAppBar'
+import { useUserStore } from '@/services/user'
+import { useEffect } from 'react'
 
 const fontRoboto = Roboto({
   subsets: ['latin'],
@@ -23,6 +25,12 @@ const siteTheme = createTheme({
 })
 
 export default function App({ Component, pageProps }: AppProps) {
+  const userStore = useUserStore()
+
+  useEffect(() => {
+    userStore.fetchUser()
+  }, [])
+
   return (
     <>
       <style jsx global>{`

@@ -2,7 +2,7 @@ import axios, { AxiosInstance } from 'axios'
 import applyCaseMiddleware from 'axios-case-converter'
 import { hasCookie, getCookie, setCookie } from 'cookies-next/client'
 
-const baseURL = 'https://api.solsynth.dev'
+const baseURL = 'https://api.sn.solsynth.dev'
 
 export let sni: AxiosInstance = (() => {
   const inst = axios.create({
@@ -29,12 +29,16 @@ async function refreshToken(): Promise<string | undefined> {
   if (!hasCookie('nex_user_atk') || !hasCookie('nex_user_rtk')) return
 
   const ogTk: string = getCookie('nex_user_atk')!
-  if (!isTokenExpired(ogTk)) return
+  if (!isTokenExpired(ogTk)) return ogTk
 
-  const resp = await axios.post('/cgi/id/auth/token', {
-    refresh_token: getCookie('nex_user_rtk')!,
-    grant_type: 'refresh_token',
-  })
+  const resp = await axios.post(
+    '/cgi/id/auth/token',
+    {
+      refresh_token: getCookie('nex_user_rtk')!,
+      grant_type: 'refresh_token',
+    },
+    { baseURL },
+  )
   const atk: string = resp.data['accessToken']
   const rtk: string = resp.data['refreshToken']
   setCookie('nex_user_atk', atk, { path: '/', maxAge: 2592000 })
