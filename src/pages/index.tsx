@@ -1,4 +1,4 @@
-import { Container, Typography } from "@mui/material";
+import { Container, Typography } from '@mui/material'
 
 export default function Home() {
   return (
@@ -10,5 +10,5 @@ export default function Home() {
         </Typography>
       </Container>
     </main>
-  );
+  )
 }
