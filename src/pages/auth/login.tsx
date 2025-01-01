@@ -2,6 +2,7 @@ import { SnLoginCheckpoint } from '@/components/auth/SnLoginCheckpoint'
 import { SnLoginRouter } from '@/components/auth/SnLoginRouter'
 import { SnLoginStart } from '@/components/auth/SnLoginStart'
 import { SnAuthFactor, SnAuthTicket } from '@/services/auth'
+import { useUserStore } from '@/services/user'
 import { Box, Container, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
@@ -13,6 +14,27 @@ export default function Login() {
   const [factor, setFactor] = useState<SnAuthFactor | null>(null)
 
   const router = useRouter()
+  const userStore = useUserStore()
+
+  function doCallback() {
+    if (router.query['redirect_url']) {
+      let redirectUrl: string
+      if (Array.isArray(router.query['redirect_url'])) {
+        redirectUrl = router.query['redirect_url'][0]
+      } else {
+        redirectUrl = router.query['redirect_url'].toString()
+      }
+
+      if (redirectUrl.startsWith('/')) {
+        router.push(redirectUrl)
+      } else {
+        window.open(redirectUrl, '_self')
+      }
+      return
+    }
+
+    router.push('/users/me')
+  }
 
   function renderForm() {
     switch (period) {
@@ -38,7 +60,8 @@ export default function Login() {
                 setPeriod(1)
                 return
               }
-              router.push('/')
+              userStore.fetchUser()
+              doCallback()
             }}
           />
         )

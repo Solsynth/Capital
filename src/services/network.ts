@@ -39,8 +39,8 @@ async function refreshToken(): Promise<string | undefined> {
     },
     { baseURL },
   )
-  const atk: string = resp.data['accessToken']
-  const rtk: string = resp.data['refreshToken']
+  const atk: string = resp.data['access_token']
+  const rtk: string = resp.data['refresh_token']
   setCookie('nex_user_atk', atk, { path: '/', maxAge: 2592000 })
   setCookie('nex_user_rtk', rtk, { path: '/', maxAge: 2592000 })
 
@@ -69,4 +69,9 @@ function isTokenExpired(token: string): boolean {
     console.error('[Authenticator] Something went wrong with token: ', error)
     return true
   }
+}
+
+export function getAttachmentUrl(identifer: string): string {
+  if (identifer.startsWith('http')) return identifer
+  return `${baseURL}/cgi/uc/attachments/${identifer}`
 }
