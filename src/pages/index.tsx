@@ -1,9 +1,14 @@
-import { Button } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 
 export default function Home() {
   return (
-    <div>
-      <Button>Say woah!</Button>
-    </div>
+    <main>
+      <Container sx={{ mt: 12 }}>
+        <Typography variant="h3" component="h1">
+          Welcome to <br />
+          the Solsynth Capital.
+        </Typography>
+      </Container>
+    </main>
   );
 }
