@@ -11,7 +11,7 @@ export function CapAppBar() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" elevation={0} color={'transparent'}>
+      <AppBar position="absolute" elevation={0} color={'transparent'}>
         <Toolbar>
           <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
             <MenuIcon />

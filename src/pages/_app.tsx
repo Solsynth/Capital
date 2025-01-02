@@ -43,7 +43,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <CssBaseline />
 
         <CapAppBar />
-        <Box sx={{ height: 'calc(100vh - 64px)' }}>
+        <Box sx={{ height: '100vh' }}>
           <Component {...pageProps} />
         </Box>
       </ThemeProvider>
