@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { sni } from './network'
 import { hasCookie } from 'cookies-next/client'
 
-interface SnAccount {
+export interface SnAccount {
   id: number
   createdAt: Date
   updatedAt: Date
@@ -24,7 +24,7 @@ interface SnAccount {
   automatedId?: number | null
 }
 
-interface SnAccountContact {
+export interface SnAccountContact {
   accountId: number
   content: string
   createdAt: Date
@@ -37,7 +37,7 @@ interface SnAccountContact {
   verifiedAt?: Date | null
 }
 
-interface SnAccountProfile {
+export interface SnAccountProfile {
   id: number
   accountId: number
   birthday?: Date | null
@@ -50,7 +50,7 @@ interface SnAccountProfile {
   updatedAt: Date
 }
 
-interface SnAccountBadge {
+export interface SnAccountBadge {
   id: number
   createdAt: Date
   updatedAt: Date
