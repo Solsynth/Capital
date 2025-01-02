@@ -44,7 +44,7 @@ export default function UserProfile({ user, checkIn }: InferGetServerSidePropsTy
         </Box>
 
         <Grid container spacing={2} sx={{ mt: 3 }}>
-          <Grid size={{ sm: 12, md: 8 }}>
+          <Grid size={{ xs: 12, sm: 12, md: 8 }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -94,8 +94,8 @@ export default function UserProfile({ user, checkIn }: InferGetServerSidePropsTy
             </Card>
           </Grid>
           <Grid
-            size={{ sm: 12, md: 4 }}
-            order={{ sm: -1, md: 1 }}
+            size={{ xs: 12, sm: 12, md: 4 }}
+            order={{ xs: -1, sm: -1, md: 1 }}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
             <Card>
