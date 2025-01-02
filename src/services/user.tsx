@@ -1,6 +1,10 @@
 import { create } from 'zustand'
 import { sni } from './network'
 import { hasCookie } from 'cookies-next/client'
+import { JSX } from 'react'
+
+import ConstructionIcon from '@mui/icons-material/Construction'
+import FlagIcon from '@mui/icons-material/Flag'
 
 export interface SnAccount {
   id: number
@@ -58,6 +62,17 @@ export interface SnAccountBadge {
   type: string
   accountId: number
   metadata: Record<string, any>
+}
+
+export const SnAccountBadgeMapping: Record<string, { icon: JSX.Element; name: string }> = {
+  'company.staff': {
+    icon: <ConstructionIcon />,
+    name: 'Solsynth Staff',
+  },
+  'site.migration': {
+    icon: <FlagIcon />,
+    name: 'Solar Network Natives',
+  },
 }
 
 export interface UserStore {

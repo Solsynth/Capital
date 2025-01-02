@@ -1,6 +1,6 @@
 import { SnCheckInRecord } from '@/services/checkIn'
 import { getAttachmentUrl, sni } from '@/services/network'
-import { SnAccount } from '@/services/user'
+import { SnAccount, SnAccountBadgeMapping } from '@/services/user'
 import { Avatar, Box, Card, CardContent, Container, Grid2 as Grid, Typography } from '@mui/material'
 import { LineChart } from '@mui/x-charts'
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
@@ -44,7 +44,7 @@ export default function UserProfile({ user, checkIn }: InferGetServerSidePropsTy
         </Box>
 
         <Grid container spacing={2} sx={{ mt: 3 }}>
-          <Grid size={8}>
+          <Grid size={{ sm: 12, md: 8 }}>
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
@@ -64,7 +64,7 @@ export default function UserProfile({ user, checkIn }: InferGetServerSidePropsTy
                   ]}
                   xAxis={[
                     {
-                      scaleType: 'time',
+                      scaleType: 'band',
                       data: checkIn.map((c) => {
                         const og = new Date(c.createdAt)
                         og.setHours(0, 0, 0, 0)
@@ -93,17 +93,53 @@ export default function UserProfile({ user, checkIn }: InferGetServerSidePropsTy
               </CardContent>
             </Card>
           </Grid>
-          <Grid size={4}>
+          <Grid
+            size={{ sm: 12, md: 4 }}
+            order={{ sm: -1, md: 1 }}
+            sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
+          >
+            <Card>
+              <CardContent>
+                <Typography variant="h6" gutterBottom>
+                  Badges
+                </Typography>
+
+                <Box display="flex" flexDirection="column" gap={0.5}>
+                  {user.badges.map((b) => (
+                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'start' }}>
+                      {SnAccountBadgeMapping[b.type].icon}
+                      <Box>
+                        <Typography variant="body2">{SnAccountBadgeMapping[b.type].name}</Typography>
+                        {b.metadata.title && <Typography variant="subtitle2">{b.metadata.title}</Typography>}
+                      </Box>
+                    </Box>
+                  ))}
+                </Box>
+              </CardContent>
+            </Card>
+
             <Card>
               <CardContent>
                 <Typography variant="h6" gutterBottom>
                   Information
                 </Typography>
 
+                {user.description && (
+                  <Typography variant="body1" gutterBottom>
+                    {user.description}
+                  </Typography>
+                )}
+
                 <Typography variant="body2">
                   Born on {new Date(user.profile!.birthday!).toLocaleDateString()}
                 </Typography>
-                <Typography variant="body2">Joined at {new Date(user.createdAt).toLocaleDateString()}</Typography>
+                <Typography variant="body2" gutterBottom>
+                  Joined at {new Date(user.createdAt).toLocaleDateString()}
+                </Typography>
+
+                <Typography variant="overline" lineHeight={1} fontFamily="monospace">
+                  #{user.id.toString().padStart(8, '0')}
+                </Typography>
               </CardContent>
             </Card>
           </Grid>
