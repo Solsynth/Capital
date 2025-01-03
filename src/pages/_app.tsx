@@ -13,6 +13,7 @@ const fontRoboto = Roboto({
 })
 
 const siteTheme = createTheme({
+  cssVariables: true,
   palette: {
     mode: 'light',
     primary: {
@@ -43,7 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
         <CssBaseline />
 
         <CapAppBar />
-        <Box sx={{ height: '100vh' }}>
+        <Box sx={{ height: 'calc(100vh - 64px)' }}>
           <Component {...pageProps} />
         </Box>
       </ThemeProvider>

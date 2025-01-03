@@ -98,25 +98,27 @@ export default function UserProfile({ user, checkIn }: InferGetServerSidePropsTy
             order={{ xs: -1, sm: -1, md: 1 }}
             sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}
           >
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Badges
-                </Typography>
+            {user.badges && (
+              <Card>
+                <CardContent>
+                  <Typography variant="h6" gutterBottom>
+                    Badges
+                  </Typography>
 
-                <Box display="flex" flexDirection="column" gap={0.5}>
-                  {user.badges.map((b) => (
-                    <Box sx={{ display: 'flex', gap: 2, alignItems: 'start' }}>
-                      {SnAccountBadgeMapping[b.type].icon}
-                      <Box>
-                        <Typography variant="body2">{SnAccountBadgeMapping[b.type].name}</Typography>
-                        {b.metadata.title && <Typography variant="subtitle2">{b.metadata.title}</Typography>}
+                  <Box display="flex" flexDirection="column" gap={0.5}>
+                    {user.badges.map((b) => (
+                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'start' }}>
+                        {SnAccountBadgeMapping[b.type].icon}
+                        <Box>
+                          <Typography variant="body2">{SnAccountBadgeMapping[b.type].name}</Typography>
+                          {b.metadata.title && <Typography variant="subtitle2">{b.metadata.title}</Typography>}
+                        </Box>
                       </Box>
-                    </Box>
-                  ))}
-                </Box>
-              </CardContent>
-            </Card>
+                    ))}
+                  </Box>
+                </CardContent>
+              </Card>
+            )}
 
             <Card>
               <CardContent>

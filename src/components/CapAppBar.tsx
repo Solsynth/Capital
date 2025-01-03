@@ -1,17 +1,59 @@
 import { useUserStore } from '@/services/user'
-import { AppBar, Avatar, Box, IconButton, Toolbar, Typography, useTheme } from '@mui/material'
+import {
+  AppBar,
+  AppBarProps,
+  Avatar,
+  createTheme,
+  IconButton,
+  ThemeProvider,
+  Toolbar,
+  Typography,
+  useScrollTrigger,
+  useTheme,
+} from '@mui/material'
+import { getAttachmentUrl } from '@/services/network'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import Link from 'next/link'
-import { getAttachmentUrl } from '@/services/network'
+import React from 'react'
+
+interface ElevationAppBarProps {
+  elevation?: number
+  color?: any
+  children?: React.ReactElement<{ elevation?: number } & AppBarProps>
+}
+
+function ElevationScroll(props: ElevationAppBarProps) {
+  if (typeof window === 'undefined') return props.children
+
+  const trigger = useScrollTrigger({
+    disableHysteresis: true,
+    threshold: 0,
+    target: window,
+  })
+
+  const commonStyle = {
+    transition: 'all',
+    transitionDuration: '300ms',
+  }
+
+  return props.children
+    ? React.cloneElement(props.children, {
+        elevation: trigger ? props.elevation : 0,
+        sx: trigger
+          ? { backgroundColor: props.color, ...commonStyle }
+          : { backgroundColor: 'transparent', ...commonStyle },
+      })
+    : null
+}
 
 export function CapAppBar() {
   const userStore = useUserStore()
   const theme = useTheme()
 
   return (
-    <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="absolute" elevation={0} color={'transparent'}>
+    <ElevationScroll elevation={2} color="white">
+      <AppBar position="sticky" elevation={0} color="transparent">
         <Toolbar>
           <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
             <MenuIcon />
@@ -41,6 +83,6 @@ export function CapAppBar() {
           </Link>
         </Toolbar>
       </AppBar>
-    </Box>
+    </ElevationScroll>
   )
 }
