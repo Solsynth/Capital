@@ -14,9 +14,11 @@ import {
   Typography,
   Divider,
 } from '@mui/material'
+import { AttachmentItem } from '@/components/attachments/AttachmentItem'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { useEffect, useMemo, useState } from 'react'
 import { unified } from 'unified'
+import Head from 'next/head'
 import Image from 'next/image'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeStringify from 'rehype-stringify'
@@ -24,13 +26,15 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 
 import CloseIcon from '@mui/icons-material/Close'
-import { AttachmentItem } from '@/components/attachments/AttachmentItem'
 
 export const getServerSideProps = (async (context) => {
   const id = context.params!.id as string[]
   try {
     const { data: post } = await sni.get<SnPost>('/cgi/co/posts/' + id.join(':'))
     if (post.body.content) {
+      if (!post.body.description) {
+        post.body.description = post.body.content.replaceAll('\n', ' ').substring(0, 200)
+      }
       const out = await unified()
         .use(remarkParse)
         .use(remarkRehype)
@@ -52,7 +56,48 @@ export const getServerSideProps = (async (context) => {
 }) satisfies GetServerSideProps<{ post: SnPost; attachments: SnAttachment[] }>
 
 export default function Post({ post, attachments }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const link = useMemo(() => `https://sn.solsynth.dev/posts/${post.id}`, [post])
+  const appLink = useMemo(() => `https://sn.solsynth.dev/posts/${post.id}`, [post])
+  const link = useMemo(
+    () =>
+      post.alias && post.aliasPrefix
+        ? `https://solsynth.dev/posts/${post.aliasPrefix}/${post.alias}`
+        : `https://solsynth.dev/posts/${post.id}`,
+    [post],
+  )
+
+  const title = useMemo(
+    () =>
+      post.body.title
+        ? `${post.body.title} / @${post.publisher.name} / Solar Network`
+        : `Post #${post.id} / @${post.publisher.name} / Solar Network`,
+    [post],
+  )
+  const description = useMemo(() => post.body.description, [post])
+
+  const image = useMemo(() => {
+    if (post.body.thumbnail) {
+      return getAttachmentUrl(post.body.thumbnail)
+    }
+    if (attachments) {
+      const images = attachments.filter((a) => a.mimetype.startsWith('image'))
+      if (images) return getAttachmentUrl(images[0].rid)
+    }
+    return null
+  }, [post])
+  const video = useMemo(() => {
+    if (attachments) {
+      const videos = attachments.filter((a) => a.mimetype.startsWith('video'))
+      if (videos) return getAttachmentUrl(videos[0].rid)
+    }
+    return null
+  }, [post])
+  const audio = useMemo(() => {
+    if (attachments) {
+      const audios = attachments.filter((a) => a.mimetype.startsWith('audio'))
+      if (audios) return getAttachmentUrl(audios[0].rid)
+    }
+    return null
+  }, [post])
 
   const [openAppHint, setOpenAppHint] = useState<boolean>()
 
@@ -70,6 +115,26 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
 
   return (
     <>
+      <Head>
+        <title>{title}</title>
+        <meta name="description" content={description} />
+        <meta name="author" content={`@${post.publisher.name}`} />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:creator" content={`@${post.publisher.name}`} />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+
+        <meta property="og:url" content={link} />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="article" />
+        <meta property="og:site_name" content="Solar Network" />
+        {image && <meta property="og:image" content={image} />}
+        {video && <meta property="og:video" content={video} />}
+        {audio && <meta property="og:audio" content={audio} />}
+      </Head>
+
       <Collapse in={openAppHint}>
         <Alert
           variant="filled"
@@ -90,7 +155,7 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
         >
           <AlertTitle gutterBottom={false}>Open in Solian</AlertTitle>
           All feature supported, cross-platform, the official app of Solar Network.{' '}
-          <Link href={link} color="#ffffff">
+          <Link href={appLink} color="#ffffff">
             Launch
           </Link>
         </Alert>
