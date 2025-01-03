@@ -1,6 +1,19 @@
 import { getAttachmentUrl, sni } from '@/services/network'
 import { SnPost } from '@/services/post'
-import { Alert, AlertTitle, Avatar, Box, Collapse, Container, IconButton, Link, Typography } from '@mui/material'
+import { listAttachment, SnAttachment } from '@/services/attachment'
+import {
+  Grid2 as Grid,
+  Alert,
+  AlertTitle,
+  Avatar,
+  Box,
+  Collapse,
+  Container,
+  IconButton,
+  Link,
+  Typography,
+  Divider,
+} from '@mui/material'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { useEffect, useMemo, useState } from 'react'
 import { unified } from 'unified'
@@ -11,6 +24,7 @@ import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 
 import CloseIcon from '@mui/icons-material/Close'
+import { AttachmentItem } from '@/components/attachments/AttachmentItem'
 
 export const getServerSideProps = (async (context) => {
   const id = context.params!.id as string[]
@@ -25,15 +39,19 @@ export const getServerSideProps = (async (context) => {
         .process(post.body.content)
       post.body.content = String(out)
     }
-    return { props: { post } }
+    let attachments: SnAttachment[] = []
+    if (post.body.attachments) {
+      attachments = await listAttachment(post.body.attachments)
+    }
+    return { props: { post, attachments } }
   } catch (err) {
     return {
       notFound: true,
     }
   }
-}) satisfies GetServerSideProps<{ post: SnPost }>
+}) satisfies GetServerSideProps<{ post: SnPost; attachments: SnAttachment[] }>
 
-export default function Post({ post }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function Post({ post, attachments }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const link = useMemo(() => `https://sn.solsynth.dev/posts/${post.id}`, [post])
 
   const [openAppHint, setOpenAppHint] = useState<boolean>()
@@ -84,7 +102,7 @@ export default function Post({ post }: InferGetServerSidePropsType<typeof getSer
         </Box>
       )}
 
-      <Container sx={{ mt: 3, pb: 5 }} maxWidth="md">
+      <Container sx={{ mt: 3, pb: 5 }} maxWidth="md" component="article">
         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
           <Box sx={{ display: 'flex', gap: 2 }}>
             <Avatar src={getAttachmentUrl(post.publisher.avatar)} />
@@ -97,9 +115,33 @@ export default function Post({ post }: InferGetServerSidePropsType<typeof getSer
           </Box>
         </Box>
 
-        <Box sx={{ mt: 2.5, maxWidth: 'unset' }} component="article" className="prose prose-lg">
+        <Box sx={{ my: 2.5 }} display="flex" flexDirection="column" gap={1}>
+          {(post.body.title || post.body.content) && (
+            <Box>
+              {post.body.title && <Typography variant="h6">{post.body.title}</Typography>}
+              {post.body.description && <Typography variant="subtitle1">{post.body.description}</Typography>}
+            </Box>
+          )}
+          <Box display="flex" gap={2} sx={{ opacity: 0.8 }}>
+            <Typography variant="body2">
+              Published at {new Date(post.publishedAt ?? post.createdAt).toLocaleString()}
+            </Typography>
+          </Box>
+        </Box>
+
+        <Divider />
+
+        <Box sx={{ mt: 2.5, maxWidth: 'unset' }} className="prose prose-lg">
           {post.body.content && <div dangerouslySetInnerHTML={{ __html: post.body.content }} />}
         </Box>
+
+        {attachments && (
+          <Grid container spacing={2} sx={{ mt: 3 }} columns={{ md: Math.min(2, attachments.length) }}>
+            {attachments.map((a) => (
+              <AttachmentItem item={a} />
+            ))}
+          </Grid>
+        )}
       </Container>
     </>
   )

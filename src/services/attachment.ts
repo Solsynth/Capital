@@ -32,12 +32,12 @@ export interface SnAttachment {
   metadata: Record<string, any>
 }
 
-async function getAttachment(id: string | number): Promise<SnAttachment> {
+export async function getAttachment(id: string | number): Promise<SnAttachment> {
   const resp = await sni.get<SnAttachment>('/cgi/uc/attachments/' + id + '/meta')
   return resp.data
 }
 
-async function listAttachment(id: string[]): Promise<SnAttachment[]> {
+export async function listAttachment(id: string[]): Promise<SnAttachment[]> {
   const resp = await sni.get<{ data: SnAttachment[] }>('/cgi/uc/attachments', {
     params: {
       id: id.join(','),
