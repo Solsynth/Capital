@@ -41,7 +41,7 @@ function ElevationScroll(props: ElevationAppBarProps) {
     ? React.cloneElement(props.children, {
         elevation: trigger ? props.elevation : 0,
         sx: trigger
-          ? { backgroundColor: props.color, ...commonStyle }
+          ? { backgroundColor: props.color, color: 'black', ...commonStyle }
           : { backgroundColor: 'transparent', ...commonStyle },
       })
     : null
