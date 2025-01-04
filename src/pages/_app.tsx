@@ -3,6 +3,7 @@ import type { AppProps } from 'next/app'
 import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { Roboto } from 'next/font/google'
 import { CapAppBar } from '@/components/CapAppBar'
+import { PagesProgressBar as ProgressBar } from 'next-nprogress-bar'
 import { useUserStore } from '@/services/user'
 import { useEffect } from 'react'
 import Head from 'next/head'
@@ -57,6 +58,12 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <ThemeProvider theme={siteTheme}>
         <CssBaseline />
+        <ProgressBar
+          height="4px"
+          color={siteTheme.palette.primary.main}
+          options={{ showSpinner: false }}
+          shallowRouting
+        />
 
         <CapAppBar />
         <Box sx={{ minHeight: 'calc(100vh - 64px)' }}>
