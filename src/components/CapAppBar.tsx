@@ -76,8 +76,8 @@ export function CapAppBar() {
                 {userStore.account ? (
                   <Avatar sx={{ backgroundColor: 'transparent' }} src={getAttachmentUrl(userStore.account.avatar)} />
                 ) : (
-                  <Avatar sx={{ backgroundColor: 'transparent' }}>
-                    <AccountCircle sx={{ color: theme.palette.text.primary }} className="dark:invert" />
+                  <Avatar sx={{ backgroundColor: 'transparent', color: theme.palette.text.primary }}>
+                    <AccountCircle />
                   </Avatar>
                 )}
               </IconButton>
