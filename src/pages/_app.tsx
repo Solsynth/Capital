@@ -44,6 +44,7 @@ export default function App({ Component, pageProps }: AppProps) {
       <style jsx global>{`
         html {
           font-family: ${fontRoboto.style.fontFamily};
+          scroll-behavior: smooth;
         }
       `}</style>
 

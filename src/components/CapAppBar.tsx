@@ -1,15 +1,5 @@
 import { useUserStore } from '@/services/user'
-import {
-  AppBar,
-  AppBarProps,
-  Avatar,
-  IconButton,
-  Toolbar,
-  Typography,
-  useMediaQuery,
-  useScrollTrigger,
-  useTheme,
-} from '@mui/material'
+import { AppBar, AppBarProps, Avatar, IconButton, Toolbar, Typography, useScrollTrigger, useTheme } from '@mui/material'
 import { getAttachmentUrl } from '@/services/network'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
@@ -17,14 +7,12 @@ import Link from 'next/link'
 import React, { useState } from 'react'
 import { CapDrawer } from './CapDrawer'
 
-interface ElevationAppBarProps {
+interface AppBarScrollProps {
   elevation?: number
-  color?: any
-  isMobile: boolean
   children?: React.ReactElement<{ elevation?: number } & AppBarProps>
 }
 
-function ElevationScroll(props: ElevationAppBarProps) {
+function AppBarScroll(props: AppBarScrollProps) {
   if (typeof window === 'undefined') return props.children
 
   const trigger = useScrollTrigger({
@@ -41,9 +29,7 @@ function ElevationScroll(props: ElevationAppBarProps) {
   return props.children
     ? React.cloneElement(props.children, {
         elevation: trigger ? props.elevation : 0,
-        sx: trigger
-          ? { backgroundColor: props.color, color: 'black', ...commonStyle }
-          : { backgroundColor: 'transparent', ...commonStyle },
+        sx: trigger ? { borderBottom: 1, borderColor: 'divider', ...commonStyle } : { ...commonStyle },
       })
     : null
 }
@@ -51,8 +37,6 @@ function ElevationScroll(props: ElevationAppBarProps) {
 export function CapAppBar() {
   const userStore = useUserStore()
   const theme = useTheme()
-
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
   const [open, setOpen] = useState(false)
 
@@ -62,16 +46,8 @@ export function CapAppBar() {
     <>
       <CapDrawer width={drawerWidth} open={open} onClose={() => setOpen(false)} />
 
-      <ElevationScroll isMobile={isMobile} elevation={2} color="white">
-        <AppBar
-          position="sticky"
-          elevation={0}
-          color="transparent"
-          sx={{
-            width: isMobile ? null : `calc(100% - ${drawerWidth}`,
-            marginLeft: isMobile ? null : `${drawerWidth}px`,
-          }}
-        >
+      <AppBarScroll elevation={0}>
+        <AppBar position="sticky" elevation={0} color="transparent" className="backdrop-blur-md">
           <Toolbar>
             <IconButton
               size="large"
@@ -108,7 +84,7 @@ export function CapAppBar() {
             </Link>
           </Toolbar>
         </AppBar>
-      </ElevationScroll>
+      </AppBarScroll>
     </>
   )
 }
