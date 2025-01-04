@@ -6,13 +6,11 @@ import { useForm } from 'react-hook-form'
 
 import ErrorIcon from '@mui/icons-material/Error'
 
-import 'animate.css'
-
 export type SnResetPasswordForm = {
   password: string
 }
 
-export default function AccountConfirm() {
+export default function AccountPasswordReset() {
   const router = useRouter()
 
   const { handleSubmit, register } = useForm<SnResetPasswordForm>()

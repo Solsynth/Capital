@@ -15,6 +15,9 @@ const fontRoboto = Roboto({
 
 const siteTheme = createTheme({
   cssVariables: true,
+  // colorSchemes: {
+  //   dark: true,
+  // },
   palette: {
     mode: 'light',
     primary: {

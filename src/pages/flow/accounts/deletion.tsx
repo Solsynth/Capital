@@ -5,9 +5,7 @@ import { useState } from 'react'
 
 import ErrorIcon from '@mui/icons-material/Error'
 
-import 'animate.css'
-
-export default function AccountConfirm() {
+export default function AccountDeletion() {
   const router = useRouter()
 
   const [error, setError] = useState<string | null>(null)
