@@ -105,14 +105,14 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
   const [openAppHint, setOpenAppHint] = useState<boolean>()
 
   useEffect(() => {
-    if (!localStorage.getItem('sol_hide_app_hint')) {
+    if (!localStorage.getItem('sol-hide-app-hint')) {
       setOpenAppHint(true)
     }
   }, [])
 
   useEffect(() => {
     if (openAppHint === false) {
-      localStorage.setItem('sol_hide_app_hint', 'yes')
+      localStorage.setItem('sol-hide-app-hint', 'yes')
     }
   }, [openAppHint])
 

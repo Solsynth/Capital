@@ -8,8 +8,10 @@ import {
   Divider,
   Drawer,
   Toolbar,
+  Typography,
 } from '@mui/material'
 import { JSX } from 'react'
+import Image from 'next/image'
 
 import FeedIcon from '@mui/icons-material/Feed'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
@@ -44,7 +46,7 @@ export function CapDrawer({ width, open, onClose }: { width: number; open: boole
       href: '/about',
     },
     {
-      title: 'Term & Conditions',
+      title: 'Terms & Conditions',
       icon: <PolicyIcon />,
       href: '/terms',
     },
@@ -53,7 +55,20 @@ export function CapDrawer({ width, open, onClose }: { width: number; open: boole
   return (
     <Drawer open={open} onClose={onClose}>
       <Box sx={{ width: width }} role="presentation" onClick={onClose}>
-        <Toolbar>Solsynth LLC</Toolbar>
+        <Toolbar style={{ padding: 0 }}>
+          <Box display="flex" gap={2} sx={{ mx: 2 }}>
+            <Image src="/logo.png" width={28} height={28} alt="company logo" style={{ objectFit: 'contain' }} />
+
+            <Box display="flex" flexDirection="column" justifyContent="center">
+              <Typography variant="body2" component="h2" fontWeight="bold" lineHeight={1.4}>
+                Solsynth LLC
+              </Typography>
+              <Typography variant="caption" component="h3" lineHeight={1} fontFamily="monospace">
+                Capital
+              </Typography>
+            </Box>
+          </Box>
+        </Toolbar>
         <Divider />
 
         <List>
