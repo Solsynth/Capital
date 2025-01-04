@@ -44,7 +44,7 @@ export function SnLoginRouter({
         </Alert>
       </Collapse>
 
-      <Box sx={{ display: 'flex', flexDirection: 'column', width: 320, gap: 2, textAlign: 'center' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, textAlign: 'center' }}>
         <ButtonGroup orientation="vertical" aria-label="Vertical button group">
           {factorList.map((factor) => (
             <Button

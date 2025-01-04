@@ -6,6 +6,7 @@ import { ArrowForward } from '@mui/icons-material'
 import { Alert, Box, Button, Collapse, Link, TextField, Typography } from '@mui/material'
 import { SnAuthFactor, SnAuthResult, SnAuthTicket } from '@/services/auth'
 import { useForm } from 'react-hook-form'
+import NextLink from 'next/link'
 
 import ErrorIcon from '@mui/icons-material/Error'
 
@@ -38,14 +39,14 @@ export function SnLoginStart({ onNext }: { onNext: (val: SnAuthTicket, fcs: SnAu
 
   return (
     <>
-      <Collapse in={!!error} sx={{ width: 320 }}>
+      <Collapse in={!!error} sx={{ width: '100%' }}>
         <Alert sx={{ mb: 4 }} icon={<ErrorIcon fontSize="inherit" />} severity="error">
           {error}
         </Alert>
       </Collapse>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: 320, gap: 2, textAlign: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, textAlign: 'center' }}>
           <TextField
             label="Username"
             helperText="You can also use email address and phone number"
@@ -57,8 +58,14 @@ export function SnLoginStart({ onNext }: { onNext: (val: SnAuthTicket, fcs: SnAu
           </Button>
 
           <Typography variant="caption" sx={{ opacity: 0.75, mx: 2 }}>
-            By continuing means you agree to our <Link href="#">Terms of Service</Link> and{' '}
-            <Link href="#">Privacy Policy</Link>
+            By continuing means you agree to our{' '}
+            <NextLink href="/terms/privacy-policy" passHref>
+              <Link component="span">Privacy Policy</Link>
+            </NextLink>{' '}
+            and{' '}
+            <NextLink href="/terms/user-agreements" passHref>
+              <Link component="span">User Agreements</Link>
+            </NextLink>
           </Typography>
         </Box>
       </form>

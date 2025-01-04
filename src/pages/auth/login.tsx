@@ -86,8 +86,9 @@ export default function Login() {
         height: 'calc(100vh - 64px)',
         textAlign: 'center',
       }}
+      maxWidth="xs"
     >
-      <Box>
+      <Box sx={{ width: '100%' }}>
         <Typography variant="h5" component="h1">
           Login
         </Typography>

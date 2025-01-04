@@ -59,14 +59,14 @@ export function SnLoginCheckpoint({
 
   return (
     <>
-      <Collapse in={!!error} sx={{ width: 320 }}>
+      <Collapse in={!!error} sx={{ width: '100%' }}>
         <Alert sx={{ mb: 4 }} icon={<ErrorIcon fontSize="inherit" />} severity="error">
           {error}
         </Alert>
       </Collapse>
 
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: 320, gap: 2, textAlign: 'center' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', gap: 2, textAlign: 'center' }}>
           <TextField
             label={factor.type == 0 ? 'Password' : 'Verification code'}
             type="password"
