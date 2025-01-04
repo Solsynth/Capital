@@ -5,6 +5,7 @@ import { Roboto } from 'next/font/google'
 import { CapAppBar } from '@/components/CapAppBar'
 import { useUserStore } from '@/services/user'
 import { useEffect } from 'react'
+import Head from 'next/head'
 
 const fontRoboto = Roboto({
   subsets: ['latin'],
@@ -32,6 +33,12 @@ export default function App({ Component, pageProps }: AppProps) {
     userStore.fetchUser()
   }, [])
 
+  const title = pageProps.title
+    ? pageProps.title.endsWith('Solar Network')
+      ? pageProps.title
+      : `${pageProps.title} | Solsynth LLC`
+    : 'Solsynth LLC'
+
   return (
     <>
       <style jsx global>{`
@@ -39,6 +46,10 @@ export default function App({ Component, pageProps }: AppProps) {
           font-family: ${fontRoboto.style.fontFamily};
         }
       `}</style>
+
+      <Head>
+        <title>{title}</title>
+      </Head>
 
       <ThemeProvider theme={siteTheme}>
         <CssBaseline />
