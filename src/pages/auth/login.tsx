@@ -83,7 +83,7 @@ export default function Login() {
       sx={{
         display: 'grid',
         placeItems: 'center',
-        height: '100%',
+        height: 'calc(100vh - 64px)',
         textAlign: 'center',
       }}
     >

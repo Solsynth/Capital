@@ -216,7 +216,7 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
             }}
           >
             {attachments.map((a) => (
-              <Grid size="grow">
+              <Grid size={1} key={a.id}>
                 <AttachmentItem item={a} />
               </Grid>
             ))}
