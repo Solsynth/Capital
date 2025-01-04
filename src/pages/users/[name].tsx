@@ -107,7 +107,7 @@ export default function UserProfile({ user, checkIn }: InferGetServerSidePropsTy
 
                   <Box display="flex" flexDirection="column" gap={0.5}>
                     {user.badges.map((b) => (
-                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'start' }}>
+                      <Box sx={{ display: 'flex', gap: 2, alignItems: 'start' }} key={b.id}>
                         {SnAccountBadgeMapping[b.type].icon}
                         <Box>
                           <Typography variant="body2">{SnAccountBadgeMapping[b.type].name}</Typography>

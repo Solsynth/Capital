@@ -61,7 +61,7 @@ export default function AccountConfirm() {
               className="animate__animated animate__flash animate__infinite"
               style={{ '--animate-duration': '3s' } as any}
             >
-              Hold on a moment, we're working on it...
+              Hold on a moment, we&apos;re working on it...
             </Typography>
           </Box>
         )}

@@ -11,7 +11,7 @@ export default async function handler(_: NextApiRequest, res: NextApiResponse) {
   out['authorization_endpoint'] = siteUrl + '/auth/authorize'
   out['jwks_uri'] = siteUrl + '/.well-known/jwks'
 
-  for (let [k, v] of Object.entries(out)) {
+  for (const [k, v] of Object.entries(out)) {
     if (typeof v === 'string') {
       if (v.startsWith('https://id.solsynth.dev/api')) {
         out[k] = v.replace('https://id.solsynth.dev/api', solarNetworkApi + '/cgi/id')

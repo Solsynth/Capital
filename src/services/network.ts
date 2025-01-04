@@ -4,7 +4,7 @@ import { hasCookie, getCookie, setCookie } from 'cookies-next/client'
 
 const baseURL = 'https://api.sn.solsynth.dev'
 
-export let sni: AxiosInstance = (() => {
+export const sni: AxiosInstance = (() => {
   const inst = axios.create({
     baseURL,
   })

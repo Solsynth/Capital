@@ -18,7 +18,7 @@ export function SnLoginRouter({
   factorList: SnAuthFactor[]
   onNext: (val: SnAuthFactor) => void
 }) {
-  const factorTypeIcons = [<PasswordIcon />, <EmailIcon />]
+  const factorTypeIcons = [<PasswordIcon key="password-icon" />, <EmailIcon key="email-icon" />]
   const factorTypeLabels = ['Password', 'Email verification code']
 
   const [error, setError] = useState<string | null>(null)

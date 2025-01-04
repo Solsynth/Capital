@@ -29,9 +29,9 @@ export const getServerSideProps = (async (context) => {
       },
     })
 
-    let posts: SnPostWithAttachments[] = resp.data as SnPostWithAttachments[]
+    const posts: SnPostWithAttachments[] = resp.data as SnPostWithAttachments[]
     for (let idx = 0; idx < posts.length; idx++) {
-      let post = posts[idx]
+      const post = posts[idx]
       if (post.body.content) {
         let processor: any = unified().use(remarkParse)
         if (post.type != 'article') {
