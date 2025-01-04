@@ -3,11 +3,10 @@ import {
   AppBar,
   AppBarProps,
   Avatar,
-  createTheme,
   IconButton,
-  ThemeProvider,
   Toolbar,
   Typography,
+  useMediaQuery,
   useScrollTrigger,
   useTheme,
 } from '@mui/material'
@@ -15,11 +14,13 @@ import { getAttachmentUrl } from '@/services/network'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import Link from 'next/link'
-import React from 'react'
+import React, { useState } from 'react'
+import { CapDrawer } from './CapDrawer'
 
 interface ElevationAppBarProps {
   elevation?: number
   color?: any
+  isMobile: boolean
   children?: React.ReactElement<{ elevation?: number } & AppBarProps>
 }
 
@@ -51,38 +52,63 @@ export function CapAppBar() {
   const userStore = useUserStore()
   const theme = useTheme()
 
-  return (
-    <ElevationScroll elevation={2} color="white">
-      <AppBar position="sticky" elevation={0} color="transparent">
-        <Toolbar>
-          <IconButton size="large" edge="start" color="inherit" aria-label="menu" sx={{ mr: 2 }}>
-            <MenuIcon />
-          </IconButton>
-          <Link href="/" passHref style={{ flexGrow: 1 }}>
-            <Typography variant="h6" component="div">
-              Capital
-            </Typography>
-          </Link>
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'))
 
-          <Link href={userStore.account ? '/users/me' : '/auth/login'} passHref>
+  const [open, setOpen] = useState(false)
+
+  const drawerWidth = 280
+
+  return (
+    <>
+      <CapDrawer width={drawerWidth} open={open} onClose={() => setOpen(false)} />
+
+      <ElevationScroll isMobile={isMobile} elevation={2} color="white">
+        <AppBar
+          position="sticky"
+          elevation={0}
+          color="transparent"
+          sx={{
+            width: isMobile ? null : `calc(100% - ${drawerWidth}`,
+            marginLeft: isMobile ? null : `${drawerWidth}px`,
+          }}
+        >
+          <Toolbar>
             <IconButton
               size="large"
-              aria-label="account of current user"
-              aria-controls="primary-search-account-menu"
-              aria-haspopup="true"
+              edge="start"
               color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={() => setOpen(true)}
             >
-              {userStore.account ? (
-                <Avatar sx={{ backgroundColor: 'transparent' }} src={getAttachmentUrl(userStore.account.avatar)} />
-              ) : (
-                <Avatar sx={{ backgroundColor: 'transparent' }}>
-                  <AccountCircle sx={{ color: theme.palette.text.primary }} />
-                </Avatar>
-              )}
+              <MenuIcon />
             </IconButton>
-          </Link>
-        </Toolbar>
-      </AppBar>
-    </ElevationScroll>
+            <Link href="/" passHref style={{ flexGrow: 1 }}>
+              <Typography variant="h6" component="div">
+                Capital
+              </Typography>
+            </Link>
+
+            <Link href={userStore.account ? '/users/me' : '/auth/login'} passHref>
+              <IconButton
+                size="large"
+                aria-label="account of current user"
+                aria-controls="primary-search-account-menu"
+                aria-haspopup="true"
+                color="inherit"
+              >
+                {userStore.account ? (
+                  <Avatar sx={{ backgroundColor: 'transparent' }} src={getAttachmentUrl(userStore.account.avatar)} />
+                ) : (
+                  <Avatar sx={{ backgroundColor: 'transparent' }}>
+                    <AccountCircle sx={{ color: theme.palette.text.primary }} />
+                  </Avatar>
+                )}
+              </IconButton>
+            </Link>
+          </Toolbar>
+        </AppBar>
+      </ElevationScroll>
+    </>
   )
 }

@@ -22,6 +22,7 @@ import Head from 'next/head'
 import Image from 'next/image'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeStringify from 'rehype-stringify'
+import remarkBreaks from 'remark-breaks'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
 
@@ -32,15 +33,12 @@ export const getServerSideProps = (async (context) => {
   try {
     const { data: post } = await sni.get<SnPost>('/cgi/co/posts/' + id.join(':'))
     if (post.body.content) {
-      if (!post.body.description) {
-        post.body.description = post.body.content.replaceAll('\n', ' ').substring(0, 200)
+      let processor: any = unified().use(remarkParse)
+      if (post.type != 'article') {
+        processor = processor.use(remarkBreaks)
       }
-      const out = await unified()
-        .use(remarkParse)
-        .use(remarkRehype)
-        .use(rehypeSanitize)
-        .use(rehypeStringify)
-        .process(post.body.content)
+      const out = await processor.use(remarkRehype).use(rehypeSanitize).use(rehypeStringify).process(post.body.content)
+      post.body.rawContent = post.body.content
       post.body.content = String(out)
     }
     let attachments: SnAttachment[] = []
@@ -49,6 +47,7 @@ export const getServerSideProps = (async (context) => {
     }
     return { props: { post, attachments } }
   } catch (err) {
+    console.error(err)
     return {
       notFound: true,
     }
@@ -72,7 +71,11 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
         : `Post #${post.id} / @${post.publisher.name} / Solar Network`,
     [post],
   )
-  const description = useMemo(() => post.body.description, [post])
+  const description = useMemo(
+    () =>
+      post.body.description ? post.body.description : post.body.rawContent.replaceAll('\n', ' ').substring(0, 200),
+    [post],
+  )
 
   const image = useMemo(() => {
     if (post.body.thumbnail) {
@@ -80,21 +83,21 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
     }
     if (attachments) {
       const images = attachments.filter((a) => a.mimetype.startsWith('image'))
-      if (images) return getAttachmentUrl(images[0].rid)
+      if (images && images[0]) return getAttachmentUrl(images[0].rid)
     }
     return null
   }, [post])
   const video = useMemo(() => {
     if (attachments) {
       const videos = attachments.filter((a) => a.mimetype.startsWith('video'))
-      if (videos) return getAttachmentUrl(videos[0].rid)
+      if (videos && videos[0]) return getAttachmentUrl(videos[0].rid)
     }
     return null
   }, [post])
   const audio = useMemo(() => {
     if (attachments) {
       const audios = attachments.filter((a) => a.mimetype.startsWith('audio'))
-      if (audios) return getAttachmentUrl(audios[0].rid)
+      if (audios && audios[0]) return getAttachmentUrl(audios[0].rid)
     }
     return null
   }, [post])
@@ -201,9 +204,21 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
         </Box>
 
         {attachments && (
-          <Grid container spacing={2} sx={{ mt: 3 }} columns={{ md: Math.min(2, attachments.length) }}>
+          <Grid
+            container
+            spacing={2}
+            sx={{ mt: 3 }}
+            columns={{
+              xs: 1,
+              sm: Math.min(2, attachments.length),
+              md: Math.min(3, attachments.length),
+              lg: Math.min(4, attachments.length),
+            }}
+          >
             {attachments.map((a) => (
-              <AttachmentItem item={a} />
+              <Grid size="grow">
+                <AttachmentItem item={a} />
+              </Grid>
             ))}
           </Grid>
         )}

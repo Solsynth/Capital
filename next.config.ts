@@ -4,7 +4,16 @@ const nextConfig: NextConfig = {
   /* config options here */
   reactStrictMode: true,
   images: {
-    domains: ['raw.sn.solsynth.dev', 'api.sn.solsynth.dev'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'raw.sn.solsynth.dev',
+      },
+      {
+        protocol: 'https',
+        hostname: 'api.sn.solsynth.dev',
+      },
+    ],
   },
 }
 
