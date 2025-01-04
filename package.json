@@ -18,6 +18,7 @@
     "@mui/material-nextjs": "^6.3.1",
     "@mui/x-charts": "^7.23.2",
     "@tailwindcss/typography": "^0.5.15",
+    "@vercel/speed-insights": "^1.1.0",
     "animate.css": "^4.1.1",
     "axios": "^1.7.9",
     "axios-case-converter": "^1.1.1",
@@ -44,5 +45,8 @@
     "eslint": "^9",
     "eslint-config-next": "15.1.3",
     "@eslint/eslintrc": "^3"
-  }
+  },
+  "trustedDependencies": [
+    "@vercel/speed-insights"
+  ]
 }
