@@ -15,7 +15,6 @@ import Image from 'next/image'
 
 import FeedIcon from '@mui/icons-material/Feed'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
-import InfoIcon from '@mui/icons-material/Info'
 import PolicyIcon from '@mui/icons-material/Policy'
 import Link from 'next/link'
 
@@ -40,11 +39,6 @@ export function CapDrawer({ width, open, onClose }: { width: number; open: boole
   ]
 
   const additionalLinks: NavLink[] = [
-    {
-      title: 'About',
-      icon: <InfoIcon />,
-      href: '/about',
-    },
     {
       title: 'Terms & Conditions',
       icon: <PolicyIcon />,

@@ -14,6 +14,7 @@ import {
   AccordionSummary,
 } from '@mui/material'
 import { JSX } from 'react'
+import { Roboto_Serif } from 'next/font/google'
 import Image from 'next/image'
 import NextLink from 'next/link'
 
@@ -41,6 +42,21 @@ interface DownloadableAsset {
 interface AskableQuestion {
   question: string
   answer: string
+}
+
+const fontSerif = Roboto_Serif({
+  subsets: ['latin'],
+  weight: ['300'],
+  display: 'swap',
+  style: 'italic',
+})
+
+export async function getStaticProps() {
+  return {
+    props: {
+      title: 'Solar Network',
+    },
+  }
 }
 
 export default function ProductSolarNetwork() {
@@ -131,6 +147,16 @@ export default function ProductSolarNetwork() {
         </Box>
         <Typography variant="subtitle1" component="h1" className="animate__animated animate__fadeInUp">
           The next generation Social Network platform.
+        </Typography>
+
+        <Typography
+          variant="subtitle1"
+          fontSize={26}
+          fontFamily={fontSerif.style.fontFamily}
+          sx={{ mt: 2.5, width: 'fit-content', fontStyle: 'italic' }}
+          className="textmarker-effect animate__animated animate__fadeInUp"
+        >
+          Social Network, Redefined.
         </Typography>
 
         <Link href="#download" sx={{ my: 2.5 }}>
