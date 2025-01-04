@@ -22,7 +22,7 @@ export default function Home() {
     <>
       <Container sx={{ py: 24, display: 'flex', flexDirection: 'column', gap: 32 }}>
         <Box>
-          <Image src="/logo.png" width={128} height={128} alt="company logo" className="mb-2" />
+          <Image src="/logo.png" width={128} height={128} alt="company logo" className="mb-2 dark:invert" />
           <Typography variant="h3" component="h1" gutterBottom>
             Welcome to <br />
             the Solsynth Capital.
@@ -92,6 +92,7 @@ export default function Home() {
                 width={256}
                 height={80}
                 style={{ marginLeft: '-20px' }}
+                className="dark:invert"
               />
               <Typography variant="h4" component="h2" sx={{ my: 2 }}>
                 Made by Solsynth

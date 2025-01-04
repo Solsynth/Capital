@@ -199,7 +199,7 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
 
         <Divider />
 
-        <Box sx={{ mt: 2.5, maxWidth: 'unset' }} className="prose prose-lg">
+        <Box sx={{ mt: 2.5, maxWidth: 'unset' }} className="prose prose-lg dark:prose-invert">
           {post.body.content && <div dangerouslySetInnerHTML={{ __html: post.body.content }} />}
         </Box>
 

@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
 
       <Divider />
 
-      <Box component="article" sx={{ my: 5, maxWidth: 'unset' }} className="prose prose-lg">
+      <Box component="article" sx={{ my: 5, maxWidth: 'unset' }} className="prose prose-lg dark:prose-invert">
         <h2 id="introduction">Introduction</h2>
         <p>
           We take your privacy seriously. This privacy policy outlines the types of personal information we collect, how

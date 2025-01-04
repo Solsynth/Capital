@@ -97,7 +97,7 @@ export default function PostList({ posts, page, pages }: InferGetServerSideProps
 
               <Divider />
 
-              <Box sx={{ maxWidth: 'unset' }} className="prose prose-md">
+              <Box sx={{ maxWidth: 'unset' }} className="prose prose-md dark:prose-invert">
                 {p.body.content && <div dangerouslySetInnerHTML={{ __html: p.body.content }} />}
               </Box>
             </Box>

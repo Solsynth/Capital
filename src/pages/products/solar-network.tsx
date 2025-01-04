@@ -124,7 +124,7 @@ export default function ProductSolarNetwork() {
           width={128}
           height={128}
           style={{ objectFit: 'cover' }}
-          className="shadow-xl rounded-2xl mx-auto mb-8 border border-1 border-gray-200"
+          className="shadow-xl rounded-2xl mx-auto mb-8 border border-1 border-gray-200 dark:invert"
           alt="solar network icon"
         />
         <Box position="relative" width="fit-content" className="animate__animated animate__fadeInUp">

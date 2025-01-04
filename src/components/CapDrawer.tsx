@@ -51,7 +51,14 @@ export function CapDrawer({ width, open, onClose }: { width: number; open: boole
       <Box sx={{ width: width }} role="presentation" onClick={onClose}>
         <Toolbar style={{ padding: 0 }}>
           <Box display="flex" gap={2} sx={{ mx: 2 }}>
-            <Image src="/logo.png" width={28} height={28} alt="company logo" style={{ objectFit: 'contain' }} />
+            <Image
+              src="/logo.png"
+              width={28}
+              height={28}
+              alt="company logo"
+              style={{ objectFit: 'contain' }}
+              className="dark:invert"
+            />
 
             <Box display="flex" flexDirection="column" justifyContent="center">
               <Typography variant="body2" component="h2" fontWeight="bold" lineHeight={1.4}>

@@ -17,7 +17,7 @@ export default function PrivacyPolicy() {
 
       <Divider />
 
-      <Box component="article" sx={{ my: 5, maxWidth: 'unset' }} className="prose prose-lg">
+      <Box component="article" sx={{ my: 5, maxWidth: 'unset' }} className="prose prose-lg dark:prose-invert">
         <p>
           This Agreement applies to all Solsynth LLC products, including but not limited to Solar Network, Solian,
           DietaryGuard, AceField.
