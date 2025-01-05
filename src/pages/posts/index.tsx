@@ -37,6 +37,10 @@ export const getServerSideProps = (async (context) => {
         if (post.type != 'article') {
           processor = processor.use(remarkBreaks)
         }
+        post.body.content = post.body.content.replace(
+          /!\[.*?\]\(solink:\/\/attachments\/([\w-]+)\)/g,
+          '![alt](https://api.sn.solsynth.dev/cgi/uc/attachments/$1)',
+        )
         const out = await processor
           .use(remarkRehype)
           .use(rehypeSanitize)
@@ -47,6 +51,9 @@ export const getServerSideProps = (async (context) => {
       }
       if (post.body.attachments) {
         post.attachments = await listAttachment(post.body.attachments)
+        if (post.type == 'article') {
+          post.attachments = post.attachments.filter((a) => !a.mimetype.startsWith('image'))
+        }
       }
       posts[idx] = post
     }

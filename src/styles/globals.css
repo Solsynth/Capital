@@ -36,3 +36,7 @@
     width: 100%;
   }
 }
+
+.prose img {
+  border-radius: 8px;
+}

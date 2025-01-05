@@ -25,6 +25,7 @@ import rehypeStringify from 'rehype-stringify'
 import remarkBreaks from 'remark-breaks'
 import remarkParse from 'remark-parse'
 import remarkRehype from 'remark-rehype'
+import remarkGfm from 'remark-gfm'
 
 import CloseIcon from '@mui/icons-material/Close'
 
@@ -37,7 +38,16 @@ export const getServerSideProps = (async (context) => {
       if (post.type != 'article') {
         processor = processor.use(remarkBreaks)
       }
-      const out = await processor.use(remarkRehype).use(rehypeSanitize).use(rehypeStringify).process(post.body.content)
+      post.body.content = post.body.content.replace(
+        /!\[.*?\]\(solink:\/\/attachments\/([\w-]+)\)/g,
+        '![alt](https://api.sn.solsynth.dev/cgi/uc/attachments/$1)',
+      )
+      const out = await processor
+        .use(remarkRehype)
+        .use(remarkGfm)
+        .use(rehypeSanitize)
+        .use(rehypeStringify)
+        .process(post.body.content)
       post.body.rawContent = post.body.content
       post.body.content = String(out)
     }
@@ -100,6 +110,13 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
       if (audios && audios[0]) return getAttachmentUrl(audios[0].rid)
     }
     return null
+  }, [post])
+
+  const displayableAttachments = useMemo(() => {
+    if (post.type == 'article') {
+      return attachments.filter((a) => !a.mimetype.startsWith('image'))
+    }
+    return attachments
   }, [post])
 
   const [openAppHint, setOpenAppHint] = useState<boolean>()
@@ -203,7 +220,7 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
           {post.body.content && <div dangerouslySetInnerHTML={{ __html: post.body.content }} />}
         </Box>
 
-        {attachments && (
+        {displayableAttachments && (
           <Grid
             container
             spacing={2}
@@ -215,7 +232,7 @@ export default function Post({ post, attachments }: InferGetServerSidePropsType<
               lg: Math.min(4, attachments.length),
             }}
           >
-            {attachments.map((a) => (
+            {displayableAttachments.map((a) => (
               <Grid size={1} key={a.id}>
                 <AttachmentItem item={a} />
               </Grid>
