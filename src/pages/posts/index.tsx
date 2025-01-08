@@ -2,9 +2,20 @@ import { AttachmentItem } from '@/components/attachments/AttachmentItem'
 import { SnAttachment, listAttachment } from '@/services/attachment'
 import { getAttachmentUrl, sni } from '@/services/network'
 import { SnPost } from '@/services/post'
-import { Avatar, Box, Container, Divider, Grid2 as Grid, Pagination, Paper, Typography } from '@mui/material'
+import {
+  Avatar,
+  Box,
+  Button,
+  Container,
+  Divider,
+  Grid2 as Grid,
+  Link,
+  Pagination,
+  Paper,
+  Typography,
+} from '@mui/material'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import Link from 'next/link'
+import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 import rehypeSanitize from 'rehype-sanitize'
 import rehypeStringify from 'rehype-stringify'
@@ -86,7 +97,7 @@ export default function PostList({ posts, page, pages }: InferGetServerSideProps
             </Box>
           </Box>
 
-          <Link href={`/posts/${p.id}`} passHref>
+          <NextLink href={`/posts/${p.id}`} passHref>
             <Box>
               <Box sx={{ mt: 1.5, mb: 1 }} display="flex" flexDirection="column" gap={0.5}>
                 {(p.body.title || p.body.content) && (
@@ -108,7 +119,7 @@ export default function PostList({ posts, page, pages }: InferGetServerSideProps
                 {p.body.content && <div dangerouslySetInnerHTML={{ __html: p.body.content }} />}
               </Box>
             </Box>
-          </Link>
+          </NextLink>
 
           {p.attachments && (
             <Grid
@@ -131,12 +142,24 @@ export default function PostList({ posts, page, pages }: InferGetServerSideProps
         </Paper>
       ))}
 
-      <Pagination
-        count={pages}
-        page={page}
-        sx={{ mx: 'auto', mb: 5, mt: 3 }}
-        onChange={(_, page) => router.push('/posts?page=' + page)}
-      />
+      <Box
+        sx={{
+          mx: 'auto',
+          mb: 5,
+          mt: 3,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          placeItems: 'center',
+          gap: 1.5,
+          textAlign: 'center',
+        }}
+      >
+        <Pagination count={pages} page={page} onChange={(_, page) => router.push('/posts?page=' + page)} />
+        <NextLink passHref href="/posts/feed" target="_blank" prefetch={false}>
+          <Link fontSize={13}>RSS Feed</Link>
+        </NextLink>
+      </Box>
     </Container>
   )
 }
