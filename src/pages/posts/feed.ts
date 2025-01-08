@@ -13,10 +13,7 @@ function generateFeed(posts: SnPost[]): string {
     copyright: `All rights reserved ${new Date().getFullYear()} © Solsynth LLC & Post Publishers`,
     updated: new Date(posts[0].createdAt),
     generator: 'Capital',
-    feedLinks: {
-      json: 'https://example.com/json',
-      atom: 'https://example.com/atom',
-    },
+    feedLinks: {},
   })
 
   for (const p of posts) {
