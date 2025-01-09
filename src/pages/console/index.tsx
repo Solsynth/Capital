@@ -26,7 +26,7 @@ export default function ConsoleLanding() {
           <Typography variant="subtitle1">of the Solar Network</Typography>
         </Box>
 
-        <Grid container columns={{ xs: 2, sm: 2, md: 3, lg: 4 }} spacing={4}>
+        <Grid container columns={{ xs: 1, sm: 2, md: 3 }} spacing={4}>
           <Grid size={1}>
             <NextLink passHref href="/console/matrix">
               <CardActionArea>

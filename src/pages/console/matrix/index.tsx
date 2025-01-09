@@ -1,7 +1,17 @@
 import { ConsoleLayout, getConsoleStaticProps } from '@/components/layouts/ConsoleLayout'
 import { MaProduct } from '@/services/matrix/product'
 import { sni } from '@/services/network'
-import { Typography, Container, Box, Button, Grid2 as Grid, Card, CardActionArea, CardContent } from '@mui/material'
+import {
+  Typography,
+  Container,
+  Box,
+  Button,
+  Grid2 as Grid,
+  Card,
+  CardActionArea,
+  CardContent,
+  CardActions,
+} from '@mui/material'
 import NextLink from 'next/link'
 import { useEffect, useState } from 'react'
 
@@ -36,21 +46,21 @@ export default function MatrixMarketplace() {
           Matrix Marketplace
         </Typography>
 
-        <Grid container columns={{ xs: 2, sm: 2, md: 3, lg: 4 }} spacing={4}>
+        <Grid container columns={{ xs: 1, sm: 2, md: 3 }} spacing={4}>
           {products.map((p) => (
             <Grid size={1} key={p.id}>
-              <NextLink passHref href="/console/matrix">
-                <CardActionArea>
-                  <Card sx={{ width: '100%' }}>
-                    <CardContent>
-                      <Typography variant="h5" gutterBottom>
-                        {p.name}
-                      </Typography>
-                      <Typography variant="body1">{p.description}</Typography>
-                    </CardContent>
-                  </Card>
-                </CardActionArea>
-              </NextLink>
+              <Card sx={{ width: '100%' }}>
+                <CardContent>
+                  <Typography variant="h5" gutterBottom>
+                    {p.name}
+                  </Typography>
+                  <Typography variant="body1">{p.description}</Typography>
+                </CardContent>
+                <CardActions>
+                  <Button size="small">Details</Button>
+                  <Button size="small">Edit</Button>
+                </CardActions>
+              </Card>
             </Grid>
           ))}
         </Grid>
