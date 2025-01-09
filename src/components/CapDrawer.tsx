@@ -9,26 +9,29 @@ import {
   Drawer,
   Toolbar,
   Typography,
+  Link,
 } from '@mui/material'
 import { JSX } from 'react'
 import Image from 'next/image'
 
-import FeedIcon from '@mui/icons-material/Feed'
+import ExploreIcon from '@mui/icons-material/Explore'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
-import PolicyIcon from '@mui/icons-material/Policy'
-import Link from 'next/link'
+import NextLink from 'next/link'
+import { useRouter } from 'next/router'
 
 interface NavLink {
   title: string
-  icon: JSX.Element
+  icon?: JSX.Element
   href: string
 }
 
 export function CapDrawer({ width, open, onClose }: { width: number; open: boolean; onClose: () => void }) {
+  const router = useRouter()
+
   const functionLinks: NavLink[] = [
     {
-      title: 'Posts',
-      icon: <FeedIcon />,
+      title: 'Explore',
+      icon: <ExploreIcon />,
       href: '/posts',
     },
     {
@@ -41,7 +44,6 @@ export function CapDrawer({ width, open, onClose }: { width: number; open: boole
   const additionalLinks: NavLink[] = [
     {
       title: 'Terms & Conditions',
-      icon: <PolicyIcon />,
       href: '/terms',
     },
   ]
@@ -74,29 +76,26 @@ export function CapDrawer({ width, open, onClose }: { width: number; open: boole
 
         <List>
           {functionLinks.map((l) => (
-            <Link passHref href={l.href} key={l.href}>
+            <NextLink passHref href={l.href} key={l.href}>
               <ListItem disablePadding>
-                <ListItemButton>
+                <ListItemButton selected={router.pathname == l.href}>
                   <ListItemIcon>{l.icon}</ListItemIcon>
                   <ListItemText primary={l.title} />
                 </ListItemButton>
               </ListItem>
-            </Link>
+            </NextLink>
           ))}
         </List>
         <Divider />
-        <List dense>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', px: 2, py: 1.5 }}>
           {additionalLinks.map((l) => (
-            <Link passHref href={l.href} key={l.href}>
-              <ListItem disablePadding>
-                <ListItemButton>
-                  <ListItemIcon>{l.icon}</ListItemIcon>
-                  <ListItemText primary={l.title} />
-                </ListItemButton>
-              </ListItem>
-            </Link>
+            <NextLink passHref href={l.href} key={l.href}>
+              <Link variant="body2" color={'textSecondary'} fontSize={13}>
+                {l.title}
+              </Link>
+            </NextLink>
           ))}
-        </List>
+        </Box>
       </Box>
     </Drawer>
   )
