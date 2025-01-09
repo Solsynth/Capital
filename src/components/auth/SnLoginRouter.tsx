@@ -1,7 +1,7 @@
 'use client'
 
-import { SnAuthFactor, SnAuthTicket } from '@/services/auth'
-import { sni } from '@/services/network'
+import { SnAuthFactor, SnAuthTicket } from 'solar-js-sdk'
+import { sni } from 'solar-js-sdk'
 import { Collapse, Alert, Box, Button, Typography, ButtonGroup } from '@mui/material'
 import { useState } from 'react'
 

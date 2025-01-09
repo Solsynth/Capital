@@ -1,6 +1,6 @@
-import { getAttachmentUrl, sni } from '@/services/network'
-import { SnPost } from '@/services/post'
-import { listAttachment, SnAttachment } from '@/services/attachment'
+import { getAttachmentUrl, sni } from 'solar-js-sdk'
+import { SnPost } from 'solar-js-sdk'
+import { listAttachment, SnAttachment } from 'solar-js-sdk'
 import {
   Grid2 as Grid,
   Alert,

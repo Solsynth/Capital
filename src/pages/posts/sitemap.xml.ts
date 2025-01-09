@@ -1,5 +1,5 @@
-import { sni } from '@/services/network'
-import { SnPost } from '@/services/post'
+import { sni } from 'solar-js-sdk'
+import { SnPost } from 'solar-js-sdk'
 import { GetServerSideProps } from 'next'
 import { EnumChangefreq, SitemapItem, SitemapStream, streamToPromise } from 'sitemap'
 import { Readable } from 'stream'

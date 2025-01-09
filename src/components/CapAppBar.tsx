@@ -1,6 +1,6 @@
-import { useUserStore } from '@/services/user'
+import { useUserStore } from 'solar-js-sdk'
 import { AppBar, AppBarProps, Avatar, IconButton, Toolbar, Typography, useScrollTrigger, useTheme } from '@mui/material'
-import { getAttachmentUrl } from '@/services/network'
+import { getAttachmentUrl } from 'solar-js-sdk'
 import MenuIcon from '@mui/icons-material/Menu'
 import AccountCircle from '@mui/icons-material/AccountCircle'
 import Link from 'next/link'

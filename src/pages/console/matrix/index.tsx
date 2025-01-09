@@ -1,17 +1,7 @@
 import { ConsoleLayout, getConsoleStaticProps } from '@/components/layouts/ConsoleLayout'
-import { MaProduct } from '@/services/matrix/product'
-import { sni } from '@/services/network'
-import {
-  Typography,
-  Container,
-  Box,
-  Button,
-  Grid2 as Grid,
-  Card,
-  CardActionArea,
-  CardContent,
-  CardActions,
-} from '@mui/material'
+import { MaProduct } from 'solar-js-sdk'
+import { sni } from 'solar-js-sdk'
+import { Typography, Container, Box, Button, Grid2 as Grid, Card, CardContent, CardActions } from '@mui/material'
 import NextLink from 'next/link'
 import { useEffect, useState } from 'react'
 

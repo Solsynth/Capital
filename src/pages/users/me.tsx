@@ -1,14 +1,14 @@
-import { checkAuthenticatedClient, redirectToLogin } from '@/services/auth'
-import { useUserStore } from '@/services/user'
+import { checkAuthenticatedClient, redirectToLogin } from 'solar-js-sdk'
+import { useUserStore } from 'solar-js-sdk'
 import { Avatar, Box, Button, Container, Typography } from '@mui/material'
-import { getAttachmentUrl } from '@/services/network'
+import { getAttachmentUrl } from 'solar-js-sdk'
 import { useEffect } from 'react'
+import { removeTokenCookies } from 'solar-js-sdk'
 import Image from 'next/image'
 
 import LogoutIcon from '@mui/icons-material/Logout'
 import LaunchIcon from '@mui/icons-material/Launch'
 import Link from 'next/link'
-import { deleteCookie } from 'cookies-next/client'
 
 export default function UserItself() {
   useEffect(() => {
@@ -18,8 +18,7 @@ export default function UserItself() {
   const userStore = useUserStore()
 
   function logout() {
-    deleteCookie('nex_user_atk')
-    deleteCookie('nex_user_rtk')
+    removeTokenCookies()
     window.location.reload()
   }
 

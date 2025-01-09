@@ -1,5 +1,5 @@
-import { SnAttachment } from '@/services/attachment'
-import { getAttachmentUrl } from '@/services/network'
+import { SnAttachment } from 'solar-js-sdk'
+import { getAttachmentUrl } from 'solar-js-sdk'
 import { QuestionMark } from '@mui/icons-material'
 import { Link, Paper, Typography } from '@mui/material'
 import { ComponentProps } from 'react'

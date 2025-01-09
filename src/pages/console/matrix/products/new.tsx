@@ -3,8 +3,8 @@ import { Typography, Container, Box, Button, TextField, Collapse, Alert } from '
 import { useForm } from 'react-hook-form'
 import { useState } from 'react'
 import { useRouter } from 'next/router'
+import { sni } from 'solar-js-sdk'
 import NextLink from 'next/link'
-import { sni } from '@/services/network'
 
 import ErrorIcon from '@mui/icons-material/Error'
 

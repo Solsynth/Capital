@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { sni } from '@/services/network'
+import { sni } from 'solar-js-sdk'
 import { ArrowForward } from '@mui/icons-material'
 import { Alert, Box, Button, Collapse, Link, TextField, Typography } from '@mui/material'
-import { SnAuthFactor, SnAuthResult, SnAuthTicket } from '@/services/auth'
+import { SnAuthFactor, SnAuthResult, SnAuthTicket } from 'solar-js-sdk'
 import { useForm } from 'react-hook-form'
 import NextLink from 'next/link'
 

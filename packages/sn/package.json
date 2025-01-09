@@ -1,0 +1,32 @@
+{
+  "name": "solar-js-sdk",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "type": "module",
+  "tsup": {
+    "entry": [
+      "src/index.ts"
+    ],
+    "splitting": true,
+    "sourcemap": true,
+    "clean": true,
+    "dts": true,
+    "format": "esm"
+  },
+  "scripts": {
+    "build": "tsup"
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "tsup": "^8.3.5"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "axios": "^1.7.9",
+    "axios-case-converter": "^1.1.1",
+    "universal-cookie": "^7.2.2",
+    "zustand": "^5.0.3"
+  }
+}

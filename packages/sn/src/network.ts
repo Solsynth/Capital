@@ -1,6 +1,7 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { type AxiosInstance } from 'axios'
 import applyCaseMiddleware from 'axios-case-converter'
-import { hasCookie, getCookie, setCookie } from 'cookies-next/client'
+import Cookies from 'universal-cookie'
+import { setTokenCookies } from './auth'
 
 const baseURL = 'https://api.sn.solsynth.dev'
 
@@ -26,23 +27,23 @@ export const sni: AxiosInstance = (() => {
 })()
 
 async function refreshToken(): Promise<string | undefined> {
-  if (!hasCookie('nex_user_atk') || !hasCookie('nex_user_rtk')) return
+  const cookies = new Cookies()
+  if (!cookies.get('nex_user_atk') || !cookies.get('nex_user_rtk')) return
 
-  const ogTk: string = getCookie('nex_user_atk')!
+  const ogTk: string = cookies.get('nex_user_atk')!
   if (!isTokenExpired(ogTk)) return ogTk
 
   const resp = await axios.post(
     '/cgi/id/auth/token',
     {
-      refresh_token: getCookie('nex_user_rtk')!,
+      refresh_token: cookies.get('nex_user_rtk')!,
       grant_type: 'refresh_token',
     },
     { baseURL },
   )
   const atk: string = resp.data['access_token']
   const rtk: string = resp.data['refresh_token']
-  setCookie('nex_user_atk', atk, { path: '/', maxAge: 2592000 })
-  setCookie('nex_user_rtk', rtk, { path: '/', maxAge: 2592000 })
+  setTokenCookies(atk, rtk)
 
   console.log('[Authenticator] Refreshed token...')
 

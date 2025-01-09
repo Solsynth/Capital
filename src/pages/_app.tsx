@@ -5,7 +5,7 @@ import { Roboto } from 'next/font/google'
 import { CapAppBar } from '@/components/CapAppBar'
 import { PagesProgressBar as ProgressBar } from 'next-nprogress-bar'
 import { AppProvider } from '@toolpad/core/nextjs'
-import { useUserStore } from '@/services/user'
+import { useUserStore } from 'solar-js-sdk'
 import { useEffect } from 'react'
 import Head from 'next/head'
 

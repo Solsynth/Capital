@@ -1,8 +1,8 @@
-import { sni } from '@/services/network'
+import { sni } from 'solar-js-sdk'
 import { Container, Box, Typography, Alert, Collapse, Button, CircularProgress, Card, CardContent } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useEffect, useState } from 'react'
-import { checkAuthenticatedClient, redirectToLogin, SnAuthTicket } from '@/services/auth'
+import { checkAuthenticatedClient, redirectToLogin, SnAuthTicket } from 'solar-js-sdk'
 
 import ErrorIcon from '@mui/icons-material/Error'
 import CloseIcon from '@mui/icons-material/Close'

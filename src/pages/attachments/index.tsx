@@ -1,6 +1,6 @@
 import { AttachmentItem } from '@/components/attachments/AttachmentItem'
-import { SnAttachment } from '@/services/attachment'
-import { sni } from '@/services/network'
+import { SnAttachment } from 'solar-js-sdk'
+import { sni } from 'solar-js-sdk'
 import { Box, ImageList, ImageListItem, Pagination, useMediaQuery, useTheme } from '@mui/material'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { useRouter } from 'next/router'

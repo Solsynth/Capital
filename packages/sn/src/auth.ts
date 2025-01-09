@@ -1,4 +1,4 @@
-import { hasCookie } from 'cookies-next/client'
+import Cookies from 'universal-cookie'
 
 export interface SnAuthResult {
   isFinished: boolean
@@ -35,8 +35,21 @@ export interface SnAuthFactor {
   accountId?: number | null
 }
 
+export function setTokenCookies(atk: string, rtk: string) {
+  const cookies = new Cookies()
+  cookies.set('nex_user_atk', atk, { path: '/', maxAge: 2592000 })
+  cookies.set('nex_user_rtk', rtk, { path: '/', maxAge: 2592000 })
+}
+
+export function removeTokenCookies() {
+  const cookies = new Cookies()
+  cookies.remove('nex_user_atk')
+  cookies.remove('nex_user_rtk')
+}
+
 export function checkAuthenticatedClient(): boolean {
-  return !!hasCookie('nex_user_atk')
+  const cookies = new Cookies()
+  return !!cookies.get('nex_user_atk')
 }
 
 export function redirectToLogin() {

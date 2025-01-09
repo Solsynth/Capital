@@ -1,4 +1,4 @@
-import { sni } from '@/services/network'
+import { sni } from 'solar-js-sdk'
 import { Container, Box, Typography, Alert, Collapse, Button, TextField } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useState } from 'react'

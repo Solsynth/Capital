@@ -1,14 +1,13 @@
 'use client'
 
-import { SnAuthFactor, SnAuthResult, SnAuthTicket } from '@/services/auth'
-import { sni } from '@/services/network'
+import { setTokenCookies, SnAuthFactor, SnAuthResult, SnAuthTicket } from 'solar-js-sdk'
+import { sni } from 'solar-js-sdk'
 import { ArrowForward } from '@mui/icons-material'
 import { Collapse, Alert, Box, TextField, Button } from '@mui/material'
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import ErrorIcon from '@mui/icons-material/Error'
-import { setCookie } from 'cookies-next/client'
 
 export interface SnLoginCheckpointForm {
   password: string
@@ -44,8 +43,7 @@ export function SnLoginCheckpoint({
         })
         const atk: string = tokenResp.data['accessToken']
         const rtk: string = tokenResp.data['refreshToken']
-        setCookie('nex_user_atk', atk, { path: '/', maxAge: 2592000 })
-        setCookie('nex_user_rtk', rtk, { path: '/', maxAge: 2592000 })
+        setTokenCookies(atk, rtk)
         console.log('[Authenticator] User has been logged in. Result atk: ', atk)
       }
 

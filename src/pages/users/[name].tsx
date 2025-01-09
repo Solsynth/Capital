@@ -1,9 +1,10 @@
-import { SnCheckInRecord } from '@/services/checkIn'
-import { getAttachmentUrl, sni } from '@/services/network'
-import { SnAccount, SnAccountBadgeMapping } from '@/services/user'
+import { SnCheckInRecord } from 'solar-js-sdk'
+import { getAttachmentUrl, sni } from 'solar-js-sdk'
+import { SnAccount } from 'solar-js-sdk'
 import { Avatar, Box, Card, CardContent, Container, Grid2 as Grid, Typography } from '@mui/material'
 import { LineChart } from '@mui/x-charts'
 import type { InferGetServerSidePropsType, GetServerSideProps } from 'next'
+import { SnAccountBadgeMapping } from '@/services/user'
 import Image from 'next/image'
 
 export const getServerSideProps = (async (context) => {

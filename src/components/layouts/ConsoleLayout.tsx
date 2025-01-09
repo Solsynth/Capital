@@ -1,4 +1,4 @@
-import { checkAuthenticatedClient, redirectToLogin } from '@/services/auth'
+import { checkAuthenticatedClient, redirectToLogin } from 'solar-js-sdk'
 import { JSX, useEffect } from 'react'
 import { DashboardLayout, Navigation } from '@toolpad/core'
 import { Box, Stack, Typography } from '@mui/material'
