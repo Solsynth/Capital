@@ -2,18 +2,7 @@ import { AttachmentItem } from '@/components/attachments/AttachmentItem'
 import { SnAttachment, listAttachment } from '@/services/attachment'
 import { getAttachmentUrl, sni } from '@/services/network'
 import { SnPost } from '@/services/post'
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Divider,
-  Grid2 as Grid,
-  Link,
-  Pagination,
-  Paper,
-  Typography,
-} from '@mui/material'
+import { Avatar, Box, Container, Divider, Grid2 as Grid, Link, Pagination, Paper, Typography } from '@mui/material'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'

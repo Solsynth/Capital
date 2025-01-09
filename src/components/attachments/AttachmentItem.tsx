@@ -4,18 +4,26 @@ import { QuestionMark } from '@mui/icons-material'
 import { Link, Paper, Typography } from '@mui/material'
 import { ComponentProps } from 'react'
 
-export function AttachmentItem({ item, ...rest }: { item: SnAttachment } & ComponentProps<'div'>) {
+export function AttachmentItem({
+  item,
+  borderRadius,
+  ...rest
+}: { item: SnAttachment; borderRadius?: string } & ComponentProps<'div'>) {
   switch (item.mimetype.split('/')[0]) {
     case 'image':
       return (
         <Paper {...rest}>
-          <img src={getAttachmentUrl(item.rid)} alt={item.alt} style={{ objectFit: 'cover', borderRadius: '8px' }} />
+          <img
+            src={getAttachmentUrl(item.rid)}
+            alt={item.alt}
+            style={{ objectFit: 'cover', borderRadius: borderRadius ?? '8px' }}
+          />
         </Paper>
       )
     case 'video':
       return (
         <Paper {...rest}>
-          <video src={getAttachmentUrl(item.rid)} controls style={{ borderRadius: '8px' }} />
+          <video src={getAttachmentUrl(item.rid)} controls style={{ borderRadius: borderRadius ?? '8px' }} />
         </Paper>
       )
     default:
