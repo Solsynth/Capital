@@ -1,7 +1,32 @@
 import axios, { type AxiosInstance } from 'axios'
-import applyCaseMiddleware from 'axios-case-converter'
 import Cookies from 'universal-cookie'
 import { setTokenCookies } from './auth'
+
+function toCamelCase(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(toCamelCase)
+  } else if (obj && typeof obj === 'object') {
+    return Object.keys(obj).reduce((result: any, key) => {
+      const camelKey = key.replace(/_([a-z])/g, (_, char) => char.toUpperCase())
+      result[camelKey] = toCamelCase(obj[key])
+      return result
+    }, {})
+  }
+  return obj
+}
+
+// function toSnakeCase(obj: any): any {
+//   if (Array.isArray(obj)) {
+//     return obj.map(toSnakeCase)
+//   } else if (obj && typeof obj === 'object') {
+//     return Object.keys(obj).reduce((result: any, key) => {
+//       const snakeKey = key.replace(/[A-Z]/g, (char) => `_${char.toLowerCase()}`)
+//       result[snakeKey] = toSnakeCase(obj[key])
+//       return result
+//     }, {})
+//   }
+//   return obj
+// }
 
 const baseURL = 'https://api.sn.solsynth.dev'
 
@@ -18,11 +43,21 @@ export const sni: AxiosInstance = (() => {
     },
     (error) => error,
   )
+  inst.interceptors.response.use(
+    (response) => {
+      if (response.data) {
+        response.data = toCamelCase(response.data)
+      }
+      return response
+    },
+    (error) => {
+      if (error.response && error.response.data) {
+        error.response.data = toCamelCase(error.response.data)
+      }
+      return Promise.reject(error)
+    },
+  )
 
-  applyCaseMiddleware(inst, {
-    ignoreParams: true,
-    ignoreHeaders: true,
-  })
   return inst
 })()
 
