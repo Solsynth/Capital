@@ -30,7 +30,7 @@ export default function ConsoleLanding() {
           <Grid size={1}>
             <NextLink passHref href="/console/matrix">
               <CardActionArea>
-                <Card sx={{ width: '100%' }} onClick={() => {}}>
+                <Card sx={{ width: '100%' }}>
                   <CardContent>
                     <AppsIcon sx={{ fontSize: 32, mb: 1.5 }} />
                     <Typography variant="h5" gutterBottom>

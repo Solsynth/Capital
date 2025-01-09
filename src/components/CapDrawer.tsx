@@ -52,6 +52,10 @@ export function CapDrawer({ width, open, onClose }: { width: number; open: boole
       title: 'Terms & Conditions',
       href: '/terms',
     },
+    {
+      title: 'SN Console',
+      href: '/console',
+    },
   ]
 
   return (
@@ -93,7 +97,7 @@ export function CapDrawer({ width, open, onClose }: { width: number; open: boole
           ))}
         </List>
         <Divider />
-        <Box sx={{ display: 'flex', flexWrap: 'wrap', px: 2, py: 1.5 }}>
+        <Box sx={{ display: 'flex', flexWrap: 'wrap', px: 2, py: 1.5, gap: 1 }}>
           {additionalLinks.map((l) => (
             <NextLink passHref href={l.href} key={l.href}>
               <Link variant="body2" color={'textSecondary'} fontSize={13}>

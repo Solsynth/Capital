@@ -1,9 +1,10 @@
 import { checkAuthenticatedClient, redirectToLogin } from '@/services/auth'
 import { JSX, useEffect } from 'react'
 import { DashboardLayout, Navigation } from '@toolpad/core'
-import { Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material'
 import NextLink from 'next/link'
 
+import HomeIcon from '@mui/icons-material/Home'
 import AppsIcon from '@mui/icons-material/Apps'
 
 export function ConsoleLayout({ children }: { children: JSX.Element }) {
@@ -12,6 +13,11 @@ export function ConsoleLayout({ children }: { children: JSX.Element }) {
   }, [])
 
   const navigation: Navigation = [
+    {
+      segment: '',
+      title: 'Home',
+      icon: <HomeIcon />,
+    },
     {
       segment: 'console/matrix',
       title: 'Matrix',
@@ -34,6 +40,9 @@ export function ConsoleLayout({ children }: { children: JSX.Element }) {
               </NextLink>
             </Stack>
           )
+        },
+        toolbarActions(_) {
+          return <Box />
         },
       }}
       sidebarExpandedWidth={300}
