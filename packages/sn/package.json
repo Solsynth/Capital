@@ -3,6 +3,11 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "type": "module",
+  "author": {
+    "name": "LittleSheep",
+    "email": "littlesheep.code@hotmail.com"
+  },
+  "version": "0.0.1",
   "tsup": {
     "entry": [
       "src/index.ts"
