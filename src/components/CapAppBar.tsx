@@ -47,7 +47,7 @@ export function CapAppBar() {
       <CapDrawer width={drawerWidth} open={open} onClose={() => setOpen(false)} />
 
       <AppBarScroll elevation={0}>
-        <AppBar position="sticky" elevation={0} color="transparent" className="backdrop-blur-md">
+        <AppBar position="sticky" elevation={0} color="transparent" className="backdrop-blur-md z-10">
           <Toolbar>
             <IconButton
               size="large"

@@ -4,6 +4,7 @@ import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { Roboto } from 'next/font/google'
 import { CapAppBar } from '@/components/CapAppBar'
 import { PagesProgressBar as ProgressBar } from 'next-nprogress-bar'
+import { AppProvider } from '@toolpad/core/nextjs'
 import { useUserStore } from '@/services/user'
 import { useEffect } from 'react'
 import Head from 'next/head'
@@ -56,20 +57,22 @@ export default function App({ Component, pageProps }: AppProps) {
         <link rel="apple-touch-icon" href="/apple-icon.png" type="image/png" />
       </Head>
 
-      <ThemeProvider theme={siteTheme}>
-        <CssBaseline />
-        <ProgressBar
-          height="4px"
-          color={siteTheme.palette.primary.main}
-          options={{ showSpinner: false }}
-          shallowRouting
-        />
+      <AppProvider>
+        <ThemeProvider theme={siteTheme}>
+          <CssBaseline />
+          <ProgressBar
+            height="4px"
+            color={siteTheme.palette.primary.main}
+            options={{ showSpinner: false }}
+            shallowRouting
+          />
 
-        <CapAppBar />
-        <Box sx={{ minHeight: 'calc(100vh - 64px)' }}>
-          <Component {...pageProps} />
-        </Box>
-      </ThemeProvider>
+          {(pageProps.showAppBar ?? true) && <CapAppBar />}
+          <Box sx={{ minHeight: 'calc(100vh - 64px)' }}>
+            <Component {...pageProps} />
+          </Box>
+        </ThemeProvider>
+      </AppProvider>
     </>
   )
 }

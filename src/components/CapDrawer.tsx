@@ -16,10 +16,11 @@ import Image from 'next/image'
 
 import ExploreIcon from '@mui/icons-material/Explore'
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary'
+import AppsIcon from '@mui/icons-material/Apps'
 import NextLink from 'next/link'
 import { useRouter } from 'next/router'
 
-interface NavLink {
+export interface NavLink {
   title: string
   icon?: JSX.Element
   href: string
@@ -38,6 +39,11 @@ export function CapDrawer({ width, open, onClose }: { width: number; open: boole
       title: 'Gallery',
       icon: <PhotoLibraryIcon />,
       href: '/attachments',
+    },
+    {
+      title: 'Matrix',
+      icon: <AppsIcon />,
+      href: '/matrix',
     },
   ]
 
