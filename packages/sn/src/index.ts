@@ -1,4 +1,5 @@
 export * from './matrix/product'
+export * from './matrix/release'
 export * from './attachment'
 export * from './auth'
 export * from './checkIn'

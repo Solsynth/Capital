@@ -13,12 +13,13 @@ import {
   IconButton,
 } from '@mui/material'
 import { useRouter } from 'next-nprogress-bar'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import ErrorIcon from '@mui/icons-material/Error'
 import CloseIcon from '@mui/icons-material/Close'
 import { MaProduct } from 'solar-js-sdk'
+import { version } from 'node:os'
 
 export interface MatrixReleaseForm {
   version: string
@@ -39,12 +40,26 @@ export default function MaReleaseForm({
 }: {
   onSubmit: (data: MatrixReleaseForm) => Promise<any>
   onSuccess?: () => void
-  parent: MaProduct
-  defaultValue?: unknown
+  parent: Partial<MaProduct>
+  defaultValue?: any
 }) {
   const { handleSubmit, register } = useForm<MatrixReleaseForm>({
-    defaultValues: {},
+    defaultValues: {
+      title: defaultValue?.meta.title,
+      version: defaultValue?.version,
+      type: defaultValue?.type ?? 0,
+      channel: defaultValue?.channel,
+      description: defaultValue?.meta.description,
+      content: defaultValue?.meta.content,
+      attachments: defaultValue?.meta.attachments,
+    },
   })
+
+  useEffect(() => {
+    if (defaultValue) {
+      setAssets(Object.keys(defaultValue.assets).map((k) => ({ k, v: defaultValue.assets[k] })))
+    }
+  }, [])
 
   const router = useRouter()
 
@@ -61,7 +76,7 @@ export default function MaReleaseForm({
     if (onSuccess) {
       onSuccess()
     } else {
-      router.push(`/console/matrix/products/${parent.id}`)
+      router.push(`/console/matrix/products/${parent?.id}`)
     }
   }
 
