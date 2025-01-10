@@ -29,6 +29,14 @@ export default function MatrixMarketplace() {
     fetchProducts()
   }, [])
 
+  async function deleteProduct(id: number) {
+    const yes = confirm(`Are you sure you want to delete this product #${id}?`)
+    if (!yes) return
+
+    await sni.delete('/cgi/ma/products/' + id)
+    window.location.reload()
+  }
+
   return (
     <ConsoleLayout>
       <Container sx={{ py: 16, display: 'flex', flexDirection: 'column', gap: 4 }}>
@@ -53,6 +61,9 @@ export default function MatrixMarketplace() {
                   <NextLink passHref href={`/console/matrix/products/${p.id}/edit`}>
                     <Button size="small">Edit</Button>
                   </NextLink>
+                  <Button size="small" color="error" onClick={() => deleteProduct(p.id)}>
+                    Delete
+                  </Button>
                 </CardActions>
               </Card>
             </Grid>

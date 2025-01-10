@@ -25,6 +25,14 @@ export const getServerSideProps: GetServerSideProps = (async (context) => {
 }) satisfies GetServerSideProps<{ product: MaProduct; releases: any[] }>
 
 export default function ProductDetails({ product, releases }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  async function deleteRelease(id: number) {
+    const yes = confirm(`Are you sure you want to delete this release #${id}?`)
+    if (!yes) return
+
+    await sni.delete('/cgi/ma/products/' + product.id + '/releases/' + id)
+    window.location.reload()
+  }
+
   return (
     <ConsoleLayout>
       <Container sx={{ py: 16, display: 'flex', flexDirection: 'column', gap: 8 }}>
@@ -63,6 +71,9 @@ export default function ProductDetails({ product, releases }: InferGetServerSide
                     <NextLink passHref href={`/console/matrix/products/${r.productId}/releases/${r.id}/edit`}>
                       <Button size="small">Edit</Button>
                     </NextLink>
+                    <Button size="small" color="error" onClick={() => deleteRelease(r.id)}>
+                      Delete
+                    </Button>
                   </CardActions>
                 </Card>
               </Grid>
