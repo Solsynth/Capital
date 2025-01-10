@@ -48,7 +48,9 @@ export default function MatrixMarketplace() {
                 </CardContent>
                 <CardActions>
                   <Button size="small">Details</Button>
-                  <Button size="small">Edit</Button>
+                  <NextLink passHref href={`/console/matrix/products/${p.id}/edit`}>
+                    <Button size="small">Edit</Button>
+                  </NextLink>
                 </CardActions>
               </Card>
             </Grid>
