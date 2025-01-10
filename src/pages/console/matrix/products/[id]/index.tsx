@@ -54,7 +54,7 @@ export default function ProductDetails({ product, releases }: InferGetServerSide
 
           <Grid container columns={{ xs: 1, sm: 2, md: 3 }} spacing={2}>
             {releases.map((r: any) => (
-              <Grid size={1}>
+              <Grid size={1} key={r.id}>
                 <Card>
                   <CardContent>
                     <Typography variant="caption">{r.version}</Typography>
