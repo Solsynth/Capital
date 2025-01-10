@@ -47,19 +47,19 @@ export async function listAttachment(id: string[]): Promise<SnAttachment[]> {
   return resp.data.data
 }
 
-type MultipartProgress = {
+export type MultipartProgress = {
   value: number | null
   current: number
   total: number
 }
 
-type MultipartInfo = {
+export type MultipartInfo = {
   rid: string
   fileChunks: Record<string, number>
   isUploaded: boolean
 }
 
-class UploadAttachmentTask {
+export class UploadAttachmentTask {
   private content: File
   private pool: string
   private multipartSize: number = 0
@@ -83,7 +83,7 @@ class UploadAttachmentTask {
     const limit = 3
 
     try {
-      await this.createMultipartPlaceholder()
+      await this.createFragment()
       console.log(`[Paperclip] Multipart placeholder has been created with rid ${this.multipartInfo?.rid}`)
 
       this.multipartProgress.value = 0
@@ -124,7 +124,7 @@ class UploadAttachmentTask {
     }
   }
 
-  private async createMultipartPlaceholder(): Promise<void> {
+  private async createFragment(): Promise<void> {
     const mimetypeMap: Record<string, string> = {
       mp4: 'video/mp4',
       mov: 'video/quicktime',
@@ -139,7 +139,7 @@ class UploadAttachmentTask {
     const nameArray = this.content.name.split('.')
     nameArray.pop()
 
-    const resp = await sni.post('/cgi/uc/attachments/multipart', {
+    const resp = await sni.post('/cgi/uc/attachments/fragments', {
       pool: this.pool,
       size: this.content.size,
       name: this.content.name,
@@ -162,7 +162,7 @@ class UploadAttachmentTask {
     const data = new FormData()
     data.set('file', chunk)
 
-    const resp = await sni.post(`/cgi/uc/attachments/multipart/${this.multipartInfo.rid}/${chunkId}`, data, {
+    const resp = await sni.post(`/cgi/uc/attachments/fragments/${this.multipartInfo.rid}/${chunkId}`, data, {
       timeout: 3 * 60 * 1000,
     })
 

@@ -37,7 +37,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.1",
     "sitemap": "^8.0.0",
-    "solar-js-sdk": "^0.0.1",
+    "solar-js-sdk": "./packages/sn",
     "unified": "^11.0.5",
     "zustand": "^5.0.3"
   },
