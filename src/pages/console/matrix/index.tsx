@@ -47,7 +47,9 @@ export default function MatrixMarketplace() {
                   <Typography variant="body1">{p.description}</Typography>
                 </CardContent>
                 <CardActions>
-                  <Button size="small">Details</Button>
+                  <NextLink passHref href={`/console/matrix/products/${p.id}`}>
+                    <Button size="small">Details</Button>
+                  </NextLink>
                   <NextLink passHref href={`/console/matrix/products/${p.id}/edit`}>
                     <Button size="small">Edit</Button>
                   </NextLink>

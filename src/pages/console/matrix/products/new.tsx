@@ -7,7 +7,7 @@ import MaProductForm, { MatrixProductForm } from '@/components/matrix/MaProductF
 export async function getStaticProps() {
   return getConsoleStaticProps({
     props: {
-      title: 'Matrix',
+      title: 'New Product',
     },
   })
 }
