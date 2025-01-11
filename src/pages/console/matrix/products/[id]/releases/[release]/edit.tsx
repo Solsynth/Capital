@@ -12,7 +12,7 @@ export const getServerSideProps: GetServerSideProps = (async (context) => {
 
   return getConsoleStaticProps({
     props: {
-      title: `Edit Release "${data.name}"`,
+      title: `Edit Release v${data.version}`,
       release: data,
     },
   })

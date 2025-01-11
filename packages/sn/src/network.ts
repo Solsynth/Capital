@@ -15,18 +15,18 @@ function toCamelCase(obj: any): any {
   return obj
 }
 
-// function toSnakeCase(obj: any): any {
-//   if (Array.isArray(obj)) {
-//     return obj.map(toSnakeCase)
-//   } else if (obj && typeof obj === 'object') {
-//     return Object.keys(obj).reduce((result: any, key) => {
-//       const snakeKey = key.replace(/[A-Z]/g, (char) => `_${char.toLowerCase()}`)
-//       result[snakeKey] = toSnakeCase(obj[key])
-//       return result
-//     }, {})
-//   }
-//   return obj
-// }
+function toSnakeCase(obj: any): any {
+  if (Array.isArray(obj)) {
+    return obj.map(toSnakeCase)
+  } else if (obj && typeof obj === 'object') {
+    return Object.keys(obj).reduce((result: any, key) => {
+      const snakeKey = key.replace(/[A-Z]/g, (char) => `_${char.toLowerCase()}`)
+      result[snakeKey] = toSnakeCase(obj[key])
+      return result
+    }, {})
+  }
+  return obj
+}
 
 const baseURL = 'https://api.sn.solsynth.dev'
 
@@ -43,6 +43,19 @@ export const sni: AxiosInstance = (() => {
     },
     (error) => error,
   )
+
+  /// Case convertor
+
+  inst.interceptors.request.use(
+    (config) => {
+      if (config.data) {
+        config.data = toSnakeCase(config.data)
+      }
+      return config
+    },
+    (error) => Promise.reject(error),
+  )
+
   inst.interceptors.response.use(
     (response) => {
       if (response.data) {
