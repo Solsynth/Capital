@@ -18,9 +18,9 @@ export const getServerSideProps: GetServerSideProps = (async (context) => {
   })
 }) satisfies GetServerSideProps<{ release: any }>
 
-export default function ProductEdit({ release }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function ReleaseEdit({ release }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   async function onSubmit(data: MatrixReleaseForm) {
-    await sni.put('/cgi/ma/products/' + release.id + '/releases/' + release.productId, data)
+    await sni.put('/cgi/ma/products/' + release.productId + '/releases/' + release.id, data)
   }
 
   return (
