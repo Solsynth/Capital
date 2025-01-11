@@ -53,7 +53,7 @@ export function CapDrawer({ width, open, onClose }: { width: number; open: boole
       href: '/terms',
     },
     {
-      title: 'SN Console',
+      title: 'Solar Console',
       href: '/console',
     },
   ]

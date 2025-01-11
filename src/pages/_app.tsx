@@ -39,7 +39,7 @@ export default function App({ Component, pageProps }: AppProps) {
   }, [])
 
   const title = pageProps.title
-    ? pageProps.startsWith('Solar Network Console')
+    ? pageProps.title.startsWith('Solar Console')
       ? pageProps.title
       : `${pageProps.title} | Solsynth LLC`
     : 'Solsynth LLC'

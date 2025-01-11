@@ -55,7 +55,7 @@ export function ConsoleLayout({ children }: { children: JSX.Element }) {
 
 export function getConsoleStaticProps(original: any) {
   if (original.props.title) {
-    original.props.title = 'Console | ' + original.props.title
+    original.props.title = 'Solar Console | ' + original.props.title
   }
   original.props.showAppBar = false
 
