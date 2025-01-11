@@ -1,6 +1,6 @@
 import { Collapse, Alert, TextField, Button, Box } from '@mui/material'
 import { useRouter } from 'next-nprogress-bar'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { MaProduct } from 'solar-js-sdk'
 
@@ -11,6 +11,9 @@ export interface MatrixProductForm {
   alias: string
   description: string
   introduction: string
+  icon: string
+  previews: string[]
+  tags: string[]
 }
 
 export default function MaProductForm({
@@ -28,10 +31,23 @@ export default function MaProductForm({
       alias: defaultValue?.alias ?? '',
       description: defaultValue?.description ?? '',
       introduction: defaultValue?.meta?.introduction ?? '',
+      icon: defaultValue?.icon ?? '',
     },
   })
 
   const router = useRouter()
+
+  const [previews, setPreviews] = useState<string[]>([])
+  const [tags, setTags] = useState<string[]>([])
+
+  useEffect(() => {
+    if (defaultValue?.previews) {
+      setPreviews(defaultValue.previews)
+    }
+    if (defaultValue?.tags) {
+      setTags(defaultValue.tags)
+    }
+  }, [])
 
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState<boolean>(false)
@@ -47,7 +63,11 @@ export default function MaProductForm({
   async function submit(data: MatrixProductForm) {
     try {
       setBusy(true)
-      await onSubmit(data)
+      await onSubmit({
+        ...data,
+        previews,
+        tags,
+      })
       callback()
     } catch (err: any) {
       setError(err.toString())
@@ -65,9 +85,25 @@ export default function MaProductForm({
           </Alert>
         </Collapse>
 
+        <TextField label="Icon" placeholder="Image URL or Attachment RID" {...register('icon')} />
+
+        <TextField
+          label="Previews"
+          placeholder="Comma separated, Image URL or Attachment RID, the first one will be used as the banner"
+          value={previews.join(',')}
+          onChange={(val) => setPreviews(val.target.value.split(',').map((v) => v.trim()))}
+        />
+
         <TextField label="Name" {...register('name')} />
 
         <TextField label="Alias" {...register('alias')} />
+
+        <TextField
+          label="Tags"
+          placeholder="Comma separated"
+          value={tags.join(',')}
+          onChange={(val) => setTags(val.target.value.split(',').map((v) => v.trim()))}
+        />
 
         <TextField minRows={3} maxRows={3} multiline label="Description" {...register('description')} />
 
