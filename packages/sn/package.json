@@ -8,7 +8,7 @@
     "name": "LittleSheep",
     "email": "littlesheep.code@hotmail.com"
   },
-  "version": "0.0.8",
+  "version": "0.1.1",
   "tsup": {
     "entry": [
       "src/index.ts"

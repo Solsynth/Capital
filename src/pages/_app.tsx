@@ -38,7 +38,11 @@ export default function App({ Component, pageProps }: AppProps) {
     userStore.fetchUser()
   }, [])
 
-  const title = pageProps.title ? `${pageProps.title} | Solsynth LLC` : 'Solsynth LLC'
+  const title = pageProps.title
+    ? pageProps.startsWith('Solar Network Console')
+      ? pageProps.title
+      : `${pageProps.title} | Solsynth LLC`
+    : 'Solsynth LLC'
 
   return (
     <>

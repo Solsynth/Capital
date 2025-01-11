@@ -56,7 +56,6 @@ export type MultipartProgress = {
 export type MultipartInfo = {
   rid: string
   fileChunks: Record<string, number>
-  isUploaded: boolean
 }
 
 export class UploadAttachmentTask {
@@ -66,9 +65,9 @@ export class UploadAttachmentTask {
   private multipartInfo: MultipartInfo | null = null
   private multipartProgress: MultipartProgress = { value: null, current: 0, total: 0 }
 
-  loading: boolean = false
-  success: boolean = false
-  error: string | null = null
+  onProgress?: (progress: MultipartProgress) => void
+  onSuccess?: (success: boolean) => void
+  onError?: (error: string) => void
 
   constructor(content: File, pool: string) {
     if (!content || !pool) {
@@ -78,8 +77,7 @@ export class UploadAttachmentTask {
     this.pool = pool
   }
 
-  public async submit(): Promise<void> {
-    this.loading = true
+  public async submit(): Promise<SnAttachment> {
     const limit = 3
 
     try {
@@ -92,14 +90,20 @@ export class UploadAttachmentTask {
       const chunks = Object.keys(this.multipartInfo?.fileChunks || {})
       this.multipartProgress.total = chunks.length
 
+      let result: SnAttachment | null = null
+
       const uploadChunks = async (chunk: string): Promise<void> => {
         try {
-          await this.uploadSingleMultipart(chunk)
+          const resp = await this.uploadOneChunk(chunk)
           this.multipartProgress.current++
           console.log(
             `[Paperclip] Uploaded multipart ${this.multipartProgress.current}/${this.multipartProgress.total}`,
           )
           this.multipartProgress.value = this.multipartProgress.current / this.multipartProgress.total
+
+          if (this.onProgress) this.onProgress(this.multipartProgress)
+
+          result = resp
         } catch (err) {
           console.log(`[Paperclip] Upload multipart ${chunk} failed, retrying in 3 seconds...`)
           await this.delay(3000)
@@ -112,15 +116,13 @@ export class UploadAttachmentTask {
         await Promise.all(chunkSlice.map(uploadChunks))
       }
 
-      if (this.multipartInfo?.isUploaded) {
-        console.log(`[Paperclip] Entire file has been uploaded in ${this.multipartProgress.total} chunk(s)`)
-        this.success = true
-      }
-    } catch (e) {
-      console.error(e)
-      this.error = e instanceof Error ? e.message : String(e)
-    } finally {
-      this.loading = false
+      console.log(`[Paperclip] Entire file has been uploaded in ${this.multipartProgress.total} chunk(s)`)
+      if (this.onSuccess) this.onSuccess(true)
+
+      return result!
+    } catch (err: any) {
+      if (this.onError) this.onError(err.toString())
+      throw err
     }
   }
 
@@ -139,7 +141,7 @@ export class UploadAttachmentTask {
     const nameArray = this.content.name.split('.')
     nameArray.pop()
 
-    const resp = await sni.post('/cgi/uc/attachments/fragments', {
+    const resp = await sni.post('/cgi/uc/fragments', {
       pool: this.pool,
       size: this.content.size,
       name: this.content.name,
@@ -153,20 +155,22 @@ export class UploadAttachmentTask {
     this.multipartInfo = data.meta
   }
 
-  private async uploadSingleMultipart(chunkId: string): Promise<void> {
-    if (!this.multipartInfo) return
+  private async uploadOneChunk(chunkId: string): Promise<SnAttachment | null> {
+    if (!this.multipartInfo) return null
 
     const chunkIdx = this.multipartInfo.fileChunks[chunkId]
     const chunk = this.content.slice(chunkIdx * this.multipartSize, (chunkIdx + 1) * this.multipartSize)
 
-    const data = new FormData()
-    data.set('file', chunk)
-
-    const resp = await sni.post(`/cgi/uc/attachments/fragments/${this.multipartInfo.rid}/${chunkId}`, data, {
+    const resp = await sni.post(`/cgi/uc/fragments/${this.multipartInfo.rid}/${chunkId}`, chunk, {
+      headers: { 'Content-Type': 'application/octet-stream' },
       timeout: 3 * 60 * 1000,
     })
 
-    this.multipartInfo = resp.data
+    if (resp.data['attachment']) {
+      return resp.data['attachment'] as SnAttachment
+    }
+    this.multipartInfo = resp.data['fragment']
+    return null
   }
 
   private delay(ms: number): Promise<void> {
