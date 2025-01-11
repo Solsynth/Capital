@@ -8,6 +8,7 @@ export interface MaRelease {
   channel: string
   assets: Record<string, MaReleaseAsset>
   installers: Record<string, MaReleaseInstaller>
+  runners: Record<string, MaReleaseRunner>
   product_id: number
   meta: MaReleaseMeta
 }
@@ -38,4 +39,10 @@ export interface MaReleaseInstaller {
   workdir?: string
   script?: string
   patches: MaReleaseInstallerPatch[]
+}
+
+export interface MaReleaseRunner {
+  workdir?: string
+  script: string
+  label: string
 }

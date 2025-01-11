@@ -16,7 +16,14 @@ import {
 import { useRouter } from 'next-nprogress-bar'
 import { useEffect, useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { MaProduct, MaRelease, MaReleaseAsset, MaReleaseInstaller, MaReleaseInstallerPatch } from 'solar-js-sdk'
+import {
+  MaProduct,
+  MaRelease,
+  MaReleaseAsset,
+  MaReleaseInstaller,
+  MaReleaseInstallerPatch,
+  MaReleaseRunner,
+} from 'solar-js-sdk'
 import MonacoEditor from '@monaco-editor/react'
 
 import ErrorIcon from '@mui/icons-material/Error'
@@ -31,6 +38,7 @@ export interface MatrixReleaseForm {
   content: string
   assets: Record<string, MaReleaseAsset>
   installers: Record<string, MaReleaseInstaller>
+  runners: Record<string, MaReleaseRunner>
   attachments: string[]
 }
 
@@ -64,12 +72,16 @@ export default function MaReleaseForm({
     if (defaultValue?.installers) {
       setInstallers(Object.keys(defaultValue.installers).map((k) => ({ k, v: defaultValue.installers[k] })))
     }
+    if (defaultValue?.runners) {
+      setRunners(Object.keys(defaultValue.runners).map((k) => ({ k, v: defaultValue.runners[k] })))
+    }
   }, [])
 
   const router = useRouter()
 
   const [assets, setAssets] = useState<{ k: string; v: MaReleaseAsset }[]>([])
   const [installers, setInstallers] = useState<{ k: string; v: MaReleaseInstaller }[]>([])
+  const [runners, setRunners] = useState<{ k: string; v: MaReleaseRunner }[]>([])
 
   function addAsset() {
     setAssets((val) => [...val, { k: '', v: { uri: '', contentType: '' } }])
@@ -77,6 +89,10 @@ export default function MaReleaseForm({
 
   function addInstaller() {
     setInstallers((val) => [...val, { k: '', v: { workdir: '', script: '', patches: [] } }])
+  }
+
+  function addRunner() {
+    setRunners((val) => [...val, { k: '', v: { workdir: '', script: '', label: '' } }])
   }
 
   const [error, setError] = useState<string | null>(null)
@@ -97,6 +113,7 @@ export default function MaReleaseForm({
         ...data,
         assets: assets.reduce((a, { k, v }) => ({ ...a, [k]: v }), {}),
         installers: installers.reduce((a, { k, v }) => ({ ...a, [k]: v }), {}),
+        runners: runners.reduce((a, { k, v }) => ({ ...a, [k]: v }), {}),
       })
       callback()
     } catch (err: any) {
@@ -254,7 +271,7 @@ export default function MaReleaseForm({
                     </Typography>
                     <Card variant="outlined">
                       <MonacoEditor
-                        height="280px"
+                        height="140px"
                         width="100%"
                         options={{ minimap: { enabled: false } }}
                         defaultValue={v.script}
@@ -272,7 +289,7 @@ export default function MaReleaseForm({
                     </Typography>
                     <Card variant="outlined">
                       <MonacoEditor
-                        height="280px"
+                        height="140px"
                         width="100%"
                         options={{ minimap: { enabled: false } }}
                         defaultValue={v.patches.map((p) => `${p.action}:${p.glob}`).join('\n')}
@@ -304,6 +321,94 @@ export default function MaReleaseForm({
 
           <Box>
             <Button variant="outlined" onClick={addInstaller}>
+              Add
+            </Button>
+          </Box>
+        </Box>
+
+        <Box sx={{ mt: 3, display: 'flex', flexDirection: 'column', gap: 2 }}>
+          <Typography variant="h5">Runners</Typography>
+
+          {runners.map(({ k, v }, idx) => (
+            <Card variant="outlined" key={idx}>
+              <Box sx={{ pl: 2, pr: 4, py: 2 }}>
+                <Grid container spacing={2}>
+                  <Grid size={4}>
+                    <TextField
+                      label="Platform"
+                      sx={{ width: '100%' }}
+                      value={k}
+                      onChange={(val) => {
+                        setRunners((data) =>
+                          data.map((ele, index) => (index == idx ? { k: val.target.value, v: ele.v } : ele)),
+                        )
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={7}>
+                    <TextField
+                      label="Working Directory"
+                      sx={{ width: '100%' }}
+                      value={v.workdir}
+                      onChange={(val) => {
+                        setRunners((data) =>
+                          data.map((ele, index) =>
+                            index == idx ? { k: ele.k, v: { ...ele.v, workdir: val.target.value } } : ele,
+                          ),
+                        )
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={1} sx={{ display: 'grid', placeItems: 'center' }}>
+                    <IconButton
+                      onClick={() => {
+                        setRunners((data) => data.filter((_, index) => index != idx))
+                      }}
+                    >
+                      <CloseIcon />
+                    </IconButton>
+                  </Grid>
+                  <Grid size={12}>
+                    <TextField
+                      label="Label"
+                      sx={{ width: '100%' }}
+                      value={v.label}
+                      onChange={(val) => {
+                        setRunners((data) =>
+                          data.map((ele, index) =>
+                            index == idx ? { k: ele.k, v: { ...ele.v, label: val.target.value } } : ele,
+                          ),
+                        )
+                      }}
+                    />
+                  </Grid>
+                  <Grid size={12}>
+                    <Typography variant="subtitle1" sx={{ mx: 1 }}>
+                      Script
+                    </Typography>
+                    <Card variant="outlined">
+                      <MonacoEditor
+                        height="280px"
+                        width="100%"
+                        options={{ minimap: { enabled: false } }}
+                        defaultValue={v.script}
+                        onChange={(val) =>
+                          setRunners((data) =>
+                            data.map((ele, index) =>
+                              index == idx ? { v: { ...ele.v, script: val ?? '' }, k: ele.k } : ele,
+                            ),
+                          )
+                        }
+                      />
+                    </Card>
+                  </Grid>
+                </Grid>
+              </Box>
+            </Card>
+          ))}
+
+          <Box>
+            <Button variant="outlined" onClick={addRunner}>
               Add
             </Button>
           </Box>
