@@ -34,46 +34,53 @@ export default function MatrixMarketplace() {
     if (!yes) return
 
     await sni.delete('/cgi/ma/products/' + id)
-    window.location.reload()
+    await fetchProducts()
   }
 
   return (
     <ConsoleLayout>
       <Container sx={{ py: 16, display: 'flex', flexDirection: 'column', gap: 4 }}>
-        <Typography variant="h3" component="h1">
-          Matrix Marketplace
-        </Typography>
-
-        <Grid container columns={{ xs: 1, sm: 2, md: 3 }} spacing={4}>
-          {products.map((p) => (
-            <Grid size={1} key={p.id}>
-              <Card sx={{ width: '100%' }}>
-                <CardContent>
-                  <Typography variant="h5" gutterBottom>
-                    {p.name}
-                  </Typography>
-                  <Typography variant="body1">{p.description}</Typography>
-                </CardContent>
-                <CardActions>
-                  <NextLink passHref href={`/console/matrix/products/${p.id}`}>
-                    <Button size="small">Details</Button>
-                  </NextLink>
-                  <NextLink passHref href={`/console/matrix/products/${p.id}/edit`}>
-                    <Button size="small">Edit</Button>
-                  </NextLink>
-                  <Button size="small" color="error" onClick={() => deleteProduct(p.id)}>
-                    Delete
-                  </Button>
-                </CardActions>
-              </Card>
-            </Grid>
-          ))}
-        </Grid>
-
         <Box>
-          <NextLink passHref href="/console/matrix/products/new">
-            <Button variant="contained">Create a product</Button>
-          </NextLink>
+          <Typography variant="h3" component="h1">
+            Matrix Marketplace
+          </Typography>
+          <Typography variant="body1">
+            The new way to release your app, implement version check and auto updating.
+          </Typography>
+        </Box>
+
+        <Box display="flex" flexDirection="column" gap={2}>
+          <Box>
+            <NextLink passHref href="/console/matrix/products/new">
+              <Button variant="contained">Create a product</Button>
+            </NextLink>
+          </Box>
+
+          <Grid container columns={{ xs: 1, sm: 2, md: 3 }} spacing={4}>
+            {products.map((p) => (
+              <Grid size={1} key={p.id}>
+                <Card sx={{ width: '100%' }}>
+                  <CardContent>
+                    <Typography variant="h5" gutterBottom>
+                      {p.name}
+                    </Typography>
+                    <Typography variant="body1">{p.description}</Typography>
+                  </CardContent>
+                  <CardActions>
+                    <NextLink passHref href={`/console/matrix/products/${p.id}`}>
+                      <Button size="small">Details</Button>
+                    </NextLink>
+                    <NextLink passHref href={`/console/matrix/products/${p.id}/edit`}>
+                      <Button size="small">Edit</Button>
+                    </NextLink>
+                    <Button size="small" color="error" onClick={() => deleteProduct(p.id)}>
+                      Delete
+                    </Button>
+                  </CardActions>
+                </Card>
+              </Grid>
+            ))}
+          </Grid>
         </Box>
       </Container>
     </ConsoleLayout>

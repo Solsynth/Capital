@@ -13,6 +13,7 @@
     "@emotion/react": "^11.14.0",
     "@emotion/server": "^11.11.0",
     "@emotion/styled": "^11.14.0",
+    "@monaco-editor/react": "^4.6.0",
     "@mui/icons-material": "^6.3.1",
     "@mui/material": "^6.3.1",
     "@mui/material-nextjs": "^6.3.1",
@@ -37,7 +38,7 @@
     "remark-parse": "^11.0.0",
     "remark-rehype": "^11.1.1",
     "sitemap": "^8.0.0",
-    "solar-js-sdk": "^0.0.2",
+    "solar-js-sdk": "0.0.8",
     "unified": "^11.0.5",
     "zustand": "^5.0.3"
   },

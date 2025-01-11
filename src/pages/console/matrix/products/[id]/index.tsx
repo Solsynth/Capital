@@ -1,7 +1,8 @@
 import { ConsoleLayout, getConsoleStaticProps } from '@/components/layouts/ConsoleLayout'
 import { Box, Button, Container, Typography, Grid2 as Grid, Card, CardContent, CardActions } from '@mui/material'
 import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
-import { sni, MaProduct } from 'solar-js-sdk'
+import { sni, MaProduct, MaRelease } from 'solar-js-sdk'
+import { useEffect, useState } from 'react'
 import NextLink from 'next/link'
 
 export const getServerSideProps: GetServerSideProps = (async (context) => {
@@ -9,28 +10,37 @@ export const getServerSideProps: GetServerSideProps = (async (context) => {
 
   const { data } = await sni.get<MaProduct>('/cgi/ma/products/' + id)
 
-  const { data: resp } = await sni.get<{ data: any[] }>('/cgi/ma/products/' + id + '/releases', {
-    params: {
-      take: 10,
-    },
-  })
-
   return getConsoleStaticProps({
     props: {
       title: `Product "${data.name}"`,
       product: data,
-      releases: resp.data,
     },
   })
-}) satisfies GetServerSideProps<{ product: MaProduct; releases: any[] }>
+}) satisfies GetServerSideProps<{ product: MaProduct }>
 
-export default function ProductDetails({ product, releases }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+export default function ProductDetails({ product }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [releases, setReleases] = useState<MaRelease[]>([])
+
+  async function fetchReleases() {
+    const { data: resp } = await sni.get<{ data: MaRelease[] }>('/cgi/ma/products/' + product.id + '/releases', {
+      params: {
+        take: 10,
+      },
+    })
+
+    setReleases(resp.data)
+  }
+
+  useEffect(() => {
+    fetchReleases()
+  }, [])
+
   async function deleteRelease(id: number) {
     const yes = confirm(`Are you sure you want to delete this release #${id}?`)
     if (!yes) return
 
     await sni.delete('/cgi/ma/products/' + product.id + '/releases/' + id)
-    window.location.reload()
+    await fetchReleases()
   }
 
   return (

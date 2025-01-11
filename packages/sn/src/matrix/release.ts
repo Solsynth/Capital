@@ -6,7 +6,8 @@ export interface MaRelease {
   version: string
   type: number
   channel: string
-  assets: Record<string, any>
+  assets: Record<string, MaReleaseAsset>
+  installers: Record<string, MaReleaseInstaller>
   product_id: number
   meta: MaReleaseMeta
 }
@@ -21,4 +22,20 @@ export interface MaReleaseMeta {
   content: string
   attachments: string[]
   release_id: number
+}
+
+export interface MaReleaseAsset {
+  uri: string
+  contentType: string
+}
+
+export interface MaReleaseInstallerPatch {
+  action: string
+  glob: string
+}
+
+export interface MaReleaseInstaller {
+  workdir?: string
+  script?: string
+  patches: MaReleaseInstallerPatch[]
 }
