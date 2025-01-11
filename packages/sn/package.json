@@ -2,6 +2,7 @@
   "name": "solar-js-sdk",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "entrypoint": "dist/index.js",
   "type": "module",
   "author": {
     "name": "LittleSheep",
