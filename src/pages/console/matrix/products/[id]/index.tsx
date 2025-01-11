@@ -4,7 +4,6 @@ import { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import { sni, MaProduct, MaRelease, getAttachmentUrl } from 'solar-js-sdk'
 import { useEffect, useState } from 'react'
 import NextLink from 'next/link'
-import Image from 'next/image'
 
 export const getServerSideProps: GetServerSideProps = (async (context) => {
   const id = context.params!.id
