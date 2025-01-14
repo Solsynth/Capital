@@ -4,7 +4,6 @@ import {
   DocumentHeadTagsProps,
   documentGetInitialProps,
 } from '@mui/material-nextjs/v15-pagesRouter'
-import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Html, Head, Main, NextScript, DocumentContext, DocumentProps } from 'next/document'
 
 export default function Document(props: DocumentProps & DocumentHeadTagsProps) {
@@ -17,7 +16,6 @@ export default function Document(props: DocumentProps & DocumentHeadTagsProps) {
         <body className="antialiased">
           <Main />
           <NextScript />
-          <SpeedInsights />
         </body>
       </Html>
     </AppCacheProvider>
