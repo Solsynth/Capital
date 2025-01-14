@@ -1,0 +1,13 @@
+{
+  "sync": {
+    "region": "capital",
+    "configPath": "roadsign.toml"
+  },
+  "deployments": [
+    {
+      "region": "capital",
+      "site": "capital-app",
+      "path": ".next"
+    }
+  ]
+}
