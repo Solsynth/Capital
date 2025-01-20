@@ -1,4 +1,4 @@
-import { Box, Chip, Container, Grid2 as Grid, Link, Paper, Typography } from '@mui/material'
+import { Alert, AlertTitle, Box, Button, Chip, Container, Grid2 as Grid, Link, Paper, Typography } from '@mui/material'
 import { Roboto_Serif } from 'next/font/google'
 import NextLink from 'next/link'
 import Image from 'next/image'
@@ -21,6 +21,22 @@ export default function Home() {
   return (
     <>
       <Container sx={{ py: 24, display: 'flex', flexDirection: 'column', gap: 32 }}>
+        <Alert
+          variant="filled"
+          icon={<span>🎉</span>}
+          severity="info"
+          action={
+            <NextLink href="/events/2025-lunar-countdown" passHref>
+              <Button color="inherit" size="small">
+                立即前往
+              </Button>
+            </NextLink>
+          }
+        >
+          <AlertTitle gutterBottom={false}>预祝农历新年</AlertTitle>
+          索尔幸茨的 2025 农历新年倒计时现已开启！
+        </Alert>
+
         <Box>
           <Image src="/logo.png" width={128} height={128} alt="company logo" className="mb-2 dark:invert" />
           <Typography variant="h3" component="h1" gutterBottom>
