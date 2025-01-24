@@ -5,6 +5,7 @@ import {
   documentGetInitialProps,
 } from '@mui/material-nextjs/v15-pagesRouter'
 import { Html, Head, Main, NextScript, DocumentContext, DocumentProps } from 'next/document'
+import { GoogleAnalytics } from '@next/third-parties/google'
 
 export default function Document(props: DocumentProps & DocumentHeadTagsProps) {
   return (
@@ -16,6 +17,7 @@ export default function Document(props: DocumentProps & DocumentHeadTagsProps) {
         <body className="antialiased">
           <Main />
           <NextScript />
+          <GoogleAnalytics gaId="G-ZFJ7RX0JXF" />
         </body>
       </Html>
     </AppCacheProvider>
