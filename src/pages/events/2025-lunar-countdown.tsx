@@ -5,6 +5,7 @@ import { useState } from 'react'
 
 const serifFont = Noto_Serif_TC({
   weight: ['400', '500', '700'],
+  subsets: ['latin'],
   display: 'swap',
 })
 
