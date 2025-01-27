@@ -1,3 +1,5 @@
+'use client'
+
 import { sni } from 'solar-js-sdk'
 import { Container, Box, Typography, CircularProgress, Alert, Collapse } from '@mui/material'
 import { useRouter } from 'next/router'
@@ -6,16 +8,18 @@ import { useEffect, useState } from 'react'
 import ErrorIcon from '@mui/icons-material/Error'
 
 import 'animate.css'
+import { useSearchParams } from 'next/navigation'
 
 export default function AccountConfirm() {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const [error, setError] = useState<string | null>(null)
 
   async function confirm() {
     try {
       await sni.post('/cgi/id/users/me/confirm', {
-        code: router.query['code'] as string,
+        code: searchParams.get('code'),
       })
       router.push('/')
     } catch (err: any) {
@@ -25,7 +29,7 @@ export default function AccountConfirm() {
 
   useEffect(() => {
     confirm()
-  }, [])
+  }, [searchParams])
 
   return (
     <Container

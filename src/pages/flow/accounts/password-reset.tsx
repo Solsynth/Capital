@@ -1,3 +1,5 @@
+'use client'
+
 import { sni } from 'solar-js-sdk'
 import { Container, Box, Typography, Alert, Collapse, Button, TextField } from '@mui/material'
 import { useRouter } from 'next/router'
@@ -5,6 +7,7 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 
 import ErrorIcon from '@mui/icons-material/Error'
+import { useSearchParams } from 'next/navigation'
 
 export type SnResetPasswordForm = {
   password: string
@@ -12,6 +15,7 @@ export type SnResetPasswordForm = {
 
 export default function AccountPasswordReset() {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const { handleSubmit, register } = useForm<SnResetPasswordForm>()
 
@@ -22,7 +26,7 @@ export default function AccountPasswordReset() {
     try {
       setBusy(true)
       await sni.patch('/cgi/id/users/me/password-reset', {
-        code: router.query['code'] as string,
+        code: searchParams.get('code'),
         new_password: data.password,
       })
       router.push('/')

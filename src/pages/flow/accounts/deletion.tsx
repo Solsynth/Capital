@@ -1,12 +1,16 @@
+'use client'
+
 import { sni } from 'solar-js-sdk'
 import { Container, Box, Typography, Alert, Collapse, Button } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 
 import ErrorIcon from '@mui/icons-material/Error'
+import { useSearchParams } from 'next/navigation'
 
 export default function AccountDeletion() {
   const router = useRouter()
+  const searchParams = useSearchParams()
 
   const [error, setError] = useState<string | null>(null)
   const [busy, setBusy] = useState(false)
@@ -15,7 +19,7 @@ export default function AccountDeletion() {
     try {
       setBusy(true)
       await sni.patch('/cgi/id/users/me/deletion', {
-        code: router.query['code'] as string,
+        code: searchParams.get('code'),
       })
       router.push('/')
     } catch (err: any) {
