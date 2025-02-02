@@ -6,6 +6,7 @@ import { useUserStore } from 'solar-js-sdk'
 import { Box, Container, Typography } from '@mui/material'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
+import { useSearchParams } from 'next/navigation'
 
 export default function Login() {
   const [period, setPeriod] = useState<number>(0)
@@ -14,17 +15,12 @@ export default function Login() {
   const [factor, setFactor] = useState<SnAuthFactor | null>(null)
 
   const router = useRouter()
+  const searchParams = useSearchParams()
   const userStore = useUserStore()
 
   function doCallback() {
-    if (router.query['redirect_url']) {
-      let redirectUrl: string
-      if (Array.isArray(router.query['redirect_url'])) {
-        redirectUrl = router.query['redirect_url'][0]
-      } else {
-        redirectUrl = router.query['redirect_url'].toString()
-      }
-
+    let redirectUrl = searchParams.get('redirect_url')
+    if (redirectUrl) {
       if (redirectUrl.startsWith('/')) {
         router.push(redirectUrl)
       } else {

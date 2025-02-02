@@ -8,6 +8,8 @@ import { useState } from 'react'
 import ErrorIcon from '@mui/icons-material/Error'
 import PasswordIcon from '@mui/icons-material/Password'
 import EmailIcon from '@mui/icons-material/Email'
+import PinIcon from '@mui/icons-material/Pin'
+import NotificationsActiveIcon from '@mui/icons-material/NotificationsActive'
 
 export function SnLoginRouter({
   ticket,
@@ -18,8 +20,13 @@ export function SnLoginRouter({
   factorList: SnAuthFactor[]
   onNext: (val: SnAuthFactor) => void
 }) {
-  const factorTypeIcons = [<PasswordIcon key="password-icon" />, <EmailIcon key="email-icon" />]
-  const factorTypeLabels = ['Password', 'Email verification code']
+  const factorTypeIcons = [
+    <PasswordIcon key="password-icon" />,
+    <EmailIcon key="email-icon" />,
+    <PinIcon key="pin-icon" />,
+    <NotificationsActiveIcon key="notification-icon" />,
+  ]
+  const factorTypeLabels = ['Password', 'Email verification code', 'Time-based OTP', 'In-app verification code']
 
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState<boolean>(false)
