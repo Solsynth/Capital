@@ -19,7 +19,7 @@ export default function Login() {
   const userStore = useUserStore()
 
   function doCallback() {
-    let redirectUrl = searchParams.get('redirect_url')
+    let redirectUrl = searchParams.get('redirect_uri')
     if (redirectUrl) {
       if (redirectUrl.startsWith('/')) {
         router.push(redirectUrl)
