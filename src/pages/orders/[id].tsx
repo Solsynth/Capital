@@ -92,7 +92,7 @@ export default function Post({ order }: InferGetServerSidePropsType<typeof getSe
         <Box sx={{ my: 3, flexDirection: 'column', display: 'flex', gap: 2 }}>
           {paid || canceled ? (
             canceled ? (
-              <Typography textAlign="center">Canceled, you're not able to pay this order any more.</Typography>
+              <Typography textAlign="center">Canceled, you are not able to pay this order any more</Typography>
             ) : (
               <Typography textAlign="center">Paid, you can return to the seller now</Typography>
             )
