@@ -12,6 +12,9 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
+  Grid2 as Grid,
+  Card,
+  CardContent,
 } from '@mui/material'
 import { JSX } from 'react'
 import { Roboto_Serif } from 'next/font/google'
@@ -27,9 +30,20 @@ import AndroidIcon from '@mui/icons-material/Android'
 import WindowIcon from '@mui/icons-material/Window'
 import WebIcon from '@mui/icons-material/Public'
 import CodeIcon from '@mui/icons-material/Code'
+import SearchIcon from '@mui/icons-material/Search'
+import GitHubIcon from '@mui/icons-material/GitHub'
+import SecurityIcon from '@mui/icons-material/Security'
+import CookieIcon from '@mui/icons-material/Cookie'
 
 import ImgSolarNetworkIcon from '@/assets/products/solar-network/icon.png'
 import ImgSolarNetworkAlpha from '@/assets/products/solar-network/alpha.webp'
+
+import ImgFtDashboard from '@/assets/products/solar-network/ft-dashboard.png'
+import ImgFtExplore from '@/assets/products/solar-network/ft-explore.png'
+import ImgFtChat from '@/assets/products/solar-network/ft-chat.png'
+import ImgFtNews from '@/assets/products/solar-network/ft-news.png'
+import ImgFtStickers from '@/assets/products/solar-network/ft-stickers.png'
+import ImgFtPosting from '@/assets/products/solar-network/ft-posting.png'
 
 import 'animate.css'
 import { useTranslation } from 'next-i18next'
@@ -162,12 +176,201 @@ export default function ProductSolarNetwork() {
           {t('appSlogan')}
         </Typography>
 
-        <Link href="#download" sx={{ my: 2.5 }}>
-          {ct('actionDownload')} <DownloadIcon sx={{ fontSize: 15, marginLeft: 0.5 }} />
-        </Link>
+        <Box display="flex" gap={2}>
+          <Link href="#features" sx={{ my: 2.5 }}>
+            {ct('actionLearnMore')} <SearchIcon sx={{ fontSize: 15, marginLeft: 0.5 }} />
+          </Link>
+          <Link href="#download" sx={{ my: 2.5 }}>
+            {ct('actionDownload')} <DownloadIcon sx={{ fontSize: 15, marginLeft: 0.5 }} />
+          </Link>
+        </Box>
 
         <Box position="relative" width="100%" sx={{ aspectRatio: 16 / 10, mt: 5 }}>
           <Image src={ImgSolarNetworkAlpha} fill alt="solar network screenshot" style={{ objectFit: 'cover' }} />
+        </Box>
+      </Box>
+
+      <Box id="features" display="flex" flexDirection="column" gap={12}>
+        <Grid container columns={{ xs: 1, md: 2 }} spacing={4} alignItems="center">
+          <Grid size={1}>
+            <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom>
+              {t('ftDashboard')}
+            </Typography>
+            <Typography variant="body1" fontSize={18}>
+              {t('ftDashboardDescription')}
+            </Typography>
+          </Grid>
+          <Grid size={1}>
+            <Box position="relative" borderRadius="4px" width="100%" sx={{ aspectRatio: 16 / 9 }} className="shadow-xl">
+              <Image
+                src={ImgFtDashboard}
+                alt="solar network dashboard"
+                fill
+                style={{ objectFit: 'cover', borderRadius: '8px' }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Grid container columns={{ xs: 1, md: 2 }} spacing={4} alignItems="center">
+          <Grid size={1}>
+            <Box position="relative" borderRadius="4px" width="100%" sx={{ aspectRatio: 16 / 9 }} className="shadow-xl">
+              <Image
+                src={ImgFtExplore}
+                alt="solar network explore"
+                fill
+                style={{ objectFit: 'cover', borderRadius: '8px' }}
+              />
+            </Box>
+          </Grid>
+          <Grid size={1} textAlign={{ xs: 'left', md: 'right' }} order={{ xs: -1, md: 1 }}>
+            <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom>
+              {t('ftExplore')}
+            </Typography>
+            <Typography variant="body1" fontSize={18}>
+              {t('ftExploreDescription')}
+            </Typography>
+          </Grid>
+        </Grid>
+
+        <Grid container columns={{ xs: 1, md: 2 }} spacing={4} alignItems="center">
+          <Grid size={1}>
+            <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom>
+              {t('ftChat')}
+            </Typography>
+            <Typography variant="body1" fontSize={18}>
+              {t('ftChatDescription')}
+            </Typography>
+          </Grid>
+          <Grid size={1}>
+            <Box position="relative" borderRadius="4px" width="100%" sx={{ aspectRatio: 16 / 9 }} className="shadow-xl">
+              <Image
+                src={ImgFtChat}
+                alt="solar network chat"
+                fill
+                style={{ objectFit: 'cover', borderRadius: '8px' }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Grid container columns={{ xs: 1, md: 2 }} spacing={4} alignItems="center">
+          <Grid size={1}>
+            <Box position="relative" borderRadius="4px" width="100%" sx={{ aspectRatio: 16 / 9 }} className="shadow-xl">
+              <Image
+                src={ImgFtNews}
+                alt="solar network news"
+                fill
+                style={{ objectFit: 'cover', borderRadius: '8px' }}
+              />
+            </Box>
+          </Grid>
+          <Grid size={1} textAlign={{ xs: 'left', md: 'right' }} order={{ xs: -1, md: 1 }}>
+            <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom>
+              {t('ftNews')}
+            </Typography>
+            <Typography variant="body1" fontSize={18}>
+              {t('ftNewsDescription')}
+            </Typography>
+          </Grid>
+        </Grid>
+
+        <Grid container columns={{ xs: 1, md: 2 }} spacing={4} alignItems="center">
+          <Grid size={1}>
+            <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom>
+              {t('ftStickers')}
+            </Typography>
+            <Typography variant="body1" fontSize={18}>
+              {t('ftStickersDescription')}
+            </Typography>
+          </Grid>
+          <Grid size={1}>
+            <Box position="relative" borderRadius="4px" width="100%" sx={{ aspectRatio: 16 / 9 }} className="shadow-xl">
+              <Image
+                src={ImgFtStickers}
+                alt="solar network stickers"
+                fill
+                style={{ objectFit: 'cover', borderRadius: '8px' }}
+              />
+            </Box>
+          </Grid>
+        </Grid>
+
+        <Grid container columns={{ xs: 1, md: 2 }} spacing={4} alignItems="center">
+          <Grid size={1}>
+            <Box position="relative" borderRadius="4px" width="100%" sx={{ aspectRatio: 16 / 9 }} className="shadow-xl">
+              <Image
+                src={ImgFtPosting}
+                alt="solar network posting"
+                fill
+                style={{ objectFit: 'cover', borderRadius: '8px' }}
+              />
+            </Box>
+          </Grid>
+          <Grid size={1} textAlign={{ xs: 'left', md: 'right' }} order={{ xs: -1, md: 1 }}>
+            <Typography variant="h5" component="h3" fontWeight="bold" gutterBottom>
+              {t('ftPosting')}
+            </Typography>
+            <Typography variant="body1" fontSize={18} gutterBottom>
+              {t('ftPostingDescription')}
+            </Typography>
+            <Typography variant="caption">*{t('ftPostingDescriptionAddition')}</Typography>
+          </Grid>
+        </Grid>
+
+        <Box>
+          <Typography variant="h5" component="h2" textAlign="center" sx={{ my: 5 }}>
+            {t('whatsMore')}
+          </Typography>
+
+          <Grid container columns={{ xs: 1, sm: 2, md: 3 }} spacing={4}>
+            <Grid size={1}>
+              <Card variant="outlined">
+                <CardContent>
+                  <GitHubIcon sx={{ fontSize: 40, mb: 1 }} />
+                  <Typography variant="h6" component="h5" gutterBottom>
+                    {t('ftOpenSource')}
+                  </Typography>
+                  <Typography variant="body2">{t('ftOpenSourceDescription')}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid size={1}>
+              <Card variant="outlined">
+                <CardContent>
+                  <SecurityIcon sx={{ fontSize: 40, mb: 1 }} />
+                  <Typography variant="h6" component="h5" gutterBottom>
+                    {t('ftSecurity')}
+                  </Typography>
+                  <Typography variant="body2">{t('ftSecurityDescription')}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+            <Grid size={1}>
+              <Card variant="outlined">
+                <CardContent>
+                  <CookieIcon sx={{ fontSize: 40, mb: 1 }} />
+                  <Typography variant="h6" component="h5" gutterBottom>
+                    {t('ftNoCollecting')}
+                  </Typography>
+                  <Typography variant="body2">{t('ftNoCollectingDescription')}</Typography>
+                </CardContent>
+              </Card>
+            </Grid>
+          </Grid>
+        </Box>
+
+        <Box textAlign="center">
+          <Typography variant="h5" component="h2" fontWeight="bold" sx={{ mt: 5 }} gutterBottom>
+            {t('noWaiting')}
+          </Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            {t('noWaitingDescription')}
+          </Typography>
+
+          <Link href="#download" sx={{ my: 2.5 }}>
+            {ct('actionDownload')} <DownloadIcon sx={{ fontSize: 15, marginLeft: 0.5 }} />
+          </Link>
         </Box>
       </Box>
 
