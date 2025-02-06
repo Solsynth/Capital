@@ -15,6 +15,7 @@ import {
 } from '@mui/material'
 import { JSX } from 'react'
 import { Roboto_Serif } from 'next/font/google'
+import { serverSideTranslations } from 'next-i18next/serverSideTranslations'
 import Image from 'next/image'
 import NextLink from 'next/link'
 
@@ -31,6 +32,7 @@ import ImgSolarNetworkIcon from '@/assets/products/solar-network/icon.png'
 import ImgSolarNetworkAlpha from '@/assets/products/solar-network/alpha.webp'
 
 import 'animate.css'
+import { useTranslation } from 'next-i18next'
 
 interface DownloadableAsset {
   icon: JSX.Element
@@ -51,68 +53,69 @@ const fontSerif = Roboto_Serif({
   style: 'italic',
 })
 
-export async function getStaticProps() {
+export async function getStaticProps({ locale }: { locale: string }) {
   return {
     props: {
       title: 'Solar Network',
+      ...(await serverSideTranslations(locale, ['common', 'product-solar-network'])),
     },
   }
 }
 
 export default function ProductSolarNetwork() {
+  const { t: ct } = useTranslation('common')
+  const { t } = useTranslation('product-solar-network')
+
   const downloadableAssets: DownloadableAsset[] = [
     {
       icon: <AppleIcon />,
-      title: 'iOS / macOS (App Store)',
+      title: ct('downloadAppleStore'),
       href: 'https://apps.apple.com/us/app/solian/id6499032345?itscg=30200&itsct=apps_box_link&mttnsubad=6499032345',
     },
     {
       icon: <AppleIcon />,
-      title: 'iOS / macOS (TestFlight)',
+      title: ct('downloadAppleTestflight'),
       href: 'https://testflight.apple.com/join/YJ0lmN6O',
     },
     {
       icon: <AndroidIcon />,
-      title: 'Android',
+      title: ct('downloadAndroid'),
       href: 'https://files.solsynth.dev/production01/solian/app-arm64-v8a-release.apk',
     },
     {
       icon: <WindowIcon />,
-      title: 'Windows',
+      title: ct('downloadWindows'),
       href: 'https://files.solsynth.dev/production01/solian/windows-x86_64-release.zip',
     },
     {
       icon: <WebIcon />,
-      title: 'Web',
+      title: ct('downloadWeb'),
       href: 'https://sn.solsynth.dev',
       open: true,
     },
     {
       icon: <CodeIcon />,
-      title: 'Source Code',
+      title: ct('downloadSourceCode'),
       href: 'https://github.com/Solsynth/HyperNet.Surface',
     },
   ]
 
   const askableQuestions: AskableQuestion[] = [
     {
-      question: "What's the relationship between Solar Network and Solian?",
-      answer:
-        'Solian is the official app made for Solar Network. And the Solar Network is the official HyperNet instance hosted by Solsynth LLC. For simple, Solian is the app, and the Solar Network is the platform.',
+      question: t('faq1'),
+      answer: t('faq1a'),
     },
     {
-      question: "What's the relationship between Solar Network and HyperNet?",
-      answer:
-        'HyperNet is the entire project including frontend app (also knowns as Solian for public) and the backend server. And the Solar Network is the official HyperNet instance which hosted and managed by Solsynth LLC who developed the HyperNet Project.',
+      question: t('faq2'),
+      answer: t('faq2a'),
     },
     {
-      question: 'Which rules do I need to follow while using Solar Network?',
-      answer:
-        'Check out our Terms & Conditions for a detailed explanation of what you can do and cannot do on Solar Network. If you violate any of these rules, we have the right to suspend or terminate your account., you can see them in the drawer.',
+      question: t('faq3'),
+      answer: t('faq3a'),
     },
     {
-      question: 'If I have any question about Solar Network, where can I get help?',
-      answer: 'Feel free to email as at lily@solsynth.dev',
+      question: t('faq4'),
+      answer: t('faq4a'),
     },
   ]
 
@@ -129,7 +132,7 @@ export default function ProductSolarNetwork() {
         />
         <Box position="relative" width="fit-content" className="animate__animated animate__fadeInUp">
           <Typography variant="h4" component="h1">
-            Solar Network
+            {t('appName')}
           </Typography>
           <Box
             position="absolute"
@@ -139,14 +142,14 @@ export default function ProductSolarNetwork() {
             className="animate__animated animate__pulse animate__infinite"
           >
             <Chip
-              label="2.0"
+              label="2.2"
               variant="outlined"
               sx={{ fontFamily: 'monospace', backgroundColor: 'background.default', fontSize: 12 }}
             />
           </Box>
         </Box>
         <Typography variant="subtitle1" component="h1" className="animate__animated animate__fadeInUp">
-          The next generation Social Network platform.
+          {t('appDescription')}
         </Typography>
 
         <Typography
@@ -156,11 +159,11 @@ export default function ProductSolarNetwork() {
           sx={{ mt: 2.5, width: 'fit-content', fontStyle: 'italic' }}
           className="textmarker-effect animate__animated animate__fadeInUp"
         >
-          Social Network, Redefined.
+          {t('appSlogan')}
         </Typography>
 
         <Link href="#download" sx={{ my: 2.5 }}>
-          Download <DownloadIcon sx={{ fontSize: 15, marginLeft: 0.5 }} />
+          {ct('actionDownload')} <DownloadIcon sx={{ fontSize: 15, marginLeft: 0.5 }} />
         </Link>
 
         <Box position="relative" width="100%" sx={{ aspectRatio: 16 / 10, mt: 5 }}>
@@ -170,15 +173,15 @@ export default function ProductSolarNetwork() {
 
       <Box id="download">
         <Typography variant="h5" component="h2" textAlign="center" sx={{ mb: 5 }}>
-          Download
+          {ct('actionDownload')}
         </Typography>
 
         <Table sx={{ maxWidth: '800px', marginX: 'auto' }} aria-label="download table">
           <TableHead>
             <TableRow>
               <TableCell />
-              <TableCell>Platform</TableCell>
-              <TableCell align="right">Distribution</TableCell>
+              <TableCell>{ct('downloadPlatform')}</TableCell>
+              <TableCell align="right">{ct('downloadDistribution')}</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -190,12 +193,12 @@ export default function ProductSolarNetwork() {
                   <NextLink passHref href={a.href} target="_blank">
                     {a.open ? (
                       <Link component="span">
-                        Open now
+                        {ct('actionOpen')}
                         <LaunchIcon sx={{ fontSize: 15, marginLeft: 0.5 }} />
                       </Link>
                     ) : (
                       <Link component="span">
-                        Download now
+                        {ct('actionDownload')}
                         <DownloadIcon sx={{ fontSize: 15, marginLeft: 0.5 }} />
                       </Link>
                     )}
@@ -209,7 +212,7 @@ export default function ProductSolarNetwork() {
 
       <Box id="faq">
         <Typography variant="h5" component="h2" textAlign="center" sx={{ mb: 5 }}>
-          Frequently Asked Questions
+          {ct('faq')}
         </Typography>
 
         <Box sx={{ maxWidth: '800px', marginX: 'auto' }}>

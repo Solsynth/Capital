@@ -1,0 +1,13 @@
+{
+  "appName": "Solar Network",
+  "appDescription": "下一代社交网络平台",
+  "appSlogan": "重新定义社交网络",
+  "faq1": "Solar Network 和 Solian 之间有什么关系？",
+  "faq1a": "Solian 是为 Solar Network 制作的官方应用程序。而 Solar Network 是由 Solsynth LLC 托管的官方 HyperNet 实例。简单来说，Solian 是应用程序，而 Solar Network 是平台。",
+  "faq2": "Solar Network 和 HyperNet 之间有什么关系？",
+  "faq2a": "HyperNet 是整个项目，包括前端应用程序（公众也称 Solian）和后端服务器。而 Solar Network 是由开发 HyperNet 项目的 Solsynth LLC 托管和管理的官方 HyperNet 实例。",
+  "faq3": "使用 Solar Network 时我需要遵守哪些规则？",
+  "faq3a": "查看我们的条款和条件，详细了解您在 Solar Network 上可以做什么和不能做什么。如果您违反任何这些规则，我们有权暂停或终止您的帐户。您可以在抽屉中看到它们。",
+  "faq4": "如果我对 Solar Network 有任何疑问，我可以在哪里获得帮助？",
+  "faq4a": "你可以发邮件给我们的客户服务获取支持：lily@solsynth.dev"
+}

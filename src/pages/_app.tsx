@@ -1,4 +1,5 @@
 import '@/styles/globals.css'
+
 import type { AppProps } from 'next/app'
 import { Box, createTheme, CssBaseline, ThemeProvider } from '@mui/material'
 import { Roboto } from 'next/font/google'
@@ -7,6 +8,7 @@ import { PagesProgressBar as ProgressBar } from 'next-nprogress-bar'
 import { AppProvider } from '@toolpad/core/nextjs'
 import { useUserStore } from 'solar-js-sdk'
 import { useEffect } from 'react'
+import { appWithTranslation } from 'next-i18next'
 import Head from 'next/head'
 
 const fontRoboto = Roboto({
@@ -31,7 +33,7 @@ const siteTheme = createTheme({
   },
 })
 
-export default function App({ Component, pageProps }: AppProps) {
+function App({ Component, pageProps }: AppProps) {
   const userStore = useUserStore()
 
   useEffect(() => {
@@ -80,3 +82,5 @@ export default function App({ Component, pageProps }: AppProps) {
     </>
   )
 }
+
+export default appWithTranslation(App)

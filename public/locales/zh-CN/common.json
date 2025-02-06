@@ -1,0 +1,13 @@
+{
+  "actionDownload": "下载",
+  "downloadPlatform": "平台",
+  "downloadDistribution": "分发",
+  "downloadAppleStore": "iOS / macOS (App Store)",
+  "downloadAppleTestflight": "iOS / macOS (TestFlight)",
+  "downloadAndroid": "安卓",
+  "downloadWindows": "Windows",
+  "downloadWeb": "网页版",
+  "downloadSourceCode": "源代码",
+  "actionOpen": "打开",
+  "faq": "常见问题"
+}

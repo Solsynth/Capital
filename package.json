@@ -27,11 +27,14 @@
     "axios-case-converter": "^1.1.1",
     "cookies-next": "^5.0.2",
     "feed": "^4.2.2",
+    "i18next": "^24.2.2",
     "next": "^15.1.5",
+    "next-i18next": "^15.4.2",
     "next-nprogress-bar": "^2.4.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.54.2",
+    "react-i18next": "^15.4.0",
     "rehype-sanitize": "^6.0.0",
     "rehype-stringify": "^10.0.1",
     "remark-breaks": "^4.0.0",
@@ -57,6 +60,7 @@
   },
   "trustedDependencies": [
     "@vercel/speed-insights",
+    "core-js",
     "esbuild",
     "sharp"
   ]

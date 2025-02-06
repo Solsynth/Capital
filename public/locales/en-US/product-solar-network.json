@@ -1,0 +1,13 @@
+{
+  "appName": "Solar Network",
+  "appDescription": "The next generation Social Network platform.",
+  "appSlogan": "Social Network, Redefined.",
+  "faq1": "What's the relationship between Solar Network and Solian?",
+  "faq1a": "Solian is the official app made for Solar Network. And the Solar Network is the official HyperNet instance hosted by Solsynth LLC. For simple, Solian is the app, and the Solar Network is the platform.",
+  "faq2": "What's the relationship between Solar Network and HyperNet?",
+  "faq2a": "HyperNet is the entire project including frontend app (also knowns as Solian for public) and the backend server. And the Solar Network is the official HyperNet instance which hosted and managed by Solsynth LLC who developed the HyperNet Project.",
+  "faq3": "Which rules do I need to follow while using Solar Network?",
+  "faq3a": "Check out our Terms & Conditions for a detailed explanation of what you can do and cannot do on Solar Network. If you violate any of these rules, we have the right to suspend or terminate your account., you can see them in the drawer.",
+  "faq4": "If I have any question about Solar Network, where can I get help?",
+  "faq4a": "Feel free to email as at lily@solsynth.dev"
+}

@@ -1,0 +1,13 @@
+{
+  "actionDownload": "Download",
+  "downloadPlatform": "Platform",
+  "downloadDistribution": "Distribution",
+  "downloadAppleStore": "iOS / macOS (App Store)",
+  "downloadAppleTestflight": "iOS / macOS (TestFlight)",
+  "downloadAndroid": "Android",
+  "downloadWindows": "Windows",
+  "downloadWeb": "Web",
+  "downloadSourceCode": "Source Code",
+  "actionOpen": "Open",
+  "faq": "Frequently Asked Questions"
+}
