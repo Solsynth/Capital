@@ -14,10 +14,13 @@ import {
   ListItemIcon,
   ListItemText,
   Typography,
+  useTheme,
 } from '@mui/material'
 import { GetServerSideProps } from 'next'
 import { checkAuthenticatedClient, getAttachmentUrl, redirectToLogin, sni, useUserStore } from 'solar-js-sdk'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { useSearchParams } from 'next/navigation'
+import { QRCodeSVG } from 'qrcode.react'
 
 import PublicIcon from '@mui/icons-material/Public'
 import ErrorIcon from '@mui/icons-material/Error'
@@ -47,6 +50,10 @@ export default function Realm({ realm }: any) {
 
   const [publicChannels, setPublicChannels] = useState<any[]>([])
   const [checkedChannels, setCheckedChannels] = useState<string[]>([])
+
+  const searchParams = useSearchParams()
+
+  const isShare = useMemo(() => searchParams.has('share'), [searchParams])
 
   function handleCheckChannel(value: string) {
     const currentIndex = checkedChannels.indexOf(value)
@@ -104,6 +111,8 @@ export default function Realm({ realm }: any) {
     }
   }
 
+  const theme = useTheme()
+
   return (
     <Box
       sx={{
@@ -133,65 +142,84 @@ export default function Realm({ realm }: any) {
             </Typography>
             <Typography sx={{ mt: 3 }}>{realm.description}</Typography>
 
-            {publicChannels.length > 0 && (
-              <Box sx={{ mt: 3 }}>
-                <Typography fontSize={14} mx={1} sx={{ opacity: 0.75, mb: 0.5, textAlign: 'center' }}>
-                  Public channels in this realm you can join
+            {isShare ? (
+              <Box mt={3} mx="auto" width={256}>
+                <QRCodeSVG
+                  title="Realm QR Code"
+                  value={'https://solsynth.dev/realms/' + realm.alias}
+                  level="H"
+                  bgColor="#00000000"
+                  fgColor={theme.palette.text.primary}
+                  size={256}
+                />
+
+                <Typography textAlign="center" mt={2}>
+                  Scan the QR Code above to join
                 </Typography>
-                <List sx={{ width: '100%', p: 0, borderRadius: '8px', bgcolor: 'rgba(255, 255, 255, .2)' }}>
-                  {publicChannels.map((value) => {
-                    const labelId = `checkbox-list-label-${value}`
-
-                    return (
-                      <ListItem key={value.id} disablePadding>
-                        <ListItemButton
-                          sx={{ borderRadius: '8px' }}
-                          onClick={() => handleCheckChannel(value.alias)}
-                          dense
-                        >
-                          <ListItemIcon>
-                            <Checkbox
-                              edge="start"
-                              checked={checkedChannels.includes(value.alias)}
-                              tabIndex={-1}
-                              disableRipple
-                              inputProps={{ 'aria-labelledby': labelId }}
-                            />
-                          </ListItemIcon>
-                          <ListItemText id={labelId} primary={value.name} />
-                        </ListItemButton>
-                      </ListItem>
-                    )
-                  })}
-                </List>
               </Box>
-            )}
-
-            {realm.isCommunity && (
-              <Box sx={{ mt: 3 }}>
-                <Box display="flex" sx={{ opacity: 0.75 }}>
-                  <PublicIcon />
-                  <Typography sx={{ ml: 1 }} variant="body2">
-                    A community realm, you can join it as you wish.
-                  </Typography>
-                </Box>
-              </Box>
-            )}
-
-            <Collapse in={!!error} sx={{ width: '100%' }}>
-              <Alert sx={{ mt: 3 }} icon={<ErrorIcon fontSize="inherit" />} severity="error">
-                {error}
-              </Alert>
-            </Collapse>
-
-            {joined ? (
-              <Alert severity="info" sx={{ mt: 2.5 }}>
-                Joined, check it out in the app
-              </Alert>
             ) : (
-              <Button fullWidth variant="contained" disabled={loading} sx={{ mt: 3 }} onClick={joinRealm}>
-                Join
-              </Button>
+              <>
+                {publicChannels.length > 0 && (
+                  <Box sx={{ mt: 3 }}>
+                    <Typography fontSize={14} mx={1} sx={{ opacity: 0.75, mb: 0.5, textAlign: 'center' }}>
+                      Public channels in this realm you can join
+                    </Typography>
+                    <List sx={{ width: '100%', p: 0, borderRadius: '8px', bgcolor: 'rgba(255, 255, 255, .2)' }}>
+                      {publicChannels.map((value) => {
+                        const labelId = `checkbox-list-label-${value}`
+
+                        return (
+                          <ListItem key={value.id} disablePadding>
+                            <ListItemButton
+                              sx={{ borderRadius: '8px' }}
+                              onClick={() => handleCheckChannel(value.alias)}
+                              dense
+                            >
+                              <ListItemIcon>
+                                <Checkbox
+                                  edge="start"
+                                  checked={checkedChannels.includes(value.alias)}
+                                  tabIndex={-1}
+                                  disableRipple
+                                  inputProps={{ 'aria-labelledby': labelId }}
+                                />
+                              </ListItemIcon>
+                              <ListItemText id={labelId} primary={value.name} />
+                            </ListItemButton>
+                          </ListItem>
+                        )
+                      })}
+                    </List>
+                  </Box>
+                )}
+
+                {realm.isCommunity && (
+                  <Box sx={{ mt: 3 }}>
+                    <Box display="flex" sx={{ opacity: 0.75 }}>
+                      <PublicIcon />
+                      <Typography sx={{ ml: 1 }} variant="body2">
+                        A community realm, you can join it as you wish.
+                      </Typography>
+                    </Box>
+                  </Box>
+                )}
+
+                <Collapse in={!!error} sx={{ width: '100%' }}>
+                  <Alert sx={{ mt: 3 }} icon={<ErrorIcon fontSize="inherit" />} severity="error">
+                    {error}
+                  </Alert>
+                </Collapse>
+
+                {joined ? (
+                  <Alert severity="info" sx={{ mt: 2.5 }}>
+                    Joined, check it out in the app
+                  </Alert>
+                ) : (
+                  <Button fullWidth variant="contained" disabled={loading} sx={{ mt: 3 }} onClick={joinRealm}>
+                    Join
+                  </Button>
+                )}
+              </>
             )}
           </CardContent>
         </Card>
