@@ -99,15 +99,14 @@ export default function Realm({ realm }: any) {
   }
 
   async function joinChannels() {
-    try {
-      for (const chan of checkedChannels) {
+    for (const chan of checkedChannels) {
+      try {
         await sni.post('/cgi/im/channels/' + realm.alias + '/' + chan + '/members', {
           related: user.account!.name,
         })
+      } catch (err: any) {
+        console.error(err)
       }
-    } catch (err: any) {
-      console.error(err)
-      setError(err.toString())
     }
   }
 
