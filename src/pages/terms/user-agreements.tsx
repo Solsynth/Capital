@@ -57,6 +57,11 @@ export default function PrivacyPolicy() {
           Although you have 100% freedom of speech on Solar Network. However, please be aware that freedom of speech
           does not mean that you will not be held accountable for what you say.
         </p>
+        <h4 id="the-branding-issue">The Impersonating Issue</h4>
+        <p>
+          You cannot impersonating us (the Solsynth LLC) in anyways. For example like using our logos, our product name,
+          or our name. Otherwise we have the right to remove / suspend your account.
+        </p>
         <h4 id="restriction-and-discontinuation">Restriction and Discontinuation</h4>
         <ul>
           <li>
