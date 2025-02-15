@@ -34,6 +34,7 @@ import SearchIcon from '@mui/icons-material/Search'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import SecurityIcon from '@mui/icons-material/Security'
 import CookieIcon from '@mui/icons-material/Cookie'
+import ComputerIcon from '@mui/icons-material/Computer';
 
 import ImgSolarNetworkIcon from '@/assets/products/solar-network/icon.png'
 import ImgSolarNetworkAlpha from '@/assets/products/solar-network/alpha.webp'
@@ -100,6 +101,16 @@ export default function ProductSolarNetwork() {
       icon: <WindowIcon />,
       title: ct('downloadWindows'),
       href: 'https://files.solsynth.dev/production01/solian/windows-x86_64-release.zip',
+    },
+    {
+      icon: <ComputerIcon />,
+      title: ct('downloadLinux'),
+      href: 'https://files.solsynth.dev/production01/solian/linux-x86_64-release.zip',
+    },
+    {
+      icon: <ComputerIcon />,
+      title: ct('downloadLinuxDebian'),
+      href: 'https://files.solsynth.dev/production01/solian/linux-debian-x86_64-release.deb',
     },
     {
       icon: <WebIcon />,

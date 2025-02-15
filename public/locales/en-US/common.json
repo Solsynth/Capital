@@ -9,6 +9,8 @@
   "downloadWindows": "Windows",
   "downloadWeb": "Web",
   "downloadSourceCode": "Source Code",
+  "downloadLinux": "Linux Unpacked",
+  "downloadLinuxDebian": "deb (Debian/Ubuntu)",
   "actionOpen": "Open",
   "faq": "Frequently Asked Questions"
 }

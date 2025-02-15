@@ -9,6 +9,8 @@
   "downloadWindows": "Windows",
   "downloadWeb": "网页版",
   "downloadSourceCode": "源代码",
+  "downloadLinux": "Linux 未打包",
+  "downloadLinuxDebian": "deb (Debian/Ubuntu)",
   "actionOpen": "打开",
   "faq": "常见问题"
 }
