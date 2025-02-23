@@ -95,22 +95,22 @@ export default function ProductSolarNetwork() {
     {
       icon: <AndroidIcon />,
       title: ct('downloadAndroid'),
-      href: 'https://files.solsynth.dev/production01/solian/app-arm64-v8a-release.apk',
+      href: 'https://github.com/Solsynth/HyperNet.Surface/releases/latest',
     },
     {
       icon: <WindowIcon />,
       title: ct('downloadWindows'),
-      href: 'https://files.solsynth.dev/production01/solian/windows-x86_64-release.zip',
+      href: 'https://github.com/Solsynth/HyperNet.Surface/releases/latest',
     },
     {
       icon: <ComputerIcon />,
       title: ct('downloadLinux'),
-      href: 'https://files.solsynth.dev/production01/solian/linux-x86_64-release.zip',
+      href: 'https://github.com/Solsynth/HyperNet.Surface/releases/latest',
     },
     {
       icon: <ComputerIcon />,
       title: ct('downloadLinuxDebian'),
-      href: 'https://files.solsynth.dev/production01/solian/linux-debian-x86_64-release.deb',
+      href: 'https://github.com/Solsynth/HyperNet.Surface/releases/latest',
     },
     {
       icon: <WebIcon />,
