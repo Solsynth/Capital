@@ -3,11 +3,11 @@ import { ref } from "vue"
 import { solarFetch } from "~/utils/request"
 
 export function useAtk() {
-  return useCookie("__hydrogen_atk", { path: "/", maxAge: 31556952000 })
+  return useCookie("solar_network_atk", { path: "/", maxAge: 31556952000 })
 }
 
 export function useRtk() {
-  return useCookie("__hydrogen_rtk", { path: "/", maxAge: 31556952000 })
+  return useCookie("solar_network_rtk", { path: "/", maxAge: 31556952000 })
 }
 
 export function useLoggedInState() {
@@ -22,18 +22,23 @@ export const useUserinfo = defineStore("userinfo", () => {
   let fetchCompleter: Completer<boolean> | null = null
   let refreshCompleter: Completer<string> | null = null
 
-  const lastRefreshedAt = ref<Date | null>(null)
-
   function setTokenSet(atk: string, rtk: string) {
-    lastRefreshedAt.value = new Date()
     useAtk().value = atk
     useRtk().value = rtk
   }
 
   async function getAtk() {
-    if (!useLoggedInState().value) return useAtk().value
-    if (lastRefreshedAt.value != null && Math.floor(Math.abs(Date.now() - lastRefreshedAt.value.getTime()) / 60000) < 3) {
-      return useAtk().value
+    const atk = useAtk()
+    if (!useLoggedInState().value) return atk.value
+
+    const parts = atk.value?.split(".") ?? []
+    if (parts.length != 3) return atk.value
+
+    const payload = JSON.parse(atob(parts[1]))
+    const exp: number = payload["exp"]
+
+    if (exp > Date.now() / 1000) {
+      return atk.value
     }
 
     if (refreshCompleter != null) {
@@ -57,7 +62,7 @@ export const useUserinfo = defineStore("userinfo", () => {
       throw new Error(err)
     } else {
       const out = await res.json()
-      console.log("[PASSPORT] Access token has been refreshed now.")
+      console.log("[Passport] Access token has been refreshed now.")
       setTokenSet(out["access_token"], out["refresh_token"])
       refreshCompleter.complete(out["access_token"])
       return out["access_token"]
@@ -97,12 +102,12 @@ export const useUserinfo = defineStore("userinfo", () => {
     fetchCompleter = null
   }
 
-  return { userinfo, lastRefreshedAt, isLoggedIn, isReady, fetchCompleter, setTokenSet, getAtk, readProfiles }
+  return { userinfo, isLoggedIn, isReady, fetchCompleter, setTokenSet, getAtk, readProfiles }
 })
 
 export class Completer<T> {
   public readonly promise: Promise<T>
-  public complete: (value: (PromiseLike<T> | T)) => void
+  public complete: (value: PromiseLike<T> | T) => void
   private reject: (reason?: any) => void
 
   public constructor() {

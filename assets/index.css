@@ -1,22 +1,28 @@
-@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300..700&family=Noto+Sans+JP:wght@100..900&family=Noto+Sans+SC:wght@100..900&family=Noto+Sans+TC:wght@100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Noto+Sans+SC:wght@100..900&family=Noto+Sans+TC:wght@100..900&family=Nunito:ital,wght@0,200..1000;1,200..1000&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&display=swap");
 
-html, body {
-    padding: 0;
-    margin: 0;
+html,
+body {
+  padding: 0;
+  margin: 0;
 }
 
-html, body, #app, .v-application {
-    overflow: auto !important;
+html,
+body,
+#app,
+.v-application {
+  overflow: auto !important;
 
-    font-family: "Comfortaa", "Noto Sans SC", "Noto Sans TC", "Noto Sans JP", sans-serif !important;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-style: normal;
+  font-family: "Nunito", "Noto Sans SC", "Noto Sans TC", "Noto Sans JP", sans-serif !important;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
 
-.font-mono, code, pre {
-    font-family: "Roboto Mono", monospace !important;
-    font-optical-sizing: auto;
-    font-weight: 500;
-    font-style: normal;
+.font-mono,
+code,
+pre {
+  font-family: "Roboto Mono", monospace !important;
+  font-optical-sizing: auto;
+  font-weight: 500;
+  font-style: normal;
 }
