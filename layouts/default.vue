@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar flat color="primary">
+  <v-app-bar app flat color="surface" class="app-bar-blur">
     <v-container fluid class="mx-auto d-flex align-center justify-center pr-8">
       <v-app-bar-nav-icon @click="openDrawer = !openDrawer" />
 
@@ -22,7 +22,7 @@
     </v-container>
   </v-app-bar>
 
-  <v-navigation-drawer v-model="openDrawer" location="left" width="300" floating>
+  <v-navigation-drawer v-model="openDrawer" location="left" width="300" temporary order="-1">
     <v-list density="compact" nav color="primary">
       <v-list-item title="Knowledge Base" prepend-icon="mdi-library" to="/docs" exact />
       <v-list-item title="Developer Portal" prepend-icon="mdi-code-tags" to="/dev" exact />
@@ -48,9 +48,16 @@
 </template>
 
 <script setup lang="ts">
-import Logo from "../assets/logo-w-shadow.png"
-
 const { t } = useI18n()
 
 const openDrawer = ref(false)
 </script>
+
+<style lang="css" scoped>
+.app-bar-blur {
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.5) 65%, rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 40%, rgba(0, 0, 0, 0.5) 65%, rgba(0, 0, 0, 0) 100%);
+  mask-repeat: no-repeat;
+  mask-size: 100%;
+}
+</style>

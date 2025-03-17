@@ -31,7 +31,7 @@
         />
       </div>
 
-      <article v-if="post.type == 'story' || props.forceShowContent" class="text-base prose max-w-none">
+      <article v-if="(post.type == 'story' || props.forceShowContent) && post.body?.content" class="text-base prose max-w-none">
         <m-d-c :value="post.body?.content"></m-d-c>
       </article>
 

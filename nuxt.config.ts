@@ -151,7 +151,7 @@ export default defineNuxtConfig({
     "@pinia/nuxt",
     "@nuxtjs/i18n",
     "nuxt-schema-org",
-    "nuxt-gtag",
+    "@vueuse/motion/nuxt",
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         // @ts-expect-error

@@ -25,7 +25,7 @@
       />
     </v-card>
 
-    <article class="text-base prose xl:text-lg mx-auto">
+    <article v-if="post.body?.content" class="text-base prose xl:text-lg mx-auto">
       <m-d-c :value="post.body?.content"></m-d-c>
     </article>
 
