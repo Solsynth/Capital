@@ -1,17 +1,10 @@
 <template>
   <v-app-bar flat color="primary" scroll-behavior="hide" scroll-threshold="800">
-    <v-container fluid class="mx-auto d-flex align-center justify-center px-8">
-      <v-tooltip>
-        <template #activator="{ props }">
-          <div @click="openDrawer = !openDrawer" v-bind="props" class="cursor-pointer">
-            <v-img class="me-4 ms-1" width="32" height="32" alt="Logo" :src="Logo" />
-          </div>
-        </template>
-        Open / close drawer
-      </v-tooltip>
+    <v-container fluid class="mx-auto d-flex align-center justify-center pr-8">
+      <v-app-bar-nav-icon @click="openDrawer = !openDrawer" />
 
       <nuxt-link to="/dev" exact>
-        <h2 class="mt-1">Developer Portal</h2>
+        <h2>Developer Portal</h2>
       </nuxt-link>
 
       <v-spacer></v-spacer>
@@ -51,6 +44,6 @@ const { t } = useI18n()
 const openDrawer = ref(false)
 
 useHead({
-  titleTemplate: "%s | Solsynth Dev Portal"
+  titleTemplate: "%s | Solsynth Dev Portal",
 })
 </script>

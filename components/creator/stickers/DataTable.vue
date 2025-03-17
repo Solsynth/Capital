@@ -5,13 +5,11 @@
     </v-alert>
   </v-expand-transition>
 
-  <v-data-table-server
+  <v-data-table
     density="compact"
     :headers="dataDefinitions.stickers"
     :items="stickers"
-    :items-length="pagination.stickers.total"
     :loading="reverting.stickers"
-    v-model:items-per-page="pagination.stickers.pageSize"
     @update:options="readStickers"
     item-value="id"
   >
@@ -74,23 +72,24 @@
             <template v-slot:default="{ isActive }">
               <v-card :title="`Delete sticker #${item.id}?`">
                 <v-card-text>
-                  This action will delete this sticker, all content used it will no longer show your sticker.
-                  But the attachment will still exists.
+                  This action will delete this sticker, all content used it will no longer show your sticker. But the
+                  attachment will still exists.
                 </v-card-text>
 
                 <v-card-actions>
                   <v-spacer></v-spacer>
 
-                  <v-btn
-                    text="Cancel"
-                    color="grey"
-                    @click="isActive.value = false"
-                  ></v-btn>
+                  <v-btn text="Cancel" color="grey" @click="isActive.value = false"></v-btn>
 
                   <v-btn
                     text="Delete"
                     color="error"
-                    @click="() => { deleteSticker(item); isActive.value = false }"
+                    @click="
+                      () => {
+                        deleteSticker(item)
+                        isActive.value = false
+                      }
+                    "
                   />
                 </v-card-actions>
               </v-card>
@@ -99,7 +98,7 @@
         </td>
       </tr>
     </template>
-  </v-data-table-server>
+  </v-data-table>
 </template>
 
 <script setup lang="ts">
@@ -108,7 +107,7 @@ import { solarFetch } from "~/utils/request"
 const config = useRuntimeConfig()
 const { t } = useI18n()
 
-const props = defineProps<{ packId: number, packPrefix?: string }>()
+const props = defineProps<{ packId: number; packPrefix?: string }>()
 
 const error = ref<null | string>(null)
 
@@ -125,34 +124,20 @@ const dataDefinitions: { [id: string]: any[] } = {
 const stickers = ref<any>([])
 
 const reverting = reactive({ stickers: false })
-const pagination = reactive({
-  stickers: { page: 1, pageSize: 5, total: 0 },
-})
 
-async function readStickers({ page, itemsPerPage }: { page?: number; itemsPerPage?: number }) {
-  if (itemsPerPage) pagination.stickers.pageSize = itemsPerPage
-  if (page) pagination.stickers.page = page
-
+async function readStickers() {
   reverting.stickers = true
-  const res = await solarFetch(
-    "/cgi/uc/stickers?" +
-    new URLSearchParams({
-      pack: props.packId.toString(),
-      take: pagination.stickers.pageSize.toString(),
-      offset: ((pagination.stickers.page - 1) * pagination.stickers.pageSize).toString(),
-    }),
-  )
+  const res = await solarFetch("/cgi/uc/stickers/packs/" + props.packId)
   if (res.status !== 200) {
     error.value = await res.text()
   } else {
     const data = await res.json()
-    stickers.value = data["data"]
-    pagination.stickers.total = data["count"]
+    stickers.value = data["stickers"]
   }
   reverting.stickers = false
 }
 
-onMounted(() => readStickers({}))
+onMounted(() => readStickers())
 
 const submitting = ref(false)
 
@@ -165,7 +150,7 @@ async function deleteSticker(item: any) {
   if (res.status !== 200) {
     error.value = await res.text()
   } else {
-    await readStickers({})
+    await readStickers()
   }
 
   submitting.value = false

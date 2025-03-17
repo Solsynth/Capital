@@ -6,13 +6,7 @@
       </div>
 
       <div class="flex gap-2">
-        <v-btn
-          color="primary"
-          text="New"
-          append-icon="mdi-plus"
-          variant="tonal"
-          to="/creator/stickers/new"
-        />
+        <v-btn color="primary" text="New" append-icon="mdi-plus" variant="tonal" to="/creator/stickers/new" />
       </div>
     </div>
 
@@ -24,10 +18,7 @@
 
     <div class="mt-5">
       <v-expansion-panels>
-        <v-expansion-panel
-          v-for="item in data"
-          :key="'sticker-pack#'+item.id"
-        >
+        <v-expansion-panel v-for="item in data" :key="'sticker-pack#' + item.id">
           <template #title>
             <div class="flex items-center gap-2">
               <p>{{ item.name }}</p>
@@ -87,16 +78,17 @@
                         <v-card-actions>
                           <v-spacer></v-spacer>
 
-                          <v-btn
-                            text="Cancel"
-                            color="grey"
-                            @click="isActive.value = false"
-                          ></v-btn>
+                          <v-btn text="Cancel" color="grey" @click="isActive.value = false"></v-btn>
 
                           <v-btn
                             text="Delete"
                             color="error"
-                            @click="() => { deletePack(item); isActive.value = false }"
+                            @click="
+                              () => {
+                                deletePack(item)
+                                isActive.value = false
+                              }
+                            "
                           />
                         </v-card-actions>
                       </v-card>
@@ -131,6 +123,7 @@ useHead({
 })
 
 const { t } = useI18n()
+const ua = useUserinfo()
 
 const loading = ref(false)
 const error = ref<null | string>(null)
@@ -140,7 +133,7 @@ const data = ref<any[]>([])
 async function readPacks() {
   loading.value = true
 
-  const res = await solarFetch(`/cgi/uc/stickers/packs?take=10&offset=${data.value.length}`)
+  const res = await solarFetch(`/cgi/uc/stickers/packs?take=10&author=${ua.userinfo?.id}&offset=${data.value.length}`)
   if (res.status != 200) {
     error.value = await res.text()
   } else {
