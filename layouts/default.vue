@@ -1,19 +1,19 @@
 <template>
   <v-app-bar flat color="primary">
-    <v-container fluid class="mx-auto d-flex align-center justify-center px-8">
-      <v-tooltip>
-        <template #activator="{ props }">
-          <div @click="openDrawer = !openDrawer" v-bind="props" class="cursor-pointer">
-            <v-img class="me-4 ms-1" width="32" height="32" alt="Logo" :src="Logo" />
-          </div>
-        </template>
-        Open / close drawer
-      </v-tooltip>
-
+    <v-container fluid class="mx-auto d-flex align-center justify-center pr-8">
+      <v-app-bar-nav-icon @click="openDrawer = !openDrawer" />
 
       <nuxt-link to="/" exact>
-        <h2 class="mt-1">Solsynth LLC</h2>
+        <h2>Solsynth LLC</h2>
       </nuxt-link>
+
+      <v-spacer></v-spacer>
+
+      <div class="flex gap-2">
+        <v-btn to="/products" exact prepend-icon="mdi-shape">{{ t("navProducts") }}</v-btn>
+        <v-btn to="/posts" exact prepend-icon="mdi-note-text">{{ t("navPosts") }}</v-btn>
+        <v-btn to="/gallery" exact prepend-icon="mdi-image-multiple">{{ t("navGallery") }}</v-btn>
+      </div>
 
       <v-spacer></v-spacer>
 
@@ -24,18 +24,15 @@
 
   <v-navigation-drawer v-model="openDrawer" location="left" width="300" floating>
     <v-list density="compact" nav color="primary">
-      <v-list-item :title="t('navProducts')" prepend-icon="mdi-shape" to="/products" exact />
-      <v-list-item :title="t('navPosts')" prepend-icon="mdi-note-text" to="/posts" exact />
-      <v-list-item :title="t('navActivity')" prepend-icon="mdi-newspaper-variant-multiple-outline" to="/activity" exact />
-      <v-list-item :title="t('navGallery')" prepend-icon="mdi-image-multiple" to="/gallery" exact />
+      <v-list-item title="Knowledge Base" prepend-icon="mdi-library" to="/docs" exact />
+      <v-list-item title="Developer Portal" prepend-icon="mdi-code-tags" to="/dev" exact />
+      <v-list-item title="Creator Hub" prepend-icon="mdi-pencil" to="/creator" exact />
     </v-list>
 
     <v-divider class="border-opacity-50 my-1" />
 
     <v-list density="compact" nav color="primary">
-      <v-list-item title="Knowledge Base" prepend-icon="mdi-library" to="/docs" exact />
-      <v-list-item title="Developer Portal" prepend-icon="mdi-code-tags" to="/dev" exact />
-      <v-list-item title="Creator Hub" prepend-icon="mdi-pencil" to="/creator" exact />
+      <v-list-item title="Code Repository" prepend-icon="mdi-git" href="https://git.solsynth.dev" target="_blank" />
     </v-list>
 
     <v-divider class="border-opacity-50 mb-4 mt-0.5" />
@@ -53,7 +50,7 @@
 <script setup lang="ts">
 import Logo from "../assets/logo-w-shadow.png"
 
-const {  t } = useI18n()
+const { t } = useI18n()
 
 const openDrawer = ref(false)
 </script>

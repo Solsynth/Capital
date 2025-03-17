@@ -14,3 +14,13 @@ export async function solarFetch(input: string, init?: RequestInit) {
     },
   })
 }
+
+export function getAttachmentUrl(identifier: string | undefined): string | undefined {
+  if (identifier == null || identifier.length == 0) {
+    return undefined
+  }
+  if (identifier.startsWith("http")) {
+    return identifier
+  }
+  return `${useRuntimeConfig().public.solarNetworkApi}/cgi/uc/attachments/${identifier}`
+}

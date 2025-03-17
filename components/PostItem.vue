@@ -3,10 +3,12 @@
     <v-card-text>
       <div class="mb-3 flex flex-row gap-4">
         <nuxt-link :to="`/users/${post.publisher?.name}`">
-          <v-avatar :image="post.publisher?.avatar" />
+          <v-avatar :image="getAttachmentUrl(post.publisher?.avatar)" icon="mdi-account-circle" />
         </nuxt-link>
         <div class="flex flex-col">
-          <span>{{ post.publisher?.nick }} <span class="text-xs">@{{ post.publisher?.name }}</span></span>
+          <span
+            >{{ post.publisher?.nick }} <span class="text-xs">@{{ post.publisher?.name }}</span></span
+          >
           <span v-if="post.body?.title" class="text-md">{{ post.body?.title }}</span>
           <span v-if="post.body?.description" class="text-sm">{{ post.body?.description }}</span>
           <span v-if="!post.body?.title && !post.body?.description" class="text-sm">
@@ -41,24 +43,19 @@
       </v-card>
 
       <div class="text-sm flex flex-col">
-      <span class="flex flex-row gap-1">
-      <span>
-        {{ post.metric.reply_count }} {{ post.metric.reply_count > 1 ? "replies" : "reply" }},
-      </span>
-      <span>
-        {{ post.metric.reaction_count }} {{ post.metric.reaction_count > 1 ? "reactions" : "reaction" }}
-      </span>
-      </span>
+        <span class="flex flex-row gap-1">
+          <span> {{ post.metric.reply_count }} {{ post.metric.reply_count > 1 ? "replies" : "reply" }}, </span>
+          <span>
+            {{ post.metric.reaction_count }} {{ post.metric.reaction_count > 1 ? "reactions" : "reaction" }}
+          </span>
+        </span>
         <span>
-        {{ post.type.startsWith("a") ? "An" : "A" }} {{ post.type }} posted on
-        {{ new Date(post.published_at).toLocaleString() }}
-      </span>
+          {{ post.type.startsWith("a") ? "An" : "A" }} {{ post.type }} posted on
+          {{ new Date(post.published_at).toLocaleString() }}
+        </span>
       </div>
 
-      <div
-        v-if="post.tags?.length > 0"
-        class="text-xs text-grey flex flex-row gap-1 mt-3"
-      >
+      <div v-if="post.tags?.length > 0" class="text-xs text-grey flex flex-row gap-1 mt-3">
         <nuxt-link
           v-for="tag in post.tags"
           :to="`/posts/tags/${tag.alias}`"
@@ -73,10 +70,12 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ post: any, forceShowContent?: boolean, noClickableAttachment?: boolean }>()
+const props = defineProps<{ post: any; forceShowContent?: boolean; noClickableAttachment?: boolean }>()
 const config = useRuntimeConfig()
 
 const { t } = useI18n()
 
-const url = computed(() => props.post.alias ? `/posts/${props.post.area_alias}/${props.post.alias}` : `/posts/${props.post.id}`)
+const url = computed(() =>
+  props.post.alias ? `/posts/${props.post.area_alias}/${props.post.alias}` : `/posts/${props.post.id}`,
+)
 </script>
