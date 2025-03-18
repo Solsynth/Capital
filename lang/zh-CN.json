@@ -87,5 +87,17 @@
   "upload": "上传",
   "cancel": "取消",
   "seeMore": "查看更多",
-  "solarNetworkDescription": "开放、包容、和谐"
+  "solarNetworkDescription": "开放、包容、和谐",
+  "solarNetworkBeforeYouStart": "桥豆麻袋",
+  "solarNetworkBeforeYouStartDescription": "在你开始之前，了解一些关于 Solar Network 文化和常识",
+  "solarNetworkFreedomOfSpeech": "言论自由",
+  "solarNetworkFreedomOfSpeechDescription": "尽管 Solar Network 保护你的言论自由，不会手动对帖子进行删除。但是这不代表你可以对你的言论不负责。同时 Solar Network 上的「吹哨」功能生效时会对其他用户隐藏你的帖子。我们还是希望用户能以和为贵，少发生争吵。",
+  "solarNetworkConfirmAccount": "确认账户",
+  "solarNetworkConfirmAccountDescription": "在注册之后记得前往您绑定的邮件获取确认帐号的邮件，否则您的帐号会在 24 小时内被回收，并且期间不会分配权限，影响绝大部分功能使用。",
+  "solarNetworkNoImpersonation": "不要冒充他人",
+  "solarNetworkNoImpersonationDescription": "不要冒充在站内 / 站外的人物，对方有一定知名度的甚是。无论出发点如何，对用户造成了误解时我们保留权利处理相关帐号和内容。",
+  "solarNetworkReadDialog": "阅读错误提示",
+  "solarNetworkReadDialogDescription": "遇到报错提示不要第一时间截图抱怨，尝试理解为什么这件事情发生。其次在开发频道或 GitHub 寻求帮助，不要发帖抱怨。",
+  "solarNetworkToS": "还有，如果你继续注册 Solarpass 帐号，这意味着你同意我们的各项条款",
+  "solarNetworkToSCheck": "阅读这些条款"
 }

@@ -27,6 +27,42 @@
       </div>
     </section>
 
+    <section class="content-section flex flex-col items-center justify-center text-center px-4" id="reminders">
+      <h1 class="text-3xl font-bold">{{ t("solarNetworkBeforeYouStart") }}</h1>
+      <p class="text-lg">{{ t("solarNetworkBeforeYouStartDescription") }}</p>
+
+      <div class="max-h-[500px] w-full mt-4 text-left">
+        <v-row dense>
+          <v-col cols="12" md="4">
+            <v-card :title="t('solarNetworkFreedomOfSpeech')" prepend-icon="mdi-account-voice" density="comfortable">
+              <v-card-text>{{ t("solarNetworkFreedomOfSpeechDescription") }}</v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-card :title="t('solarNetworkConfirmAccount')" prepend-icon="mdi-account-check" density="comfortable">
+              <v-card-text>{{ t("solarNetworkConfirmAccountDescription") }}</v-card-text>
+            </v-card>
+            <v-card
+              :title="t('solarNetworkNoImpersonation')"
+              prepend-icon="mdi-account-cancel"
+              density="comfortable"
+              class="mt-2"
+            >
+              <v-card-text>{{ t("solarNetworkNoImpersonationDescription") }}</v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" md="4">
+            <v-card :title="t('solarNetworkReadDialog')" prepend-icon="mdi-alert-circle" density="comfortable">
+              <v-card-text>{{ t("solarNetworkReadDialogDescription") }}</v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </div>
+
+      <p class="text-sm mt-4">{{ t("solarNetworkToS") }}</p>
+      <nuxt-link class="underline text-sm" to="/terms">{{ t("solarNetworkToSCheck") }}</nuxt-link>
+    </section>
+
     <section class="content-section flex flex-col items-center justify-center text-center px-4" id="downloads">
       <h1 class="text-3xl font-bold">{{ t("download") }}</h1>
       <p class="text-lg">
@@ -86,7 +122,7 @@
                 <v-progress-circular class="px-5 my-3" indeterminate />
               </div>
               <v-card-text>
-                <p class="text-sm opacity-50 mb-2">{{ t('downloadForApple') }}</p>
+                <p class="text-sm opacity-50 mb-2">{{ t("downloadForApple") }}</p>
                 <div class="flex align-center gap-2.5">
                   <nuxt-link
                     to="https://apps.apple.com/us/app/solian/id6499032345?itscg=30200&itsct=apps_box_link&mttnsubad=6499032345"
@@ -96,21 +132,19 @@
                   </nuxt-link>
                   <div>
                     <nuxt-link to="https://testflight.apple.com/join/YJ0lmN6O" target="_blank" class="underline">
-                      {{ t('downloadTestFlight') }}
+                      {{ t("downloadTestFlight") }}
                     </nuxt-link>
-                    <p class="text-xs opacity-40">{{ t('downloadTestFlightDescription') }}</p>
+                    <p class="text-xs opacity-40">{{ t("downloadTestFlightDescription") }}</p>
                   </div>
                 </div>
 
-                <p class="text-sm opacity-50 mt-4">{{ t('downloadForDesktop') }}</p>
-                <p class="text-sm">{{ t('downloadForDesktopDescription') }}</p>
+                <p class="text-sm opacity-50 mt-4">{{ t("downloadForDesktop") }}</p>
+                <p class="text-sm">{{ t("downloadForDesktopDescription") }}</p>
 
-                <p class="text-sm opacity-50 mt-4">{{ t('downloadWithoutDownload') }}</p>
+                <p class="text-sm opacity-50 mt-4">{{ t("downloadWithoutDownload") }}</p>
                 <div class="text-sm flex gap-2 underline">
-                  <nuxt-link to="https://sn.solsynth.dev" target="_blank">{{ t('downloadWeb') }}</nuxt-link>
-                  <nuxt-link to="https://sn.solsynth.dev?cdn=cn" target="_blank"
-                    >{{ t('downloadWebChina') }}</nuxt-link
-                  >
+                  <nuxt-link to="https://sn.solsynth.dev" target="_blank">{{ t("downloadWeb") }}</nuxt-link>
+                  <nuxt-link to="https://sn.solsynth.dev?cdn=cn" target="_blank">{{ t("downloadWebChina") }}</nuxt-link>
                 </div>
               </v-card-text>
             </v-card>

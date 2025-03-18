@@ -87,5 +87,17 @@
   "upload": "Upload",
   "cancel": "Cancel",
   "seeMore": "See more",
-  "solarNetworkDescription": "A open, free, and friendly social network."
+  "solarNetworkDescription": "A open, free, and friendly social network.",
+  "solarNetworkBeforeYouStart": "Before you start",
+  "solarNetworkBeforeYouStartDescription": "Learn some culture and basics of Solar Network",
+  "solarNetworkFreedomOfSpeech": "Freedom of Speech",
+  "solarNetworkFreedomOfSpeechDescription": "While Solar Network protects your freedom of speech and does not manually delete posts, this does not mean you are not responsible for your words. Additionally, when the 'flag the post' feature is activated, your posts will be hidden from other users. We still encourage users to prioritize harmony and minimize conflicts.",
+  "solarNetworkConfirmAccount": "Confirm Account",
+  "solarNetworkConfirmAccountDescription": "After registering, please check your bound email for the account confirmation email. Otherwise, your account will be reclaimed within 24 hours, and during this period, no permissions will be assigned, affecting most functionalities.",
+  "solarNetworkNoImpersonation": "No Impersonation",
+  "solarNetworkNoImpersonationDescription": "Do not impersonate individuals either within or outside the platform, especially those with a certain level of recognition. Regardless of intent, if it causes misunderstanding among users, we reserve the right to take action on the relevant account and content.",
+  "solarNetworkReadDialog": "Read Error Messages",
+  "solarNetworkReadDialogDescription": "When encountering an error message, do not immediately take a screenshot and complain. Try to understand why the issue occurred. Then, seek help in the development channel or on GitHub instead of making complaint posts.",
+  "solarNetworkToS": "And, if you continue registering, means you accept our Terms & Conditions",
+  "solarNetworkToSCheck": "Check them out"
 }
