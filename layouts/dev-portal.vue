@@ -38,7 +38,7 @@
 </template>
 
 <script setup lang="ts">
-import Logo from "../assets/logo-w-shadow.png"
+import Logo from "~/assets/logo-w-shadow.png"
 
 const { t } = useI18n()
 const openDrawer = ref(false)

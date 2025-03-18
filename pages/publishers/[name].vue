@@ -27,7 +27,7 @@
         </v-col>
         <v-col row="12" lg="4" order="first" order-lg="last">
           <div class="sticky top-0 h-fit">
-            <v-card prepend-icon="mdi-identifier" title="About">
+            <v-card prepend-icon="mdi-information-outline" title="About">
               <v-card-text>
                 <p><b>Description</b></p>
                 <p>{{ account.description }}</p>
@@ -53,7 +53,7 @@ const config = useRuntimeConfig()
 
 const tab = ref(1)
 
-const { data: account } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/co/publisher/${route.params.name}`)
+const { data: account } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/co/publishers/${route.params.name}`)
 
 if (account.value == null) {
   throw createError({

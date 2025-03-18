@@ -12,16 +12,7 @@
       </div>
 
       <div class="mb-7">
-        <v-card rounded="xl" class="mx-[-5px]">
-          <v-tabs
-            v-model="tab"
-            align-tabs="start"
-            color="primary"
-            hide-slider
-          >
-            <v-tab :value="1">{{ t("userActivity") }}</v-tab>
-          </v-tabs>
-        </v-card>
+
       </div>
 
       <v-row>
@@ -46,10 +37,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  alias: ["/@:name(.*)*"],
-})
-
 const { t } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
@@ -67,6 +54,4 @@ if (account.value == null) {
 
 const urlOfAvatar = computed(() => account.value?.avatar ? `${config.public.solarNetworkApi}/cgi/uc/attachments/${account.value.avatar}` : void 0)
 const urlOfBanner = computed(() => account.value?.banner ? `${config.public.solarNetworkApi}/cgi/uc/attachments/${account.value.banner}` : void 0)
-
-const externalOpenLink = computed(() => `${config.public.solianUrl}/accounts/view/${route.params.name}`)
 </script>

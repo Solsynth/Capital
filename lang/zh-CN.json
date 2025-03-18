@@ -69,6 +69,16 @@
   "continueReading": "继续阅读",
   "download": "下载",
   "downloadDescription": "选择适合你的版本下载",
+  "downloadSwitchPrerelease": "切换至预发行版本",
+  "downloadSwitchRelease": "切换至稳定版本",
+  "downloadForApple": "使用 iOS / macOS 的设备？",
+  "downloadTestFlight": "测试飞机 (TestFlight)",
+  "downloadTestFlightDescription": "提供预发行版本",
+  "downloadForDesktop": "使用桌面设备？",
+  "downloadForDesktopDescription": "通常如果发行未包含桌面版本，你仍然可以从 GitHub Action 处下载最新的构建",
+  "downloadWithoutDownload": "想不下载尝试一下？",
+  "downloadWeb": "网页版",
+  "downloadWebChina": "中国大陆特供版本 (优化过的内容分发网络)",
   "attachmentUpload": "新传附件",
   "attachmentCreate": "新建附件",
   "attachmentCreateCaption": "使用 Solar Network 来托管你的文件",
@@ -76,5 +86,6 @@
   "attachmentUploadCompleted": "上传完成",
   "upload": "上传",
   "cancel": "取消",
-  "seeMore": "查看更多"
+  "seeMore": "查看更多",
+  "solarNetworkDescription": "开放、包容、和谐"
 }

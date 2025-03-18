@@ -69,6 +69,16 @@
   "continueReading": "Continue Reading",
   "download": "Download",
   "downloadDescription": "Pick the right version for you",
+  "downloadSwitchPrerelease": "Switch to pre-release",
+  "downloadSwitchRelease": "Switch to regular release",
+  "downloadForApple": "Looking for iOS / macOS version?",
+  "downloadTestFlight": "TestFlight",
+  "downloadTestFlightDescription": "For pre-release version",
+  "downloadForDesktop": "Looking for desktop version?",
+  "downloadForDesktopDescription": "If the release does not contain the desktop version, you can still download the latest build from GitHub Action",
+  "downloadWithoutDownload": "Want have a try without downloading?",
+  "downloadWeb": "Web",
+  "downloadWebChina": "with China Mainland Optimized",
   "attachmentUpload": "Upload new",
   "attachmentCreate": "Create Attachment",
   "attachmentCreateCaption": "Use Solar Network host your files",
@@ -76,5 +86,6 @@
   "attachmentUploadCompleted": "Uploaded",
   "upload": "Upload",
   "cancel": "Cancel",
-  "seeMore": "See more"
+  "seeMore": "See more",
+  "solarNetworkDescription": "A open, free, and friendly social network."
 }

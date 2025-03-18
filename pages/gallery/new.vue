@@ -93,7 +93,7 @@ onMounted(() => {
 
 const poolOptions = [
   { label: "Interactive", description: "Public indexable, no lifecycle.", value: "interactive" },
-  { label: "Messaging", description: "Has lifecycle, will delete after 14 days.", value: "messaging" },
+  { label: "Messaging", description: "Has lifecycle, will be deleted after 14 days.", value: "messaging" },
   { label: "Sticker", description: "Public indexable, privilege required.", value: "sticker", disabled: true },
   { label: "Dedicated Pool", description: "Your own configuration, coming soon.", value: "dedicated", disabled: true },
 ]
@@ -201,12 +201,12 @@ async function uploadSingleMultipart(chunkId: string) {
   const chunkIdx: number = multipartInfo.value["file_chunks"][chunkId]
   const chunk = content.value.slice(chunkIdx * multipartSize.value, (chunkIdx + 1) * multipartSize.value)
 
-  const data = new FormData()
-  data.set("file", chunk)
-
   const resp = await solarFetch(`/cgi/uc/attachments/multipart/${multipartInfo.value.rid}/${chunkId}`, {
     method: "POST",
-    body: data,
+    body: chunk,
+    headers: {
+      "Content-Type": "application/octet-stream",
+    },
     signal: AbortSignal.timeout(3 * 60 * 1000),
   })
   if (resp.status != 200) throw new Error(await resp.text())
