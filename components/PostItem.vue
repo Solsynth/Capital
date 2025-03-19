@@ -76,6 +76,6 @@ const config = useRuntimeConfig()
 const { t } = useI18n()
 
 const url = computed(() =>
-  props.post.alias ? `/posts/${props.post.area_alias}/${props.post.alias}` : `/posts/${props.post.id}`,
+  props.post?.alias ? `/posts/${props.post?.alias_prefix}/${props.post?.alias}` : `/posts/${props.post?.id}`,
 )
 </script>
