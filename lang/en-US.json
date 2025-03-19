@@ -99,5 +99,21 @@
   "solarNetworkReadDialog": "Read Error Messages",
   "solarNetworkReadDialogDescription": "When encountering an error message, do not immediately take a screenshot and complain. Try to understand why the issue occurred. Then, seek help in the development channel or on GitHub instead of making complaint posts.",
   "solarNetworkToS": "And, if you continue registering, means you accept our Terms & Conditions",
-  "solarNetworkToSCheck": "Check them out"
+  "solarNetworkToSCheck": "Check them out",
+  "solarNetworkFeat": "Features",
+  "solarNetworkFeatDescription": "Explore the core features of Solar Network",
+  "solarNetworkFeatDashboard": "Dashboard",
+  "solarNetworkFeatDashboardDescription": "A single place to information around the site, anytime, anywhere.",
+  "solarNetworkFeatExplore": "Explore",
+  "solarNetworkFeatExploreDescription": "Enjoy what you love, free from ads and algorithmic noise.",
+  "solarNetworkFeatChat": "Chat",
+  "solarNetworkFeatChatDescription": "Bridge distances, stay connected with friends and communities effortlessly.",
+  "solarNetworkFeatNews": "News",
+  "solarNetworkFeatNewsDescription": "Even without traveling afar, stay informed about the world's stories.",
+  "solarNetworkFeatStickers": "Stickers",
+  "solarNetworkFeatStickersDescription": "Express yourself beyond words with playful and vivid stickers.",
+  "solarNetworkFeatCompose": "Compose",
+  "solarNetworkFeatComposeDescription": "Write freely, speak boldly—your voice deserves to be heard.",
+  "solarNetworkJumpIn": "Jump into the community",
+  "solarNetworkNeedHelp": "Need help?"
 }

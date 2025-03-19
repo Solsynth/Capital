@@ -69,10 +69,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  alias: ["/posts/:area/:id"],
-})
-
 const route = useRoute()
 const config = useRuntimeConfig()
 
@@ -80,17 +76,9 @@ const attachments = ref<any[]>([])
 const firstImage = ref<string | null>()
 const firstVideo = ref<string | null>()
 
-const slug = computed(() => {
-  if (route.params.area) {
-    return `${route.params.area}:${route.params.id}`
-  } else {
-    return route.params.id
-  }
-})
-
 const { t } = useI18n()
 
-const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/co/posts/${slug.value}`)
+const { data: post } = await useFetch<any>(`${config.public.solarNetworkApi}/cgi/co/posts/${route.params.id}`)
 
 if (!post.value) {
   const { data: publisher } = await $fetch<any>(`${config.public.solarNetworkApi}/cgi/co/publishers/${route.params.id}`)
@@ -154,7 +142,7 @@ useSeoMeta({
   ogSiteName: "Solsynth Capital",
 })
 
-const externalOpenLink = computed(() => `${config.public.solianUrl}/posts/view/${slug.value}`)
+const externalOpenLink = computed(() => `${config.public.solianUrl}/posts/${route.params.id.toString().replace('/', ':')}`)
 </script>
 
 <style scoped>
