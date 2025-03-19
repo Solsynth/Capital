@@ -24,7 +24,6 @@
 
   <v-navigation-drawer v-model="openDrawer" location="left" width="300" temporary order="-1">
     <v-list density="compact" nav color="primary">
-      <v-list-item title="Knowledge Base" prepend-icon="mdi-library" to="/docs" exact />
       <v-list-item title="Developer Portal" prepend-icon="mdi-code-tags" to="/dev" exact />
       <v-list-item title="Creator Hub" prepend-icon="mdi-pencil" to="/creator" exact />
     </v-list>
