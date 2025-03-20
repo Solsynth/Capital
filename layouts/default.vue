@@ -1,18 +1,34 @@
 <template>
   <v-app-bar app flat color="surface" class="app-bar-blur">
-    <v-container fluid class="mx-auto d-flex align-center justify-center pr-8">
+    <v-container fluid class="mx-auto d-flex align-center justify-center pr-8 relative">
       <v-app-bar-nav-icon @click="openDrawer = !openDrawer" />
 
       <nuxt-link to="/" exact>
-        <h2>Solsynth LLC</h2>
+        <h2 v-if="isLargeScreen">Solsynth LLC</h2>
+        <v-icon v-else icon="mdi-home" />
       </nuxt-link>
 
       <v-spacer></v-spacer>
 
-      <div class="flex gap-2">
-        <v-btn to="/products" exact prepend-icon="mdi-shape">{{ t("navProducts") }}</v-btn>
-        <v-btn to="/posts" exact prepend-icon="mdi-note-text">{{ t("navPosts") }}</v-btn>
-        <v-btn to="/gallery" exact prepend-icon="mdi-image-multiple">{{ t("navGallery") }}</v-btn>
+      <div class="absolute left-0 right-0 flex justify-center gap-2 w-screen">
+        <v-btn
+          v-if="isLargeScreen"
+          v-for="item in navItems"
+          :to="item.to"
+          exact
+          :prepend-icon="item.icon"
+          >{{ t(item.title) }}</v-btn
+        >
+        <v-menu location="bottom center" v-else>
+          <template v-slot:activator="{ props }">
+            <v-btn v-bind="props" icon="mdi-dots-horizontal-circle" slim size="small" />
+          </template>
+          <v-list nav slim class="w-[280px]">
+            <v-list-item v-for="item in navItems" :to="item.to" :prepend-icon="item.icon">
+              <v-list-item-title>{{ t(item.title) }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </div>
 
       <v-spacer></v-spacer>
@@ -47,9 +63,38 @@
 </template>
 
 <script setup lang="ts">
+import { useBreakpoints, breakpointsVuetifyV3 } from "@vueuse/core"
+
 const { t } = useI18n()
 
 const openDrawer = ref(false)
+
+const breakpoints = useBreakpoints(breakpointsVuetifyV3)
+const isLargeScreen = computed(() => breakpoints.isGreaterOrEqual("md").valueOf())
+
+interface NavItem {
+  icon: string
+  title: string
+  to: string
+}
+
+const navItems: NavItem[] = [
+  {
+    icon: "mdi-shape",
+    title: "navProducts",
+    to: "/products",
+  },
+  {
+    icon: "mdi-note-text",
+    title: "navPosts",
+    to: "/posts",
+  },
+  {
+    icon: "mdi-image-multiple",
+    title: "navGallery",
+    to: "/gallery",
+  },
+]
 </script>
 
 <style lang="css" scoped>

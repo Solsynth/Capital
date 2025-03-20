@@ -22,8 +22,8 @@ const { t } = useI18n()
 const projects: { [id: string]: [string, string] } = {
   "solar-network": ["Solar Network", "https://solsynth.dev/products/solar-network"],
   "capital": ["Capital", "https://git.solsynth.dev/Goatworks/Capital"],
-  "passport": ["Hydrogen.Passport", "https://git.solsynth.dev/Hydrogen/Passport"],
-  "paperclip": ["Hydrogen.Paperclip", "https://git.solsynth.dev/Hydrogen/Paperclip"],
+  "passport": ["HyperNet.Passport", "https://git.solsynth.dev/HyperNet/Passport"],
+  "paperclip": ["HyperNet.Paperclip", "https://git.solsynth.dev/HyperNet/Paperclip"],
   "roadsign": ["RoadSign", "https://git.solsynth.dev/Goatworks/RoadSign"],
 }
 </script>

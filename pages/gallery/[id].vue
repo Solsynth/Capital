@@ -46,8 +46,8 @@
         <span>Solar Network Attachment Web Preview</span>
         <span
           >Powered by
-          <a class="underline" target="_blank" href="https://git.solsynth.dev/Hydrogen/Paperclip"
-            >Hydrogen.Paperclip</a
+          <a class="underline" target="_blank" href="https://git.solsynth.dev/HyperNet/Paperclip"
+            >HyperNet.Paperclip</a
           ></span
         >
       </div>
