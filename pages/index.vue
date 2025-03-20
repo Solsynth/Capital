@@ -12,7 +12,7 @@
           enter: {
             y: 0,
             opacity: 1,
-            transition: { duration: 0.8 }
+            transition: { duration: 0.8 },
           },
         }"
         :src="Logo"
@@ -107,11 +107,13 @@ const { data: products } = await useAsyncData("products", () => {
 const canvasRef = ref(null)
 
 onMounted(() => {
+  const isDarkMode = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+
   const canvas: HTMLCanvasElement = canvasRef.value!
   const ctx = canvas.getContext("2d")!
-  const dpr = window.devicePixelRatio || 1;
-  canvas.width = window.innerWidth * dpr;
-  canvas.height = window.innerHeight * dpr;
+  const dpr = window.devicePixelRatio || 1
+  canvas.width = window.innerWidth * dpr
+  canvas.height = window.innerHeight * dpr
 
   let particles: Particle[] = []
   const numParticles = 100
@@ -139,10 +141,10 @@ onMounted(() => {
     }
 
     draw() {
-      ctx.beginPath();
-      ctx.arc(this.x * dpr, this.y * dpr, this.size * dpr, 0, Math.PI * 2);
-      ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
-      ctx.fill();
+      ctx.beginPath()
+      ctx.arc(this.x * dpr, this.y * dpr, this.size * dpr, 0, Math.PI * 2)
+      ctx.fillStyle = isDarkMode ? "rgba(255, 255, 255, 0.8)" : "rgba(0, 0, 0, 0.8)"
+      ctx.fill()
     }
   }
 
@@ -156,17 +158,17 @@ onMounted(() => {
   function drawLines() {
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
-        let dx = particles[i].x - particles[j].x;
-        let dy = particles[i].y - particles[j].y;
-        let distance = Math.sqrt(dx * dx + dy * dy);
+        let dx = particles[i].x - particles[j].x
+        let dy = particles[i].y - particles[j].y
+        let distance = Math.sqrt(dx * dx + dy * dy)
 
         if (distance < 100) {
-          ctx.beginPath();
-          ctx.moveTo(particles[i].x * dpr, particles[i].y * dpr);
-          ctx.lineTo(particles[j].x * dpr, particles[j].y * dpr);
-          ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
-          ctx.lineWidth = 0.5 * dpr;
-          ctx.stroke();
+          ctx.beginPath()
+          ctx.moveTo(particles[i].x * dpr, particles[i].y * dpr)
+          ctx.lineTo(particles[j].x * dpr, particles[j].y * dpr)
+          ctx.strokeStyle = isDarkMode ? "rgba(255, 255, 255, 0.2)" : "rgba(0, 0, 0, 0.2)"
+          ctx.lineWidth = 0.5 * dpr
+          ctx.stroke()
         }
       }
     }
