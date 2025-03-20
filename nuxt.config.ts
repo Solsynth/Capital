@@ -143,6 +143,12 @@ export default defineNuxtConfig({
     transpile: ["vuetify"],
   },
 
+  umami: {
+    id: 'eef151fb-07e2-461b-8b7f-2547aab735d4',
+    host: 'https://us.umami.is',
+    autoTrack: true,
+  },
+
   modules: [
     "@unocss/nuxt",
     "@nuxt/content",
@@ -152,6 +158,7 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "nuxt-schema-org",
     "@vueuse/motion/nuxt",
+    "nuxt-umami",
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         // @ts-expect-error
