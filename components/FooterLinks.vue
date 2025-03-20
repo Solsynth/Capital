@@ -2,7 +2,7 @@
   <div class="text-xs text-grey sidebar-footer transition-opacity duration-500">
     <div class="flex footer-links flex-wrap">
       <nuxt-link to="/terms/privacy-policy" class="hover:underline">Privacy Policy</nuxt-link>
-      <nuxt-link to="/terms/user-agreement" class="hover:underline">Term of Service</nuxt-link>
+      <nuxt-link to="/terms/basic-law" class="hover:underline">Term of Service</nuxt-link>
     </div>
     <div class="flex footer-links flex-wrap">
       <nuxt-link to="https://status.solsynth.dev" target="_blank" class="hover:underline">Status of Service</nuxt-link>

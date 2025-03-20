@@ -43,10 +43,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  alias: ["/@:name(.*)*"],
-})
-
 const { t } = useI18n()
 const route = useRoute()
 const config = useRuntimeConfig()
