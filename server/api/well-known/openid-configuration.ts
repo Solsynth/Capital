@@ -1,31 +1,21 @@
-export default defineEventHandler((event) => {
-  const config = useRuntimeConfig()
+import { defineEventHandler } from 'h3'
+import { solarFetch } from '~/utils/request'
 
-  return {
-    "authorization_endpoint": `${config.public.siteUrl}/auth/authorize`,
-    "grant_types_supported": [
-      "authorization_code",
-      "implicit",
-      "refresh_token",
-    ],
-    "id_token_signing_alg_values_supported": [
-      "HS512",
-    ],
-    "issuer": config.public.siteUrl,
-    "response_types_supported": [
-      "code",
-      "token",
-    ],
-    "subject_types_supported": [
-      "public",
-    ],
-    "token_endpoint": `${config.public.solarNetworkApi}/cgi/id/auth/token`,
-    "token_endpoint_auth_methods_supported": [
-      "client_secret_post",
-    ],
-    "token_endpoint_auth_signing_alg_values_supported": [
-      "HS512",
-    ],
-    "userinfo_endpoint": `${config.public.solarNetworkApi}/cgi/id/users/me`,
+export default defineEventHandler(async () => {
+  const siteUrl = 'https://solsynth.dev'
+  const solarNetworkApi = 'https://api.sn.solsynth.dev'
+
+  const resp = await solarFetch(`${solarNetworkApi}/cgi/id/well-known/openid-configuration`)
+  const out: Record<string, any> = await resp.json()
+
+  out['authorization_endpoint'] = `${siteUrl}/auth/authorize`
+  out['jwks_uri'] = `${siteUrl}/.well-known/jwks`
+
+  for (const [k, v] of Object.entries(out)) {
+    if (typeof v === 'string' && v.startsWith('https://id.solsynth.dev/api')) {
+      out[k] = v.replace('https://id.solsynth.dev/api', `${solarNetworkApi}/cgi/id`)
+    }
   }
+
+  return out
 })
