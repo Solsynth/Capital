@@ -59,6 +59,7 @@ export default defineNuxtConfig({
   },
 
   app: {
+    baseURL: "https://solsynth.dev",
     pageTransition: { name: "page", mode: "out-in" },
     head: {
       title: "Solsynth LLC",
@@ -144,8 +145,8 @@ export default defineNuxtConfig({
   },
 
   umami: {
-    id: 'eef151fb-07e2-461b-8b7f-2547aab735d4',
-    host: 'https://us.umami.is',
+    id: "eef151fb-07e2-461b-8b7f-2547aab735d4",
+    host: "https://us.umami.is",
     autoTrack: true,
   },
 
