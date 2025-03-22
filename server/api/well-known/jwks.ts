@@ -1,10 +1,9 @@
 import { defineEventHandler } from 'h3'
-import { solarFetch } from '~/utils/request'
 
 export default defineEventHandler(async () => {
-  const solarNetworkApi = 'https://api.sn.solsynth.dev'
+  const config = useRuntimeConfig();
 
-  const resp = await solarFetch(`${solarNetworkApi}/cgi/id/well-known/jwks`)
+  const resp = await fetch(`${config.public.solarNetworkApi}/cgi/id/well-known/jwks`)
 
   return await resp.json()
 })
