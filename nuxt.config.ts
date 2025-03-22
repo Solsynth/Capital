@@ -59,7 +59,6 @@ export default defineNuxtConfig({
   },
 
   app: {
-    baseURL: "https://solsynth.dev",
     pageTransition: { name: "page", mode: "out-in" },
     head: {
       title: "Solsynth LLC",
@@ -167,10 +166,6 @@ export default defineNuxtConfig({
       })
     },
   ],
-
-  gtag: {
-    id: "G-ZFJ7RX0JXF",
-  },
 
   vite: {
     vue: {

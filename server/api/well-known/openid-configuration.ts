@@ -2,7 +2,7 @@ import { defineEventHandler } from 'h3'
 
 export default defineEventHandler(async () => {
   const config = useRuntimeConfig();
-  const siteUrl = config.app.baseURL
+  const siteUrl = config.public.siteUrl
 
   const resp = await fetch(`${config.public.solarNetworkApi}/cgi/id/well-known/openid-configuration`)
   const out: Record<string, any> = await resp.json()
