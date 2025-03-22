@@ -53,8 +53,8 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    "/.well-known/openid-configuration": {
-      proxy: "/api/well-known/openid-configuration",
+    "/.well-known/**": {
+      proxy: "/api/well-known/**",
     },
   },
 
