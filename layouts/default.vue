@@ -1,7 +1,7 @@
 <template>
   <v-app-bar app flat color="surface" class="app-bar-blur">
     <v-container fluid class="mx-auto d-flex align-center justify-center pr-8 relative">
-      <v-app-bar-nav-icon @click="openDrawer = !openDrawer" />
+      <v-app-bar-nav-icon @click="openDrawer = !openDrawer" class="z-10" />
 
       <nuxt-link to="/" exact class="z-10">
         <h2 v-if="isLargeScreen">Solsynth LLC</h2>
