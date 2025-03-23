@@ -3,7 +3,7 @@
     <v-container fluid class="mx-auto d-flex align-center justify-center pr-8 relative">
       <v-app-bar-nav-icon @click="openDrawer = !openDrawer" />
 
-      <nuxt-link to="/" exact>
+      <nuxt-link to="/" exact class="z-10">
         <h2 v-if="isLargeScreen">Solsynth LLC</h2>
         <v-icon v-else icon="mdi-home" />
       </nuxt-link>
@@ -11,14 +11,9 @@
       <v-spacer></v-spacer>
 
       <div class="absolute left-0 right-0 flex justify-center gap-2 w-screen">
-        <v-btn
-          v-if="isLargeScreen"
-          v-for="item in navItems"
-          :to="item.to"
-          exact
-          :prepend-icon="item.icon"
-          >{{ t(item.title) }}</v-btn
-        >
+        <v-btn v-if="isLargeScreen" v-for="item in navItems" :to="item.to" exact :prepend-icon="item.icon">{{
+          t(item.title)
+        }}</v-btn>
         <v-menu location="bottom center" v-else>
           <template v-slot:activator="{ props }">
             <v-btn v-bind="props" icon="mdi-dots-horizontal-circle" slim size="small" />
@@ -33,8 +28,8 @@
 
       <v-spacer></v-spacer>
 
-      <locale-select />
-      <user-menu />
+      <locale-select class="z-10" />
+      <user-menu class="z-10" />
     </v-container>
   </v-app-bar>
 
