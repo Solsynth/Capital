@@ -159,6 +159,12 @@ export default defineNuxtConfig({
     "nuxt-schema-org",
     "@vueuse/motion/nuxt",
     "nuxt-umami",
+    [
+      "@nuxtjs/google-adsense",
+      {
+        id: "ca-pub-9386575057902635",
+      },
+    ],
     (_options, nuxt) => {
       nuxt.hooks.hook("vite:extendConfig", (config) => {
         // @ts-expect-error
