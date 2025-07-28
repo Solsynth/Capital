@@ -48,5 +48,11 @@ body {
   padding: 0;
   margin: 0;
   font-family: Nunito Variable, sans-serif;
+
+  scroll-behavior: smooth;
+}
+
+.n-layout-scroll-container {
+  scroll-behavior: smooth;
 }
 </style>

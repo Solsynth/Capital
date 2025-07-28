@@ -8,18 +8,18 @@
         that interesting.
       </p>
       <n-space justify="center">
-        <n-button type="primary" size="large" round>Explore around</n-button>
+        <n-button type="primary" size="large" round tag="a" href="#products">Explore around</n-button>
         <n-button type="default" size="large" round>About us</n-button>
       </n-space>
     </div>
-    <div id="about" class="pb-36">
+    <div id="products" class="pb-56">
       <client-only>
         <n-grid cols="1 m:2 l:2" responsive="screen" x-gap="32" y-gap="16">
           <n-gi>
             <div class="flex items-center justify-center">
               <n-carousel
                 show-arrow
-                draggable
+                autoplay
                 dot-type="line"
                 class="rounded-xl w-full max-h-[360px] aspect-video flex-shrink-1"
               >
@@ -45,6 +45,14 @@
                     "
                     class="absolute left-0 right-0 top-1/2 bottom-0"
                   />
+                  <div class="absolute left-0 right-0 top-0 px-4 pt-4 flex justify-end gap-2.5">
+                    <n-button v-if="product.repo" circle color="white" size="small" tag="a" :href="product.repo" target="_blank">
+                      <n-icon><code-round /></n-icon>
+                    </n-button>
+                    <n-button v-if="product.url" circle color="white" size="small" tag="a" :href="product.url" target="_blank">
+                      <n-icon><launch-round /></n-icon>
+                    </n-button>
+                  </div>
                   <div
                     class="absolute bottom-0 px-6 py-8 w-full"
                     style="z-index: 2"
@@ -64,8 +72,14 @@
               class="flex justify-center text-right h-full py-8 px-4 flex flex-col"
             >
               <h2 class="text-3xl font-bold mb-3">Our products</h2>
-              <p class="text-lg mb-1">The made various of software, from social network to cloud drive.</p>
-              <p class="text-lg">Take a look of them on the left on your own <code>ヽ(&gt;∀&lt;☆)ノ</code></p>
+              <p class="text-lg mb-1">
+                The made various of software, from social network to cloud
+                drive.
+              </p>
+              <p class="text-lg">
+                Take a look of them on the left on your own
+                <code>ヽ(&gt;∀&lt;☆)ノ</code>
+              </p>
             </div>
           </n-gi>
         </n-grid>
@@ -82,8 +96,10 @@ import {
   NGi,
   NCarousel,
   NCarouselItem,
+  NIcon,
   useThemeVars,
 } from "naive-ui";
+import { LaunchRound, CodeRound } from "@vicons/material";
 import Typed from "typed.js";
 
 const route = useRoute();
