@@ -1,0 +1,11 @@
+{
+    "icon": "/solar-network/icon-alternative.png",
+    "background": "/solar-network/satelite.jpg",
+    "name": "Solar Network Drive",
+    "description": "The way to host and transfer files with ease in mind.",
+    "url": "https://fs.solian.app",
+    "repo": "https://github.com/Solsynth/Solian",
+    "releasedDate": "2025-07-28T08:00:00.000Z",
+    "version": "1.0.0.0",
+    "updatedDate": "2025-07-28T08:00:00.000Z"
+}
