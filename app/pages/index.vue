@@ -1,7 +1,7 @@
 <template>
   <main class="container mx-auto h-full px-8 flex flex-col gap-16">
     <div class="text-center py-56 flex flex-col items-center justify-center">
-      <img src="/favicon.png" class="w-28 h-28 mb-4" />
+      <nuxt-img src="/favicon.png" class="w-28 h-28 mb-4" />
       <h1 class="text-5xl font-extrabold mb-3">We <span id="who-are-we" /></h1>
       <p class="text-xl mb-8">
         We are a group of friends that make software, hardware and any stuff
