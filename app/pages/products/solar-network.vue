@@ -46,7 +46,7 @@
           </n-gi>
           <n-gi>
             <div
-              class="flex justify-center text-right h-full py-8 px-4 flex flex-col"
+              class="flex justify-center text-right h-full py-8 px-4 flex-col"
             >
               <h2 class="text-3xl font-bold mb-3">Features</h2>
               <p class="text-lg mb-1">

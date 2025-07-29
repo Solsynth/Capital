@@ -14,7 +14,15 @@ export default defineContentConfig({
         repo: z.string().optional(),
         releasedDate: z.date().optional(),
         version: z.string().optional(),
-        updatedDate: z.date().optional()
+        updatedDate: z.date().optional(),
+      }),
+    }),
+    terms: defineCollection({
+      type: "page",
+      source: "terms/**.md",
+      schema: z.object({
+        title: z.string().nonempty(),
+        updatedDate: z.date().optional(),
       }),
     }),
   },

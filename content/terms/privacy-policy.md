@@ -1,0 +1,48 @@
+---
+title: Privacy Policy / Privacy Protection Law
+updatedDate: 2025-03-19T16:12:21.897Z
+---
+
+This regulation is an expansion of Chapter 5 of the contents of the “Basic Law”. This entry applies the security protection policy (direct modification by the legislator is not allowed due to the design of user data security).
+
+We take your privacy very seriously. This Privacy Policy outlines the types of personal information we collect, how we use it, and the protective measures we take.
+
+## 5.1 Information Collection
+
+We only collect personal information that is necessary to provide our services. This includes:
+
+- Email
+- Telephone number *optional*
+- Name *optional
+- Address *optional
+- Date of Birth *Optional
+- Gender *selectable
+- Internet Address
+- Device Identifier
+- User behavior data
+
+## 5.2 Use of Information
+
+We use your personal information to:
+
+- Provide data necessary for the provision and use of our services
+- communicate with you about updates to regulations or other important information
+- analyze services to improve the quality of our services
+
+## 5.3 Data Sharing
+
+We do not sell or trade your personal information.
+
+We share some of your personal information, which may include device identifiers and behavioral data, with our partner Google Analytics to help us analyze and improve our services, as described in Google's Privacy Policy (https://policies.google.com/privacy).
+
+## 5.4 Data Security
+
+We have implemented strong security measures (including, but not limited to, the use of industry-leading encryption algorithms, a database key rotation policy, etc.) to protect your personal information from unauthorized access, alteration, disclosure or destruction.
+
+## 5.5 Your Rights
+
+Regardless of the penalties imposed on your account, you always have the right to:
+
+- Access the personal information we hold about you
+- Request correction of your personal information
+- Request the deletion of your personal information
