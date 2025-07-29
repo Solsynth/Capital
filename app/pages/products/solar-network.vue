@@ -132,6 +132,10 @@ import {
 import { Octokit } from "@octokit/rest";
 import { LaunchRound } from "@vicons/material";
 
+useHead({
+  title: "Solar Network",
+});
+
 const latestRelease = useAsyncData("sn-latest-release", async () => {
   const octo = new Octokit({});
   const resp = await octo.repos.getLatestRelease({

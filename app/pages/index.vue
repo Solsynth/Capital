@@ -192,6 +192,10 @@ const { data: products } = await useAsyncData(route.path, () => {
   return queryCollection("products").all();
 });
 
+useHead({
+  title: "Solsynth",
+});
+
 onMounted(() => {
   new Typed("#who-are-we", {
     strings: [

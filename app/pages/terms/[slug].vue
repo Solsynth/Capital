@@ -5,6 +5,10 @@ const route = useRoute();
 const { data: page } = await useAsyncData(route.path, () => {
   return queryCollection("terms").path(route.path).first();
 });
+
+useHead({
+  title: () => page.value?.title || "Terms",
+});
 </script>
 
 <template>
