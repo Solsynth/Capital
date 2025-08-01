@@ -14,7 +14,7 @@ useHead({
 <template>
   <article
     v-if="page"
-    class="prose lg:prose-lg dark:prose-invert prose-neutral mx-auto my-16"
+    class="prose lg:prose-lg dark:prose-invert prose-neutral mx-auto my-16 px-8"
   >
     <content-renderer :value="page" />
     <div v-if="page.updatedDate" class="text-sm mt-6">

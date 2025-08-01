@@ -1,4 +1,5 @@
 ---
+lang: en
 title: Privacy Policy / Privacy Protection Law
 description: The framework of rules for all Solsynth LLC products.
 updatedDate: 2025-03-19T16:12:21.897Z
