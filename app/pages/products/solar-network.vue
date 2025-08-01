@@ -68,7 +68,7 @@
         <n-grid cols="1 m:2 l:2" responsive="screen" x-gap="32" y-gap="16">
           <n-gi>
             <div
-              class="flex justify-center text-left h-full py-8 px-4 flex flex-col"
+              class="flex justify-center text-left h-full py-8 px-4 flex-col"
             >
               <h2 class="text-3xl font-bold mb-3">Download</h2>
               <p class="text-lg mb-1">
@@ -109,6 +109,48 @@
                     </n-icon>
                   </template>
                 </n-button>
+              </n-card>
+            </div>
+          </n-gi>
+        </n-grid>
+      </client-only>
+    </div>
+    <div id="download" class="pb-56">
+      <client-only>
+        <n-grid cols="1 m:2 l:2" responsive="screen" x-gap="32" y-gap="16">
+          <n-gi>
+            <div
+              class="flex justify-center text-left h-full py-8 px-4 flex-col"
+            >
+              <h2 class="text-3xl font-bold mb-3">Feedback & Support</h2>
+              <p class="text-lg mb-1">
+                Due to the Solar Network always under active development, if you
+                have any idea or issues. Feel free to told us!
+              </p>
+            </div>
+          </n-gi>
+          <n-gi>
+            <div class="flex items-center justify-center flex-col gap-4">
+              <n-card
+                title="GitHub Issues"
+                hoverable
+                href="https://github.com/Solsynth/Solian/issues"
+                target="_blank"
+                tag="a"
+              >
+                If you have any new idea or function that don't work as
+                expected. Go to GitHub and create an issue to feedback!
+              </n-card>
+              <n-card
+                title="Customer Service"
+                hoverable
+                href="mailto:lily@solsynth.dev"
+                target="_blank"
+                tag="a"
+              >
+                If you have any account and payments related problems, please
+                contact our customer service via email at
+                <address class="font-italic">lily [at] solsynth.dev</address>
               </n-card>
             </div>
           </n-gi>
