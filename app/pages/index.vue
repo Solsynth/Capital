@@ -61,7 +61,7 @@
                       :href="product.repo"
                       target="_blank"
                     >
-                      <n-icon><code-round /></n-icon>
+                      <n-icon color="black"><code-round /></n-icon>
                     </n-button>
                     <n-button
                       v-if="product.url"
@@ -72,7 +72,7 @@
                       :href="product.url"
                       target="_blank"
                     >
-                      <n-icon><launch-round /></n-icon>
+                      <n-icon color="black"><launch-round /></n-icon>
                     </n-button>
                   </div>
                   <div
@@ -83,7 +83,9 @@
                     <p class="text-lg text-white line-height-1">
                       {{ product.name }}
                     </p>
-                    <p>{{ product.description }}</p>
+                    <p class="text-white line-height-1">
+                      {{ product.description }}
+                    </p>
                   </div>
                 </n-carousel-item>
               </n-carousel>

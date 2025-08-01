@@ -22,6 +22,7 @@ export default defineContentConfig({
       source: "terms/**.md",
       schema: z.object({
         title: z.string().nonempty(),
+        description: z.string().optional(),
         updatedDate: z.date().optional(),
       }),
     }),

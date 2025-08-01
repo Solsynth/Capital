@@ -1,7 +1,10 @@
 ---
 title: User Agreement / Basic Law
+description: The framework of rules for all Solsynth LLC products.
 updatedDate: 2025-03-19T16:12:21.897Z
 ---
+
+# User Agreement
 
 This User Agreement (a.k.a. the Basic Law) is the framework of rules for all Solsynth LLC products, and other related regulations should comply with it, or the entry will not be effective.
 

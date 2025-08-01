@@ -1,7 +1,10 @@
 ---
 title: Privacy Policy / Privacy Protection Law
+description: The framework of rules for all Solsynth LLC products.
 updatedDate: 2025-03-19T16:12:21.897Z
 ---
+
+# Privacy Policy
 
 This regulation is an expansion of Chapter 5 of the contents of the “Basic Law”. This entry applies the security protection policy (direct modification by the legislator is not allowed due to the design of user data security).
 
