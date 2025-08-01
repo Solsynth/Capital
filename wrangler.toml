@@ -1,0 +1,5 @@
+[observability.logs]
+enabled = true
+
+[placement]
+mode = "smart"
