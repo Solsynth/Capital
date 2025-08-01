@@ -1,52 +1,61 @@
 ---
 lang: en
-title: Privacy Policy / Privacy Protection Law
-description: The framework of rules for all Solsynth LLC products.
-updatedDate: 2025-03-19T16:12:21.897Z
+title: Privacy Policy
+description: Basic Privacy Policy applicable to all Solsynth products
+updatedDate: '2025-08-01'
 ---
 
-# Privacy Policy
-
-This regulation is an expansion of Chapter 5 of the contents of the “Basic Law”. This entry applies the security protection policy (direct modification by the legislator is not allowed due to the design of user data security).
+# **Privacy Policy**
 
 We take your privacy very seriously. This Privacy Policy outlines the types of personal information we collect, how we use it, and the protective measures we take.
 
-## 5.1 Information Collection
+## **Information Collection**
 
-We only collect personal information that is necessary to provide our services. This includes:
+We only collect necessary personal information when providing our services. This includes:
 
 - Email
-- Telephone number *optional*
-- Name *optional
-- Address *optional
-- Date of Birth *Optional
-- Gender *selectable
-- Internet Address
-- Device Identifier
+- Phone number *optional*
+- Name *optional*
+- Address *optional*
+- Date of birth *optional*
+- Gender *optional*
+- IP address
+- Device identifiers
 - User behavior data
 
-## 5.2 Use of Information
+## **Information Usage**
 
 We use your personal information to:
 
-- Provide data necessary for the provision and use of our services
-- communicate with you about updates to regulations or other important information
-- analyze services to improve the quality of our services
+- Provide the necessary data for our services
+- Communicate with you about regulation updates or other important information
+- Analyze our services to improve their quality
+- Protect the security of your account and data
 
-## 5.3 Data Sharing
+## **Data Sharing**
 
-We do not sell or trade your personal information.
+We will not sell or trade your personal information.
 
-We share some of your personal information, which may include device identifiers and behavioral data, with our partner Google Analytics to help us analyze and improve our services, as described in Google's Privacy Policy (https://policies.google.com/privacy).
+We share some of your personal information, which may include device identifiers and behavior data, with our partner, Google Analytics, to help us analyze and improve our services. For more details, please see [Google's Privacy Policy](https://policies.google.com/privacy).
 
-## 5.4 Data Security
+## **Data Security**
 
-We have implemented strong security measures (including, but not limited to, the use of industry-leading encryption algorithms, a database key rotation policy, etc.) to protect your personal information from unauthorized access, alteration, disclosure or destruction.
+We implement strong security measures (including, but not limited to, using industry-leading encryption algorithms and a database key rotation policy) to protect your personal information from unauthorized access, alteration, disclosure, or destruction.
 
-## 5.5 Your Rights
+## **Your Rights**
 
-Regardless of the penalties imposed on your account, you always have the right to:
+Regardless of any penalties applied to your account, you always have the right to:
 
 - Access the personal information we hold about you
 - Request correction of your personal information
-- Request the deletion of your personal information
+- Request deletion of your personal information
+
+## **Data Storage**
+
+Text data submitted by users is stored on our Tencent Cloud servers located in Hong Kong. User-uploaded files are stored on Cloudflare and Yumio's object storage services, depending on the user's selected file storage pool.
+
+## **Data Deletion**
+
+Except when a user requests it, we have the right to delete data submitted and uploaded by users to reclaim available resources, based on maintenance needs.
+
+Before we proactively delete user data, we **should** notify the user and provide an opportunity for backup.
