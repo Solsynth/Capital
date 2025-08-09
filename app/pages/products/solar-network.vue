@@ -35,7 +35,7 @@
               <iframe
                 width="560"
                 height="315"
-                src="https://www.youtube-nocookie.com/embed/Pek0cLDAol4?si=f3J3Kqto5u-Nc_5f"
+                src="https://www.youtube-nocookie.com/embed/xhK5UBqGw5Q"
                 title="YouTube video player"
                 frameborder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -78,7 +78,7 @@
                 File-hosting & versioning by
                 <a
                   class="underline"
-                  href="https://github.com/Solsynth/HyperNet.Surface"
+                  href="https://github.com/Solsynth/Solian"
                   target="_blank"
                   >GitHub</a
                 >
@@ -86,8 +86,71 @@
             </div>
           </n-gi>
           <n-gi>
-            <div class="flex items-center justify-center flex-col">
-              <n-card title="Latest Release">
+            <div class="flex items-center justify-center flex-col gap-4">
+              <n-card title="iOS / macOS">
+                <div class="grid gird-cols-1 md:grid-cols-2 gap-4">
+                  <div class="flex flex-col">
+                    <div class="mb-3">
+                      <n-tag round :bordered="false" type="success">
+                        Recommended
+                        <template #icon>
+                          <n-icon :component="StarRound" />
+                        </template>
+                      </n-tag>
+                    </div>
+                    <h3 class="text-lg font-bold">Download via TestFlight</h3>
+                    <p>
+                      Latest version, new features and bug fixes. 中国可用。
+                    </p>
+                    <n-button
+                      type="primary"
+                      tag="a"
+                      target="_blank"
+                      round
+                      class="mt-4"
+                      href="https://testflight.apple.com/join/YJ0lmN6O"
+                    >
+                      Join TestFlight
+                      <template #icon>
+                        <n-icon>
+                          <launch-round />
+                        </n-icon>
+                      </template>
+                    </n-button>
+                  </div>
+                  <div class="flex flex-col">
+                    <div class="mb-3">
+                      <n-tag round :bordered="false" type="info">
+                        Not that recommended
+                        <template #icon>
+                          <n-icon :component="StarOutlineRound" />
+                        </template>
+                      </n-tag>
+                    </div>
+                    <h3 class="text-lg font-bold">Download via App Store</h3>
+                    <p>
+                      Can leave reviews to increase the popularity of the Solar
+                      Network.
+                    </p>
+                    <n-button
+                      type="primary"
+                      tag="a"
+                      target="_blank"
+                      round
+                      class="mt-4"
+                      href="https://apps.apple.com/us/app/solian/id6499032345"
+                    >
+                      Go to App Store
+                      <template #icon>
+                        <n-icon>
+                          <launch-round />
+                        </n-icon>
+                      </template>
+                    </n-button>
+                  </div>
+                </div>
+              </n-card>
+              <n-card v-if="latestRelease.data.value" title="Latest Release">
                 <p>
                   <code>{{ latestRelease.data.value?.tag_name }}</code>
                 </p>
@@ -170,9 +233,10 @@ import {
   NAlert,
   NIcon,
   NMarquee,
+  NTag,
 } from "naive-ui";
 import { Octokit } from "@octokit/rest";
-import { LaunchRound } from "@vicons/material";
+import { LaunchRound, StarOutlineRound, StarRound } from "@vicons/material";
 
 useHead({
   title: "Solar Network",
