@@ -173,6 +173,15 @@
                   </template>
                 </n-button>
               </n-card>
+              <a href="https://web.solian.app" target="_blank">
+                <n-tag round :bordered="false" size="small" class="cursor-pointer">
+                  Open the web version (Strongly not recommended, only for
+                  preview)
+                  <template #icon>
+                    <n-icon :component="WebRound" />
+                  </template>
+                </n-tag>
+              </a>
             </div>
           </n-gi>
         </n-grid>
@@ -236,7 +245,12 @@ import {
   NTag,
 } from "naive-ui";
 import { Octokit } from "@octokit/rest";
-import { LaunchRound, StarOutlineRound, StarRound } from "@vicons/material";
+import {
+  LaunchRound,
+  StarOutlineRound,
+  StarRound,
+  WebRound,
+} from "@vicons/material";
 
 useHead({
   title: "Solar Network",
