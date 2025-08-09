@@ -9,10 +9,14 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/png", href: "/favicon.png" }],
     },
   },
-  umami: {
-    id: 'eef151fb-07e2-461b-8b7f-2547aab735d4',
-    host: 'https://solsynth.dev',
-    autoTrack: true,
+  scripts: {
+    globals: {
+      umami: {
+        src: "https://cloud.umami.is/script.js",
+        "data-website-id": "eef151fb-07e2-461b-8b7f-2547aab735d4",
+        defer: true,
+      },
+    },
   },
   nitro: {
     preset: "cloudflare_module",
@@ -44,6 +48,5 @@ export default defineNuxtConfig({
     "nuxtjs-naive-ui",
     "@vueuse/nuxt",
     "@eschricht/nuxt-color-mode",
-    "nuxt-umami",
   ],
 });
