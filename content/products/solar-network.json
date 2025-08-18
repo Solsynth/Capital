@@ -1,11 +1,11 @@
 {
-    "icon": "/solar-network/icon.png",
-    "background": "/solar-network/kp.jpg",
-    "name": "Solar Network",
-    "description": "The amazing social network for technology, programming, ACG fans.",
-    "url": "https://solian.app",
-    "repo": "https://github.com/Solsynth/Solian",
-    "releasedDate": "2024-01-27T08:00:00.000Z",
-    "version": "3.1.0",
-    "updatedDate": "2025-07-28T08:00:00.000Z"
+  "icon": "/solar-network/icon.png",
+  "background": "/solar-network/kp.jpg",
+  "name": "Solar Network",
+  "description": "The amazing social network for technology, programming, ACG fans.",
+  "url": "https://solsynth.dev/products/solar-network",
+  "repo": "https://github.com/Solsynth/Solian",
+  "releasedDate": "2024-01-27T08:00:00.000Z",
+  "version": "3.1.0",
+  "updatedDate": "2025-07-28T08:00:00.000Z"
 }

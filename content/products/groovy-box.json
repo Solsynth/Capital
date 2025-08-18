@@ -1,0 +1,11 @@
+{
+  "icon": "/groovy-box/icon.png",
+  "background": "/groovy-box/background.jpg",
+  "name": "聆阁",
+  "description": "简单，好看，实用的本地播放器",
+  "url": "https://solsynth.dev/products/groovy-box",
+  "repo": "https://github.com/littlesheep2code/groovy-box",
+  "releasedDate": "2025-08-14T08:00:00.000Z",
+  "version": "1.0.0.0",
+  "updatedDate": "2025-08-14T08:00:00.000Z"
+}
