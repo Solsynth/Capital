@@ -2,7 +2,7 @@
 lang: en
 title: Privacy Policy
 description: Basic Privacy Policy applicable to all Solsynth products
-updatedDate: '2025-08-01'
+updatedDate: '2025-08-26'
 ---
 
 # **Privacy Policy**
@@ -59,3 +59,9 @@ Text data submitted by users is stored on our Tencent Cloud servers located in H
 Except when a user requests it, we have the right to delete data submitted and uploaded by users to reclaim available resources, based on maintenance needs.
 
 Before we proactively delete user data, we **should** notify the user and provide an opportunity for backup.
+
+## **Data Export**
+
+Users can export their personal information by contacting us at [lily@solsynth.dev](mailto:lily@solsynth.dev).
+
+**NOTICE: Once the data export was done, we will delete the exported data in our database immediately. Which means you no longer have access to your Solarpass account. We use the email address we recieved the export request to validate your identity. And that's the final step in the process. We won't send any further confirmation emails.**
