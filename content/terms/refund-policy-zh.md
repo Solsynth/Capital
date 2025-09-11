@@ -1,7 +1,7 @@
 ---
 lang: zh
 title: 退款条例
-description: 适用于所有 Solsynth 产品的退款条例
+description: 适用于所有 Solsynth 产品的退款条例。
 updatedDate: '2025-08-01'
 ---
 
