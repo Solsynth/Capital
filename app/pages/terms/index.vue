@@ -45,6 +45,10 @@ const { data: terms } = await useAsyncData(
       .all(),
   { watch: [chosenLanguage] },
 );
+
+definePageMeta({
+  title: "Terms and Conditions",
+});
 </script>
 
 <style scoped>
