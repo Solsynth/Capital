@@ -133,18 +133,10 @@ Our Services are not intended for children under 13 years of age (or the minimum
 
 We may update this Policy from time to time to reflect changes in legal, technical, or business requirements. Upon updates, we will notify users via email, in-app notifications, or official website announcements. Continued use of the Services constitutes agreement to the updated Policy.
 
-Latest version release date: September 12, 2025.
-
 ## 11. Contact Us
 
 For questions, complaints, or requests to exercise your rights, please contact:
 - Email: [lily@solsynth.dev](mailto:lily@solsynth.dev)
-- Official Support: [support.solsynth.dev](https://support.solsynth.dev)
 
 We will respond as soon as possible, typically within 30 days.
-
-## 12. Governing Law
-
-This Policy is governed by the laws of the People’s Republic of China (or the laws of Solsynth’s place of incorporation). Disputes will be submitted to the Beijing Arbitration Commission for arbitration.
-
 Thank you for trusting Solsynth. We are committed to protecting your privacy and providing a secure service experience.

@@ -67,7 +67,7 @@ Other definitions:
      - Partial Suspension: Restricts specific functions, such as posting or uploading files.
    - **Ban**: Permanently disables the account and access to all Solsynth Services. We reserve the right to delete related data.
 2. If Users create new accounts to bypass penalties, we will delete the new accounts and may extend or escalate the original penalty.
-3. Users have the right to appeal penalties by submitting evidence to support@solsynth.dev. We will review and respond to appeals.
+3. Users have the right to appeal penalties by submitting evidence to lily@solsynth.dev. We will review and respond to appeals.
 
 ## Inappropriate Use
 
@@ -97,7 +97,7 @@ The following behaviors are considered inappropriate use, and we reserve the rig
 
 ## Data Privacy and Security
 
-1. We collect and process User data to provide Services. See our Privacy Policy for details (link: [Privacy Policy](/privacy-policy-en)).
+1. We collect and process User data to provide Services. See our Privacy Policy for details (link: [Privacy Policy](/terms/privacy-policy)).
 2. Users consent to our use of cookies, logs, and other technologies to track usage.
 3. We implement reasonable security measures but are not liable for hacker attacks or data breaches. Users **should** use strong passwords and enable two-factor authentication.
 
