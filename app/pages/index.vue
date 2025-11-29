@@ -25,7 +25,7 @@
                 show-arrow
                 autoplay
                 dot-type="line"
-                class="rounded-xl w-full max-h-[360px] aspect-video flex-shrink-1"
+                class="rounded-xl w-full max-h-[360px] aspect-video shrink"
               >
                 <n-carousel-item
                   v-for="product in products"
@@ -114,7 +114,7 @@
         <n-grid cols="1 m:2 l:2" responsive="screen" x-gap="32" y-gap="16">
           <n-gi>
             <div
-              class="flex justify-center text-left h-full py-8 px-4 flex flex-col"
+              class="justify-center text-left h-full py-8 px-4 flex flex-col"
             >
               <h2 class="text-3xl font-bold mb-3">About us</h2>
               <p class="text-lg mb-1">
