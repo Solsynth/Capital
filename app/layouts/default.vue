@@ -161,8 +161,7 @@ const menuOptions = computed<MenuOption[]>(() => {
     recentProducts.value?.map((product: any) => {
       const id = product.stem.split("/").pop();
       const hasPage = product.hasPage;
-      const localePrefix = locale.value == "en" ? "" : `/${locale.value}`;
-      const url = hasPage ? `${localePrefix}/products/${id}` : product.url;
+      const url = hasPage ? `/products/${id}` : product.url;
 
       return {
         label: hasPage
