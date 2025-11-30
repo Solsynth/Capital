@@ -4,9 +4,9 @@
       class="navbar bg-transparent shadow-lg fixed top-0 left-0 right-0 backdrop-blur-2xl z-1000 h-[64px]"
     >
       <div class="container mx-auto flex items-center justify-between px-5">
-        <nuxt-link to="/">
+        <nuxt-link-locale to="/">
           <nuxt-img src="/favicon.png" alt="Solsynth" class="w-8 h-8" />
-        </nuxt-link>
+        </nuxt-link-locale>
 
         <n-menu
           v-if="breakpoints.isGreaterOrEqual('md')"
@@ -64,15 +64,15 @@
         <a href="https://solian.app" target="_blank" class="link link-hover">{{
           t("layout.default.footer.solarNetwork")
         }}</a>
-        <nuxt-link to="/products" class="link link-hover">{{
+        <nuxt-link-locale to="/products" class="link link-hover">{{
           t("layout.default.footer.catalog")
-        }}</nuxt-link>
+        }}</nuxt-link-locale>
       </nav>
       <nav>
         <h6 class="footer-title">{{ t("layout.default.footer.company") }}</h6>
-        <nuxt-link to="/about" class="link link-hover">{{
+        <nuxt-link-locale to="/about" class="link link-hover">{{
           t("layout.default.footer.about")
-        }}</nuxt-link>
+        }}</nuxt-link-locale>
         <a
           href="https://github.com/Solsynth"
           target="_blank"
@@ -82,18 +82,18 @@
       </nav>
       <nav>
         <h6 class="footer-title">{{ t("layout.default.footer.legal") }}</h6>
-        <nuxt-link to="/terms/user-agreement" class="link link-hover">{{
+        <nuxt-link-locale to="/terms/user-agreement" class="link link-hover">{{
           t("layout.default.footer.tos")
-        }}</nuxt-link>
-        <nuxt-link to="/terms/privacy-policy" class="link link-hover">{{
+        }}</nuxt-link-locale>
+        <nuxt-link-locale to="/terms/privacy-policy" class="link link-hover">{{
           t("layout.default.footer.privacy")
-        }}</nuxt-link>
-        <nuxt-link to="/terms/refund-policy" class="link link-hover">{{
+        }}</nuxt-link-locale>
+        <nuxt-link-locale to="/terms/refund-policy" class="link link-hover">{{
           t("layout.default.footer.refund")
-        }}</nuxt-link>
-        <nuxt-link to="/terms" class="link link-hover">{{
+        }}</nuxt-link-locale>
+        <nuxt-link-locale to="/terms" class="link link-hover">{{
           t("layout.default.footer.allDocs")
-        }}</nuxt-link>
+        }}</nuxt-link-locale>
       </nav>
     </footer>
   </div>
@@ -124,7 +124,7 @@ const localeDropdownOptions = computed(() => {
 });
 
 const handleLocaleSelect = (key: string) => {
-  router.push(switchLocalePath(key));
+  router.push(switchLocalePath(key as any));
 };
 
 const route = useRoute();
@@ -146,7 +146,9 @@ function renderIcon(icon: any) {
 }
 
 function renderLabel(label: string, route: string) {
-  return () => h(RouterLink, { to: route }, { default: () => label });
+  const localePrefix = locale.value == "en" ? "" : `/${locale.value}`;
+  return () =>
+    h(RouterLink, { to: localePrefix + route }, { default: () => label });
 }
 
 function renderExternalLabel(label: string, url: string) {
@@ -159,7 +161,8 @@ const menuOptions = computed<MenuOption[]>(() => {
     recentProducts.value?.map((product: any) => {
       const id = product.stem.split("/").pop();
       const hasPage = product.hasPage;
-      const url = hasPage ? `/products/${id}` : product.url;
+      const localePrefix = locale.value == "en" ? "" : `/${locale.value}`;
+      const url = hasPage ? `${localePrefix}/products/${id}` : product.url;
 
       return {
         label: hasPage

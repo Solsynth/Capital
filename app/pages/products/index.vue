@@ -2,7 +2,7 @@
   <div class="container max-w-xl mx-auto my-16 px-8">
     <h1 class="text-4xl font-bold mb-8">Our Products</h1>
 
-    <nuxt-link
+    <nuxt-link-locale
       v-for="product in products"
       :key="product.url"
       :to="
@@ -41,7 +41,7 @@
           </div>
         </template>
       </n-card>
-    </nuxt-link>
+    </nuxt-link-locale>
   </div>
 </template>
 
@@ -49,7 +49,7 @@
 import { NCard } from "naive-ui";
 
 const { data: products } = await useAsyncData("products", () =>
-  queryCollection("products").all()
+  queryCollection("products").all(),
 );
 
 useHead({

@@ -11,10 +11,11 @@
 
       <nuxt-img src="/favicon.png" class="w-32 h-32 mb-8 animate-float" />
       <h1 class="text-6xl font-extrabold mb-6 tracking-tight">
-        {{ t('page.index.hero.we') }} <span ref="typedElement" class="text-primary" />
+        {{ t("page.index.hero.we") }}
+        <span ref="typedElement" class="text-primary" />
       </h1>
       <p class="text-2xl mb-10 opacity-80 max-w-2xl">
-        {{ t('page.index.hero.subtitle') }}
+        {{ t("page.index.hero.subtitle") }}
       </p>
       <n-space justify="center" size="large">
         <n-button
@@ -25,10 +26,10 @@
           href="#products"
           class="px-8 text-lg font-bold shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-shadow"
         >
-          {{ t('page.index.hero.explore') }}
+          {{ t("page.index.hero.explore") }}
         </n-button>
         <n-button size="large" round tag="a" href="/about" class="px-8 text-lg">
-          {{ t('page.index.hero.about') }}
+          {{ t("page.index.hero.about") }}
         </n-button>
       </n-space>
 
@@ -44,9 +45,11 @@
     <!-- Products Section -->
     <div id="products" class="scroll-mt-24">
       <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold mb-4">{{ t('page.index.creations.title') }}</h2>
+        <h2 class="text-4xl font-bold mb-4">
+          {{ t("page.index.creations.title") }}
+        </h2>
         <p class="text-xl opacity-70 max-w-2xl mx-auto">
-          {{ t('page.index.creations.subtitle') }}
+          {{ t("page.index.creations.subtitle") }}
         </p>
       </div>
 
@@ -91,14 +94,14 @@
               >
                 <n-icon :component="LaunchRound" color="black"></n-icon>
               </n-button>
-              <nuxt-link
+              <nuxt-link-locale
                 v-if="product.hasPage"
                 :to="`/products/${product.stem.split('/').pop()}`"
               >
                 <n-button circle color="white" size="small">
                   <n-icon :component="InfoRound" color="black"></n-icon>
                 </n-button>
-              </nuxt-link>
+              </nuxt-link-locale>
             </div>
 
             <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -132,12 +135,14 @@
           class="flex flex-col md:flex-row items-center gap-12 relative z-10 p-8"
         >
           <div class="flex-1">
-            <h2 class="text-3xl font-bold mb-4">{{ t('page.index.about.title') }}</h2>
+            <h2 class="text-3xl font-bold mb-4">
+              {{ t("page.index.about.title") }}
+            </h2>
             <p class="text-lg opacity-80 mb-6 leading-relaxed">
-              {{ t('page.index.about.subtitle') }}
+              {{ t("page.index.about.subtitle") }}
             </p>
             <n-button type="primary" ghost size="large" tag="a" href="/about">
-              {{ t('page.index.about.readStory') }}
+              {{ t("page.index.about.readStory") }}
               <template #icon>
                 <n-icon :component="ChevronRightOutlined"></n-icon>
               </template>
@@ -185,7 +190,7 @@ const typedElement = ref(null);
 const typed = shallowRef(null);
 
 useHead({
-  title: t('page.index.title'),
+  title: t("page.index.title"),
   titleTemplate: "%s",
 });
 
