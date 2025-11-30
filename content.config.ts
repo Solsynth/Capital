@@ -15,6 +15,7 @@ export default defineContentConfig({
         releasedDate: z.date().optional(),
         version: z.string().optional(),
         updatedDate: z.date().optional(),
+        hasPage: z.boolean().optional(),
       }),
     }),
     terms: defineCollection({

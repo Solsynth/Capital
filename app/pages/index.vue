@@ -1,219 +1,260 @@
 <template>
-  <main class="container mx-auto h-full px-8 flex flex-col gap-16">
-    <div class="text-center py-56 flex flex-col items-center justify-center">
-      <nuxt-img src="/favicon.png" class="w-28 h-28 mb-4" />
-      <h1 class="text-5xl font-extrabold mb-3">We <span id="who-are-we" /></h1>
-      <p class="text-xl mb-8">
+  <main class="container mx-auto h-full px-8 flex flex-col gap-24 pb-24">
+    <!-- Hero Section -->
+    <div
+      class="text-center min-h-[80vh] flex flex-col items-center justify-center relative"
+    >
+      <!-- Background decoration -->
+      <div
+        class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/20 rounded-full blur-[120px] -z-10 pointer-events-none"
+      ></div>
+
+      <nuxt-img src="/favicon.png" class="w-32 h-32 mb-8 animate-float" />
+      <h1 class="text-6xl font-extrabold mb-6 tracking-tight">
+        We <span ref="typedElement" class="text-primary" />
+      </h1>
+      <p class="text-2xl mb-10 opacity-80 max-w-2xl">
         We are a group of friends that make software, hardware and any stuff
-        that interesting.
+        that is interesting.
       </p>
-      <n-space justify="center">
-        <n-button type="primary" size="large" round tag="a" href="#products"
-          >Explore around</n-button
+      <n-space justify="center" size="large">
+        <n-button
+          type="primary"
+          size="large"
+          round
+          tag="a"
+          href="#products"
+          class="px-8 text-lg font-bold shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-shadow"
         >
-        <n-button type="default" size="large" round tag="a" href="#about"
-          >About us</n-button
-        >
+          Explore Products
+        </n-button>
+        <n-button size="large" round tag="a" href="/about" class="px-8 text-lg">
+          About Us
+        </n-button>
       </n-space>
+
+      <div class="absolute bottom-10 animate-bounce">
+        <n-icon
+          size="32"
+          class="opacity-50"
+          :component="ArrowDownwardOutlined"
+        />
+      </div>
     </div>
-    <div id="products" class="pb-56">
-      <client-only>
-        <n-grid cols="1 m:2 l:2" responsive="screen" x-gap="32" y-gap="16">
-          <n-gi>
-            <div class="flex items-center justify-center">
-              <n-carousel
-                show-arrow
-                autoplay
-                dot-type="line"
-                class="rounded-xl w-full max-h-[360px] aspect-video shrink"
+
+    <!-- Products Section -->
+    <div id="products" class="scroll-mt-24">
+      <div class="text-center mb-16">
+        <h2 class="text-4xl font-bold mb-4">Our Creations</h2>
+        <p class="text-xl opacity-70 max-w-2xl mx-auto">
+          From social networks to cloud drives, we build tools that empower and
+          connect.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <n-card
+          v-for="product in products"
+          :key="product.path"
+          class="product-card"
+          content-style="padding: 0"
+        >
+          <div class="relative aspect-video overflow-hidden group">
+            <img
+              :src="product.background"
+              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+            />
+            <div
+              class="absolute inset-0 bg-linear-to-t from-black/80 via-black/20 to-transparent opacity-90"
+            ></div>
+
+            <div
+              class="absolute top-4 right-4 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+            >
+              <n-button
+                v-if="product.repo"
+                circle
+                color="white"
+                size="small"
+                tag="a"
+                :href="product.repo"
+                target="_blank"
+                class="text-black"
               >
-                <n-carousel-item
-                  v-for="product in products"
-                  :key="product.path"
-                  class="rounded-xl w-full max-h-[360px] aspect-video relative"
-                  :style="`background-color: ${product.background ? 'transparent' : themeVar.baseColor}`"
-                >
-                  <img
-                    :src="product.background"
-                    class="absolute left-0 right-0 top-0 bottom-0 object-cover aspect-video"
-                    style="z-index: -1"
-                  />
-                  <div
-                    style="
-                      background: linear-gradient(
-                        to top,
-                        rgba(0, 0, 0, 0.7),
-                        transparent
-                      );
-                      z-index: 1;
-                    "
-                    class="absolute left-0 right-0 top-1/2 bottom-0"
-                  />
-                  <div
-                    class="absolute left-0 right-0 top-0 px-4 pt-4 flex justify-end gap-2.5"
-                  >
-                    <n-button
-                      v-if="product.repo"
-                      circle
-                      color="white"
-                      size="small"
-                      tag="a"
-                      :href="product.repo"
-                      target="_blank"
-                    >
-                      <n-icon color="black"><code-round /></n-icon>
-                    </n-button>
-                    <n-button
-                      v-if="product.url"
-                      circle
-                      color="white"
-                      size="small"
-                      tag="a"
-                      :href="product.url"
-                      target="_blank"
-                    >
-                      <n-icon color="black"><launch-round /></n-icon>
-                    </n-button>
-                  </div>
-                  <div
-                    class="absolute bottom-0 px-6 py-8 w-full"
-                    style="z-index: 2"
-                  >
-                    <nuxt-img :src="product.icon" class="w-12 h-12" />
-                    <p class="text-lg text-white line-height-1">
-                      {{ product.name }}
-                    </p>
-                    <p class="text-white line-height-1">
-                      {{ product.description }}
-                    </p>
-                  </div>
-                </n-carousel-item>
-              </n-carousel>
+                <n-icon><code-round /></n-icon>
+              </n-button>
+              <n-button
+                v-if="product.url"
+                circle
+                color="white"
+                size="small"
+                tag="a"
+                :href="product.url"
+                target="_blank"
+                class="text-black"
+              >
+                <n-icon><launch-round /></n-icon>
+              </n-button>
             </div>
-          </n-gi>
-          <n-gi>
-            <div
-              class="flex justify-center text-right h-full py-8 px-4 flex-col"
-            >
-              <h2 class="text-3xl font-bold mb-3">Our products</h2>
-              <p class="text-lg mb-1">
-                The made various of software, from social network to cloud
-                drive.
-              </p>
-              <p class="text-lg">
-                Take a look of them on the left on your own
-                <code>ヽ(&gt;∀&lt;☆)ノ</code>
-              </p>
-            </div>
-          </n-gi>
-        </n-grid>
-      </client-only>
-    </div>
-    <div id="about" class="pb-56">
-      <client-only>
-        <n-grid cols="1 m:2 l:2" responsive="screen" x-gap="32" y-gap="16">
-          <n-gi>
-            <div
-              class="justify-center text-left h-full py-8 px-4 flex flex-col"
-            >
-              <h2 class="text-3xl font-bold mb-3">About us</h2>
-              <p class="text-lg mb-1">
-                Our aim is not making a profit.
-                <i class="text-xs">At least not yet.</i>
-              </p>
-              <p class="text-lg">
-                Instead we hope we can spread the love to the world and make
-                everyone enjoy the fun of the Internet and the world.
-              </p>
-            </div>
-          </n-gi>
-          <n-gi>
-            <div class="flex h-full justify-center flex-col text-right">
-              <h2 class="text-3xl font-bold mb-3">Team members</h2>
-              <p class="text-lg">
-                Say hi to our lovely members... uh, seems there is only me.
-              </p>
-              <div class="flex justify-end gap-4 my-4">
-                <div class="flex flex-col items-end text-right">
-                  <n-avatar
-                    src="https://fs.solian.app/api/files/200ee92546244ed1a6a02202f5ca9cc9"
-                    :size="100"
-                    class="mb-2"
-                  />
-                  <div class="flex gap-1">
-                    <p>LittleSheep</p>
-                    <n-button
-                      text
-                      tag="a"
-                      size="small"
-                      href="https://id.solian.app/@littlesheep"
-                      target="_blank"
-                      class="mt-0.5"
-                    >
-                      <n-icon>
-                        <info-outlined />
-                      </n-icon>
-                    </n-button>
-                  </div>
-                  <p class="text-xs opacity-75 max-w-sm">
-                    Founder, CEO, CTO, Senior Developer, Marketing Engineer,
-                    Customer Service Engineer, DevOps, Database Administrator,
-                    Product Manager, UI/UX Designer, QA Engineer, Mobile
-                    Developer, Security Engineer, Technical Writer, Project
-                    Manager, Community Manager, Software Architect
-                  </p>
-                </div>
+
+            <div class="absolute bottom-0 left-0 right-0 p-6">
+              <div class="flex items-center gap-3 mb-2">
+                <nuxt-img
+                  :src="product.icon"
+                  class="w-10 h-10 rounded-lg shadow-sm"
+                />
+                <h3 class="text-xl font-bold text-white">
+                  {{ product.name }}
+                </h3>
               </div>
+              <p class="text-gray-200 text-sm line-clamp-2">
+                {{ product.description }}
+              </p>
             </div>
-          </n-gi>
-        </n-grid>
-      </client-only>
+          </div>
+        </n-card>
+      </div>
+    </div>
+
+    <!-- About Teaser Section -->
+    <div class="py-16">
+      <n-card
+        class="bg-linear-to-r from-primary/10 to-secondary/10 border-0 overflow-hidden relative"
+      >
+        <div
+          class="absolute top-0 right-0 w-64 h-64 bg-primary/20 rounded-full blur-[80px] -translate-y-1/2 translate-x-1/2"
+        ></div>
+        <div
+          class="flex flex-col md:flex-row items-center gap-12 relative z-10 p-8"
+        >
+          <div class="flex-1">
+            <h2 class="text-3xl font-bold mb-4">More Than Just Code</h2>
+            <p class="text-lg opacity-80 mb-6 leading-relaxed">
+              We are a community-driven team focused on creating meaningful
+              experiences. Our mission goes beyond software—it's about
+              connection, innovation, and fun.
+            </p>
+            <n-button type="primary" ghost size="large" tag="a" href="/about">
+              Read Our Story
+              <template #icon>
+                <n-icon :component="ChevronRightOutlined"></n-icon>
+              </template>
+            </n-button>
+          </div>
+          <div class="flex-1 flex justify-center">
+            <!-- Abstract representation or team collage could go here -->
+            <div class="grid grid-cols-2 gap-4 opacity-80">
+              <div
+                class="w-32 h-32 rounded-2xl bg-primary/20 animate-pulse"
+              ></div>
+              <div
+                class="w-32 h-32 rounded-2xl bg-secondary/20 animate-pulse delay-75"
+              ></div>
+              <div
+                class="w-32 h-32 rounded-2xl bg-info/20 animate-pulse delay-150"
+              ></div>
+              <div
+                class="w-32 h-32 rounded-2xl bg-success/20 animate-pulse delay-300"
+              ></div>
+            </div>
+          </div>
+        </div>
+      </n-card>
     </div>
   </main>
 </template>
 
 <script setup>
+import { NSpace, NButton, NIcon, NCard } from "naive-ui";
 import {
-  NSpace,
-  NButton,
-  NGrid,
-  NGi,
-  NCarousel,
-  NCarouselItem,
-  NIcon,
-  NAvatar,
-  useThemeVars,
-} from "naive-ui";
-import { LaunchRound, CodeRound, InfoOutlined } from "@vicons/material";
+  LaunchRound,
+  CodeRound,
+  ChevronRightOutlined,
+  ArrowDownwardOutlined,
+} from "@vicons/material";
 import Typed from "typed.js";
 
 const route = useRoute();
-const themeVar = useThemeVars();
+const typedElement = ref(null);
+const typed = shallowRef(null);
+
+useHead({
+  title: "Solsynth - Creating Experiences",
+});
+
+onMounted(() => {
+  if (typedElement.value) {
+    if (typed.value) {
+      typed.value.destroy();
+    }
+    typed.value = new Typed(typedElement.value, {
+      strings: [
+        "make software",
+        "make hardware",
+        "craft experiences",
+        "write stories",
+        "are Solsynth",
+      ],
+      typeSpeed: 50,
+      backDelay: 1500,
+      backSpeed: 30,
+      smartBackspace: true,
+      loop: true,
+      showCursor: true,
+      cursorChar: "|",
+      autoInsertCss: true,
+    });
+  }
+});
+
+onUnmounted(() => {
+  if (typed.value) {
+    typed.value.destroy();
+    typed.value = null;
+  }
+});
 
 const { data: products } = await useAsyncData(route.path, () => {
   return queryCollection("products").all();
 });
-
-useHead({
-  title: "Solsynth",
-});
-
-onMounted(() => {
-  new Typed("#who-are-we", {
-    strings: [
-      "make software",
-      "make hardware",
-      "make experience",
-      "write stories",
-      "are Solsynth^3000",
-    ],
-    typeSpeed: 40,
-    backDelay: 1000,
-    backSpeed: 40,
-    smartBackspace: true,
-    loop: true,
-    showCursor: false,
-    autoInsertCss: false,
-  });
-});
 </script>
+
+<style scoped>
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.product-card {
+  height: 100%;
+  transform: translateY(0);
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  border: none;
+  background-color: rgba(
+    255,
+    255,
+    255,
+    0.5
+  ); /* Example, adjust base color as needed */
+  backdrop-filter: blur(4px); /* For backdrop-blur-sm */
+
+  &:hover {
+    transform: translateY(-0.5rem); /* For -translate-y-2 */
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04); /* For shadow-xl */
+  }
+}
+</style>
