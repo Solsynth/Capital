@@ -261,7 +261,7 @@
                   target="_blank"
                   class="py-6 font-bold"
                 >
-                  Join TestFlight (iOS)
+                  Join TestFlight (iOS, macOS)
                   <template #icon><n-icon :component="LaunchRound" /></template>
                 </n-button>
                 <n-button
@@ -274,7 +274,7 @@
                   target="_blank"
                   class="py-6 font-bold"
                 >
-                  Direct Download (All)
+                  Direct Download
                   <template #icon
                     ><n-icon :component="CloudDownloadRound"
                   /></template>
@@ -289,7 +289,7 @@
                   target="_blank"
                   class="py-2 font-bold text-primary hover:underline"
                 >
-                  Try Web Version
+                  Open in your Browser
                   <template #icon><n-icon :component="WebRound" /></template>
                 </n-button>
               </div>

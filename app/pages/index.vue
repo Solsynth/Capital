@@ -79,9 +79,8 @@
                 tag="a"
                 :href="product.repo"
                 target="_blank"
-                class="text-black"
               >
-                <n-icon><code-round /></n-icon>
+                <n-icon :component="CodeRound" color="black"></n-icon>
               </n-button>
               <n-button
                 v-if="product.url"
@@ -91,10 +90,17 @@
                 tag="a"
                 :href="product.url"
                 target="_blank"
-                class="text-black"
               >
-                <n-icon><launch-round /></n-icon>
+                <n-icon :component="LaunchRound" color="black"></n-icon>
               </n-button>
+              <nuxt-link
+                v-if="product.hasPage"
+                :to="`/products/${product.stem.split('/').pop()}`"
+              >
+                <n-button circle color="white" size="small">
+                  <n-icon :component="InfoRound" color="black"></n-icon>
+                </n-button>
+              </nuxt-link>
             </div>
 
             <div class="absolute bottom-0 left-0 right-0 p-6">
@@ -171,6 +177,7 @@ import {
   CodeRound,
   ChevronRightOutlined,
   ArrowDownwardOutlined,
+  InfoRound,
 } from "@vicons/material";
 import Typed from "typed.js";
 

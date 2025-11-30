@@ -5,7 +5,11 @@
     <nuxt-link
       v-for="product in products"
       :key="product.url"
-      :to="product.url"
+      :to="
+        product.hasPage
+          ? `/products/${product.stem.split('/').pop()}`
+          : product.url
+      "
       class="no-underline block mb-4"
     >
       <n-card hoverable>
