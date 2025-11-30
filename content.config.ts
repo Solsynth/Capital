@@ -28,5 +28,24 @@ export default defineContentConfig({
         updatedDate: z.date().optional(),
       }),
     }),
+    team: defineCollection({
+      type: "data",
+      source: "team/**.json",
+      schema: z.object({
+        name: z.string(),
+        role: z.string(),
+        avatar: z.string(),
+        bio: z.string(),
+        profileUrl: z.string().optional(),
+        socials: z
+          .array(
+            z.object({
+              icon: z.string(),
+              url: z.string(),
+            })
+          )
+          .optional(),
+      }),
+    }),
   },
 });

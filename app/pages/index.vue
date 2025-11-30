@@ -2,7 +2,7 @@
   <main class="container mx-auto h-full px-8 flex flex-col gap-24 pb-24">
     <!-- Hero Section -->
     <div
-      class="text-center min-h-[80vh] flex flex-col items-center justify-center relative"
+      class="text-center min-h-[80vh] flex flex-col items-center justify-center relative isolate"
     >
       <!-- Background decoration -->
       <div
@@ -179,7 +179,8 @@ const typedElement = ref(null);
 const typed = shallowRef(null);
 
 useHead({
-  title: "Solsynth - Creating Experiences",
+  title: "We are Solsynth",
+  titleTemplate: "%s",
 });
 
 onMounted(() => {
