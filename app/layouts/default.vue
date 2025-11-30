@@ -32,7 +32,16 @@
           />
         </n-popover>
 
-        <naive-color-mode-switch />
+        <div class="flex gap-4">
+          <naive-color-mode-switch />
+          <n-dropdown
+            trigger="hover"
+            :options="localeDropdownOptions"
+            @select="handleLocaleSelect"
+          >
+            <n-button text>{{ locale.toUpperCase().split("-")[0] }}</n-button>
+          </n-dropdown>
+        </div>
       </div>
     </header>
 
@@ -46,39 +55,45 @@
       <aside>
         <nuxt-img src="/favicon.png" alt="Solsynth" class="w-12 h-12" />
         <div>
-          <h3 class="text-lg font-bold">Solsynth</h3>
-          Making software, hardware and experiences since 2024
+          <h3 class="text-lg font-bold">{{ t("common.solsynth") }}</h3>
+          {{ t("layout.default.footer.tagline") }}
         </div>
       </aside>
       <nav>
-        <h6 class="footer-title">Products</h6>
-        <a href="https://solian.app" target="_blank" class="link link-hover"
-          >Solar Network</a
-        >
-        <nuxt-link to="/products" class="link link-hover">Catalog</nuxt-link>
+        <h6 class="footer-title">{{ t("layout.default.footer.products") }}</h6>
+        <a href="https://solian.app" target="_blank" class="link link-hover">{{
+          t("layout.default.footer.solarNetwork")
+        }}</a>
+        <nuxt-link to="/products" class="link link-hover">{{
+          t("layout.default.footer.catalog")
+        }}</nuxt-link>
       </nav>
       <nav>
-        <h6 class="footer-title">Company</h6>
-        <nuxt-link to="/about" class="link link-hover">About us</nuxt-link>
+        <h6 class="footer-title">{{ t("layout.default.footer.company") }}</h6>
+        <nuxt-link to="/about" class="link link-hover">{{
+          t("layout.default.footer.about")
+        }}</nuxt-link>
         <a
           href="https://github.com/Solsynth"
           target="_blank"
           class="link link-hover"
-          >GitHub</a
+          >{{ t("layout.default.footer.github") }}</a
         >
       </nav>
       <nav>
-        <h6 class="footer-title">Legal</h6>
-        <nuxt-link to="/terms/user-agreement" class="link link-hover"
-          >Terms of Service</nuxt-link
-        >
-        <nuxt-link to="/terms/privacy-policy" class="link link-hover"
-          >Privacy Policy</nuxt-link
-        >
-        <nuxt-link to="/terms/refund-policy" class="link link-hover"
-          >Refund Policy</nuxt-link
-        >
-        <nuxt-link to="/terms" class="link link-hover">All Documents</nuxt-link>
+        <h6 class="footer-title">{{ t("layout.default.footer.legal") }}</h6>
+        <nuxt-link to="/terms/user-agreement" class="link link-hover">{{
+          t("layout.default.footer.tos")
+        }}</nuxt-link>
+        <nuxt-link to="/terms/privacy-policy" class="link link-hover">{{
+          t("layout.default.footer.privacy")
+        }}</nuxt-link>
+        <nuxt-link to="/terms/refund-policy" class="link link-hover">{{
+          t("layout.default.footer.refund")
+        }}</nuxt-link>
+        <nuxt-link to="/terms" class="link link-hover">{{
+          t("layout.default.footer.allDocs")
+        }}</nuxt-link>
       </nav>
     </footer>
   </div>
@@ -86,9 +101,10 @@
 
 <script lang="ts" setup>
 import type { MenuOption } from "naive-ui";
-import { NIcon, NAvatar, NMenu } from "naive-ui";
+import { NIcon, NAvatar, NMenu, NDropdown, NButton } from "naive-ui";
 import { computed, h } from "vue";
-import { useRoute, RouterLink } from "vue-router";
+import { useRoute, useRouter, RouterLink } from "vue-router";
+import { useI18n } from "vue-i18n";
 import {
   ExploreOutlined,
   CategoryOutlined,
@@ -96,11 +112,26 @@ import {
 } from "@vicons/material";
 import { breakpointsTailwind } from "@vueuse/core";
 
+const router = useRouter();
+const switchLocalePath = useSwitchLocalePath();
+const { t, locale, locales } = useI18n();
+
+const localeDropdownOptions = computed(() => {
+  return locales.value?.map((l: any) => ({
+    label: l.name,
+    key: l.code,
+  }));
+});
+
+const handleLocaleSelect = (key: string) => {
+  router.push(switchLocalePath(key));
+};
+
 const route = useRoute();
 const breakpoints = useBreakpoints(breakpointsTailwind);
 
 const { data: recentProducts } = await useAsyncData("recent-products", () =>
-  queryCollection("products").order("updatedDate", "DESC").limit(5).all()
+  queryCollection("products").order("updatedDate", "DESC").limit(5).all(),
 );
 
 const activeKey = computed(() => {
@@ -148,12 +179,12 @@ const menuOptions = computed<MenuOption[]>(() => {
 
   return [
     {
-      label: renderLabel("Explore", "/"),
+      label: renderLabel(t("layout.default.menu.explore"), "/"),
       key: "explore",
       icon: renderIcon(ExploreOutlined),
     },
     {
-      label: renderLabel("Products", "/products"),
+      label: renderLabel(t("layout.default.menu.products"), "/products"),
       key: "products",
       icon: renderIcon(CategoryOutlined),
       children: productChildren,

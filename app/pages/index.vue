@@ -11,11 +11,10 @@
 
       <nuxt-img src="/favicon.png" class="w-32 h-32 mb-8 animate-float" />
       <h1 class="text-6xl font-extrabold mb-6 tracking-tight">
-        We <span ref="typedElement" class="text-primary" />
+        {{ t('page.index.hero.we') }} <span ref="typedElement" class="text-primary" />
       </h1>
       <p class="text-2xl mb-10 opacity-80 max-w-2xl">
-        We are a group of friends that make software, hardware and any stuff
-        that is interesting.
+        {{ t('page.index.hero.subtitle') }}
       </p>
       <n-space justify="center" size="large">
         <n-button
@@ -26,10 +25,10 @@
           href="#products"
           class="px-8 text-lg font-bold shadow-lg shadow-primary/30 hover:shadow-primary/50 transition-shadow"
         >
-          Explore Products
+          {{ t('page.index.hero.explore') }}
         </n-button>
         <n-button size="large" round tag="a" href="/about" class="px-8 text-lg">
-          About Us
+          {{ t('page.index.hero.about') }}
         </n-button>
       </n-space>
 
@@ -45,10 +44,9 @@
     <!-- Products Section -->
     <div id="products" class="scroll-mt-24">
       <div class="text-center mb-16">
-        <h2 class="text-4xl font-bold mb-4">Our Creations</h2>
+        <h2 class="text-4xl font-bold mb-4">{{ t('page.index.creations.title') }}</h2>
         <p class="text-xl opacity-70 max-w-2xl mx-auto">
-          From social networks to cloud drives, we build tools that empower and
-          connect.
+          {{ t('page.index.creations.subtitle') }}
         </p>
       </div>
 
@@ -134,14 +132,12 @@
           class="flex flex-col md:flex-row items-center gap-12 relative z-10 p-8"
         >
           <div class="flex-1">
-            <h2 class="text-3xl font-bold mb-4">More Than Just Code</h2>
+            <h2 class="text-3xl font-bold mb-4">{{ t('page.index.about.title') }}</h2>
             <p class="text-lg opacity-80 mb-6 leading-relaxed">
-              We are a community-driven team focused on creating meaningful
-              experiences. Our mission goes beyond software—it's about
-              connection, innovation, and fun.
+              {{ t('page.index.about.subtitle') }}
             </p>
             <n-button type="primary" ghost size="large" tag="a" href="/about">
-              Read Our Story
+              {{ t('page.index.about.readStory') }}
               <template #icon>
                 <n-icon :component="ChevronRightOutlined"></n-icon>
               </template>
@@ -180,13 +176,16 @@ import {
   InfoRound,
 } from "@vicons/material";
 import Typed from "typed.js";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 const route = useRoute();
 const typedElement = ref(null);
 const typed = shallowRef(null);
 
 useHead({
-  title: "We are Solsynth",
+  title: t('page.index.title'),
   titleTemplate: "%s",
 });
 
@@ -197,11 +196,11 @@ onMounted(() => {
     }
     typed.value = new Typed(typedElement.value, {
       strings: [
-        "make software",
-        "make hardware",
-        "craft experiences",
-        "write stories",
-        "are Solsynth",
+        t("page.index.hero.typed.makeSoftware"),
+        t("page.index.hero.typed.makeHardware"),
+        t("page.index.hero.typed.craftExperiences"),
+        t("page.index.hero.typed.writeStories"),
+        t("page.index.hero.typed.areSolsynth"),
       ],
       typeSpeed: 50,
       backDelay: 1500,

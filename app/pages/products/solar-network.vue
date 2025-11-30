@@ -27,14 +27,11 @@
         </div>
 
         <h1 class="text-6xl md:text-7xl font-extrabold mb-6 tracking-tight">
-          Solar Network
+          {{ t('page.product.solarNetwork.hero.title') }}
         </h1>
 
         <p class="text-xl md:text-2xl mb-10 max-w-2xl mx-auto leading-relaxed">
-          The next-generation social network designed for
-          <span class="text-primary font-semibold">technology enthusiasts</span
-          >, <span class="text-secondary font-semibold">developers</span>, and
-          <span class="text-info font-semibold">ACG culture</span>.
+          {{ t('page.product.solarNetwork.hero.subtitle', [t('page.product.solarNetwork.hero.subtitle.enthusiasts'), t('page.product.solarNetwork.hero.subtitle.developers'), t('page.product.solarNetwork.hero.subtitle.acg')]) }}
         </p>
 
         <n-space justify="center" size="large" class="mb-16">
@@ -46,7 +43,7 @@
             href="#download"
             class="px-8 py-6 text-lg font-bold shadow-lg shadow-primary/25 hover:shadow-primary/40 transition-all download-button"
           >
-            Get Started
+          {{ t('page.product.solarNetwork.hero.getStarted') }}
             <template #icon>
               <n-icon :component="ArrowDownwardRound" />
             </template>
@@ -59,7 +56,7 @@
             href="#features"
             class="px-8 py-6 text-lg hover:bg-gray-100 dark:hover:bg-white/10 transition-all"
           >
-            Learn More
+            {{ t('page.product.solarNetwork.hero.learnMore') }}
           </n-button>
         </n-space>
       </div>
@@ -77,11 +74,10 @@
       <div class="container mx-auto max-w-6xl">
         <div class="text-center mb-20">
           <h2 class="text-4xl md:text-5xl font-bold mb-6">
-            Why Solar Network?
+            {{ t('page.product.solarNetwork.features.title') }}
           </h2>
           <p class="text-xl max-w-2xl mx-auto">
-            Built for those who create, code, and connect. Experience a platform
-            that understands your passions.
+            {{ t('page.product.solarNetwork.features.subtitle') }}
           </p>
         </div>
 
@@ -94,10 +90,11 @@
                 >
                   <n-icon size="32" :component="CodeRound" />
                 </div>
-                <h3 class="text-2xl font-bold mb-4">Developer First</h3>
+                <h3 class="text-2xl font-bold mb-4">
+                  {{ t('page.product.solarNetwork.features.devFirst.title') }}
+                </h3>
                 <p class="opacity-80 leading-relaxed">
-                  Native syntax highlighting, code snippet sharing, and seamless
-                  integration with your favorite dev tools.
+                  {{ t('page.product.solarNetwork.features.devFirst.content') }}
                 </p>
               </div>
             </div>
@@ -110,11 +107,11 @@
                 >
                   <n-icon size="32" :component="ApiRound" />
                 </div>
-                <h3 class="text-2xl font-bold mb-4">OpenAPI</h3>
+                <h3 class="text-2xl font-bold mb-4">
+                  {{ t('page.product.solarNetwork.features.openapi.title') }}
+                </h3>
                 <p class="opacity-80 leading-relaxed">
-                  Fully documented API, transparent rate limiting and risk
-                  control. Great start for developing your own app with the
-                  Solar Network!
+                  {{ t('page.product.solarNetwork.features.openapi.content') }}
                 </p>
               </div>
             </div>
@@ -127,10 +124,11 @@
                 >
                   <n-icon size="32" :component="AutoAwesomeRound" />
                 </div>
-                <h3 class="text-2xl font-bold mb-4">ACG Culture</h3>
+                <h3 class="text-2xl font-bold mb-4">
+                  {{ t('page.product.solarNetwork.features.acg.title') }}
+                </h3>
                 <p class="opacity-80 leading-relaxed">
-                  A dedicated space for Anime, Comic, and Game enthusiasts.
-                  Share your art, reviews, and passion.
+                  {{ t('page.product.solarNetwork.features.acg.content') }}
                 </p>
               </div>
             </div>
@@ -143,10 +141,11 @@
                 >
                   <n-icon size="32" :component="FavoriteRound" />
                 </div>
-                <h3 class="text-2xl font-bold mb-4">Friendly Community</h3>
+                <h3 class="text-2xl font-bold mb-4">
+                  {{ t('page.product.solarNetwork.features.community.title') }}
+                </h3>
                 <p class="opacity-80 leading-relaxed">
-                  Join a vibrant community of like-minded individuals. Share
-                  your knowledge, ask questions, and connect with others.
+                  {{ t('page.product.solarNetwork.features.community.content') }}
                 </p>
               </div>
             </div>
@@ -159,18 +158,18 @@
         >
           <div class="grid grid-cols-1 lg:grid-cols-2 gap-0">
             <div class="p-12 flex flex-col justify-center">
-              <h3 class="text-3xl font-bold mb-6">Experience the Future</h3>
+              <h3 class="text-3xl font-bold mb-6">
+                {{ t('page.product.solarNetwork.experience.title') }}
+              </h3>
               <p class="text-lg mb-8">
-                Watch our promotional video to see Solar Network in action.
-                Discover a fluid, responsive, and beautiful interface designed
-                for modern interactions.
+                {{ t('page.product.solarNetwork.experience.content') }}
               </p>
               <div class="flex gap-4">
                 <n-tag type="warning" round :bordered="false">
                   <template #icon
                     ><n-icon :component="ConstructionRound"
                   /></template>
-                  Under Construction
+                  {{ t('page.product.solarNetwork.experience.wip') }}
                 </n-tag>
               </div>
             </div>
@@ -207,10 +206,10 @@
       <div class="container mx-auto max-w-5xl">
         <div class="text-center mb-20">
           <h2 class="text-2xl md:text-3xl font-bold mb-2">
-            Start Your Journey
+            {{ t('page.product.solarNetwork.download.title') }}
           </h2>
           <p class="text-xl">
-            Available on iOS, Android, macOS, Windows, and Linux.
+            {{ t('page.product.solarNetwork.download.subtitle') }}
           </p>
         </div>
 
@@ -227,7 +226,7 @@
                 class="shadow-lg shadow-success/20"
               >
                 <template #icon><n-icon :component="StarRound" /></template>
-                Recommended
+                {{ t('page.product.solarNetwork.download.faster.recommended') }}
               </n-tag>
             </div>
 
@@ -237,9 +236,11 @@
               >
                 <n-icon size="36" color="white" :component="IosShareRound" />
               </div>
-              <h3 class="text-2xl font-bold mb-2">Faster Release</h3>
+              <h3 class="text-2xl font-bold mb-2">
+                {{ t('page.product.solarNetwork.download.faster.title') }}
+              </h3>
               <p class="opacity-80 mb-8 grow">
-                Get early access to the latest features on all platforms.
+                {{ t('page.product.solarNetwork.download.faster.content') }}
                 <br />
                 <span class="text-xs opacity-70 mt-2 block">
                   <n-space size="small" align="center">
@@ -261,7 +262,7 @@
                   target="_blank"
                   class="py-6 font-bold"
                 >
-                  Join TestFlight (iOS, macOS)
+                  {{ t('page.product.solarNetwork.download.faster.testflight') }}
                   <template #icon><n-icon :component="LaunchRound" /></template>
                 </n-button>
                 <n-button
@@ -274,7 +275,7 @@
                   target="_blank"
                   class="py-6 font-bold"
                 >
-                  Direct Download
+                  {{ t('page.product.solarNetwork.download.faster.direct') }}
                   <template #icon
                     ><n-icon :component="CloudDownloadRound"
                   /></template>
@@ -289,7 +290,7 @@
                   target="_blank"
                   class="py-2 font-bold text-primary hover:underline"
                 >
-                  Open in your Browser
+                  {{ t('page.product.solarNetwork.download.faster.browser') }}
                   <template #icon><n-icon :component="WebRound" /></template>
                 </n-button>
               </div>
@@ -309,9 +310,11 @@
               >
                 <n-icon size="36" color="white" :component="LogoApple" />
               </div>
-              <h3 class="text-2xl font-bold mb-2">App Store</h3>
+              <h3 class="text-2xl font-bold mb-2">
+                {{ t('page.product.solarNetwork.download.appstore.title') }}
+              </h3>
               <p class="opacity-80 mb-8 grow">
-                Stable release for general users. Leave a review to support us!
+                {{ t('page.product.solarNetwork.download.appstore.content') }}
               </p>
               <n-button
                 secondary
@@ -323,7 +326,7 @@
                 target="_blank"
                 class="py-6 font-bold"
               >
-                Visit Store Page
+                {{ t('page.product.solarNetwork.download.appstore.visit') }}
                 <template #icon><n-icon :component="LaunchRound" /></template>
               </n-button>
             </div>
@@ -345,7 +348,7 @@
                 <div
                   class="text-xs opacity-80 uppercase tracking-wider font-bold mb-1"
                 >
-                  Latest Release
+                  {{ t('page.product.solarNetwork.download.latest.title') }}
                 </div>
                 <div class="font-mono text-primary font-bold">
                   {{ latestRelease.data.value?.tag_name }}
@@ -358,7 +361,7 @@
               :href="latestRelease.data.value?.html_url"
               target="_blank"
             >
-              View on GitHub
+              {{ t('page.product.solarNetwork.download.latest.view') }}
               <template #icon
                 ><n-icon :component="ArrowForwardRound"
               /></template>
@@ -371,10 +374,11 @@
     <!-- Footer / Support -->
     <div class="py-24 bg-primary/5">
       <div class="container mx-auto px-4 text-center">
-        <h2 class="text-2xl font-bold mb-2">Need Help?</h2>
+        <h2 class="text-2xl font-bold mb-2">
+          {{ t('page.product.solarNetwork.support.title') }}
+        </h2>
         <p class="mb-12 text-lg">
-          Feel free to contact your customer service or report a bug on the
-          GitHub.
+          {{ t('page.product.solarNetwork.support.content') }}
         </p>
         <div class="flex flex-wrap justify-center gap-8">
           <a
@@ -383,14 +387,14 @@
             class="flex items-center gap-3 px-6 py-4 rounded-xl bg-white dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors border border-gray-200 dark:border-white/5 text-gray-900 dark:text-white shadow-sm"
           >
             <n-icon :component="LogoGithub" size="24" />
-            <span class="font-semibold">Report an Issue</span>
+            <span class="font-semibold">{{ t('page.product.solarNetwork.support.report') }}</span>
           </a>
           <a
             href="mailto:lily@solsynth.dev"
             class="flex items-center gap-3 px-6 py-4 rounded-xl bg-white dark:bg-white/5 hover:bg-gray-100 dark:hover:bg-white/10 transition-colors border border-gray-200 dark:border-white/5 text-gray-900 dark:text-white shadow-sm"
           >
             <n-icon :component="MailOutlineRound" size="24" />
-            <span class="font-semibold">Contact Support</span>
+            <span class="font-semibold">{{ t('page.product.solarNetwork.support.contact') }}</span>
           </a>
         </div>
       </div>
@@ -423,14 +427,16 @@ import {
   LogoWindows,
   LogoTux,
 } from "@vicons/ionicons5";
+import { useI18n } from "vue-i18n";
+
+const { t } = useI18n();
 
 useHead({
-  title: "Solar Network - Stay Connected",
+  title: t('page.product.solarNetwork.title'),
   meta: [
     {
       name: "description",
-      content:
-        "The amazing social network for technology, programming, and ACG fans.",
+      content: t('page.product.solarNetwork.description'),
     },
   ],
 });

@@ -8,7 +8,6 @@ import { generateTailwindColorThemes } from "@bg-dev/nuxt-naiveui/utils";
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
-  ssr: false,
   css: ["~/assets/css/main.css"],
   app: {
     pageTransition: { name: "page", mode: "out-in" },
@@ -18,7 +17,6 @@ export default defineNuxtConfig({
       link: [{ rel: "icon", type: "image/png", href: "/favicon.png" }],
     },
   },
-  nitro: {},
   modules: [
     "@nuxt/content",
     "@nuxt/eslint",
@@ -26,7 +24,25 @@ export default defineNuxtConfig({
     "@nuxt/scripts",
     "@vueuse/nuxt",
     "@bg-dev/nuxt-naiveui",
+    "@nuxtjs/i18n",
   ],
+  i18n: {
+    langDir: ".",
+    strategy: "prefix_except_default",
+    locales: [
+      {
+        code: "en",
+        name: "English",
+        file: "en.json",
+      },
+      {
+        code: "zh-cn",
+        name: "简体中文",
+        file: "zh-cn.json",
+      },
+    ],
+    defaultLocale: "en",
+  },
   vite: {
     plugins: [
       tailwindcss(),
@@ -46,6 +62,27 @@ export default defineNuxtConfig({
         resolvers: [NaiveUiResolver()],
       }),
     ],
+  },
+  nitro: {
+    preset: "cloudflare_module",
+    cloudflare: {
+      deployConfig: true,
+      wrangler: {
+        d1_databases: [
+          {
+            binding: "DB",
+            database_name: "capital-content",
+            database_id: "73d65123-3c42-4dc9-b540-8e89678962a2",
+          },
+        ],
+      },
+    },
+  },
+  content: {
+    database: {
+      type: "d1",
+      bindingName: "DB",
+    },
   },
   naiveui: {
     colorModePreference: "system",
