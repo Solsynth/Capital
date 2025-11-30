@@ -1,5 +1,5 @@
 <template>
-  <naive-config>
+  <naive-config :data-theme="colorMode.colorMode.value">
     <n-global-style />
     <n-loading-bar-provider>
       <n-dialog-provider>
@@ -22,6 +22,8 @@ import {
 } from "naive-ui";
 
 import "@fontsource-variable/nunito";
+
+const colorMode = useNaiveColorMode();
 </script>
 
 <style>
