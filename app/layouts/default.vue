@@ -3,25 +3,33 @@
     <header
       class="navbar bg-transparent shadow-lg fixed top-0 left-0 right-0 backdrop-blur-2xl z-1000 h-[64px]"
     >
-      <div class="container mx-auto flex items-center justify-between px-5">
+      <div
+        class="container mx-auto flex items-center justify-between px-5 relative"
+      >
         <nuxt-link-locale to="/">
           <nuxt-img src="/favicon.png" alt="Solsynth" class="w-8 h-8" />
         </nuxt-link-locale>
 
-        <n-menu
+        <div
+          class="absolute left-0 right-0 flex w-full justify-center"
           v-if="breakpoints.isGreaterOrEqual('md')"
-          v-model:value="activeKey"
-          mode="horizontal"
-          :options="menuOptions"
-          style="width: auto"
-        />
+        >
+          <n-menu
+            v-model:value="activeKey"
+            mode="horizontal"
+            :options="menuOptions"
+            style="width: auto"
+          />
+        </div>
         <n-popover v-else trigger="hover">
           <template #trigger>
-            <n-button text>
-              <template #icon>
-                <n-icon :component="MenuOutlined" />
-              </template>
-            </n-button>
+            <div class="absolute left-0 right-0 flex w-full justify-center">
+              <n-button text>
+                <template #icon>
+                  <n-icon :component="MenuOutlined" />
+                </template>
+              </n-button>
+            </div>
           </template>
           <n-menu
             v-model:value="activeKey"
