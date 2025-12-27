@@ -36,7 +36,6 @@
     "@tailwindcss/vite": "^4.1.17",
     "@vicons/ionicons5": "^0.13.0",
     "@vicons/material": "^0.13.0",
-    "daisyui": "^5.5.5",
     "naive-ui": "^2.43.2",
     "unplugin-auto-import": "^20.3.0",
     "unplugin-vue-components": "^30.0.0"
