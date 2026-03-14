@@ -2,18 +2,24 @@
 lang: en
 title: Refund Policy
 description: Refund Policy Applicable to All Solsynth Products
-updatedDate: '2025-08-01'
+updatedDate: "2026-03-14"
 ---
 
-# **Refund Policy**
+# Refund Policy
 
-The refund policy is subject to different rules depending on the platform and currency involved.
+Refund policies vary depending on the platform and currency involved.
 
-## **Transactions Processed Directly by Solsynth**
+## Virtual Points on Solar Network
 
-1. All transactions for "Source Points" and "Gold Points" are final and non-refundable once completed. We appreciate your understanding.
-2. Solsynth does not directly process cash transactions.
+Once a transaction involving virtual points (including Source Points and Golden Sun Points) is completed, no refunds will be issued for any reason.
 
-## **Transactions Processed via Third-Party Platforms**
+## Stellar Plan Purchases
 
-The refund rules of the respective third-party platform will apply.
+**This policy does not apply to Stellar Plans purchased through Solar Network point redemption.**
+
+You may contact us via email or in-app support tickets within 7 days of your Stellar Plan purchase to request a refund.
+Once the refund is processed, the corresponding Golden Sun Points will be deducted. If some of the Golden Sun Points have already been spent, we will attempt to recover them or adjust your balance to a negative value.
+
+Each account is limited to one no-reason refund per calendar year, except in special circumstances.
+
+_Purchases made through afdian cannot be refunded via Solsynth due to platform restrictions; please contact afdian directly._
