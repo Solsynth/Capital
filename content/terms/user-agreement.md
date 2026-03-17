@@ -2,7 +2,7 @@
 lang: en
 title: User Agreement
 description: This agreement outlines the fundamental rules and terms applicable to all Solsynth products, ensuring users understand their rights, obligations, and the standards for platform usage.
-updatedDate: '2025-09-12'
+updatedDate: "2026-03-17"
 ---
 
 # User Agreement
@@ -23,6 +23,7 @@ To ensure clarity, the following keywords used in this Agreement have specific m
 - **Must Not**: Indicates a prohibited action, the opposite of “must”; engaging in such actions constitutes a breach of this Agreement.
 
 Other definitions:
+
 - **User**: Refers to any individual, organization, or entity that accesses or uses our Services or holds a Solsynth account, including but not limited to natural persons, legal entities, or bot accounts.
 - **Services**: Refers to any products, platforms, APIs, tools, or features provided by Solsynth, including Solar Network.
 - **Account**: Refers to a User’s registered identity in the Solsynth system, such as a Solarpass account.
@@ -67,7 +68,7 @@ Other definitions:
      - Partial Suspension: Restricts specific functions, such as posting or uploading files.
    - **Ban**: Permanently disables the account and access to all Solsynth Services. We reserve the right to delete related data.
 2. If Users create new accounts to bypass penalties, we will delete the new accounts and may extend or escalate the original penalty.
-3. Users have the right to appeal penalties by submitting evidence to lily@solsynth.dev. We will review and respond to appeals.
+3. Users have the right to appeal penalties by submitting evidence to <lily@solsynth.dev>. We will review and respond to appeals.
 
 ## Inappropriate Use
 
@@ -107,6 +108,24 @@ The following behaviors are considered inappropriate use, and we reserve the rig
 2. We are not liable for any indirect, incidental, or consequential damages, including data loss, loss of profits, or third-party claims.
 3. Users agree to indemnify us for any losses, costs, or liabilities arising from their violations or UGC.
 4. Force majeure events (e.g., natural disasters, wars) exempt us from liability.
+
+## Subscriptions (In-app Credits)
+
+For the subscriptions purchased via the in-app credits, the following terms apply:
+
+1. We have the rights to terminate the subscription at any time without any providing a reason.
+2. When we terminate the subscription, we will refund the remaining balance to the user.
+3. We may change the price of the subscription at any time, which will applies to next renew period.
+
+## Subscriptions (App Store)
+
+For subscriptions purchased through the Apple App Store (such as the Stellar Program):
+
+1. Subscriptions automatically renew unless auto-renew is turned off at least 24 hours before the end of the current period.
+2. Payment will be charged to your Apple ID account at confirmation of purchase.
+3. Your account will be charged for renewal within 24 hours prior to the end of the current period.
+4. You can manage and cancel your subscriptions by going to your App Store account settings.
+5. All purchases are handled by Apple. Refunds are subject to Apple's refund policy.
 
 ## Termination
 
