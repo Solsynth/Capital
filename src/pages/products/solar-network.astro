@@ -1,0 +1,107 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Github, ExternalLink, Bug, ArrowLeft, Tag, Folder } from 'lucide-astro';
+---
+
+<Layout title="Solar Network">
+  <div class="relative h-[50vh] min-h-100">
+    <img src="/solar-network/kp.jpg" class="w-full h-full object-cover" alt="Solar Network" />
+    <div class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"></div>
+    
+    <div class="absolute bottom-0 left-0 right-0 p-8">
+      <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
+        <img src="/solar-network/icon.png" class="w-24 h-24 rounded-2xl shadow-xl" alt="Solar Network" />
+        <div class="flex-1">
+          <h1 class="text-4xl md:text-5xl font-bold mb-2">Solar Network</h1>
+          <p class="text-lg opacity-80">The amazing social network for technology, programming, ACG fans.</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <a href="/products?series=Solar%20Network" class="badge badge-primary badge-sm">
+              <Folder class="w-3 h-3 mr-1" />
+              Solar Network
+            </a>
+            <a href="/products?tag=Social%20Network" class="badge badge-outline badge-sm hover:badge-primary">
+              <Tag class="w-3 h-3 mr-1" />
+              Social Network
+            </a>
+            <a href="/products?tag=Community" class="badge badge-outline badge-sm hover:badge-primary">
+              <Tag class="w-3 h-3 mr-1" />
+              Community
+            </a>
+            <a href="/products?tag=ACG" class="badge badge-outline badge-sm hover:badge-primary">
+              <Tag class="w-3 h-3 mr-1" />
+              ACG
+            </a>
+          </div>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+          <a href="https://web.solian.app" target="_blank" class="btn btn-primary btn-lg rounded-full">
+            Get Started
+          </a>
+          <a href="https://github.com/Solsynth/Solian" target="_blank" class="btn btn-outline btn-lg rounded-full">
+            <Github class="w-5 h-5" />
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-16">
+    <section class="mb-16">
+      <h2 class="text-3xl font-bold mb-4 text-center">Why Solar Network?</h2>
+      <p class="text-lg opacity-70 text-center max-w-2xl mx-auto mb-12">
+        Built for those who create, code, and connect. Experience a platform that understands your passions.
+      </p>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="card bg-base-200 p-8">
+          <h3 class="text-xl font-bold mb-3 text-primary">Developer First</h3>
+          <p class="opacity-80">Native syntax highlighting, code snippet sharing, and seamless integration with your favorite dev tools.</p>
+        </div>
+        <div class="card bg-base-200 p-8">
+          <h3 class="text-xl font-bold mb-3 text-primary">OpenAPI</h3>
+          <p class="opacity-80">Fully documented API, transparent rate limiting and risk control. Great start for developing your own app!</p>
+        </div>
+        <div class="card bg-base-200 p-8">
+          <h3 class="text-xl font-bold mb-3 text-primary">ACG Culture</h3>
+          <p class="opacity-80">A dedicated space for Anime, Comic, and Game enthusiasts. Share your art, reviews, and passion.</p>
+        </div>
+        <div class="card bg-base-200 p-8">
+          <h3 class="text-xl font-bold mb-3 text-primary">Friendly Community</h3>
+          <p class="opacity-80">Join a vibrant community of like-minded individuals. Share knowledge, ask questions, and connect.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <div class="card bg-linear-to-r from-primary/10 to-secondary/10 p-8">
+        <h2 class="text-3xl font-bold mb-4">Start Your Journey</h2>
+        <p class="text-lg opacity-80 mb-6">Available on iOS, Android, macOS, Windows, and Linux.</p>
+        
+        <div class="flex flex-wrap gap-4">
+          <a href="https://web.solian.app" target="_blank" class="btn btn-primary">
+            <ExternalLink class="w-5 h-5" />
+            Open in Browser
+          </a>
+          <a href="https://github.com/Solsynth/Solian" target="_blank" class="btn btn-outline">
+            <Github class="w-5 h-5" />
+            View on GitHub
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card bg-base-200 p-8">
+        <h2 class="text-3xl font-bold mb-4">Need Help?</h2>
+        <p class="text-lg opacity-80 mb-6">Feel free to contact your customer service or report a bug on GitHub.</p>
+        <div class="flex gap-4">
+          <a href="https://github.com/Solsynth/Solian/issues" target="_blank" class="btn btn-outline">
+            <Bug class="w-5 h-5" />
+            Report an Issue
+          </a>
+        </div>
+      </div>
+    </section>
+  </div>
+</Layout>

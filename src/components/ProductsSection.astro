@@ -1,0 +1,50 @@
+---
+import ProductCard from './ProductCard.astro';
+
+interface Props {
+  products: {
+    data: {
+      title: string;
+      description: string;
+      icon: string;
+      background: string;
+      url?: string;
+      repo?: string;
+      hasPage: boolean;
+      tags?: string[];
+      series?: string;
+    };
+    id: string;
+  }[];
+}
+
+const { products } = Astro.props;
+---
+
+<section id="products" class="scroll-mt-24 py-16 px-4">
+  <div class="container mx-auto">
+    <div class="text-center mb-16">
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Creations</h2>
+      <p class="text-lg md:text-xl opacity-70 max-w-2xl mx-auto">
+        From social networks to cloud drives, we build tools that empower and connect.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      {products.map(product => (
+        <ProductCard
+          name={product.data.title}
+          description={product.data.description}
+          icon={product.data.icon}
+          background={product.data.background}
+          url={product.data.url}
+          repo={product.data.repo}
+          hasPage={product.data.hasPage}
+          slug={product.id}
+          tags={product.data.tags}
+          series={product.data.series}
+        />
+      ))}
+    </div>
+  </div>
+</section>

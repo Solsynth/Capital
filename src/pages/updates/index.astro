@@ -1,0 +1,74 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { getPosts, formatDate, truncateContent } from '../../utils/api';
+import { ArrowLeft } from 'lucide-astro';
+
+const posts = await getPosts(20, 0);
+
+function getDisplayTitle(post: { title: string; content: string }): string {
+  if (post.title && post.title.trim()) return post.title;
+  const firstLine = post.content?.split('\n')[0]?.trim() || '';
+  return firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine || 'View Post';
+}
+---
+
+<Layout title="Updates">
+  <div class="container mx-auto px-4 py-16 max-w-4xl">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">Updates</h1>
+      <p class="text-xl opacity-70 max-w-2xl mx-auto">
+        Latest news and announcements from Solsynth.
+      </p>
+    </div>
+
+    {posts.length === 0 ? (
+      <div class="text-center py-16">
+        <p class="text-lg opacity-70">No updates available at the moment.</p>
+        <a href="/" class="btn btn-primary mt-4">Back to Home</a>
+      </div>
+    ) : (
+      <div class="space-y-4">
+        {posts.map((post) => (
+          <a 
+            href={`/updates/${post.id}`}
+            class="card bg-base-200 p-6 hover:shadow-lg transition-all duration-300 block group"
+          >
+            <div class="flex flex-col lg:flex-row lg:items-start gap-4">
+              <div class="flex-1">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                  <h2 class="text-xl font-bold group-hover:text-primary transition-colors">
+                    {getDisplayTitle(post)}
+                  </h2>
+                  <span class="text-sm opacity-50">{formatDate(post.published_at)}</span>
+                </div>
+                <p class="text-sm opacity-70">{truncateContent(post.content, 200)}</p>
+                <div class="flex items-center gap-4 mt-3 text-sm opacity-50">
+                  <span>{post.views_unique} views</span>
+                  {Object.keys(post.reactions_count).length > 0 && (
+                    <span>{Object.values(post.reactions_count).reduce((a, b) => a + b, 0)} reactions</span>
+                  )}
+                  {post.replies_count > 0 && (
+                    <span>{post.replies_count} replies</span>
+                  )}
+                </div>
+              </div>
+              {post.attachments.length > 0 && (
+                <div class="shrink-0 flex gap-2 overflow-x-auto pb-2 lg:pb-0">
+                  {post.attachments.slice(0, 3).map((attachment) => (
+                    <div class="w-16 h-16 rounded-lg overflow-hidden bg-base-300 shrink-0">
+                      <img 
+                        src={`https://api.solian.app/drive/files/${attachment.id}`}
+                        alt={attachment.name}
+                        class="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>

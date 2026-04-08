@@ -1,0 +1,59 @@
+---
+import { Sun, Moon, Compass, Layers, Newspaper } from 'lucide-astro';
+---
+
+<header class="navbar bg-base-200/80 backdrop-blur-xl fixed top-0 left-0 right-0 z-50 h-16 shadow-sm">
+  <div class="container mx-auto flex items-center justify-between px-4 w-full">
+    <!-- Logo -->
+    <a href="/" class="flex items-center gap-2 shrink-0">
+      <img src="/favicon.png" alt="Solsynth" class="w-8 h-8" />
+      <span class="font-bold text-lg hidden sm:inline">Solsynth</span>
+    </a>
+
+    <!-- Centered Nav -->
+    <nav class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+      <ul class="menu menu-horizontal px-1 gap-1">
+        <li>
+          <a href="/" class="btn btn-ghost btn-sm gap-1">
+            <Compass class="w-4 h-4 me-2" />
+            Explore
+          </a>
+        </li>
+        <li>
+          <a href="/products" class="btn btn-ghost btn-sm gap-1">
+            <Layers class="w-4 h-4 me-2" />
+            Products
+          </a>
+        </li>
+        <li>
+          <a href="/updates" class="btn btn-ghost btn-sm gap-1">
+            <Newspaper class="w-4 h-4 me-2" />
+            Updates
+          </a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- Right side -->
+    <div class="flex items-center gap-2 shrink-0">
+      <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">
+        <input type="checkbox" id="theme-toggle" />
+        <Sun class="swap-on w-5 h-5" />
+        <Moon class="swap-off w-5 h-5" />
+      </label>
+    </div>
+  </div>
+</header>
+
+<script>
+  const toggle = document.getElementById('theme-toggle') as HTMLInputElement;
+  const html = document.documentElement;
+  
+  toggle?.addEventListener('change', () => {
+    if (toggle.checked) {
+      html.setAttribute('data-theme', 'dark');
+    } else {
+      html.setAttribute('data-theme', 'light');
+    }
+  });
+</script>

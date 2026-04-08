@@ -1,0 +1,49 @@
+---
+const footerLinks = {
+  products: [
+    { href: 'https://solian.app', label: 'Solar Network' },
+    { href: '/products', label: 'Catalog' },
+  ],
+  company: [
+    { href: '/about', label: 'About us' },
+    { href: 'https://github.com/Solsynth', label: 'GitHub' },
+  ],
+  legal: [
+    { href: '/terms/user-agreement', label: 'Terms of Service' },
+    { href: '/terms/privacy-policy', label: 'Privacy Policy' },
+    { href: '/terms/refund-policy', label: 'Refund Policy' },
+  ],
+};
+---
+
+<footer class="footer bg-base-200 text-base-content p-8 md:p-10">
+  <div class="container mx-auto">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
+      <aside class="col-span-1 sm:col-span-2 md:col-span-1">
+        <img src="/favicon.png" alt="Solsynth" class="w-10 md:w-12" />
+        <div class="mt-2">
+          <h3 class="font-bold text-lg">Solsynth</h3>
+          <p class="text-sm opacity-70">Making software, hardware and experiences since 2024</p>
+        </div>
+      </aside>
+      <nav>
+        <h6 class="footer-title">Products</h6>
+        {footerLinks.products.map(link => (
+          <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} class="link link-hover block text-sm">{link.label}</a>
+        ))}
+      </nav>
+      <nav>
+        <h6 class="footer-title">Company</h6>
+        {footerLinks.company.map(link => (
+          <a href={link.href} target={link.href.startsWith('http') ? '_blank' : undefined} class="link link-hover block text-sm">{link.label}</a>
+        ))}
+      </nav>
+      <nav>
+        <h6 class="footer-title">Legal</h6>
+        {footerLinks.legal.map(link => (
+          <a href={link.href} class="link link-hover block text-sm">{link.label}</a>
+        ))}
+      </nav>
+    </div>
+  </div>
+</footer>

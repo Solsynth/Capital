@@ -1,0 +1,277 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Github, ExternalLink, Bug, ArrowLeft, Tag, Folder } from 'lucide-astro';
+import { getCollection, render } from 'astro:content';
+
+export const prerender = false;
+
+const { slug } = Astro.params;
+
+const DEDICATED_PAGES = ['solar-network'];
+if (slug && DEDICATED_PAGES.includes(slug)) {
+  return Astro.redirect(`/products/${slug}`);
+}
+
+const products = await getCollection('products');
+const product = products.find(p => p.id === slug);
+
+if (!product) {
+  return Astro.redirect('/products');
+}
+
+const hasPage = product.data.hasPage !== false;
+const hasContent = product.body && product.body.trim().length > 0;
+let Content: any = null;
+
+if (hasContent) {
+  const rendered = await render(product);
+  Content = rendered.Content;
+}
+---
+
+<Layout title={product.data.title}>
+  {hasContent && Content ? (
+    <div class="relative h-[40vh] min-h-75">
+      <img src={product.data.background} class="w-full h-full object-cover" alt={product.data.title} />
+      <div class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/50 to-transparent"></div>
+      
+      <div class="absolute bottom-0 left-0 right-0 p-8">
+        <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
+          <img src={product.data.icon} class="w-20 h-20 rounded-2xl shadow-xl" alt={product.data.title} />
+          <div class="flex-1">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">{product.data.title}</h1>
+            <p class="text-lg opacity-80">{product.data.description}</p>
+          </div>
+          <div class="flex gap-3 flex-wrap">
+            {product.data.url && (
+              <a href={product.data.url} target="_blank" class="btn btn-primary">
+                <ExternalLink class="w-5 h-5" />
+                Open
+              </a>
+            )}
+            {product.data.repo && (
+              <a href={product.data.repo} target="_blank" class="btn btn-outline">
+                <Github class="w-5 h-5" />
+                GitHub
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-12">
+      <article class="prose prose-lg max-w-3xl mx-auto">
+        <Content />
+      </article>
+    </div>
+  ) : hasPage ? (
+    <div class="relative h-[50vh] min-h-100">
+      <img src={product.data.background} class="w-full h-full object-cover" alt={product.data.title} />
+      <div class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"></div>
+      
+      <div class="absolute bottom-0 left-0 right-0 p-8">
+        <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
+          <img src={product.data.icon} class="w-24 h-24 rounded-2xl shadow-xl" alt={product.data.title} />
+          <div class="flex-1">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">{product.data.title}</h1>
+            <p class="text-lg opacity-80">{product.data.description}</p>
+            {(product.data.tags?.length > 0 || product.data.series) && (
+              <div class="flex flex-wrap gap-2 mt-3">
+                {product.data.series && (
+                  <a href={`/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+                    <Folder class="w-3 h-3 mr-1" />
+                    {product.data.series}
+                  </a>
+                )}
+                {product.data.tags?.map(tag => (
+                  <a href={`/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+                    <Tag class="w-3 h-3 mr-1" />
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+          <div class="flex gap-3 flex-wrap">
+            {product.data.url && (
+              <a href={product.data.url} target="_blank" class="btn btn-primary btn-lg rounded-full">
+                Get Started
+              </a>
+            )}
+            {product.data.repo && (
+              <a href={product.data.repo} target="_blank" class="btn btn-outline btn-lg rounded-full">
+                <Github class="w-5 h-5" />
+                GitHub
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-16">
+      <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-4 text-center">Why {product.data.title}?</h2>
+        <p class="text-lg opacity-70 text-center max-w-2xl mx-auto mb-12">
+          Built for those who create, code, and connect. Experience a platform that understands your passions.
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="card bg-base-200 p-8">
+            <h3 class="text-xl font-bold mb-3 text-primary">Developer First</h3>
+            <p class="opacity-80">Native syntax highlighting, code snippet sharing, and seamless integration with your favorite dev tools.</p>
+          </div>
+          <div class="card bg-base-200 p-8">
+            <h3 class="text-xl font-bold mb-3 text-primary">OpenAPI</h3>
+            <p class="opacity-80">Fully documented API, transparent rate limiting and risk control. Great start for developing your own app!</p>
+          </div>
+          <div class="card bg-base-200 p-8">
+            <h3 class="text-xl font-bold mb-3 text-primary">ACG Culture</h3>
+            <p class="opacity-80">A dedicated space for Anime, Comic, and Game enthusiasts. Share your art, reviews, and passion.</p>
+          </div>
+          <div class="card bg-base-200 p-8">
+            <h3 class="text-xl font-bold mb-3 text-primary">Friendly Community</h3>
+            <p class="opacity-80">Join a vibrant community of like-minded individuals. Share knowledge, ask questions, and connect.</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-16">
+        <div class="card bg-linear-to-r from-primary/10 to-secondary/10 p-8">
+          <h2 class="text-3xl font-bold mb-4">Start Your Journey</h2>
+          <p class="text-lg opacity-80 mb-6">Available on iOS, Android, macOS, Windows, and Linux.</p>
+          
+          <div class="flex flex-wrap gap-4">
+            {product.data.url && (
+              <a href={product.data.url} target="_blank" class="btn btn-primary">
+                <ExternalLink class="w-5 h-5" />
+                Open in Browser
+              </a>
+            )}
+            {product.data.repo && (
+              <a href={product.data.repo} target="_blank" class="btn btn-outline">
+                <Github class="w-5 h-5" />
+                View on GitHub
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="card bg-base-200 p-8">
+          <h2 class="text-3xl font-bold mb-4">Need Help?</h2>
+          <p class="text-lg opacity-80 mb-6">Feel free to contact your customer service or report a bug on GitHub.</p>
+          <div class="flex gap-4">
+            {product.data.repo && (
+              <a href={`${product.data.repo}/issues`} target="_blank" class="btn btn-outline">
+                <Bug class="w-5 h-5" />
+                Report an Issue
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+    </div>
+  ) : (
+    <div class="relative h-[40vh] min-h-75">
+      <img src={product.data.background} class="w-full h-full object-cover" alt={product.data.title} />
+      <div class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"></div>
+      
+      <div class="absolute bottom-0 left-0 right-0 p-8">
+        <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
+          <img src={product.data.icon} class="w-20 h-20 rounded-2xl shadow-xl" alt={product.data.title} />
+          <div class="flex-1">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">{product.data.title}</h1>
+            <p class="text-lg opacity-80">{product.data.description}</p>
+            {(product.data.tags?.length > 0 || product.data.series) && (
+              <div class="flex flex-wrap gap-2 mt-3">
+                {product.data.series && (
+                  <a href={`/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+                    <Folder class="w-3 h-3 mr-1" />
+                    {product.data.series}
+                  </a>
+                )}
+                {product.data.tags?.map(tag => (
+                  <a href={`/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+                    <Tag class="w-3 h-3 mr-1" />
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+          <div class="flex gap-3 flex-wrap">
+            {product.data.url && (
+              <a href={product.data.url} target="_blank" class="btn btn-primary">
+                <ExternalLink class="w-5 h-5" />
+                Open
+              </a>
+            )}
+            {product.data.repo && (
+              <a href={product.data.repo} target="_blank" class="btn btn-outline">
+                <Github class="w-5 h-5" />
+                GitHub
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-12">
+      <div class="card bg-base-200 p-8 max-w-2xl mx-auto">
+        <div class="flex items-center gap-3 mb-4">
+          <img src={product.data.icon} class="w-12 h-12 rounded-lg" alt={product.data.title} />
+          <div>
+            <h2 class="text-xl font-bold">{product.data.title}</h2>
+            {product.data.version && <span class="text-sm opacity-60">v{product.data.version}</span>}
+          </div>
+        </div>
+        
+        <p class="opacity-80 mb-6">{product.data.description}</p>
+        
+        {(product.data.tags?.length > 0 || product.data.series) && (
+          <div class="flex flex-wrap gap-2 mb-6">
+            {product.data.series && (
+              <a href={`/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+                <Folder class="w-3 h-3 mr-1" />
+                {product.data.series}
+              </a>
+            )}
+            {product.data.tags?.map(tag => (
+              <a href={`/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+                <Tag class="w-3 h-3 mr-1" />
+                {tag}
+              </a>
+            ))}
+          </div>
+        )}
+        
+        <div class="flex flex-wrap gap-4 text-sm">
+          {product.data.url && (
+            <a href={product.data.url} target="_blank" class="btn btn-primary btn-sm">
+              <ExternalLink class="w-4 h-4" />
+              Visit Website
+            </a>
+          )}
+          {product.data.repo && (
+            <a href={product.data.repo} target="_blank" class="btn btn-outline btn-sm">
+              <Github class="w-4 h-4" />
+              Source Code
+            </a>
+          )}
+          <a href="/products" class="btn btn-ghost btn-sm">
+            <ArrowLeft class="w-4 h-4" />
+            Back to Products
+          </a>
+        </div>
+        
+        {product.data.releasedDate && (
+          <p class="text-sm opacity-60 mt-4">Released: {product.data.releasedDate}</p>
+        )}
+      </div>
+    </div>
+  )}
+</Layout>

@@ -1,0 +1,72 @@
+---
+const stats = [
+  { value: 2, suffix: "+", label: "Years" },
+  { value: 3, suffix: "+", label: "Products" },
+  { value: 1, suffix: "K+", label: "Users" },
+  { value: 100, suffix: "%", label: "Passion" }
+];
+---
+
+<section class="py-16 px-4 bg-base-200/30">
+  <div class="container mx-auto">
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      {stats.map((stat, i) => (
+        <div class="text-center animate-fade-in-up" style={`animation-delay: ${i * 100}ms`}>
+          <div class="text-4xl md:text-5xl font-extrabold text-primary mb-2">
+            <span class="counter" data-target={stat.value}>0</span>{stat.suffix}
+          </div>
+          <div class="text-lg opacity-70">{stat.label}</div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<script>
+  const counters = document.querySelectorAll('.counter');
+  
+  const animateCounter = (el: Element) => {
+    const target = parseInt(el.getAttribute('data-target') || '0');
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+    
+    const update = () => {
+      current += step;
+      if (current < target) {
+        el.textContent = Math.floor(current).toString();
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = target.toString();
+      }
+    };
+    
+    update();
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(counter => observer.observe(counter));
+</script>
+
+<style>
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
