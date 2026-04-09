@@ -4,7 +4,6 @@ import Hero from '../components/Hero.astro';
 import StatsSection from '../components/StatsSection.astro';
 import ProductsSection from '../components/ProductsSection.astro';
 import FeaturesSection from '../components/FeaturesSection.astro';
-import TechStackSection from '../components/TechStackSection.astro';
 import UpdatesSection from '../components/UpdatesSection.astro';
 import { getCollection } from 'astro:content';
 
@@ -16,6 +15,5 @@ const products = await getCollection('products');
   <StatsSection />
   <ProductsSection products={products} />
   <FeaturesSection />
-  <TechStackSection />
   <UpdatesSection />
 </Layout>
