@@ -1,6 +1,8 @@
 {
   "title": "Solar Network",
+  "titleZh": "太阳网络",
   "description": "The amazing social network for technology, programming, ACG fans.",
+  "descriptionZh": "专为技术、编程和 ACG 爱好者打造的精彩社交网络。",
   "icon": "/solar-network/icon.png",
   "background": "/solar-network/screenshot.png",
   "url": "https://web.solian.app",

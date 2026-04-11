@@ -1,0 +1,80 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getPosts, formatDate, truncateContent } from '../../../utils/api';
+import { getLangFromUrl, useTranslations, type Lang } from '../../../i18n/utils';
+
+export const prerender = false;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const prefix = lang === 'zh' ? '/zh' : '';
+
+const posts = await getPosts(20, 0);
+
+function getDisplayTitle(post: { title: string; content: string }): string {
+  if (post.title && post.title.trim()) return post.title;
+  const firstLine = post.content?.split('\n')[0]?.trim() || '';
+  return firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine || 'View Post';
+}
+---
+
+<Layout title={t('updates.title')}>
+  <div class="container mx-auto px-4 py-16 max-w-4xl">
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">{t('updates.title')}</h1>
+      <p class="text-xl opacity-70 max-w-2xl mx-auto">
+        {t('updates.subtitle')}
+      </p>
+    </div>
+
+    {posts.length === 0 ? (
+      <div class="text-center py-16">
+        <p class="text-lg opacity-70">{t('updates.noUpdates')}</p>
+        <a href={prefix || '/'} class="btn btn-primary mt-4">{lang === 'zh' ? '返回首页' : 'Back to Home'}</a>
+      </div>
+    ) : (
+      <div class="space-y-4">
+        {posts.map((post) => (
+          <a 
+            href={`${prefix}/updates/${post.id}`}
+            class="card bg-base-200 p-6 hover:shadow-lg transition-all duration-300 block group"
+          >
+            <div class="flex flex-col lg:flex-row lg:items-start gap-4">
+              <div class="flex-1">
+                <div class="flex flex-col sm:flex-row sm:items-center gap-2 mb-2">
+                  <h2 class="text-xl font-bold group-hover:text-primary transition-colors">
+                    {getDisplayTitle(post)}
+                  </h2>
+                  <span class="text-sm opacity-50">{formatDate(post.published_at)}</span>
+                </div>
+                <p class="text-sm opacity-70">{truncateContent(post.content, 200)}</p>
+                <div class="flex items-center gap-4 mt-3 text-sm opacity-50">
+                  <span>{post.views_unique} {t('updates.views')}</span>
+                  {Object.keys(post.reactions_count).length > 0 && (
+                    <span>{Object.values(post.reactions_count).reduce((a, b) => a + b, 0)} {t('updates.reactions')}</span>
+                  )}
+                  {post.replies_count > 0 && (
+                    <span>{post.replies_count} {t('updates.replies')}</span>
+                  )}
+                </div>
+              </div>
+              {post.attachments.length > 0 && (
+                <div class="shrink-0 flex gap-2 overflow-x-auto pb-2 lg:pb-0">
+                  {post.attachments.slice(0, 3).map((attachment) => (
+                    <div class="w-16 h-16 rounded-lg overflow-hidden bg-base-300 shrink-0">
+                      <img 
+                        src={`https://api.solian.app/drive/files/${attachment.id}`}
+                        alt={attachment.name}
+                        class="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>

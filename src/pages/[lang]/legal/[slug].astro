@@ -1,0 +1,59 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { getCollection, render } from 'astro:content';
+import { ArrowLeft, Calendar } from 'lucide-astro';
+import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+
+export const prerender = false;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const prefix = lang === 'zh' ? '/zh' : '';
+const { slug } = Astro.params;
+
+const allLegal = await getCollection('legal');
+
+function getSlug(filename: string): string {
+  return filename.replace(/^(en|zh)\//, '').replace(/\.md$/, '');
+}
+
+const page = allLegal.find(p => getSlug(p.id) === slug && p.id.startsWith(`${lang}/`));
+
+if (!page) {
+  return Astro.redirect(`${prefix}/legal`);
+}
+
+const { Content } = await render(page);
+---
+
+<Layout title={page.data.title}>
+  <div class="container mx-auto px-8 py-16 max-w-4xl">
+    <div class="mb-8 -mx-4">
+      <a href={`${prefix}/legal`} class="btn btn-ghost btn-sm gap-1">
+        <ArrowLeft class="w-4 h-4" />
+        {t('legal.backToLegal')}
+      </a>
+    </div>
+
+    <article>
+      <header class="mb-8">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">{page.data.title}</h1>
+        {page.data.updatedDate && (
+          <div class="flex items-center gap-2 text-sm opacity-70">
+            <Calendar class="w-4 h-4" />
+            <span>{lang === 'zh' ? t('legal.lastUpdatedZh') : t('legal.lastUpdated')} {page.data.updatedDate}</span>
+          </div>
+        )}
+        {page.data.description && (
+          <p class="text-lg opacity-70 mt-4">{page.data.description}</p>
+        )}
+      </header>
+
+      <div class="divider"></div>
+
+      <div class="prose prose-lg max-w-none">
+        <Content />
+      </div>
+    </article>
+  </div>
+</Layout>

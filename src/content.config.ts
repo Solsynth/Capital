@@ -5,7 +5,9 @@ const products = defineCollection({
   loader: glob({ pattern: "**/*.{json,md}", base: "./src/content/products" }),
   schema: z.object({
     title: z.string(),
+    titleZh: z.string().optional(),
     description: z.string(),
+    descriptionZh: z.string().optional(),
     icon: z.string(),
     background: z.string(),
     url: z.string().optional(),
@@ -18,6 +20,16 @@ const products = defineCollection({
   }),
 });
 
+const legal = defineCollection({
+  loader: glob({ pattern: "**/*.md", base: "./src/content/legal" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    updatedDate: z.string().optional(),
+  }),
+});
+
 export const collections = {
   products,
+  legal,
 };

@@ -1,11 +1,24 @@
 ---
-import { Sun, Moon, Compass, Layers, Newspaper } from 'lucide-astro';
+import { Sun, Moon, Compass, Layers, Newspaper, Scale } from 'lucide-astro';
+import { getLangFromUrl, useTranslations, languages, type Lang } from '../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const pathname = Astro.url.pathname;
+
+function getLocalizedPath(targetLang: Lang): string {
+  const pathWithoutLang = pathname.replace(/^\/(en|zh)/, '');
+  if (targetLang === 'en') {
+    return pathWithoutLang || '/';
+  }
+  return `/${targetLang}${pathWithoutLang}`;
+}
 ---
 
 <header class="navbar bg-base-200/80 backdrop-blur-xl fixed top-0 left-0 right-0 z-50 h-16 shadow-sm">
   <div class="container mx-auto flex items-center justify-between px-4 w-full">
     <!-- Logo -->
-    <a href="/" class="flex items-center gap-2 shrink-0">
+    <a href={lang === 'zh' ? '/zh' : '/'} class="flex items-center gap-2 shrink-0">
       <img src="/favicon.png" alt="Solsynth" class="w-8 h-8" />
       <span class="font-bold text-lg hidden sm:inline">Solsynth</span>
     </a>
@@ -14,21 +27,21 @@ import { Sun, Moon, Compass, Layers, Newspaper } from 'lucide-astro';
     <nav class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
       <ul class="menu menu-horizontal px-1 gap-1">
         <li>
-          <a href="/" class="btn btn-ghost btn-sm gap-1">
+          <a href={lang === 'zh' ? '/zh' : '/'} class="btn btn-ghost btn-sm gap-1">
             <Compass class="w-4 h-4 me-2" />
-            Explore
+            {t('nav.explore')}
           </a>
         </li>
         <li>
-          <a href="/products" class="btn btn-ghost btn-sm gap-1">
+          <a href={`/${lang === 'zh' ? 'zh/' : ''}products`} class="btn btn-ghost btn-sm gap-1">
             <Layers class="w-4 h-4 me-2" />
-            Products
+            {t('nav.products')}
           </a>
         </li>
         <li>
-          <a href="/updates" class="btn btn-ghost btn-sm gap-1">
+          <a href={`/${lang === 'zh' ? 'zh/' : ''}updates`} class="btn btn-ghost btn-sm gap-1">
             <Newspaper class="w-4 h-4 me-2" />
-            Updates
+            {t('nav.updates')}
           </a>
         </li>
       </ul>
@@ -36,6 +49,30 @@ import { Sun, Moon, Compass, Layers, Newspaper } from 'lucide-astro';
 
     <!-- Right side -->
     <div class="flex items-center gap-2 shrink-0">
+      <!-- Language Switcher -->
+      <div class="dropdown dropdown-end">
+        <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="10"></circle>
+            <line x1="2" y1="12" x2="22" y2="12"></line>
+            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+          </svg>
+          <span class="hidden sm:inline">{languages[lang]}</span>
+        </div>
+        <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-40 z-50">
+          {(Object.keys(languages) as Lang[]).map((l) => (
+            <li>
+              <a 
+                href={getLocalizedPath(l)}
+                class={l === lang ? 'active' : ''}
+              >
+                {languages[l]}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+      
       <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">
         <input type="checkbox" id="theme-toggle" />
         <Sun class="swap-on w-5 h-5" />

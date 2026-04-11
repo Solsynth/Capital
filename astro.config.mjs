@@ -6,6 +6,7 @@ import node from '@astrojs/node';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://solsynth.dev',
   output: 'server',
   adapter: node({
     mode: 'standalone',
@@ -13,5 +14,15 @@ export default defineConfig({
   integrations: [mdx()],
   vite: {
     plugins: [tailwindcss()],
+  },
+  i18n: {
+    defaultLocale: 'en',
+    locales: ['en', 'zh'],
+    routing: {
+      prefixDefaultLocale: false,
+    },
+    fallback: {
+      zh: 'en',
+    },
   },
 });

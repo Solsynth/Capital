@@ -1,0 +1,249 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { Heart, Code, Users, Sparkles, Github, ArrowLeft } from 'lucide-astro';
+import { getLangFromUrl, useTranslations, type Lang } from '../../i18n/utils';
+
+export const prerender = false;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const prefix = lang === 'zh' ? '/zh' : '';
+
+const content = {
+  en: {
+    hero: {
+      title: 'About Us',
+      subtitle: 'We are a collective of creators, dreamers, and builders.',
+      back: 'Back to Home',
+    },
+    mission: {
+      title: 'Our Mission',
+      paragraphs: [
+        'Our aim is not making a profit. (At least not yet.)',
+        'Instead, we hope we can spread the love to the world and make everyone enjoy the fun of the Internet and technology. We believe in open source, collaboration, and building things that bring joy.',
+      ],
+    },
+    team: {
+      title: 'Meet the Team',
+      profile: 'Profile',
+    },
+    stats: [
+      { label: 'Years', value: 2, suffix: '+' },
+      { label: 'Products', value: 3, suffix: '+' },
+      { label: 'Users', value: 1, suffix: 'K+' },
+      { label: 'Passion', value: 100, suffix: '%' },
+    ],
+  },
+  zh: {
+    hero: {
+      title: '关于我们',
+      subtitle: '我们是一群创作者、梦想家和建设者。',
+      back: '返回首页',
+    },
+    mission: {
+      title: '我们的使命',
+      paragraphs: [
+        '我们的目标不是盈利。（至少现在还不是。）',
+        '我们希望将这份热爱传递给世界，让每个人都能享受互联网和科技的乐趣。我们相信开源、协作，以及打造能带来快乐的事物。',
+      ],
+    },
+    team: {
+      title: '团队成员',
+      profile: '个人主页',
+    },
+    stats: [
+      { label: '年', value: 2, suffix: '+' },
+      { label: '款产品', value: 3, suffix: '+' },
+      { label: '用户', value: 1, suffix: 'K+' },
+      { label: '热爱', value: 100, suffix: '%' },
+    ],
+  },
+};
+
+const c = content[lang];
+
+const team = [
+  {
+    name: 'LittleSheep',
+    role: lang === 'zh' ? '创始人' : 'Founder',
+    avatar: 'https://api.solian.app/drive/files/thgJtsTgwBDM7zm9bPjNp',
+    bio: lang === 'zh' 
+      ? '创始人、CEO、CTO、高级开发、营销工程师、客服工程师、DevOps、数据库管理员、产品经理、UI/UX设计师、QA工程师、移动开发者、安全工程师、技术文档、项目经理、社区经理、软件架构师'
+      : 'Founder, CEO, CTO, Senior Developer, Marketing Engineer, Customer Service Engineer, DevOps, Database Administrator, Product Manager, UI/UX Designer, QA Engineer, Mobile Developer, Security Engineer, Technical Writer, Project Manager, Community Manager, Software Architect',
+    profileUrl: 'https://id.solian.app/@littlesheep',
+    github: 'https://github.com/LittleSheep2Code',
+  },
+];
+
+const values = [
+  { icon: Heart, title: lang === 'zh' ? '用心打造' : 'Built with Love', description: lang === 'zh' ? '每一行代码都充满热情和用心。' : 'Every line of code is written with passion and care.' },
+  { icon: Code, title: lang === 'zh' ? '开源精神' : 'Open Source', description: lang === 'zh' ? '我们相信协作与知识共享。' : "We believe in collaboration and sharing knowledge freely." },
+  { icon: Users, title: lang === 'zh' ? '社区驱动' : 'Community Driven', description: lang === 'zh' ? '用户启发着我们创作的一切。' : 'Our users inspire everything we create and build.' },
+  { icon: Sparkles, title: lang === 'zh' ? '乐趣至上' : 'Fun First', description: lang === 'zh' ? '我们打造为互联网带来欢乐的事物。' : 'We make things that bring joy to the internet.' },
+];
+---
+
+<Layout title={c.hero.title}>
+  <!-- Hero Section -->
+  <section class="min-h-[60vh] flex flex-col items-center justify-center text-center relative px-4 overflow-hidden">
+    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 rounded-full blur-[80px] animate-pulse"></div>
+    <div class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/20 rounded-full blur-[60px] animate-pulse delay-300"></div>
+    
+    <div class="animate-fade-in-up">
+      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 tracking-tight">{c.hero.title}</h1>
+      <p class="text-xl md:text-2xl opacity-80 max-w-2xl">
+        {c.hero.subtitle}
+      </p>
+    </div>
+
+    <a href={prefix || '/'} class="btn btn-ghost btn-sm mt-8 animate-fade-in-up delay-200">
+      <ArrowLeft class="w-4 h-4" />
+      {c.hero.back}
+    </a>
+  </section>
+
+  <!-- Mission Section -->
+  <section class="py-16 px-4">
+    <div class="container mx-auto max-w-3xl">
+      <div class="card bg-base-200/50 backdrop-blur-sm p-8 md:p-12 animate-fade-in-up delay-100">
+        <h2 class="text-3xl font-bold mb-6 text-center">{c.mission.title}</h2>
+        <div class="text-lg opacity-90 leading-relaxed space-y-4">
+          {c.mission.paragraphs.map(p => <p>{p}</p>)}
+        </div>
+      </div>
+
+      <div class="mt-8 flex justify-center animate-fade-in-up delay-200">
+        <div class="card bg-primary/10 p-8 text-center max-w-sm w-full hover:scale-105 transition-transform duration-300">
+          <Heart class="w-12 h-12 mx-auto mb-4 text-primary animate-pulse" />
+          <h3 class="text-xl font-bold mb-2">{values[0].title}</h3>
+          <p class="opacity-80">{values[0].description}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Values Section -->
+  <section class="py-16 px-4 bg-base-200/30">
+    <div class="container mx-auto">
+      <h2 class="text-3xl font-bold mb-12 text-center animate-fade-in-up">{lang === 'zh' ? '我们的价值观' : 'Our Values'}</h2>
+      
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        {values.map((value, i) => (
+          <div class="card bg-base-100 p-6 text-center hover:-translate-y-2 hover:shadow-xl transition-all duration-300 animate-fade-in-up" style={`animation-delay: ${(i + 1) * 100}ms`}>
+            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+              <value.icon class="w-7 h-7 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold mb-2">{value.title}</h3>
+            <p class="text-sm opacity-70">{value.description}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="py-16 px-4">
+    <div class="container mx-auto">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+        {c.stats.map((stat, i) => (
+          <div class="text-center animate-fade-in-up" style={`animation-delay: ${(i + 1) * 100}ms`}>
+            <div class="text-4xl md:text-5xl font-extrabold text-primary mb-2">
+              <span class="counter" data-target={stat.value}>0</span>{stat.suffix}
+            </div>
+            <div class="text-lg opacity-70">{stat.label}</div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- Team Section -->
+  <section class="py-16 px-4 bg-base-200/30">
+    <div class="container mx-auto">
+      <h2 class="text-3xl font-bold mb-12 text-center animate-fade-in-up">{c.team.title}</h2>
+      
+      <div class="flex flex-wrap justify-center gap-8">
+        {team.map((member, i) => (
+          <div class="card bg-base-100 max-w-xs w-full hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 animate-fade-in-up" style={`animation-delay: ${(i + 1) * 100}ms`}>
+            <div class="flex flex-col items-center text-center p-6">
+              <img 
+                src={member.avatar} 
+                alt={member.name} 
+                class="w-28 h-28 rounded-full mb-4 shadow-lg object-cover"
+              />
+              <h3 class="text-xl font-bold">{member.name}</h3>
+              <div class="flex items-center gap-2 mt-2 mb-3">
+                <span class="badge badge-primary badge-sm">{member.role}</span>
+                {member.profileUrl && (
+                  <a href={member.profileUrl} target="_blank" class="btn btn-ghost btn-xs">
+                    {c.team.profile}
+                  </a>
+                )}
+              </div>
+              <p class="text-sm opacity-75 mb-4 leading-relaxed">{member.bio}</p>
+              {member.github && (
+                <a href={member.github} target="_blank" class="btn btn-outline btn-sm">
+                  <Github class="w-4 h-4" />
+                  GitHub
+                </a>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+</Layout>
+
+<script>
+  const counters = document.querySelectorAll('.counter');
+  
+  const animateCounter = (el: Element) => {
+    const target = parseInt(el.getAttribute('data-target') || '0');
+    const duration = 2000;
+    const step = target / (duration / 16);
+    let current = 0;
+    
+    const update = () => {
+      current += step;
+      if (current < target) {
+        el.textContent = Math.floor(current).toString();
+        requestAnimationFrame(update);
+      } else {
+        el.textContent = target.toString();
+      }
+    };
+    
+    update();
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        animateCounter(entry.target);
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.5 });
+
+  counters.forEach(counter => observer.observe(counter));
+</script>
+
+<style>
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .delay-100 { animation-delay: 0.1s; }
+  .delay-200 { animation-delay: 0.2s; }
+  .delay-300 { animation-delay: 0.3s; }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>

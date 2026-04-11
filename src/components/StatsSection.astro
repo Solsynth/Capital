@@ -1,10 +1,25 @@
 ---
-const stats = [
-  { value: 2, suffix: "+", label: "Years" },
-  { value: 3, suffix: "+", label: "Products" },
-  { value: 1, suffix: "K+", label: "Users" },
-  { value: 100, suffix: "%", label: "Passion" }
-];
+import type { Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+
+const stats = lang === 'zh' 
+  ? [
+      { value: 2, suffix: "+", label: "年" },
+      { value: 3, suffix: "+", label: "款产品" },
+      { value: 1, suffix: "K+", label: "用户" },
+      { value: 100, suffix: "%", label: "热爱" }
+    ]
+  : [
+      { value: 2, suffix: "+", label: "Years" },
+      { value: 3, suffix: "+", label: "Products" },
+      { value: 1, suffix: "K+", label: "Users" },
+      { value: 100, suffix: "%", label: "Passion" }
+    ];
 ---
 
 <section class="py-16 px-4 bg-base-200/30">

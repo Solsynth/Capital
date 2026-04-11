@@ -1,0 +1,305 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import { Github, ExternalLink, Bug, ArrowLeft, Tag, Folder } from 'lucide-astro';
+import { getCollection, render } from 'astro:content';
+import { getLangFromUrl, useTranslations, type Lang } from '../../../i18n/utils';
+
+export const prerender = false;
+
+const lang = getLangFromUrl(Astro.url);
+const { slug } = Astro.params;
+const t = useTranslations(lang);
+const prefix = lang === 'zh' ? '/zh' : '';
+
+if (slug === 'solar-network') {
+  if (lang === 'en') {
+    return Astro.redirect(`/products/solar-network`);
+  } else {
+    return Astro.redirect(`/zh/products/solar-network`);
+  }
+}
+
+const allProducts = await getCollection('products');
+const product = allProducts.find(p => p.id === `${lang}/${slug}`);
+
+if (!product) {
+  return Astro.redirect(`${prefix}/products`);
+}
+
+const hasPage = product.data.hasPage !== false;
+const hasContent = product.body && product.body.trim().length > 0;
+let Content: any = null;
+
+if (hasContent) {
+  const rendered = await render(product);
+  Content = rendered.Content;
+}
+
+const title = lang === 'zh' && product.data.titleZh ? product.data.titleZh : product.data.title;
+const description = lang === 'zh' && product.data.descriptionZh ? product.data.descriptionZh : product.data.description;
+---
+
+<Layout title={title}>
+  {hasContent && Content ? (
+    <div class="relative h-[40vh] min-h-75">
+      <img src={product.data.background} class="w-full h-full object-cover" alt={title} />
+      <div class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/50 to-transparent"></div>
+      
+      <div class="absolute bottom-0 left-0 right-0 p-8">
+        <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
+          <img src={product.data.icon} class="w-20 h-20 rounded-2xl shadow-xl" alt={title} />
+          <div class="flex-1">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">{title}</h1>
+            <p class="text-lg opacity-80">{description}</p>
+            {(product.data.tags?.length > 0 || product.data.series) && (
+              <div class="flex flex-wrap gap-2 mt-3">
+                {product.data.series && (
+                  <a href={`${prefix}/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+                    <Folder class="w-3 h-3 mr-1" />
+                    {product.data.series}
+                  </a>
+                )}
+                {product.data.tags?.map((tag: string) => (
+                  <a href={`${prefix}/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+                    <Tag class="w-3 h-3 mr-1" />
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+          <div class="flex gap-3 flex-wrap">
+            {product.data.url && (
+              <a href={product.data.url} target="_blank" class="btn btn-primary">
+                <ExternalLink class="w-5 h-5" />
+                {t('product.open')}
+              </a>
+            )}
+            {product.data.repo && (
+              <a href={product.data.repo} target="_blank" class="btn btn-outline">
+                <Github class="w-5 h-5" />
+                {t('product.github')}
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-12">
+      <article class="prose prose-lg max-w-3xl mx-auto">
+        <Content />
+      </article>
+    </div>
+  ) : hasPage ? (
+    <div class="relative h-[50vh] min-h-100">
+      <img src={product.data.background} class="w-full h-full object-cover" alt={title} />
+      <div class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"></div>
+      
+      <div class="absolute bottom-0 left-0 right-0 p-8">
+        <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
+          <img src={product.data.icon} class="w-24 h-24 rounded-2xl shadow-xl" alt={title} />
+          <div class="flex-1">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">{title}</h1>
+            <p class="text-lg opacity-80">{description}</p>
+            {(product.data.tags?.length > 0 || product.data.series) && (
+              <div class="flex flex-wrap gap-2 mt-3">
+                {product.data.series && (
+                  <a href={`${prefix}/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+                    <Folder class="w-3 h-3 mr-1" />
+                    {product.data.series}
+                  </a>
+                )}
+                {product.data.tags?.map((tag: string) => (
+                  <a href={`${prefix}/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+                    <Tag class="w-3 h-3 mr-1" />
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+          <div class="flex gap-3 flex-wrap">
+            {product.data.url && (
+              <a href={product.data.url} target="_blank" class="btn btn-primary btn-lg rounded-full">
+                {t('product.getStarted')}
+              </a>
+            )}
+            {product.data.repo && (
+              <a href={product.data.repo} target="_blank" class="btn btn-outline btn-lg rounded-full">
+                <Github class="w-5 h-5" />
+                {t('product.github')}
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-16">
+      <section class="mb-16">
+        <h2 class="text-3xl font-bold mb-4 text-center">{lang === 'zh' ? `为什么选择 ${title}？` : `Why ${title}?`}</h2>
+        <p class="text-lg opacity-70 text-center max-w-2xl mx-auto mb-12">
+          {lang === 'zh' 
+            ? '为创作者、开发者和连接者打造的平台。体验一个理解您热爱的平台。'
+            : 'Built for those who create, code, and connect. Experience a platform that understands your passions.'}
+        </p>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div class="card bg-base-200 p-8">
+            <h3 class="text-xl font-bold mb-3 text-primary">{lang === 'zh' ? '开发者优先' : 'Developer First'}</h3>
+            <p class="opacity-80">{lang === 'zh' ? '原生语法高亮、代码片段分享，与您喜爱的开发工具无缝集成。' : 'Native syntax highlighting, code snippet sharing, and seamless integration with your favorite dev tools.'}</p>
+          </div>
+          <div class="card bg-base-200 p-8">
+            <h3 class="text-xl font-bold mb-3 text-primary">OpenAPI</h3>
+            <p class="opacity-80">{lang === 'zh' ? '完全文档化的 API，透明的速率限制和风险控制。开发自己应用的绝佳起点！' : 'Fully documented API, transparent rate limiting and risk control. Great start for developing your own app!'}</p>
+          </div>
+          <div class="card bg-base-200 p-8">
+            <h3 class="text-xl font-bold mb-3 text-primary">ACG Culture</h3>
+            <p class="opacity-80">{lang === 'zh' ? '动漫、游戏爱好者的专属空间。分享您的作品、评论和热情。' : 'A dedicated space for Anime, Comic, and Game enthusiasts. Share your art, reviews, and passion.'}</p>
+          </div>
+          <div class="card bg-base-200 p-8">
+            <h3 class="text-xl font-bold mb-3 text-primary">{lang === 'zh' ? '友好的社区' : 'Friendly Community'}</h3>
+            <p class="opacity-80">{lang === 'zh' ? '加入志同道合者的活力社区。分享知识、提出问题、建立联系。' : 'Join a vibrant community of like-minded individuals. Share knowledge, ask questions, and connect.'}</p>
+          </div>
+        </div>
+      </section>
+
+      <section class="mb-16">
+        <div class="card bg-linear-to-r from-primary/10 to-secondary/10 p-8">
+          <h2 class="text-3xl font-bold mb-4">{t('product.startJourney')}</h2>
+          <p class="text-lg opacity-80 mb-6">{t('product.available')}</p>
+          
+          <div class="flex flex-wrap gap-4">
+            {product.data.url && (
+              <a href={product.data.url} target="_blank" class="btn btn-primary">
+                <ExternalLink class="w-5 h-5" />
+                {t('product.openBrowser')}
+              </a>
+            )}
+            {product.data.repo && (
+              <a href={product.data.repo} target="_blank" class="btn btn-outline">
+                <Github class="w-5 h-5" />
+                {t('product.viewGithub')}
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+
+      <section>
+        <div class="card bg-base-200 p-8">
+          <h2 class="text-3xl font-bold mb-4">{t('product.needHelp')}</h2>
+          <p class="text-lg opacity-80 mb-6">{lang === 'zh' ? '请通过客户服务中心或 GitHub 报告问题。' : 'Feel free to contact your customer service or report a bug on GitHub.'}</p>
+          <div class="flex gap-4">
+            {product.data.repo && (
+              <a href={`${product.data.repo}/issues`} target="_blank" class="btn btn-outline">
+                <Bug class="w-5 h-5" />
+                {t('product.reportIssue')}
+              </a>
+            )}
+          </div>
+        </div>
+      </section>
+    </div>
+  ) : (
+    <div class="relative h-[40vh] min-h-75">
+      <img src={product.data.background} class="w-full h-full object-cover" alt={title} />
+      <div class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"></div>
+      
+      <div class="absolute bottom-0 left-0 right-0 p-8">
+        <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
+          <img src={product.data.icon} class="w-20 h-20 rounded-2xl shadow-xl" alt={title} />
+          <div class="flex-1">
+            <h1 class="text-3xl md:text-4xl font-bold mb-2">{title}</h1>
+            <p class="text-lg opacity-80">{description}</p>
+            {(product.data.tags?.length > 0 || product.data.series) && (
+              <div class="flex flex-wrap gap-2 mt-3">
+                {product.data.series && (
+                  <a href={`${prefix}/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+                    <Folder class="w-3 h-3 mr-1" />
+                    {product.data.series}
+                  </a>
+                )}
+                {product.data.tags?.map((tag: string) => (
+                  <a href={`${prefix}/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+                    <Tag class="w-3 h-3 mr-1" />
+                    {tag}
+                  </a>
+                ))}
+              </div>
+            )}
+          </div>
+          <div class="flex gap-3 flex-wrap">
+            {product.data.url && (
+              <a href={product.data.url} target="_blank" class="btn btn-primary">
+                <ExternalLink class="w-5 h-5" />
+                {t('product.open')}
+              </a>
+            )}
+            {product.data.repo && (
+              <a href={product.data.repo} target="_blank" class="btn btn-outline">
+                <Github class="w-5 h-5" />
+                {t('product.github')}
+              </a>
+            )}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container mx-auto px-4 py-12">
+      <div class="card bg-base-200 p-8 max-w-2xl mx-auto">
+        <div class="flex items-center gap-3 mb-4">
+          <img src={product.data.icon} class="w-12 h-12 rounded-lg" alt={title} />
+          <div>
+            <h2 class="text-xl font-bold">{title}</h2>
+            {product.data.version && <span class="text-sm opacity-60">v{product.data.version}</span>}
+          </div>
+        </div>
+        
+        <p class="opacity-80 mb-6">{description}</p>
+        
+        {(product.data.tags?.length > 0 || product.data.series) && (
+          <div class="flex flex-wrap gap-2 mb-6">
+            {product.data.series && (
+              <a href={`${prefix}/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+                <Folder class="w-3 h-3 mr-1" />
+                {product.data.series}
+              </a>
+            )}
+            {product.data.tags?.map((tag: string) => (
+              <a href={`${prefix}/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+                <Tag class="w-3 h-3 mr-1" />
+                {tag}
+              </a>
+            ))}
+          </div>
+        )}
+
+        <div class="flex flex-wrap gap-4 text-sm">
+          {product.data.url && (
+            <a href={product.data.url} target="_blank" class="btn btn-primary btn-sm">
+              <ExternalLink class="w-4 h-4" />
+              {t('product.visitWebsite')}
+            </a>
+          )}
+          {product.data.repo && (
+            <a href={product.data.repo} target="_blank" class="btn btn-outline btn-sm">
+              <Github class="w-4 h-4" />
+              {t('product.sourceCode')}
+            </a>
+          )}
+          <a href={`${prefix}/products`} class="btn btn-ghost btn-sm">
+            <ArrowLeft class="w-4 h-4" />
+            {t('products.backToProducts')}
+          </a>
+        </div>
+        
+        {product.data.releasedDate && (
+          <p class="text-sm opacity-60 mt-4">{t('product.released')} {product.data.releasedDate}</p>
+        )}
+      </div>
+    </div>
+  )}
+</Layout>

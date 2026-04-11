@@ -1,6 +1,8 @@
 {
-  "title": "聆阁 (Groovy Box)",
+  "title": "Groovy Box",
+  "titleZh": "Groovy Box",
   "description": "简单，好看，实用的本地播放器",
+  "descriptionZh": "简单，好看，实用的本地播放器",
   "icon": "/groovy-box/icon.png",
   "background": "/groovy-box/background.jpg",
   "url": "https://solsynth.dev/products/groovy-box",
@@ -9,5 +11,5 @@
   "releasedDate": "2025-08-14",
   "hasPage": false,
   "tags": ["Music Player", "Desktop", "Open Source"],
-  "series": "聆阁"
+  "series": "Groovy Box"
 }

@@ -1,0 +1,116 @@
+---
+import Layout from '../../../layouts/Layout.astro';
+import ProductCard from '../../../components/ProductCard.astro';
+import { getCollection } from 'astro:content';
+import { getLangFromUrl, useTranslations, type Lang } from '../../../i18n/utils';
+
+export const prerender = false;
+
+const lang = getLangFromUrl(Astro.url);
+const t = useTranslations(lang);
+const prefix = lang === 'zh' ? '/zh' : '';
+
+const allProducts = await getCollection('products');
+const products = allProducts.filter(p => p.id.startsWith(`${lang}/`)).map(p => ({
+  ...p,
+  id: p.id.replace(`${lang}/`, ''),
+}));
+
+const seriesMap = new Map<string, typeof products>();
+for (const product of products) {
+  const series = product.data.series;
+  if (series) {
+    if (!seriesMap.has(series)) {
+      seriesMap.set(series, []);
+    }
+    seriesMap.get(series)!.push(product);
+  }
+}
+
+const allTags = [...new Set(products.flatMap(p => p.data.tags || []))].sort();
+
+const urlTag = Astro.url.searchParams.get('tag');
+const urlSeries = Astro.url.searchParams.get('series');
+
+let filteredProducts = products;
+if (urlTag) {
+  filteredProducts = products.filter(p => p.data.tags?.includes(urlTag));
+}
+if (urlSeries) {
+  filteredProducts = products.filter(p => p.data.series === urlSeries);
+}
+---
+
+<Layout title={t('products.title')}>
+  <div class="container mx-auto px-4 py-16">
+    <div class="text-center mb-16">
+      <h1 class="text-4xl md:text-5xl font-bold mb-4">{t('products.title')}</h1>
+      <p class="text-xl opacity-70 max-w-2xl mx-auto">
+        {t('products.subtitle')}
+      </p>
+    </div>
+
+    {seriesMap.size > 0 && (
+      <div class="mb-12">
+        <h2 class="text-lg font-semibold mb-4">{t('products.series')}</h2>
+        <div class="flex flex-wrap gap-2">
+          {Array.from(seriesMap.keys()).map(series => (
+            <a 
+              href={`${prefix}/products?series=${encodeURIComponent(series)}`}
+              class="btn btn-sm {urlSeries === series ? 'btn-primary' : 'btn-outline'}"
+            >
+              {series}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {allTags.length > 0 && (
+      <div class="mb-12">
+        <h2 class="text-lg font-semibold mb-4">{t('products.tags')}</h2>
+        <div class="flex flex-wrap gap-2">
+          <a 
+            href={`${prefix}/products`}
+            class="btn btn-sm {!urlTag ? 'btn-primary' : 'btn-ghost'}"
+          >
+            {t('products.all')}
+          </a>
+          {allTags.map(tag => (
+            <a 
+              href={`${prefix}/products?tag=${encodeURIComponent(tag)}`}
+              class="btn btn-sm {urlTag === tag ? 'btn-primary' : 'btn-outline'}"
+            >
+              {tag}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
+
+    {filteredProducts.length === 0 ? (
+      <div class="text-center py-16">
+        <p class="text-lg opacity-70">{t('products.noProducts')}</p>
+        <a href={`${prefix || '/'}`} class="btn btn-primary mt-4">{lang === 'zh' ? '返回首页' : 'Back to Home'}</a>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {filteredProducts.map(product => (
+          <ProductCard
+            name={lang === 'zh' && product.data.titleZh ? product.data.titleZh : product.data.title}
+            description={lang === 'zh' && product.data.descriptionZh ? product.data.descriptionZh : product.data.description}
+            icon={product.data.icon}
+            background={product.data.background}
+            url={product.data.url}
+            repo={product.data.repo}
+            hasPage={product.data.hasPage}
+            slug={product.id}
+            tags={product.data.tags}
+            series={product.data.series}
+            lang={lang}
+          />
+        ))}
+      </div>
+    )}
+  </div>
+</Layout>

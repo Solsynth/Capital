@@ -1,11 +1,14 @@
 ---
 import ProductCard from './ProductCard.astro';
+import { useTranslations, type Lang } from '../i18n/utils';
 
 interface Props {
   products: {
     data: {
       title: string;
+      titleZh?: string;
       description: string;
+      descriptionZh?: string;
       icon: string;
       background: string;
       url?: string;
@@ -16,25 +19,31 @@ interface Props {
     };
     id: string;
   }[];
+  lang?: Lang;
 }
 
-const { products } = Astro.props;
+const { products, lang = 'en' } = Astro.props;
+const t = useTranslations(lang);
+
+const subtitle = lang === 'zh'
+  ? '从社交网络到云端存储，我们打造赋能与连接的工具。'
+  : 'From social networks to cloud drives, we build tools that empower and connect.';
 ---
 
 <section id="products" class="scroll-mt-24 py-16 px-4">
   <div class="container mx-auto">
     <div class="text-center mb-16">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Our Creations</h2>
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">{t('home.products.title')}</h2>
       <p class="text-lg md:text-xl opacity-70 max-w-2xl mx-auto">
-        From social networks to cloud drives, we build tools that empower and connect.
+        {subtitle}
       </p>
     </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
       {products.map(product => (
         <ProductCard
-          name={product.data.title}
-          description={product.data.description}
+          name={lang === 'zh' && product.data.titleZh ? product.data.titleZh : product.data.title}
+          description={lang === 'zh' && product.data.descriptionZh ? product.data.descriptionZh : product.data.description}
           icon={product.data.icon}
           background={product.data.background}
           url={product.data.url}
@@ -43,6 +52,7 @@ const { products } = Astro.props;
           slug={product.id}
           tags={product.data.tags}
           series={product.data.series}
+          lang={lang}
         />
       ))}
     </div>

@@ -1,5 +1,13 @@
 ---
 import { getPosts, formatDate, truncateContent } from '../utils/api';
+import { useTranslations, type Lang } from '../i18n/utils';
+
+interface Props {
+  lang?: Lang;
+}
+
+const { lang = 'en' } = Astro.props;
+const t = useTranslations(lang);
 
 const posts = await getPosts(5, 0);
 
@@ -12,21 +20,23 @@ function getDisplayTitle(post: { title: string; content: string }): string {
   const firstLine = post.content?.split('\n')[0]?.trim() || '';
   return firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine || 'View Post';
 }
+
+const prefix = lang === 'zh' ? '/zh' : '';
 ---
 
 <section class="py-16 px-4">
   <div class="container mx-auto">
     <div class="text-center mb-12">
-      <h2 class="text-3xl md:text-4xl font-bold mb-4">Recent Updates</h2>
+      <h2 class="text-3xl md:text-4xl font-bold mb-4">{t('home.updates.title')}</h2>
       <p class="text-lg md:text-xl opacity-70 max-w-2xl mx-auto">
-        What's new at Solsynth.
+        {t('home.updates.subtitle')}
       </p>
     </div>
 
     <div class="max-w-3xl mx-auto space-y-4">
       {posts.slice(0, 5).map((post, i) => (
         <a 
-          href={`/updates/${post.id}`}
+          href={`${prefix}/updates/${post.id}`}
           class="card bg-base-200 p-6 hover:shadow-lg transition-shadow duration-300 block animate-fade-in-up"
           style={`animation-delay: ${i * 100}ms`}
         >
@@ -51,8 +61,8 @@ function getDisplayTitle(post: { title: string; content: string }): string {
     </div>
 
     <div class="text-center mt-8">
-      <a href="/updates" class="btn btn-outline btn-sm">
-        View All Updates
+      <a href={`${prefix}/updates`} class="btn btn-outline btn-sm">
+        {t('home.updates.viewAll')}
       </a>
     </div>
   </div>

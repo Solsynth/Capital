@@ -1,0 +1,32 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import StatsSection from '../../components/StatsSection.astro';
+import ProductsSection from '../../components/ProductsSection.astro';
+import UpdatesSection from '../../components/UpdatesSection.astro';
+import { getCollection } from 'astro:content';
+import { getLangFromUrl } from '../../i18n/utils';
+
+export const prerender = false;
+
+const lang = getLangFromUrl(Astro.url);
+const allProducts = await getCollection('products');
+
+const products = allProducts.filter(p => p.id.startsWith(`${lang}/`)).map(p => ({
+  ...p,
+  id: p.id.replace(`${lang}/`, ''),
+}));
+
+const productIdMap: Record<string, string> = {
+  'solar-network': 'solar-network',
+  'groovy-box': 'groovy-box',
+  'solar-network-drive': 'solar-network-drive',
+};
+---
+
+<Layout title={lang === 'zh' ? 'Solsynth' : 'We are Solsynth'}>
+  <Hero lang={lang} />
+  <StatsSection lang={lang} />
+  <ProductsSection products={products} lang={lang} />
+  <UpdatesSection lang={lang} />
+</Layout>

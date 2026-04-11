@@ -3,17 +3,23 @@ import Layout from '../layouts/Layout.astro';
 import Hero from '../components/Hero.astro';
 import StatsSection from '../components/StatsSection.astro';
 import ProductsSection from '../components/ProductsSection.astro';
-import FeaturesSection from '../components/FeaturesSection.astro';
 import UpdatesSection from '../components/UpdatesSection.astro';
 import { getCollection } from 'astro:content';
 
-const products = await getCollection('products');
+export const prerender = false;
+
+const lang = 'en';
+const allProducts = await getCollection('products');
+
+const products = allProducts.filter(p => p.id.startsWith(`${lang}/`)).map(p => ({
+  ...p,
+  id: p.id.replace(`${lang}/`, ''),
+}));
 ---
 
 <Layout title="We are Solsynth">
-  <Hero />
-  <StatsSection />
-  <ProductsSection products={products} />
-  <FeaturesSection />
-  <UpdatesSection />
+  <Hero lang={lang} />
+  <StatsSection lang={lang} />
+  <ProductsSection products={products} lang={lang} />
+  <UpdatesSection lang={lang} />
 </Layout>

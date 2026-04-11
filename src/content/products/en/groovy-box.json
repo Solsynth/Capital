@@ -1,0 +1,15 @@
+{
+  "title": "Groovy Box",
+  "titleZh": "Groovy Box",
+  "description": "A simple, beautiful, and practical local music player.",
+  "descriptionZh": "简单，好看，实用的本地播放器",
+  "icon": "/groovy-box/icon.png",
+  "background": "/groovy-box/background.jpg",
+  "url": "https://solsynth.dev/products/groovy-box",
+  "repo": "https://github.com/littlesheep2code/groovy-box",
+  "version": "1.0.0",
+  "releasedDate": "2025-08-14",
+  "hasPage": false,
+  "tags": ["Music Player", "Desktop", "Open Source"],
+  "series": "Groovy Box"
+}
