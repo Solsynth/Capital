@@ -16,7 +16,7 @@ interface Props {
   lang?: Lang;
 }
 
-const { name, description, icon, background, url, repo, hasPage, slug, tags = [], series, lang = 'en' } = Astro.props;
+const { name, description, icon, background, url, repo, slug, tags = [], series, lang = 'en' } = Astro.props;
 const prefix = lang === 'zh' ? '/zh' : '';
 ---
 

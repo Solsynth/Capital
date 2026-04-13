@@ -11,12 +11,8 @@ const { slug } = Astro.params;
 const t = useTranslations(lang);
 const prefix = lang === 'zh' ? '/zh' : '';
 
-if (slug === 'solar-network') {
-  if (lang === 'en') {
-    return Astro.redirect(`/products/solar-network`);
-  } else {
-    return Astro.redirect(`/zh/products/solar-network`);
-  }
+if (slug === 'solar-network' && lang === 'en') {
+  return Astro.redirect(`/products/solar-network`);
 }
 
 const allProducts = await getCollection('products');

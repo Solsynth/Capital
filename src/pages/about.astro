@@ -1,216 +1,256 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { Heart, Code, Users, Sparkles, Github, ArrowLeft } from 'lucide-astro';
+import {Heart, Code, Users, Sparkles, Github, ArrowLeft, MessageCircleHeart, AlertTriangle} from 'lucide-astro';
+import {useTranslations} from '~/i18n/utils';
+
+const lang = 'en';
+const t = useTranslations(lang);
 
 const team = [
-  {
-    name: "LittleSheep",
-    role: "Founder",
-    avatar: "https://api.solian.app/drive/files/thgJtsTgwBDM7zm9bPjNp",
-    bio: "Founder, CEO, CTO, Senior Developer, Marketing Engineer, Customer Service Engineer, DevOps, Database Administrator, Product Manager, UI/UX Designer, QA Engineer, Mobile Developer, Security Engineer, Technical Writer, Project Manager, Community Manager, Software Architect",
-    profileUrl: "https://id.solian.app/@littlesheep",
-    github: "https://github.com/LittleSheep2Code"
-  }
+    {
+        name: 'LittleSheep',
+        role: t('about.team.role.founder'),
+        avatar: 'https://api.solian.app/passport/accounts/littlesheep/picture',
+        bio: t('about.team.littlesheep.bio'),
+        profileUrl: 'https://id.solian.app/@littlesheep',
+        github: 'https://github.com/LittleSheep2Code',
+    },
 ];
 
 const values = [
-  {
-    icon: Heart,
-    title: "Built with Love",
-    description: "Every line of code is written with passion and care."
-  },
-  {
-    icon: Code,
-    title: "Open Source",
-    description: "We believe in collaboration and sharing knowledge freely."
-  },
-  {
-    icon: Users,
-    title: "Community Driven",
-    description: "Our users inspire everything we create and build."
-  },
-  {
-    icon: Sparkles,
-    title: "Fun First",
-    description: "We make things that bring joy to the internet."
-  }
+    {icon: Heart, key: 'love'},
+    {icon: Code, key: 'opensource'},
+    {icon: Users, key: 'community'},
+    {icon: Sparkles, key: 'fun'},
 ];
 
 const stats = [
-  { value: 2, suffix: "+", label: "Years" },
-  { value: 3, suffix: "+", label: "Products" },
-  { value: 1, suffix: "K+", label: "Users" },
-  { value: 100, suffix: "%", label: "Passion" }
+    {value: 2, suffix: '+', label: t('about.stats.years')},
+    {value: 3, suffix: '+', label: t('about.stats.products')},
+    {value: 1, suffix: 'K+', label: t('about.stats.users')},
+    {value: 100, suffix: '%', label: t('about.stats.passion')},
 ];
 ---
 
-<Layout title="About Us">
-  <!-- Hero Section -->
-  <section class="min-h-[60vh] flex flex-col items-center justify-center text-center relative px-4 overflow-hidden">
-    <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 rounded-full blur-[80px] animate-pulse"></div>
-    <div class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/20 rounded-full blur-[60px] animate-pulse delay-300"></div>
-    
-    <div class="animate-fade-in-up">
-      <h1 class="text-5xl md:text-6xl font-extrabold mb-4 tracking-tight">About Us</h1>
-      <p class="text-xl md:text-2xl opacity-80 max-w-2xl">
-        We are a collective of creators, dreamers, and builders.
-      </p>
-    </div>
+<Layout title={t('about.title')}>
+    <!-- Hero Section -->
+    <section class="min-h-[50vh] flex flex-col items-center justify-center text-center relative px-4 overflow-hidden">
+        <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 rounded-full blur-[80px] animate-pulse"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/20 rounded-full blur-[60px] animate-pulse delay-300"></div>
 
-    <a href="/" class="btn btn-ghost btn-sm mt-8 animate-fade-in-up delay-200">
-      <ArrowLeft class="w-4 h-4" />
-      Back to Home
-    </a>
-  </section>
-
-  <!-- Mission Section -->
-  <section class="py-16 px-4">
-    <div class="container mx-auto max-w-3xl">
-      <div class="card bg-base-200/50 backdrop-blur-sm p-8 md:p-12 animate-fade-in-up delay-100">
-        <h2 class="text-3xl font-bold mb-6 text-center">Our Mission</h2>
-        <div class="text-lg opacity-90 leading-relaxed space-y-4">
-          <p>
-            Our aim is not making a profit. <span class="text-sm opacity-70">(At least not yet.)</span>
-          </p>
-          <p>
-            Instead, we hope we can spread the love to the world and make everyone enjoy the fun of the Internet and technology. We believe in open source, collaboration, and building things that bring joy.
-          </p>
+        <div class="animate-fade-in-up relative z-10">
+            <h1 class="text-4xl md:text-5xl font-bold mb-4">{t('about.title')}</h1>
+            <p class="text-lg md:text-xl opacity-70 max-w-xl">
+                {t('about.subtitle')}
+            </p>
         </div>
-      </div>
 
-      <div class="mt-8 flex justify-center animate-fade-in-up delay-200">
-        <div class="card bg-primary/10 p-8 text-center max-w-sm w-full hover:scale-105 transition-transform duration-300">
-          <Heart class="w-12 h-12 mx-auto mb-4 text-primary animate-pulse" />
-          <h3 class="text-xl font-bold mb-2">Built with Love</h3>
-          <p class="opacity-80">Every line of code is written with passion and care in mind.</p>
+        <a href="/" class="btn btn-ghost btn-sm mt-8 animate-fade-in-up delay-200 relative z-10">
+            <ArrowLeft class="w-4 h-4"/>
+            {t('about.backToHome')}
+        </a>
+    </section>
+
+    <!-- Mission Section -->
+    <section class="py-16 px-4">
+        <div class="container mx-auto max-w-3xl">
+            <div class="card bg-base-200/50 backdrop-blur-sm p-8 md:p-12 animate-fade-in-up delay-100">
+                <h2 class="text-2xl font-bold mb-6 text-center">{t('about.mission.title')}</h2>
+                <div class="space-y-4">
+                    <p class="opacity-90">{t('about.mission.p1')}</p>
+                    <p class="opacity-90">{t('about.mission.p2')}</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Values Section -->
-  <section class="py-16 px-4 bg-base-200/30">
-    <div class="container mx-auto">
-      <h2 class="text-3xl font-bold mb-12 text-center animate-fade-in-up">Our Values</h2>
-      
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {values.map((value, i) => (
-          <div class="card bg-base-100 p-6 text-center hover:-translate-y-2 hover:shadow-xl transition-all duration-300 animate-fade-in-up" style={`animation-delay: ${(i + 1) * 100}ms`}>
-            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <value.icon class="w-7 h-7 text-primary" />
+    <!-- Did You Know Section -->
+    <section class="py-12 px-4">
+        <div class="container mx-auto max-w-3xl">
+            <div class="card bg-base-200/50 p-5 animate-fade-in-up delay-200">
+                <h2 class="text-base font-semibold mb-3 flex items-center gap-2">
+                    <Sparkles class="w-4 h-4 text-base-content/60"/>
+                    {t('about.didYouKnow.title')}
+                </h2>
+                <ul class="text-sm space-y-2 opacity-80">
+                    <li class="flex items-start gap-2">
+                        <span class="text-base-content/60 mt-0.5">•</span>
+                        <span>{t('about.didYouKnow.solsynth')}</span>
+                    </li>
+                    <li class="flex items-start gap-2">
+                        <span class="text-base-content/60 mt-0.5">•</span>
+                        <span>{t('about.didYouKnow.chinese')}</span>
+                    </li>
+                </ul>
             </div>
-            <h3 class="text-lg font-bold mb-2">{value.title}</h3>
-            <p class="text-sm opacity-70">{value.description}</p>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
+        </div>
+    </section>
 
-  <!-- Stats Section -->
-  <section class="py-16 px-4">
-    <div class="container mx-auto">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-        {stats.map((stat, i) => (
-          <div class="text-center animate-fade-in-up" style={`animation-delay: ${(i + 1) * 100}ms`}>
-            <div class="text-4xl md:text-5xl font-extrabold text-primary mb-2">
-              <span class="counter" data-target={stat.value}>0</span>{stat.suffix}
-            </div>
-            <div class="text-lg opacity-70">{stat.label}</div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
+    <!-- Values Section -->
+    <section class="py-16 px-4 bg-base-200/30">
+        <div class="container mx-auto">
+            <h2 class="text-2xl font-bold mb-10 text-center animate-fade-in-up">{t('about.values.title')}</h2>
 
-  <!-- Team Section -->
-  <section class="py-16 px-4 bg-base-200/30">
-    <div class="container mx-auto">
-      <h2 class="text-3xl font-bold mb-12 text-center animate-fade-in-up">Meet the Team</h2>
-      
-      <div class="flex flex-wrap justify-center gap-8">
-        {team.map((member, i) => (
-          <div class="card bg-base-100 max-w-xs w-full hover:shadow-2xl hover:shadow-primary/20 transition-all duration-300 animate-fade-in-up" style={`animation-delay: ${(i + 1) * 100}ms`}>
-            <div class="flex flex-col items-center text-center p-6">
-              <img 
-                src={member.avatar} 
-                alt={member.name} 
-                class="w-28 h-28 rounded-full mb-4 shadow-lg object-cover"
-              />
-              <h3 class="text-xl font-bold">{member.name}</h3>
-              <div class="flex items-center gap-2 mt-2 mb-3">
-                <span class="badge badge-primary badge-sm">{member.role}</span>
-                {member.profileUrl && (
-                  <a href={member.profileUrl} target="_blank" class="btn btn-ghost btn-xs">
-                    Profile
-                  </a>
-                )}
-              </div>
-              <p class="text-sm opacity-75 mb-4 leading-relaxed">{member.bio}</p>
-              {member.github && (
-                <a href={member.github} target="_blank" class="btn btn-outline btn-sm">
-                  <Github class="w-4 h-4" />
-                  GitHub
-                </a>
-              )}
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+                {values.map((value, i) => (
+                        <div class="card bg-base-100 p-6 text-center hover:-translate-y-1 hover:shadow-lg transition-all duration-200 animate-fade-in-up"
+                             style={`animation-delay: ${(i + 1) * 80}ms`}>
+                            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
+                                <MessageCircleHeart class="w-6 h-6 text-primary"/>
+                            </div>
+                            <h3 class="text-base font-semibold mb-2">{t(`about.values.${value.key}.title`)}</h3>
+                            <p class="text-sm opacity-60">{t(`about.values.${value.key}.desc`)}</p>
+                        </div>
+                ))}
             </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-16 px-4">
+        <div class="container mx-auto">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+                {stats.map((stat, i) => (
+                        <div class="text-center animate-fade-in-up" style={`animation-delay: ${(i + 1) * 80}ms`}>
+                            <div class="text-3xl md:text-4xl font-bold text-primary mb-1">
+                                <span class="counter" data-target={stat.value}>0</span>{stat.suffix}
+                            </div>
+                            <div class="text-sm opacity-60">{stat.label}</div>
+                        </div>
+                ))}
+            </div>
+        </div>
+    </section>
+
+    <!-- LLC Disclaimer Section -->
+    <section class="py-12 px-4">
+        <div class="container mx-auto max-w-3xl">
+            <div class="alert bg-warning/10 border-warning/30 animate-fade-in-up delay-100">
+                <AlertTriangle class="stroke-warning shrink-0 h-6 w-6"/>
+                <div>
+                    <h3 class="font-bold text-md">{t('about.llc.title')}</h3>
+                    <div class="text-sm space-y-1 mt-1 opacity-90">
+                        <p>{t('about.llc.p1')}</p>
+                        <p>{t('about.llc.p2')}</p>
+                        <p class="font-semibold">{t('about.llc.p3')}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="py-16 px-4 bg-base-200/30">
+        <div class="container mx-auto">
+            <h2 class="text-2xl font-bold mb-10 text-center animate-fade-in-up">{t('about.team.title')}</h2>
+
+            <div class="flex flex-wrap justify-center gap-8">
+                {team.map((member) => (
+                        <div class="card bg-base-100 max-w-sm w-full hover:shadow-xl transition-shadow duration-200 animate-fade-in-up">
+                            <div class="flex flex-col items-center text-center p-6">
+                                <img
+                                        src={member.avatar}
+                                        alt={member.name}
+                                        class="w-24 h-24 rounded-full mb-4 shadow-lg object-cover"
+                                />
+                                <h3 class="text-lg font-bold">{member.name}</h3>
+                                <div class="flex items-center gap-2 mt-2 mb-4">
+                                    <span class="badge badge-primary badge-sm">{member.role}</span>
+                                    {member.profileUrl && (
+                                            <a href={member.profileUrl} target="_blank" class="btn btn-ghost btn-xs">
+                                                {t('about.team.profile')}
+                                            </a>
+                                    )}
+                                </div>
+                                <p class="text-sm opacity-70 mb-4 leading-relaxed">{member.bio}</p>
+                                {member.github && (
+                                        <a href={member.github} target="_blank" class="btn btn-outline btn-sm">
+                                            <Github class="w-4 h-4"/>
+                                            GitHub
+                                        </a>
+                                )}
+                            </div>
+                        </div>
+                ))}
+
+                <!-- Hiring Card -->
+                <div class="card bg-base-100 max-w-sm w-full border-dashed border-2 border-base-content/20 hover:shadow-xl transition-shadow duration-200 animate-fade-in-up">
+                    <div class="flex flex-col items-center text-center p-6">
+                        <div class="w-24 h-24 rounded-full mb-4 bg-primary/10 flex items-center justify-center">
+                            <span class="text-4xl">?</span>
+                        </div>
+                        <h3 class="text-lg font-bold">{t('about.hiring.title')}</h3>
+                        <p class="text-sm opacity-70 mb-3">{t('about.hiring.subtitle')}</p>
+                        <p class="text-sm opacity-60 mb-2">{t('about.hiring.roles')}</p>
+                        <p class="text-sm opacity-60 mb-2">{t('about.hiring.note')}</p>
+                        <p class="text-sm opacity-80 mb-4">{t('about.hiring.cta')}</p>
+                        <a href="mailto:lily@solsynth.dev" class="btn btn-primary btn-sm">
+                            {t('about.hiring.email')}
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </Layout>
 
 <script>
-  // Animated counter
-  const counters = document.querySelectorAll('.counter');
-  
-  const animateCounter = (el: Element) => {
-    const target = parseInt(el.getAttribute('data-target') || '0');
-    const duration = 2000;
-    const step = target / (duration / 16);
-    let current = 0;
-    
-    const update = () => {
-      current += step;
-      if (current < target) {
-        el.textContent = Math.floor(current).toString();
-        requestAnimationFrame(update);
-      } else {
-        el.textContent = target.toString();
-      }
+    const counters = document.querySelectorAll('.counter');
+
+    const animateCounter = (el: Element) => {
+        const target = parseInt(el.getAttribute('data-target') || '0');
+        const duration = 1500;
+        const step = target / (duration / 16);
+        let current = 0;
+
+        const update = () => {
+            current += step;
+            if (current < target) {
+                el.textContent = Math.floor(current).toString();
+                requestAnimationFrame(update);
+            } else {
+                el.textContent = target.toString();
+            }
+        };
+
+        update();
     };
-    
-    update();
-  };
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        animateCounter(entry.target);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.5 });
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                animateCounter(entry.target);
+                observer.unobserve(entry.target);
+            }
+        });
+    }, {threshold: 0.3});
 
-  counters.forEach(counter => observer.observe(counter));
+    counters.forEach(counter => observer.observe(counter));
 </script>
 
 <style>
-  .animate-fade-in-up {
-    animation: fadeInUp 0.6s ease-out forwards;
-    opacity: 0;
-    transform: translateY(20px);
-  }
-
-  .delay-100 { animation-delay: 0.1s; }
-  .delay-200 { animation-delay: 0.2s; }
-  .delay-300 { animation-delay: 0.3s; }
-
-  @keyframes fadeInUp {
-    to {
-      opacity: 1;
-      transform: translateY(0);
+    .animate-fade-in-up {
+        animation: fadeInUp 0.5s ease-out forwards;
+        opacity: 0;
+        transform: translateY(16px);
     }
-  }
+
+    .delay-100 {
+        animation-delay: 0.1s;
+    }
+
+    .delay-200 {
+        animation-delay: 0.2s;
+    }
+
+    .delay-300 {
+        animation-delay: 0.3s;
+    }
+
+    @keyframes fadeInUp {
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
 </style>
