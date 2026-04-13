@@ -28,7 +28,7 @@ const displayTitle = getDisplayTitle(post);
 const contentHtml = post.content ? marked.parse(post.content) : '';
 ---
 
-<Layout title={displayTitle}>
+<Layout title={displayTitle} description={contentHtml ? (marked.parse(post.content) as string).replace(/<[^>]*>/g, '').substring(0, 160) + '...' : 'Latest update from Solsynth.'} type="article" publishedTime={post.published_at} modifiedTime={post.edited_at || post.published_at}>
   <div class="container mx-auto px-8 py-16 max-w-4xl">
     <div class="mb-8 -mx-4">
       <a href="/updates" class="btn btn-ghost btn-sm gap-1">

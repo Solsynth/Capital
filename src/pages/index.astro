@@ -5,10 +5,12 @@ import StatsSection from '../components/StatsSection.astro';
 import ProductsSection from '../components/ProductsSection.astro';
 import UpdatesSection from '../components/UpdatesSection.astro';
 import { getCollection } from 'astro:content';
+import { useTranslations } from '../i18n/utils';
 
 export const prerender = false;
 
 const lang = 'en';
+const t = useTranslations(lang);
 const allProducts = await getCollection('products');
 
 const products = allProducts.filter(p => p.id.startsWith(`${lang}/`)).map(p => ({
@@ -17,7 +19,7 @@ const products = allProducts.filter(p => p.id.startsWith(`${lang}/`)).map(p => (
 }));
 ---
 
-<Layout title="We are Solsynth">
+<Layout title="We are Solsynth" description={t('seo.home.description')} lang={lang}>
   <Hero lang={lang} />
   <StatsSection lang={lang} />
   <ProductsSection products={products} lang={lang} />

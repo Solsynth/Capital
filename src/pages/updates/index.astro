@@ -2,7 +2,10 @@
 import Layout from '../../layouts/Layout.astro';
 import { getPosts, formatDate, truncateContent } from '../../utils/api';
 import { ArrowLeft } from 'lucide-astro';
+import { useTranslations } from '../../i18n/utils';
 
+const lang = 'en';
+const t = useTranslations(lang);
 const posts = await getPosts(20, 0);
 
 function getDisplayTitle(post: { title: string; content: string }): string {
@@ -12,7 +15,7 @@ function getDisplayTitle(post: { title: string; content: string }): string {
 }
 ---
 
-<Layout title="Updates">
+<Layout title="Updates" description={t('seo.updates.description')}>
   <div class="container mx-auto px-4 py-16 max-w-4xl">
     <div class="text-center mb-12">
       <h1 class="text-4xl md:text-5xl font-bold mb-4">Updates</h1>

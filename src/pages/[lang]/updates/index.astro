@@ -18,7 +18,7 @@ function getDisplayTitle(post: { title: string; content: string }): string {
 }
 ---
 
-<Layout title={t('updates.title')}>
+<Layout title={t('updates.title')} description={t('seo.updates.description')} lang={lang}>
   <div class="container mx-auto px-4 py-16 max-w-4xl">
     <div class="text-center mb-12">
       <h1 class="text-4xl md:text-5xl font-bold mb-4">{t('updates.title')}</h1>

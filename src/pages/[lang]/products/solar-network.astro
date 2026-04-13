@@ -1,9 +1,12 @@
 ---
 import Layout from '../../../layouts/Layout.astro';
 import { Github, ExternalLink, Bug, ArrowLeft, Tag, Folder, MessageSquare, FileText, Rss, Users, CreditCard, Globe, Sticker, Code, Heart, Sparkles, Zap, Shield, Smartphone, Monitor, Bell, Calendar, Wallet, Image, CheckCircle } from 'lucide-astro';
+import { getLangFromUrl } from '../../../i18n/utils';
+
+const lang = getLangFromUrl(Astro.url);
 ---
 
-<Layout title="Solar Network">
+<Layout title="Solar Network" description={lang === 'zh' ? '一个宁静的社交网络，让表达自我与连接他人变得简单而纯粹。' : 'A serene social network that makes self-expression and connecting with others simple and pure.'} lang={lang}>
   <div class="relative h-[60vh] min-h-120 overflow-hidden">
     <img src="/solar-network/screenshot.png" class="w-full h-full object-cover" alt="Solar Network" />
     <div class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/60 to-transparent"></div>

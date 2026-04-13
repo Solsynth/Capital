@@ -28,7 +28,7 @@ for (const page of allLegal) {
 const currentLangPages = allLegal.filter(p => p.id.startsWith(`${lang}/`));
 ---
 
-<Layout title={t('legal.title')}>
+<Layout title={t('legal.title')} description={t('seo.legal.description')} lang={lang}>
   <div class="container mx-auto px-4 py-16 max-w-4xl">
     <div class="text-center mb-16">
       <h1 class="text-4xl md:text-5xl font-bold mb-4">{t('legal.title')}</h1>

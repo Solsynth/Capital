@@ -35,7 +35,7 @@ const title = lang === 'zh' && product.data.titleZh ? product.data.titleZh : pro
 const description = lang === 'zh' && product.data.descriptionZh ? product.data.descriptionZh : product.data.description;
 ---
 
-<Layout title={title}>
+<Layout title={title} description={description} lang={lang}>
   {hasContent && Content ? (
     <div class="relative h-[40vh] min-h-75">
       <img src={product.data.background} class="w-full h-full object-cover" alt={title} />

@@ -130,6 +130,17 @@ export const ui = {
     "common.back": "Back",
     "common.loading": "Loading...",
     "common.notFound": "Page not found",
+
+    // SEO
+    "seo.siteName": "Solsynth",
+    "seo.home.description": "Solsynth builds software, hardware and experiences. From social networks to cloud drives, we create tools that empower and connect.",
+    "seo.products.description": "Explore Solsynth's product lineup — from social networks to tools, we build software that matters.",
+    "seo.updates.description": "Latest news, updates and announcements from Solsynth.",
+    "seo.about.description": "Learn about Solsynth's story, mission, values, and the team behind the scenes.",
+    "seo.legal.description": "Important policies, terms of service, and legal agreements for using Solsynth services.",
+    "seo.product.description": "Learn more about {name} by Solsynth. {description}",
+    "seo.update.description": "Read the latest update from Solsynth: {title}",
+    "seo.legalDoc.description": "{title} — {description}",
   },
   zh: {
     // Nav
@@ -249,5 +260,16 @@ export const ui = {
     "common.back": "返回",
     "common.loading": "加载中...",
     "common.notFound": "页面未找到",
+
+    // SEO
+    "seo.siteName": "Solsynth",
+    "seo.home.description": "Solsynth 打造软件、硬件和体验。从社交网络到云端存储，我们创作赋能与连接的工具。",
+    "seo.products.description": "探索 Solsynth 的产品阵容——从社交网络到工具，我们打造重要的软件。",
+    "seo.updates.description": "来自 Solsynth 的最新消息、动态和公告。",
+    "seo.about.description": "了解 Solsynth 的故事、使命、价值观以及背后的团队。",
+    "seo.legal.description": "使用 Solsynth 服务的重要政策、服务条款和法律协议。",
+    "seo.product.description": "了解更多关于 Solsynth 的 {name}。{description}",
+    "seo.update.description": "阅读 Solsynth 的最新动态：{title}",
+    "seo.legalDoc.description": "{title} — {description}",
   },
 } as const;
