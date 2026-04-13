@@ -2,7 +2,7 @@
 lang: en
 title: User Agreement
 description: This agreement outlines the fundamental rules and terms applicable to all Solsynth products, ensuring users understand their rights, obligations, and the standards for platform usage.
-updatedDate: "2026-03-17"
+updatedDate: "2026-04-14"
 ---
 
 Welcome to Solsynth’s products and services. This User Agreement (hereinafter referred to as the “Agreement”) constitutes a legally binding agreement between you (hereinafter referred to as the “User” or “you”) and Solsynth LLC (hereinafter referred to as “we,” “us,” or “Solsynth”). It applies to all Solsynth products and services (hereinafter referred to as the “Services”), including but not limited to Solar Network, Solarpass, and others. Unless a specific product explicitly states additional terms, this Agreement serves as the governing framework for all Services.
@@ -77,6 +77,43 @@ The following behaviors are considered inappropriate use, and we reserve the rig
 3. **Using Regular Accounts for Automation**: For example, using personal account tokens to develop chatbots. Users are encouraged to create bot accounts via the developer portal.
 4. **Developing Non-Compliant Software**: Violating the [Solar Network Developer Agreement](/terms/solar-network-dev-en), such as modifying official clients to bypass subscription limits.
 5. **Other**: Including but not limited to harassment, fraud, distributing malware, bypassing content filters, or any behavior that harms the platform’s ecosystem.
+
+### Inappropriate Use of Post Services
+
+When posting content on Solar Network, violating the following may result in adjusting the visibility of the content, shadowbanning, or complete deletion to maintain community safety and environment. You may also temporarily or permanently lose access to post services:
+
+1. Spreading misinformation that misleads others.
+2. Impersonating others to post content (including off-site users). May result in permanent loss of posting privileges.
+3. Re-uploading others' work, including but not limited to videos, artwork, music, etc. May result in full account suspension.
+4. Content that violates others' privacy.
+   - On Solar Network, portrait rights are also considered part of privacy.
+   - If you accidentally capture other users or strangers in photos, please obtain their permission before posting content, or pixelate the relevant parts.
+5. Terrorism and other content that violates social public order, customs, and local laws.
+   - Solar Network has no obligation to shield users when receiving assistance investigation requests from authorities. We will submit user IP addresses, device identifiers, and other information we possess to the relevant authorities.
+6. Behavior that redirects to off-site platforms. May result in the poster being permanently shadowbanned.
+   - Solar Network is committed to building an advertisement-free community. We believe content created through paid partnerships seriously interferes with users' choices.
+   - However, simply sharing products or merchandise without financial interest is acceptable. **But you may not provide links containing affiliation codes.**
+     - And any promotional content that generates rebates.
+   - Since Solar Network users may include many developers, this clause is not limited to promoting others' products or merchandise. It also applies to promoting your own new products or projects.
+     - We welcome: New open-source projects, non-commercial project promotions.
+     - We do not welcome: Community platform promotions that "poach" Solar Network users, and commercial product promotions.
+   - Solar Network does not have a comprehensive advertising system, so our strategy is to discourage content with paid partnerships.
+   - We will apply the principle of ambiguity in enforcing this rule. Some of your content may violate this clause, but we may choose not to act on it. Solar Network Team reserves the right to pursue at any time.
+
+**Note: Replies are a form of post and are subject to the above rules.**
+
+### Inappropriate Use of Thinking Service
+
+When using the Thinking service, the following actions may result in temporary or permanent loss of access to the Thinking service:
+
+1. **Prompt Injection**: Using inappropriate prompts in the Thinking service, intentionally or unintentionally causing the model to produce inappropriate content.
+2. **Respect Others' Privacy**: The Thinking service should not be used for doxxing or people-searching tools.
+3. **Spreading Misinformation**: Due to technical reasons, AI-generated content may not always be accurate. Please fact-check before posting AI-generated content on Solar Network.
+4. Any other violations of the upstream model provider's terms of service are also considered violations.
+
+**Note: For safety and synchronization of chat history, your chat history with the model will be stored on the server. The upstream model provider may also log your requests. Please do not share private information.**
+
+
 
 ## User-Generated Content (UGC)
 
