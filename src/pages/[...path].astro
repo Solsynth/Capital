@@ -1,0 +1,14 @@
+---
+export const prerender = false;
+
+const acceptLang = Astro.request.headers.get('accept-language');
+const preferredLang = acceptLang?.split(',')[0]?.split('-')[0];
+
+// Check if user prefers Chinese
+const lang = preferredLang === 'zh' ? 'zh' : 'en';
+
+const { path } = Astro.params;
+const targetPath = path || '';
+
+return Astro.redirect(`/${lang}/${targetPath}`);
+---

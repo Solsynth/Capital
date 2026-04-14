@@ -1,0 +1,22 @@
+---
+export const prerender = true;
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import type { Lang } from '~/i18n/utils';
+
+export function getStaticPaths() {
+  return [
+    { params: { lang: 'en', slug: 'user-agreement' } },
+    { params: { lang: 'en', slug: 'privacy-policy' } },
+    { params: { lang: 'en', slug: 'refund-policy' } },
+    { params: { lang: 'en', slug: 'solar-network-dev' } },
+    { params: { lang: 'zh', slug: 'user-agreement' } },
+    { params: { lang: 'zh', slug: 'privacy-policy' } },
+    { params: { lang: 'zh', slug: 'refund-policy' } },
+    { params: { lang: 'zh', slug: 'solar-network-dev' } },
+  ];
+}
+
+const { lang, slug } = Astro.params as { lang: Lang; slug: string };
+
+return Astro.redirect(getRelativeLocaleUrl(lang, `legal/${slug}`));
+---
