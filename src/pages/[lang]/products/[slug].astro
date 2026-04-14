@@ -3,12 +3,23 @@ import Layout from '~/layouts/Layout.astro';
 import { Github, ExternalLink, Bug, ArrowLeft, Tag, Folder } from 'lucide-astro';
 import { getCollection, render } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { getLangFromUrl, useTranslations, type Lang } from '~/i18n/utils';
+import { useTranslations, type Lang } from '~/i18n/utils';
 
 export const prerender = false;
 
-const lang = getLangFromUrl(Astro.url);
-const { slug } = Astro.params;
+export async function getStaticPaths() {
+  const allProducts = await getCollection('products');
+  const paths = [];
+  for (const product of allProducts) {
+    const [lang, slug] = product.id.split('/');
+    if (lang && slug) {
+      paths.push({ params: { lang, slug } });
+    }
+  }
+  return paths;
+}
+
+const { lang, slug } = Astro.params as { lang: Lang; slug: string };
 const t = useTranslations(lang);
 
 const allProducts = await getCollection('products');

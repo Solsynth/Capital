@@ -5,11 +5,15 @@ import StatsSection from '~/components/StatsSection.astro';
 import ProductsSection from '~/components/ProductsSection.astro';
 import UpdatesSection from '~/components/UpdatesSection.astro';
 import { getCollection } from 'astro:content';
-import { getLangFromUrl, useTranslations } from '~/i18n/utils';
+import { getLangFromUrl, useTranslations, type Lang } from '~/i18n/utils';
 
 export const prerender = false;
 
-const lang = getLangFromUrl(Astro.url);
+export function getStaticPaths() {
+  return [{ params: { lang: 'en' } }, { params: { lang: 'zh' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
 const t = useTranslations(lang);
 const allProducts = await getCollection('products');
 

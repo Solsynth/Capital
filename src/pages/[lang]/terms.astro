@@ -1,9 +1,13 @@
 ---
 export const prerender = true;
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { getLangFromUrl } from '~/i18n/utils';
+import type { Lang } from '~/i18n/utils';
 
-const lang = getLangFromUrl(Astro.url);
+export function getStaticPaths() {
+  return [{ params: { lang: 'en' } }, { params: { lang: 'zh' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
 
 return Astro.redirect(getRelativeLocaleUrl(lang, 'legal'));
 ---

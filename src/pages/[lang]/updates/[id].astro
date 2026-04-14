@@ -4,13 +4,16 @@ import { getPostById, formatDate, getAttachmentUrl } from '~/utils/api';
 import { ArrowLeft, Eye, MessageCircle, Heart, ArrowRight } from 'lucide-astro';
 import { marked } from 'marked';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { getLangFromUrl, useTranslations, type Lang } from '~/i18n/utils';
+import { useTranslations, type Lang } from '~/i18n/utils';
 
 export const prerender = false;
 
-const lang = getLangFromUrl(Astro.url);
+export function getStaticPaths() {
+  return [];
+}
+
+const { lang, id } = Astro.params as { lang: Lang; id: string };
 const t = useTranslations(lang);
-const { id } = Astro.params;
 
 if (!id) {
   return Astro.redirect(getRelativeLocaleUrl(lang, 'updates'));

@@ -2,11 +2,15 @@
 import Layout from '~/layouts/Layout.astro';
 import {Heart, Code, Users, Sparkles, Github, ArrowLeft, AlertTriangle} from 'lucide-astro';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { getLangFromUrl, useTranslations } from '~/i18n/utils';
+import { useTranslations, type Lang } from '~/i18n/utils';
 
 export const prerender = false;
 
-const lang = getLangFromUrl(Astro.url);
+export function getStaticPaths() {
+  return [{ params: { lang: 'en' } }, { params: { lang: 'zh' } }];
+}
+
+const { lang } = Astro.params as { lang: Lang };
 const t = useTranslations(lang);
 
 const team = [
