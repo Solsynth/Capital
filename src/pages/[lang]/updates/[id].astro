@@ -4,7 +4,7 @@ import { getPostById, formatDate, getAttachmentUrl } from '~/utils/api';
 import { ArrowLeft, Eye, MessageCircle, Heart, ArrowRight } from 'lucide-astro';
 import { marked } from 'marked';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { useTranslations, languages, type Lang } from '~/i18n/utils';
+import { useTranslations, type Lang } from '~/i18n/utils';
 
 export const prerender = false;
 
@@ -12,17 +12,7 @@ export function getStaticPaths() {
   return [];
 }
 
-const { lang: rawLang, id } = Astro.params as { lang: Lang; id: string };
-const lang = rawLang as Lang;
-
-// Validate language, redirect to detected language if invalid
-if (!(lang in languages)) {
-  const acceptLang = Astro.request.headers.get('accept-language');
-  const preferredLang = acceptLang?.split(',')[0]?.split('-')[0];
-  const targetLang = preferredLang === 'zh' ? 'zh' : 'en';
-  return Astro.redirect(`/${targetLang}/${rawLang}/${id}`);
-}
-
+const { lang, id } = Astro.params as { lang: Lang; id: string };
 const t = useTranslations(lang);
 
 if (!id) {

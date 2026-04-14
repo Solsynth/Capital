@@ -3,21 +3,11 @@ import Layout from '~/layouts/Layout.astro';
 import ProductCard from '~/components/ProductCard.astro';
 import { getCollection } from 'astro:content';
 import { getRelativeLocaleUrl } from 'astro:i18n';
-import { useTranslations, languages, type Lang } from '~/i18n/utils';
+import { useTranslations, type Lang } from '~/i18n/utils';
 
 export const prerender = false;
 
-const { lang: rawLang } = Astro.params;
-const lang = rawLang as Lang;
-
-// Validate language, redirect to detected language if invalid
-if (!(lang in languages)) {
-  const acceptLang = Astro.request.headers.get('accept-language');
-  const preferredLang = acceptLang?.split(',')[0]?.split('-')[0];
-  const targetLang = preferredLang === 'zh' ? 'zh' : 'en';
-  return Astro.redirect(`/${targetLang}/${rawLang}`);
-}
-
+const { lang } = Astro.params as { lang: Lang };
 const t = useTranslations(lang);
 
 const allProducts = await getCollection('products');
