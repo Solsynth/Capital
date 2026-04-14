@@ -1,112 +1,254 @@
 ---
-import { Sun, Moon, Compass, Layers, Newspaper } from 'lucide-astro';
-import { getRelativeLocaleUrl } from 'astro:i18n';
-import { getLangFromUrl, useTranslations, languages, type Lang } from '~/i18n/utils';
+import {Sun, Moon, Compass, Layers, Newspaper, Menu, X, Languages} from 'lucide-astro';
+import {getRelativeLocaleUrl} from 'astro:i18n';
+import {getLangFromUrl, useTranslations, languages, type Lang} from '~/i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
 const pathname = Astro.url.pathname;
 
 function getLocalizedPath(targetLang: Lang): string {
-  const pathWithoutLang = pathname.replace(/^\/(en|zh)/, '');
-  return getRelativeLocaleUrl(targetLang, pathWithoutLang || '/');
+    const pathWithoutLang = pathname.replace(/^\/(en|zh)/, '');
+    return getRelativeLocaleUrl(targetLang, pathWithoutLang || '/');
 }
 ---
 
 <header class="navbar bg-base-200/80 backdrop-blur-xl fixed top-0 left-0 right-0 z-50 h-16 shadow-sm">
-  <div class="container mx-auto flex items-center justify-between px-4 w-full">
-    <!-- Logo -->
-    <a href={getRelativeLocaleUrl(lang, '/')} class="flex items-center gap-2 shrink-0">
-      <img src="/favicon.png" alt="Solsynth" class="w-8 h-8" />
-      <span class="font-bold text-lg hidden sm:inline">Solsynth</span>
-    </a>
+    <div class="container mx-auto flex items-center justify-between px-4 w-full">
+        <!-- Logo -->
+        <a href={getRelativeLocaleUrl(lang, '/')} class="flex items-center gap-2 shrink-0">
+            <img src="/favicon.png" alt="Solsynth" class="w-8 h-8"/>
+            <span class="font-bold text-lg hidden sm:inline">Solsynth</span>
+        </a>
 
-    <!-- Centered Nav -->
-    <nav class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-      <ul class="menu menu-horizontal px-1 gap-1">
-        <li>
-          <a href={getRelativeLocaleUrl(lang, '/')} class="btn btn-ghost btn-sm gap-1">
-            <Compass class="w-4 h-4 me-2" />
-            {t('nav.explore')}
-          </a>
-        </li>
-        <li>
-          <a href={getRelativeLocaleUrl(lang, 'products')} class="btn btn-ghost btn-sm gap-1">
-            <Layers class="w-4 h-4 me-2" />
-            {t('nav.products')}
-          </a>
-        </li>
-        <li>
-          <a href={getRelativeLocaleUrl(lang, 'updates')} class="btn btn-ghost btn-sm gap-1">
-            <Newspaper class="w-4 h-4 me-2" />
-            {t('nav.updates')}
-          </a>
-        </li>
-      </ul>
-    </nav>
+        <!-- Centered Nav (Desktop) -->
+        <nav class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
+            <ul class="menu menu-horizontal px-1 gap-1">
+                <li>
+                    <a href={getRelativeLocaleUrl(lang, '/')} class="btn btn-ghost btn-sm gap-1">
+                        <Compass class="w-4 h-4 me-2"/>
+                        {t('nav.explore')}
+                    </a>
+                </li>
+                <li>
+                    <a href={getRelativeLocaleUrl(lang, 'products')} class="btn btn-ghost btn-sm gap-1">
+                        <Layers class="w-4 h-4 me-2"/>
+                        {t('nav.products')}
+                    </a>
+                </li>
+                <li>
+                    <a href={getRelativeLocaleUrl(lang, 'updates')} class="btn btn-ghost btn-sm gap-1">
+                        <Newspaper class="w-4 h-4 me-2"/>
+                        {t('nav.updates')}
+                    </a>
+                </li>
+            </ul>
+        </nav>
 
-    <!-- Right side -->
-    <div class="flex items-center gap-2 shrink-0">
-      <!-- Language Switcher -->
-      <div class="dropdown dropdown-end">
-        <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1">
-          <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <line x1="2" y1="12" x2="22" y2="12"></line>
-            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-          </svg>
-          <span class="hidden sm:inline">{languages[lang]}</span>
+        <!-- Right side -->
+        <div class="flex items-center gap-1 sm:gap-2 shrink-0">
+            <!-- Language Switcher -->
+            <div class="dropdown dropdown-end">
+                <div tabindex="0" role="button" class="btn btn-ghost btn-sm gap-1 px-2 max-md:w-9">
+                    <Languages class="w-5 h-5"/>
+                    <span class="hidden sm:inline">{languages[lang]}</span>
+                </div>
+                <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-40 z-50">
+                    {(Object.keys(languages) as Lang[]).map((l) => (
+                            <li>
+                                <a
+                                        href={getLocalizedPath(l)}
+                                        class={l === lang ? 'active' : ''}
+                                >
+                                    {languages[l]}
+                                </a>
+                            </li>
+                    ))}
+                </ul>
+            </div>
+
+            <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm px-2">
+                <input type="checkbox" id="theme-toggle"/>
+                <Sun class="swap-on w-5 h-5"/>
+                <Moon class="swap-off w-5 h-5"/>
+            </label>
+
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="btn btn-ghost btn-circle btn-sm md:hidden relative px-2">
+                <Menu class="w-5 h-5 absolute transition-all duration-200" id="menu-icon"/>
+                <X class="w-5 h-5 absolute transition-all duration-200 opacity-0 rotate-90" id="close-icon"/>
+            </button>
         </div>
-        <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-40 z-50">
-          {(Object.keys(languages) as Lang[]).map((l) => (
-            <li>
-              <a
-                href={getLocalizedPath(l)}
-                class={l === lang ? 'active' : ''}
-              >
-                {languages[l]}
-              </a>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">
-        <input type="checkbox" id="theme-toggle" />
-        <Sun class="swap-on w-5 h-5" />
-        <Moon class="swap-off w-5 h-5" />
-      </label>
     </div>
-  </div>
 </header>
 
+<!-- Mobile Menu Panel -->
+<div id="mobile-menu" class="fixed inset-0 z-40 pointer-events-none md:hidden">
+    <div class="absolute inset-0 bg-base-300/50 backdrop-blur-sm opacity-0 transition-opacity duration-300"
+         id="mobile-menu-overlay"></div>
+    <div class="absolute top-16 left-0 right-0 bg-base-200/95 backdrop-blur-xl shadow-lg p-4 -translate-y-4 opacity-0 transition-all duration-300 pointer-events-auto"
+         id="mobile-menu-content">
+        <nav>
+            <ul class="menu menu-vertical gap-2">
+                <li>
+                    <a href={getRelativeLocaleUrl(lang, '/')} class="btn btn-ghost justify-start gap-2">
+                        <Compass class="w-5 h-5"/>
+                        {t('nav.explore')}
+                    </a>
+                </li>
+                <li>
+                    <a href={getRelativeLocaleUrl(lang, 'products')} class="btn btn-ghost justify-start gap-2">
+                        <Layers class="w-5 h-5"/>
+                        {t('nav.products')}
+                    </a>
+                </li>
+                <li>
+                    <a href={getRelativeLocaleUrl(lang, 'updates')} class="btn btn-ghost justify-start gap-2">
+                        <Newspaper class="w-5 h-5"/>
+                        {t('nav.updates')}
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
 <script>
-  const toggle = document.getElementById('theme-toggle') as HTMLInputElement;
-  const html = document.documentElement;
+    let isMenuOpen = false;
 
-  function getTheme(): 'light' | 'dark' {
-    return html.getAttribute('data-theme') as 'light' | 'dark' || 'light';
-  }
+    function initNavbar() {
+        // Theme toggle
+        const toggle = document.getElementById('theme-toggle') as HTMLInputElement;
 
-  function setTheme(theme: 'light' | 'dark') {
-    html.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-  }
+        if (toggle && !toggle.dataset.initialized) {
+            toggle.dataset.initialized = 'true';
+            toggle.checked = document.documentElement.getAttribute('data-theme') === 'dark';
 
-  // Initialize toggle state based on current theme
-  if (toggle) {
-    toggle.checked = getTheme() === 'dark';
+            toggle.addEventListener('change', () => {
+                const theme = toggle.checked ? 'dark' : 'light';
+                document.documentElement.setAttribute('data-theme', theme);
+                localStorage.setItem('theme', theme);
+            });
+        }
 
-    toggle.addEventListener('change', () => {
-      setTheme(toggle.checked ? 'dark' : 'light');
-    });
-  }
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
 
-  // Listen for system preference changes
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (!localStorage.getItem('theme')) {
-      setTheme(e.matches ? 'dark' : 'light');
-      if (toggle) toggle.checked = e.matches;
+        if (mobileMenuBtn && !mobileMenuBtn.dataset.initialized) {
+            mobileMenuBtn.dataset.initialized = 'true';
+
+            mobileMenuBtn.addEventListener('click', () => {
+                const mobileMenu = document.getElementById('mobile-menu');
+                const menuIcon = document.getElementById('menu-icon');
+                const closeIcon = document.getElementById('close-icon');
+                const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+                const mobileMenuContent = document.getElementById('mobile-menu-content');
+
+                if (isMenuOpen) {
+                    // Close menu
+                    isMenuOpen = false;
+                    mobileMenuOverlay?.classList.add('opacity-0');
+                    mobileMenuOverlay?.classList.remove('pointer-events-auto');
+                    mobileMenuContent?.classList.add('opacity-0', '-translate-y-4');
+                    menuIcon?.classList.remove('opacity-0', 'rotate-90');
+                    menuIcon?.classList.add('opacity-100', 'rotate-0');
+                    closeIcon?.classList.add('opacity-0', 'rotate-90');
+                    closeIcon?.classList.remove('opacity-100', 'rotate-0');
+                    document.body.style.overflow = '';
+                    setTimeout(() => {
+                        if (!isMenuOpen) {
+                            mobileMenu?.classList.remove('pointer-events-auto');
+                        }
+                    }, 300);
+                } else {
+                    // Open menu
+                    isMenuOpen = true;
+                    mobileMenu?.classList.add('pointer-events-auto');
+                    mobileMenuOverlay?.classList.remove('opacity-0');
+                    mobileMenuOverlay?.classList.add('pointer-events-auto');
+                    mobileMenuContent?.classList.remove('opacity-0', '-translate-y-4');
+                    menuIcon?.classList.add('opacity-0', 'rotate-90');
+                    menuIcon?.classList.remove('opacity-100', 'rotate-0');
+                    closeIcon?.classList.remove('opacity-0', 'rotate-90');
+                    closeIcon?.classList.add('opacity-100', 'rotate-0');
+                    document.body.style.overflow = 'hidden';
+                }
+            });
+        }
+
+        // Overlay click to close
+        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+        if (mobileMenuOverlay && !mobileMenuOverlay.dataset.initialized) {
+            mobileMenuOverlay.dataset.initialized = 'true';
+            mobileMenuOverlay.addEventListener('click', () => {
+                if (isMenuOpen) {
+                    const mobileMenu = document.getElementById('mobile-menu');
+                    const menuIcon = document.getElementById('menu-icon');
+                    const closeIcon = document.getElementById('close-icon');
+                    const mobileMenuContent = document.getElementById('mobile-menu-content');
+
+                    isMenuOpen = false;
+                    mobileMenuOverlay.classList.add('opacity-0');
+                    mobileMenuOverlay.classList.remove('pointer-events-auto');
+                    mobileMenuContent?.classList.add('opacity-0', '-translate-y-4');
+                    menuIcon?.classList.remove('opacity-0', 'rotate-90');
+                    menuIcon?.classList.add('opacity-100', 'rotate-0');
+                    closeIcon?.classList.add('opacity-0', 'rotate-90');
+                    closeIcon?.classList.remove('opacity-100', 'rotate-0');
+                    document.body.style.overflow = '';
+                    setTimeout(() => {
+                        if (!isMenuOpen) {
+                            mobileMenu?.classList.remove('pointer-events-auto');
+                        }
+                    }, 300);
+                }
+            });
+        }
+
+        // Close menu when clicking a link
+        document.querySelectorAll('#mobile-menu a').forEach(link => {
+            if (!(link as HTMLElement).dataset.initialized) {
+                (link as HTMLElement).dataset.initialized = 'true';
+                link.addEventListener('click', () => {
+                    if (isMenuOpen) {
+                        const mobileMenu = document.getElementById('mobile-menu');
+                        const menuIcon = document.getElementById('menu-icon');
+                        const closeIcon = document.getElementById('close-icon');
+                        const mobileMenuOverlay = document.getElementById('mobile-menu-overlay');
+                        const mobileMenuContent = document.getElementById('mobile-menu-content');
+
+                        isMenuOpen = false;
+                        mobileMenuOverlay?.classList.add('opacity-0');
+                        mobileMenuOverlay?.classList.remove('pointer-events-auto');
+                        mobileMenuContent?.classList.add('opacity-0', '-translate-y-4');
+                        menuIcon?.classList.remove('opacity-0', 'rotate-90');
+                        menuIcon?.classList.add('opacity-100', 'rotate-0');
+                        closeIcon?.classList.add('opacity-0', 'rotate-90');
+                        closeIcon?.classList.remove('opacity-100', 'rotate-0');
+                        document.body.style.overflow = '';
+                        setTimeout(() => {
+                            if (!isMenuOpen) {
+                                mobileMenu?.classList.remove('pointer-events-auto');
+                            }
+                        }, 300);
+                    }
+                });
+            }
+        });
     }
-  });
+
+    // Listen for system preference changes (only once)
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+        if (!localStorage.getItem('theme')) {
+            document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light');
+            const toggle = document.getElementById('theme-toggle') as HTMLInputElement;
+            if (toggle) toggle.checked = e.matches;
+        }
+    });
+
+    // Initialize on first load
+    initNavbar();
+
+    // Re-initialize after view transitions
+    document.addEventListener('astro:page-load', initNavbar);
 </script>
