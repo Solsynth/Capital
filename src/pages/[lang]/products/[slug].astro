@@ -1,25 +1,21 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
+import Layout from '~/layouts/Layout.astro';
 import { Github, ExternalLink, Bug, ArrowLeft, Tag, Folder } from 'lucide-astro';
 import { getCollection, render } from 'astro:content';
-import { getLangFromUrl, useTranslations, type Lang } from '../../../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getLangFromUrl, useTranslations, type Lang } from '~/i18n/utils';
 
 export const prerender = false;
 
 const lang = getLangFromUrl(Astro.url);
 const { slug } = Astro.params;
 const t = useTranslations(lang);
-const prefix = lang === 'zh' ? '/zh' : '';
-
-if (slug === 'solar-network' && lang === 'en') {
-  return Astro.redirect(`/products/solar-network`);
-}
 
 const allProducts = await getCollection('products');
 const product = allProducts.find(p => p.id === `${lang}/${slug}`);
 
 if (!product) {
-  return Astro.redirect(`${prefix}/products`);
+  return Astro.redirect(getRelativeLocaleUrl(lang, 'products'));
 }
 
 const hasPage = product.data.hasPage !== false;
@@ -40,7 +36,7 @@ const description = lang === 'zh' && product.data.descriptionZh ? product.data.d
     <div class="relative h-[40vh] min-h-75">
       <img src={product.data.background} class="w-full h-full object-cover" alt={title} />
       <div class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/50 to-transparent"></div>
-      
+
       <div class="absolute bottom-0 left-0 right-0 p-8">
         <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
           <img src={product.data.icon} class="w-20 h-20 rounded-2xl shadow-xl" alt={title} />
@@ -50,13 +46,13 @@ const description = lang === 'zh' && product.data.descriptionZh ? product.data.d
             {(product.data.tags?.length > 0 || product.data.series) && (
               <div class="flex flex-wrap gap-2 mt-3">
                 {product.data.series && (
-                  <a href={`${prefix}/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+                  <a href={`${getRelativeLocaleUrl(lang, 'products')}?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
                     <Folder class="w-3 h-3 mr-1" />
                     {product.data.series}
                   </a>
                 )}
                 {product.data.tags?.map((tag: string) => (
-                  <a href={`${prefix}/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+                  <a href={`${getRelativeLocaleUrl(lang, 'products')}?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
                     <Tag class="w-3 h-3 mr-1" />
                     {tag}
                   </a>
@@ -91,7 +87,7 @@ const description = lang === 'zh' && product.data.descriptionZh ? product.data.d
     <div class="relative h-[50vh] min-h-100">
       <img src={product.data.background} class="w-full h-full object-cover" alt={title} />
       <div class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"></div>
-      
+
       <div class="absolute bottom-0 left-0 right-0 p-8">
         <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
           <img src={product.data.icon} class="w-24 h-24 rounded-2xl shadow-xl" alt={title} />
@@ -101,13 +97,13 @@ const description = lang === 'zh' && product.data.descriptionZh ? product.data.d
             {(product.data.tags?.length > 0 || product.data.series) && (
               <div class="flex flex-wrap gap-2 mt-3">
                 {product.data.series && (
-                  <a href={`${prefix}/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+                  <a href={`${getRelativeLocaleUrl(lang, 'products')}?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
                     <Folder class="w-3 h-3 mr-1" />
                     {product.data.series}
                   </a>
                 )}
                 {product.data.tags?.map((tag: string) => (
-                  <a href={`${prefix}/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+                  <a href={`${getRelativeLocaleUrl(lang, 'products')}?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
                     <Tag class="w-3 h-3 mr-1" />
                     {tag}
                   </a>
@@ -136,11 +132,11 @@ const description = lang === 'zh' && product.data.descriptionZh ? product.data.d
       <section class="mb-16">
         <h2 class="text-3xl font-bold mb-4 text-center">{lang === 'zh' ? `为什么选择 ${title}？` : `Why ${title}?`}</h2>
         <p class="text-lg opacity-70 text-center max-w-2xl mx-auto mb-12">
-          {lang === 'zh' 
+          {lang === 'zh'
             ? '为创作者、开发者和连接者打造的平台。体验一个理解您热爱的平台。'
             : 'Built for those who create, code, and connect. Experience a platform that understands your passions.'}
         </p>
-        
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div class="card bg-base-200 p-8">
             <h3 class="text-xl font-bold mb-3 text-primary">{lang === 'zh' ? '开发者优先' : 'Developer First'}</h3>
@@ -165,7 +161,7 @@ const description = lang === 'zh' && product.data.descriptionZh ? product.data.d
         <div class="card bg-linear-to-r from-primary/10 to-secondary/10 p-8">
           <h2 class="text-3xl font-bold mb-4">{t('product.startJourney')}</h2>
           <p class="text-lg opacity-80 mb-6">{t('product.available')}</p>
-          
+
           <div class="flex flex-wrap gap-4">
             {product.data.url && (
               <a href={product.data.url} target="_blank" class="btn btn-primary">
@@ -202,7 +198,7 @@ const description = lang === 'zh' && product.data.descriptionZh ? product.data.d
     <div class="relative h-[40vh] min-h-75">
       <img src={product.data.background} class="w-full h-full object-cover" alt={title} />
       <div class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"></div>
-      
+
       <div class="absolute bottom-0 left-0 right-0 p-8">
         <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
           <img src={product.data.icon} class="w-20 h-20 rounded-2xl shadow-xl" alt={title} />
@@ -212,13 +208,13 @@ const description = lang === 'zh' && product.data.descriptionZh ? product.data.d
             {(product.data.tags?.length > 0 || product.data.series) && (
               <div class="flex flex-wrap gap-2 mt-3">
                 {product.data.series && (
-                  <a href={`${prefix}/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+                  <a href={`${getRelativeLocaleUrl(lang, 'products')}?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
                     <Folder class="w-3 h-3 mr-1" />
                     {product.data.series}
                   </a>
                 )}
                 {product.data.tags?.map((tag: string) => (
-                  <a href={`${prefix}/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+                  <a href={`${getRelativeLocaleUrl(lang, 'products')}?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
                     <Tag class="w-3 h-3 mr-1" />
                     {tag}
                   </a>
@@ -253,19 +249,19 @@ const description = lang === 'zh' && product.data.descriptionZh ? product.data.d
             {product.data.version && <span class="text-sm opacity-60">v{product.data.version}</span>}
           </div>
         </div>
-        
+
         <p class="opacity-80 mb-6">{description}</p>
-        
+
         {(product.data.tags?.length > 0 || product.data.series) && (
           <div class="flex flex-wrap gap-2 mb-6">
             {product.data.series && (
-              <a href={`${prefix}/products?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
+              <a href={`${getRelativeLocaleUrl(lang, 'products')}?series=${encodeURIComponent(product.data.series)}`} class="badge badge-primary badge-sm">
                 <Folder class="w-3 h-3 mr-1" />
                 {product.data.series}
               </a>
             )}
             {product.data.tags?.map((tag: string) => (
-              <a href={`${prefix}/products?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
+              <a href={`${getRelativeLocaleUrl(lang, 'products')}?tag=${encodeURIComponent(tag)}`} class="badge badge-outline badge-sm hover:badge-primary">
                 <Tag class="w-3 h-3 mr-1" />
                 {tag}
               </a>
@@ -286,12 +282,12 @@ const description = lang === 'zh' && product.data.descriptionZh ? product.data.d
               {t('product.sourceCode')}
             </a>
           )}
-          <a href={`${prefix}/products`} class="btn btn-ghost btn-sm">
+          <a href={getRelativeLocaleUrl(lang, 'products')} class="btn btn-ghost btn-sm">
             <ArrowLeft class="w-4 h-4" />
             {t('products.backToProducts')}
           </a>
         </div>
-        
+
         {product.data.releasedDate && (
           <p class="text-sm opacity-60 mt-4">{t('product.released')} {product.data.releasedDate}</p>
         )}

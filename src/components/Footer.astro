@@ -1,9 +1,9 @@
 ---
-import { getLangFromUrl, useTranslations, type Lang } from '../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const prefix = lang === 'zh' ? '/zh' : '';
 ---
 
 <footer class="footer bg-base-200 text-base-content p-8 md:p-10">
@@ -19,20 +19,20 @@ const prefix = lang === 'zh' ? '/zh' : '';
       <nav>
         <h6 class="footer-title">{t('footer.products')}</h6>
         <a href="https://solian.app" target="_blank" class="link link-hover block text-sm">Solar Network</a>
-        <a href={`${prefix}/products`} class="link link-hover block text-sm">{t('footer.catalog')}</a>
+        <a href={getRelativeLocaleUrl(lang, 'products')} class="link link-hover block text-sm">{t('footer.catalog')}</a>
       </nav>
       <nav>
         <h6 class="footer-title">{t('footer.company')}</h6>
-        <a href={`${prefix}/about`} class="link link-hover block text-sm">{t('footer.aboutUs')}</a>
+        <a href={getRelativeLocaleUrl(lang, 'about')} class="link link-hover block text-sm">{t('footer.aboutUs')}</a>
         <a href="https://github.com/Solsynth" target="_blank" class="link link-hover block text-sm">{t('footer.github')}</a>
       </nav>
       <nav>
         <h6 class="footer-title">{t('footer.legal')}</h6>
-        <a href={`${prefix}/legal/user-agreement`} class="link link-hover block text-sm">{t('footer.termsOfService')}</a>
-        <a href={`${prefix}/legal/privacy-policy`} class="link link-hover block text-sm">{t('footer.privacyPolicy')}</a>
-        <a href={`${prefix}/legal/refund-policy`} class="link link-hover block text-sm">{t('footer.refundPolicy')}</a>
-        <a href={`${prefix}/legal/solar-network-dev`} class="link link-hover block text-sm">{t('footer.developerAgreement')}</a>
-        <a href={`${prefix}/legal`} class="link link-hover block text-sm">{t('nav.legalAll')}</a>
+        <a href={getRelativeLocaleUrl(lang, 'legal/user-agreement')} class="link link-hover block text-sm">{t('footer.termsOfService')}</a>
+        <a href={getRelativeLocaleUrl(lang, 'legal/privacy-policy')} class="link link-hover block text-sm">{t('footer.privacyPolicy')}</a>
+        <a href={getRelativeLocaleUrl(lang, 'legal/refund-policy')} class="link link-hover block text-sm">{t('footer.refundPolicy')}</a>
+        <a href={getRelativeLocaleUrl(lang, 'legal/solar-network-dev')} class="link link-hover block text-sm">{t('footer.developerAgreement')}</a>
+        <a href={getRelativeLocaleUrl(lang, 'legal')} class="link link-hover block text-sm">{t('nav.legalAll')}</a>
       </nav>
     </div>
   </div>

@@ -1,14 +1,14 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
+import Layout from '~/layouts/Layout.astro';
 import { getCollection, render } from 'astro:content';
 import { ArrowLeft, Calendar } from 'lucide-astro';
-import { getLangFromUrl, useTranslations } from '../../../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 
 export const prerender = false;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const prefix = lang === 'zh' ? '/zh' : '';
 const { slug } = Astro.params;
 
 const allLegal = await getCollection('legal');
@@ -20,7 +20,7 @@ function getSlug(filename: string): string {
 const page = allLegal.find(p => getSlug(p.id) === slug && p.id.startsWith(`${lang}/`));
 
 if (!page) {
-  return Astro.redirect(`${prefix}/legal`);
+  return Astro.redirect(getRelativeLocaleUrl(lang, 'legal'));
 }
 
 const { Content } = await render(page);
@@ -29,7 +29,7 @@ const { Content } = await render(page);
 <Layout title={page.data.title} description={page.data.description || 'Important legal document from Solsynth.'} lang={lang}>
   <div class="container mx-auto px-8 py-16 max-w-4xl">
     <div class="mb-8 -mx-4">
-      <a href={`${prefix}/legal`} class="btn btn-ghost btn-sm gap-1">
+      <a href={getRelativeLocaleUrl(lang, 'legal')} class="btn btn-ghost btn-sm gap-1">
         <ArrowLeft class="w-4 h-4" />
         {t('legal.backToLegal')}
       </a>

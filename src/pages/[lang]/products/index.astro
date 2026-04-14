@@ -1,14 +1,14 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
-import ProductCard from '../../../components/ProductCard.astro';
+import Layout from '~/layouts/Layout.astro';
+import ProductCard from '~/components/ProductCard.astro';
 import { getCollection } from 'astro:content';
-import { getLangFromUrl, useTranslations, type Lang } from '../../../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getLangFromUrl, useTranslations, type Lang } from '~/i18n/utils';
 
 export const prerender = false;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const prefix = lang === 'zh' ? '/zh' : '';
 
 const allProducts = await getCollection('products');
 const products = allProducts.filter(p => p.id.startsWith(`${lang}/`)).map(p => ({
@@ -55,8 +55,8 @@ if (urlSeries) {
         <h2 class="text-lg font-semibold mb-4">{t('products.series')}</h2>
         <div class="flex flex-wrap gap-2">
           {Array.from(seriesMap.keys()).map(series => (
-            <a 
-              href={`${prefix}/products?series=${encodeURIComponent(series)}`}
+            <a
+              href={`${getRelativeLocaleUrl(lang, 'products')}?series=${encodeURIComponent(series)}`}
               class="btn btn-sm {urlSeries === series ? 'btn-primary' : 'btn-outline'}"
             >
               {series}
@@ -70,15 +70,15 @@ if (urlSeries) {
       <div class="mb-12">
         <h2 class="text-lg font-semibold mb-4">{t('products.tags')}</h2>
         <div class="flex flex-wrap gap-2">
-          <a 
-            href={`${prefix}/products`}
+          <a
+            href={getRelativeLocaleUrl(lang, 'products')}
             class="btn btn-sm {!urlTag ? 'btn-primary' : 'btn-ghost'}"
           >
             {t('products.all')}
           </a>
           {allTags.map(tag => (
-            <a 
-              href={`${prefix}/products?tag=${encodeURIComponent(tag)}`}
+            <a
+              href={`${getRelativeLocaleUrl(lang, 'products')}?tag=${encodeURIComponent(tag)}`}
               class="btn btn-sm {urlTag === tag ? 'btn-primary' : 'btn-outline'}"
             >
               {tag}
@@ -91,7 +91,7 @@ if (urlSeries) {
     {filteredProducts.length === 0 ? (
       <div class="text-center py-16">
         <p class="text-lg opacity-70">{t('products.noProducts')}</p>
-        <a href={`${prefix || '/'}`} class="btn btn-primary mt-4">{lang === 'zh' ? '返回首页' : 'Back to Home'}</a>
+        <a href={getRelativeLocaleUrl(lang, '/')} class="btn btn-primary mt-4">{lang === 'zh' ? '返回首页' : 'Back to Home'}</a>
       </div>
     ) : (
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

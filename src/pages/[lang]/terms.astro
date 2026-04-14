@@ -1,9 +1,9 @@
 ---
 export const prerender = true;
-import { getLangFromUrl } from '../../i18n/utils';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getLangFromUrl } from '~/i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
-const prefix = lang === 'zh' ? '/zh' : '';
 
-return Astro.redirect(`${prefix}/legal`);
+return Astro.redirect(getRelativeLocaleUrl(lang, 'legal'));
 ---

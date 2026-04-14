@@ -1,14 +1,14 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
+import Layout from '~/layouts/Layout.astro';
 import { getCollection } from 'astro:content';
-import { FileText, Globe, Scale, Shield, Code } from 'lucide-astro';
-import { getLangFromUrl, useTranslations, type Lang } from '../../../i18n/utils';
+import { FileText, Scale, Shield, Code } from 'lucide-astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getLangFromUrl, useTranslations, type Lang } from '~/i18n/utils';
 
 export const prerender = false;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const prefix = lang === 'zh' ? '/zh' : '';
 
 const allLegal = await getCollection('legal');
 
@@ -42,7 +42,7 @@ const currentLangPages = allLegal.filter(p => p.id.startsWith(`${lang}/`));
         const slug = getSlug(page.id);
         const icon = slug.includes('privacy') ? Shield : slug.includes('user') ? Scale : slug.includes('refund') ? FileText : Code;
         return (
-          <a href={`${prefix}/legal/${slug}`} class="card bg-base-200 p-6 hover:shadow-lg transition-all duration-300 block group">
+          <a href={getRelativeLocaleUrl(lang, `legal/${slug}`)} class="card bg-base-200 p-6 hover:shadow-lg transition-all duration-300 block group">
             <div class="flex items-start gap-4">
               <div class="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
                 <icon class="w-6 h-6 text-primary" />

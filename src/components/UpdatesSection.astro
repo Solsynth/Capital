@@ -1,6 +1,7 @@
 ---
-import { getPosts, formatDate, truncateContent } from '../utils/api';
-import { useTranslations, type Lang } from '../i18n/utils';
+import { getPosts, formatDate, truncateContent } from '~/utils/api';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { useTranslations, type Lang } from '~/i18n/utils';
 
 interface Props {
   lang?: Lang;
@@ -20,8 +21,6 @@ function getDisplayTitle(post: { title: string; content: string }): string {
   const firstLine = post.content?.split('\n')[0]?.trim() || '';
   return firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine || 'View Post';
 }
-
-const prefix = lang === 'zh' ? '/zh' : '';
 ---
 
 <section class="py-16 px-4">
@@ -35,8 +34,8 @@ const prefix = lang === 'zh' ? '/zh' : '';
 
     <div class="max-w-3xl mx-auto space-y-4">
       {posts.slice(0, 5).map((post, i) => (
-        <a 
-          href={`${prefix}/updates/${post.id}`}
+        <a
+          href={getRelativeLocaleUrl(lang, `updates/${post.id}`)}
           class="card bg-base-200 p-6 hover:shadow-lg transition-shadow duration-300 block animate-fade-in-up"
           style={`animation-delay: ${i * 100}ms`}
         >
@@ -61,7 +60,7 @@ const prefix = lang === 'zh' ? '/zh' : '';
     </div>
 
     <div class="text-center mt-8">
-      <a href={`${prefix}/updates`} class="btn btn-outline btn-sm">
+      <a href={getRelativeLocaleUrl(lang, 'updates')} class="btn btn-outline btn-sm">
         {t('home.updates.viewAll')}
       </a>
     </div>

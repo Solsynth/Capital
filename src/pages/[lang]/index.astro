@@ -1,11 +1,11 @@
 ---
-import Layout from '../../layouts/Layout.astro';
-import Hero from '../../components/Hero.astro';
-import StatsSection from '../../components/StatsSection.astro';
-import ProductsSection from '../../components/ProductsSection.astro';
-import UpdatesSection from '../../components/UpdatesSection.astro';
+import Layout from '~/layouts/Layout.astro';
+import Hero from '~/components/Hero.astro';
+import StatsSection from '~/components/StatsSection.astro';
+import ProductsSection from '~/components/ProductsSection.astro';
+import UpdatesSection from '~/components/UpdatesSection.astro';
 import { getCollection } from 'astro:content';
-import { getLangFromUrl, useTranslations } from '../../i18n/utils';
+import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 
 export const prerender = false;
 

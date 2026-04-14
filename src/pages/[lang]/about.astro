@@ -1,13 +1,13 @@
 ---
-import Layout from '../../layouts/Layout.astro';
+import Layout from '~/layouts/Layout.astro';
 import {Heart, Code, Users, Sparkles, Github, ArrowLeft, AlertTriangle} from 'lucide-astro';
-import { getLangFromUrl, useTranslations } from '~/i18n/utils.ts';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getLangFromUrl, useTranslations } from '~/i18n/utils';
 
 export const prerender = false;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const prefix = lang === 'zh' ? '/zh' : '';
 
 const team = [
   {
@@ -40,7 +40,7 @@ const stats = [
   <section class="min-h-[50vh] flex flex-col items-center justify-center text-center relative px-4 overflow-hidden">
     <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/20 rounded-full blur-[80px] animate-pulse"></div>
     <div class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/20 rounded-full blur-[60px] animate-pulse delay-300"></div>
-    
+
     <div class="animate-fade-in-up relative z-10">
       <h1 class="text-4xl md:text-5xl font-bold mb-4">{t('about.title')}</h1>
       <p class="text-lg md:text-xl opacity-70 max-w-xl">
@@ -48,7 +48,7 @@ const stats = [
       </p>
     </div>
 
-    <a href={prefix || '/'} class="btn btn-ghost btn-sm mt-8 animate-fade-in-up delay-200 relative z-10">
+    <a href={getRelativeLocaleUrl(lang, '/')} class="btn btn-ghost btn-sm mt-8 animate-fade-in-up delay-200 relative z-10">
       <ArrowLeft class="w-4 h-4" />
       {t('about.backToHome')}
     </a>
@@ -93,7 +93,7 @@ const stats = [
   <section class="py-16 px-4 bg-base-200/30">
     <div class="container mx-auto">
       <h2 class="text-2xl font-bold mb-10 text-center animate-fade-in-up">{t('about.values.title')}</h2>
-      
+
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
         {values.map((value, i) => (
           <div class="card bg-base-100 p-6 text-center hover:-translate-y-1 hover:shadow-lg transition-all duration-200 animate-fade-in-up" style={`animation-delay: ${(i + 1) * 80}ms`}>
@@ -145,14 +145,14 @@ const stats = [
   <section class="py-16 px-4 bg-base-200/30">
     <div class="container mx-auto">
       <h2 class="text-2xl font-bold mb-10 text-center animate-fade-in-up">{t('about.team.title')}</h2>
-      
+
       <div class="flex flex-wrap justify-center gap-8">
         {team.map((member) => (
           <div class="card bg-base-100 max-w-sm w-full hover:shadow-xl transition-shadow duration-200 animate-fade-in-up">
             <div class="flex flex-col items-center text-center p-6">
-              <img 
-                src={member.avatar} 
-                alt={member.name} 
+              <img
+                src={member.avatar}
+                alt={member.name}
                 class="w-24 h-24 rounded-full mb-4 shadow-lg object-cover"
               />
               <h3 class="text-lg font-bold">{member.name}</h3>
@@ -198,13 +198,13 @@ const stats = [
 
 <script>
   const counters = document.querySelectorAll('.counter');
-  
+
   const animateCounter = (el: Element) => {
     const target = parseInt(el.getAttribute('data-target') || '0');
     const duration = 1500;
     const step = target / (duration / 16);
     let current = 0;
-    
+
     const update = () => {
       current += step;
       if (current < target) {
@@ -214,7 +214,7 @@ const stats = [
         el.textContent = target.toString();
       }
     };
-    
+
     update();
   };
 

@@ -1,6 +1,7 @@
 ---
-import { Sun, Moon, Compass, Layers, Newspaper, Scale } from 'lucide-astro';
-import { getLangFromUrl, useTranslations, languages, type Lang } from '../i18n/utils';
+import { Sun, Moon, Compass, Layers, Newspaper } from 'lucide-astro';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getLangFromUrl, useTranslations, languages, type Lang } from '~/i18n/utils';
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
@@ -8,17 +9,14 @@ const pathname = Astro.url.pathname;
 
 function getLocalizedPath(targetLang: Lang): string {
   const pathWithoutLang = pathname.replace(/^\/(en|zh)/, '');
-  if (targetLang === 'en') {
-    return pathWithoutLang || '/';
-  }
-  return `/${targetLang}${pathWithoutLang}`;
+  return getRelativeLocaleUrl(targetLang, pathWithoutLang || '/');
 }
 ---
 
 <header class="navbar bg-base-200/80 backdrop-blur-xl fixed top-0 left-0 right-0 z-50 h-16 shadow-sm">
   <div class="container mx-auto flex items-center justify-between px-4 w-full">
     <!-- Logo -->
-    <a href={lang === 'zh' ? '/zh' : '/'} class="flex items-center gap-2 shrink-0">
+    <a href={getRelativeLocaleUrl(lang, '/')} class="flex items-center gap-2 shrink-0">
       <img src="/favicon.png" alt="Solsynth" class="w-8 h-8" />
       <span class="font-bold text-lg hidden sm:inline">Solsynth</span>
     </a>
@@ -27,19 +25,19 @@ function getLocalizedPath(targetLang: Lang): string {
     <nav class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
       <ul class="menu menu-horizontal px-1 gap-1">
         <li>
-          <a href={lang === 'zh' ? '/zh' : '/'} class="btn btn-ghost btn-sm gap-1">
+          <a href={getRelativeLocaleUrl(lang, '/')} class="btn btn-ghost btn-sm gap-1">
             <Compass class="w-4 h-4 me-2" />
             {t('nav.explore')}
           </a>
         </li>
         <li>
-          <a href={`/${lang === 'zh' ? 'zh/' : ''}products`} class="btn btn-ghost btn-sm gap-1">
+          <a href={getRelativeLocaleUrl(lang, 'products')} class="btn btn-ghost btn-sm gap-1">
             <Layers class="w-4 h-4 me-2" />
             {t('nav.products')}
           </a>
         </li>
         <li>
-          <a href={`/${lang === 'zh' ? 'zh/' : ''}updates`} class="btn btn-ghost btn-sm gap-1">
+          <a href={getRelativeLocaleUrl(lang, 'updates')} class="btn btn-ghost btn-sm gap-1">
             <Newspaper class="w-4 h-4 me-2" />
             {t('nav.updates')}
           </a>
@@ -62,7 +60,7 @@ function getLocalizedPath(targetLang: Lang): string {
         <ul tabindex="0" class="dropdown-content menu p-2 shadow-lg bg-base-100 rounded-box w-40 z-50">
           {(Object.keys(languages) as Lang[]).map((l) => (
             <li>
-              <a 
+              <a
                 href={getLocalizedPath(l)}
                 class={l === lang ? 'active' : ''}
               >
@@ -72,7 +70,7 @@ function getLocalizedPath(targetLang: Lang): string {
           ))}
         </ul>
       </div>
-      
+
       <label class="swap swap-rotate btn btn-ghost btn-circle btn-sm">
         <input type="checkbox" id="theme-toggle" />
         <Sun class="swap-on w-5 h-5" />
@@ -85,7 +83,7 @@ function getLocalizedPath(targetLang: Lang): string {
 <script>
   const toggle = document.getElementById('theme-toggle') as HTMLInputElement;
   const html = document.documentElement;
-  
+
   toggle?.addEventListener('change', () => {
     if (toggle.checked) {
       html.setAttribute('data-theme', 'dark');

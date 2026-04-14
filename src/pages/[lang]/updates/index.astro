@@ -1,13 +1,13 @@
 ---
-import Layout from '../../../layouts/Layout.astro';
-import { getPosts, formatDate, truncateContent } from '../../../utils/api';
-import { getLangFromUrl, useTranslations, type Lang } from '../../../i18n/utils';
+import Layout from '~/layouts/Layout.astro';
+import { getPosts, formatDate, truncateContent } from '~/utils/api';
+import { getRelativeLocaleUrl } from 'astro:i18n';
+import { getLangFromUrl, useTranslations, type Lang } from '~/i18n/utils';
 
 export const prerender = false;
 
 const lang = getLangFromUrl(Astro.url);
 const t = useTranslations(lang);
-const prefix = lang === 'zh' ? '/zh' : '';
 
 const posts = await getPosts(20, 0);
 
@@ -30,13 +30,13 @@ function getDisplayTitle(post: { title: string; content: string }): string {
     {posts.length === 0 ? (
       <div class="text-center py-16">
         <p class="text-lg opacity-70">{t('updates.noUpdates')}</p>
-        <a href={prefix || '/'} class="btn btn-primary mt-4">{lang === 'zh' ? '返回首页' : 'Back to Home'}</a>
+        <a href={getRelativeLocaleUrl(lang, '/')} class="btn btn-primary mt-4">{lang === 'zh' ? '返回首页' : 'Back to Home'}</a>
       </div>
     ) : (
       <div class="space-y-4">
         {posts.map((post) => (
-          <a 
-            href={`${prefix}/updates/${post.id}`}
+          <a
+            href={getRelativeLocaleUrl(lang, `updates/${post.id}`)}
             class="card bg-base-200 p-6 hover:shadow-lg transition-all duration-300 block group"
           >
             <div class="flex flex-col lg:flex-row lg:items-start gap-4">
@@ -62,7 +62,7 @@ function getDisplayTitle(post: { title: string; content: string }): string {
                 <div class="shrink-0 flex gap-2 overflow-x-auto pb-2 lg:pb-0">
                   {post.attachments.slice(0, 3).map((attachment) => (
                     <div class="w-16 h-16 rounded-lg overflow-hidden bg-base-300 shrink-0">
-                      <img 
+                      <img
                         src={`https://api.solian.app/drive/files/${attachment.id}`}
                         alt={attachment.name}
                         class="w-full h-full object-cover"
