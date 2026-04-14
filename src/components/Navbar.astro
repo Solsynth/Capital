@@ -84,11 +84,29 @@ function getLocalizedPath(targetLang: Lang): string {
   const toggle = document.getElementById('theme-toggle') as HTMLInputElement;
   const html = document.documentElement;
 
-  toggle?.addEventListener('change', () => {
-    if (toggle.checked) {
-      html.setAttribute('data-theme', 'dark');
-    } else {
-      html.setAttribute('data-theme', 'light');
+  function getTheme(): 'light' | 'dark' {
+    return html.getAttribute('data-theme') as 'light' | 'dark' || 'light';
+  }
+
+  function setTheme(theme: 'light' | 'dark') {
+    html.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+  }
+
+  // Initialize toggle state based on current theme
+  if (toggle) {
+    toggle.checked = getTheme() === 'dark';
+
+    toggle.addEventListener('change', () => {
+      setTheme(toggle.checked ? 'dark' : 'light');
+    });
+  }
+
+  // Listen for system preference changes
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    if (!localStorage.getItem('theme')) {
+      setTheme(e.matches ? 'dark' : 'light');
+      if (toggle) toggle.checked = e.matches;
     }
   });
 </script>
