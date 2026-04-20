@@ -81,3 +81,49 @@
   --depth: 0;
   --noise: 0;
 }
+
+/* Performance Optimizations */
+
+/* Respect user preference for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimize scroll performance */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Contain paint for sections to improve scrolling */
+section {
+  contain: layout style;
+}
+
+/* Optimize fixed elements */
+header.fixed,
+.navbar {
+  contain: layout style paint;
+}
+
+/* Reduce paint areas for animated elements */
+.animate-float,
+.animate-pulse,
+.animate-fade-in-up {
+  will-change: transform;
+  transform: translateZ(0);
+}
+
+/* Firefox-specific optimizations */
+@-moz-document url-prefix() {
+  .blur-\[60px\],
+  .blur-\[40px\] {
+    filter: blur(30px);
+  }
+}
