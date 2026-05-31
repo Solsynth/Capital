@@ -1,0 +1,11 @@
+{
+  "name": "2025年度开发者峰会",
+  "description": "加入我们，与来自世界各地的开发者一起度过充满创新、学习和交流的一天。包括主题演讲、研讨会和实践编码课程。",
+  "startDate": "2025-06-15T09:00:00Z",
+  "endDate": "2025-06-15T18:00:00Z",
+  "location": "加利福尼亚州旧金山",
+  "coverImage": "/events/dev-summit-2025.jpg",
+  "status": "upcoming",
+  "registrationUrl": "https://solsynth.dev/events/dev-summit-2025/register",
+  "tags": ["会议", "开发", "社交"]
+}

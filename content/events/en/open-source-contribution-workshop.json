@@ -1,0 +1,11 @@
+{
+  "name": "Open Source Contribution Workshop",
+  "description": "Learn how to contribute to open source projects. We'll cover finding projects, submitting pull requests, and engaging with the community.",
+  "startDate": "2025-03-20T14:00:00Z",
+  "endDate": "2025-03-20T17:00:00Z",
+  "location": "Online (Zoom)",
+  "coverImage": "/events/oss-workshop.jpg",
+  "status": "ongoing",
+  "registrationUrl": "https://solsynth.dev/events/oss-workshop/register",
+  "tags": ["Workshop", "Open Source", "Education"]
+}

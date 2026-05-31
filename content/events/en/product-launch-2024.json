@@ -1,0 +1,11 @@
+{
+  "name": "Solsynth Product Launch 2024",
+  "description": "The official launch event showcasing our latest products and features. Watch the recorded sessions and explore what's new.",
+  "startDate": "2024-09-10T10:00:00Z",
+  "endDate": "2024-09-10T12:00:00Z",
+  "location": "Virtual Event",
+  "coverImage": "/events/launch-2024.jpg",
+  "status": "past",
+  "registrationUrl": "https://solsynth.dev/events/launch-2024/recording",
+  "tags": ["Product Launch", "Virtual", "Recording Available"]
+}

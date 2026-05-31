@@ -1,0 +1,11 @@
+{
+  "name": "Solsynth 2024产品发布会",
+  "description": "展示我们最新产品和功能的正式发布活动。观看录制的会议并探索新功能。",
+  "startDate": "2024-09-10T10:00:00Z",
+  "endDate": "2024-09-10T12:00:00Z",
+  "location": "虚拟活动",
+  "coverImage": "/events/launch-2024.jpg",
+  "status": "past",
+  "registrationUrl": "https://solsynth.dev/events/launch-2024/recording",
+  "tags": ["产品发布", "虚拟", "有录像"]
+}

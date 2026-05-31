@@ -1,0 +1,335 @@
+<script setup lang="ts">
+import {
+  Github, ExternalLink, Bug, ArrowLeft, Tag, Folder, MessageSquare, FileText, Rss,
+  Users, CreditCard, Globe, Sticker, Code, Heart, Sparkles, Zap, Shield, Smartphone,
+  Monitor, Bell, Calendar, Wallet, Image, CheckCircle,
+} from 'lucide-vue-next'
+
+const { t, locale } = useI18n()
+const localePath = useLocalePath()
+
+const lang = computed(() => locale.value)
+
+definePageMeta({
+  title: 'Solar Network',
+})
+
+useSeoMeta({
+  description: () => t('solarNetwork.tagline'),
+})
+</script>
+
+<template>
+  <div class="relative h-[60vh] min-h-120 overflow-hidden">
+    <img src="/solar-network/screenshot.png" class="w-full h-full object-cover" alt="Solar Network" />
+    <div class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/60 to-transparent"></div>
+    <div class="absolute inset-0 bg-gradient-to-r from-primary/20 via-transparent to-secondary/20"></div>
+
+    <div class="absolute bottom-0 left-0 right-0 p-8">
+      <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
+        <img src="/solar-network/icon.png" class="w-28 h-28 rounded-2xl shadow-2xl" alt="Solar Network" />
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-2">
+            <h1 class="text-4xl md:text-4xl font-bold">Solar Network</h1>
+          </div>
+          <p class="text-xl opacity-90 mb-4">{{ t('solarNetwork.tagline') }}</p>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <NuxtLink :to="localePath('/products?series=Solar%20Network')" class="badge badge-primary badge-sm">
+              <Folder class="w-3 h-3 mr-1" />
+              Solar Network
+            </NuxtLink>
+            <NuxtLink :to="localePath('/products?tag=Social%20Network')" class="badge badge-outline badge-sm hover:badge-primary transition-colors">
+              <Tag class="w-3 h-3 mr-1" />
+              Social Network
+            </NuxtLink>
+            <NuxtLink :to="localePath('/products?tag=Community')" class="badge badge-outline badge-sm hover:badge-primary transition-colors">
+              <Tag class="w-3 h-3 mr-1" />
+              Community
+            </NuxtLink>
+            <NuxtLink :to="localePath('/products?tag=ACG')" class="badge badge-outline badge-sm hover:badge-primary transition-colors">
+              <Tag class="w-3 h-3 mr-1" />
+              ACG
+            </NuxtLink>
+            <span class="badge badge-outline badge-sm">
+              <Globe class="w-3 h-3 mr-1" />
+              Fediverse
+            </span>
+          </div>
+        </div>
+        <div class="flex gap-3 flex-wrap">
+          <a href="https://web.solian.app" target="_blank" class="btn btn-primary btn-lg rounded-full hover:scale-105 transition-transform">
+            <Sparkles class="w-5 h-5" />
+            {{ t('solarNetwork.getStarted') }}
+          </a>
+          <a href="https://testflight.apple.com/join/YJ0lmN6O" target="_blank" class="btn btn-secondary btn-lg rounded-full hover:scale-105 transition-transform">
+            <Smartphone class="w-5 h-5" />
+            TestFlight
+          </a>
+          <a href="https://fs.solsynth.dev/official/solian" target="_blank" class="btn btn-accent btn-lg rounded-full hover:scale-105 transition-transform">
+            <ExternalLink class="w-5 h-5" />
+            Download
+          </a>
+          <a href="https://github.com/Solsynth/Solian" target="_blank" class="btn btn-outline btn-lg rounded-full hover:scale-105 transition-transform">
+            <Github class="w-5 h-5" />
+            GitHub
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute top-20 left-10 opacity-20">
+      <Sparkles class="w-16 h-16 text-primary" />
+    </div>
+    <div class="absolute top-40 right-20 opacity-20">
+      <Heart class="w-12 h-12 text-secondary" />
+    </div>
+  </div>
+
+  <div class="container mx-auto px-4 py-16">
+    <section class="mb-20">
+      <div class="text-center mb-12">
+        <span class="badge badge-primary badge-outline mb-4">{{ t('solarNetwork.about.badge') }}</span>
+        <h2 class="text-4xl font-bold mb-4">{{ t('solarNetwork.about.title') }}</h2>
+        <p class="text-lg opacity-70 max-w-3xl mx-auto">
+          {{ t('solarNetwork.about.desc') }}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl">
+          <div class="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mb-4">
+            <Heart class="w-8 h-8 text-primary" />
+          </div>
+          <h3 class="text-xl font-bold mb-2">{{ t('solarNetwork.aboutCard.peaceful.title') }}</h3>
+          <p class="opacity-80">{{ t('solarNetwork.aboutCard.peaceful.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl">
+          <div class="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center mb-4">
+            <Code class="w-8 h-8 text-secondary" />
+          </div>
+          <h3 class="text-xl font-bold mb-2">{{ t('solarNetwork.aboutCard.developer.title') }}</h3>
+          <p class="opacity-80">{{ t('solarNetwork.aboutCard.developer.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl">
+          <div class="w-16 h-16 rounded-2xl bg-accent/20 flex items-center justify-center mb-4">
+            <Zap class="w-8 h-8 text-accent" />
+          </div>
+          <h3 class="text-xl font-bold mb-2">{{ t('solarNetwork.aboutCard.open.title') }}</h3>
+          <p class="opacity-80">{{ t('solarNetwork.aboutCard.open.desc') }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-20">
+      <div class="text-center mb-12">
+        <span class="badge badge-secondary badge-outline mb-4">{{ t('solarNetwork.features.badge') }}</span>
+        <h2 class="text-4xl font-bold mb-4">{{ t('solarNetwork.features.title') }}</h2>
+        <p class="text-lg opacity-70 max-w-2xl mx-auto">
+          {{ t('solarNetwork.features.desc') }}
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <MessageSquare class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.timeline.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.timeline.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <FileText class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.posts.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.posts.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <MessageSquare class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.chat.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.chat.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Users class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.realms.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.realms.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Shield class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.oauth.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.oauth.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Bell class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.checkin.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.checkin.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Calendar class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.countdown.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.countdown.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Rss class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.rss.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.rss.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Wallet class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.wallet.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.wallet.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Sticker class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.stickers.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.stickers.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <FileText class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.editor.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.editor.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Image class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.files.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.files.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Users class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.social.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.social.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Globe class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.fediverse.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.fediverse.desc') }}</p>
+        </div>
+        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+          <div class="flex items-center gap-3 mb-3">
+            <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+              <CheckCircle class="w-6 h-6 text-primary" />
+            </div>
+            <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.achievements.title') }}</h3>
+          </div>
+          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.achievements.desc') }}</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="mb-16">
+      <div class="card bg-gradient-to-r from-primary/20 via-secondary/20 to-accent/20 p-12 rounded-3xl">
+        <div class="text-center">
+          <h2 class="text-4xl font-bold mb-4">{{ t('solarNetwork.journey.title') }}</h2>
+          <p class="text-xl opacity-80 mb-8">{{ t('solarNetwork.journey.desc') }}</p>
+
+          <div class="flex flex-wrap justify-center gap-6 mb-8">
+            <div class="flex items-center gap-2 bg-base-100/50 px-4 py-2 rounded-full">
+              <Smartphone class="w-5 h-5 text-primary" />
+              <span class="font-medium">iOS</span>
+            </div>
+            <div class="flex items-center gap-2 bg-base-100/50 px-4 py-2 rounded-full">
+              <Smartphone class="w-5 h-5 text-primary" />
+              <span class="font-medium">Android</span>
+            </div>
+            <div class="flex items-center gap-2 bg-base-100/50 px-4 py-2 rounded-full">
+              <Monitor class="w-5 h-5 text-primary" />
+              <span class="font-medium">macOS</span>
+            </div>
+            <div class="flex items-center gap-2 bg-base-100/50 px-4 py-2 rounded-full">
+              <Monitor class="w-5 h-5 text-primary" />
+              <span class="font-medium">Windows</span>
+            </div>
+            <div class="flex items-center gap-2 bg-base-100/50 px-4 py-2 rounded-full">
+              <Monitor class="w-5 h-5 text-primary" />
+              <span class="font-medium">Linux</span>
+            </div>
+          </div>
+
+          <div class="flex flex-wrap justify-center gap-4">
+            <a href="https://web.solian.app" target="_blank" class="btn btn-primary btn-lg rounded-full hover:scale-105 transition-transform">
+              <ExternalLink class="w-5 h-5" />
+              {{ t('solarNetwork.journey.openBrowser') }}
+            </a>
+            <a href="https://github.com/Solsynth/Solian" target="_blank" class="btn btn-outline btn-lg rounded-full hover:scale-105 transition-transform">
+              <Github class="w-5 h-5" />
+              {{ t('solarNetwork.journey.viewGithub') }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="card bg-base-200 p-8">
+        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+          <div>
+            <h2 class="text-3xl font-bold mb-2">{{ t('solarNetwork.help.title') }}</h2>
+            <p class="text-lg opacity-80">{{ t('solarNetwork.help.desc') }}</p>
+          </div>
+          <div class="flex gap-4">
+            <a href="https://github.com/Solsynth/Solian/issues" target="_blank" class="btn btn-outline btn-lg hover:scale-105 transition-transform">
+              <Bug class="w-5 h-5" />
+              {{ t('solarNetwork.help.reportIssue') }}
+            </a>
+            <a href="https://github.com/Solsynth/Solian/discussions" target="_blank" class="btn btn-ghost btn-lg hover:scale-105 transition-transform">
+              <MessageSquare class="w-5 h-5" />
+              {{ t('solarNetwork.help.suggestion') }}
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</template>

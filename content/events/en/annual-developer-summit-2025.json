@@ -1,0 +1,11 @@
+{
+  "name": "Annual Developer Summit 2025",
+  "description": "Join us for a day of innovation, learning, and networking with developers from around the world. Featuring keynote speeches, workshops, and hands-on coding sessions.",
+  "startDate": "2025-06-15T09:00:00Z",
+  "endDate": "2025-06-15T18:00:00Z",
+  "location": "San Francisco, CA",
+  "coverImage": "/events/dev-summit-2025.jpg",
+  "status": "upcoming",
+  "registrationUrl": "https://solsynth.dev/events/dev-summit-2025/register",
+  "tags": ["Conference", "Development", "Networking"]
+}

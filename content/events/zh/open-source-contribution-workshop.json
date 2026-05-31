@@ -1,0 +1,11 @@
+{
+  "name": "开源贡献工作坊",
+  "description": "学习如何为开源项目做出贡献。我们将涵盖寻找项目、提交拉取请求以及与社区互动。",
+  "startDate": "2025-03-20T14:00:00Z",
+  "endDate": "2025-03-20T17:00:00Z",
+  "location": "在线（Zoom）",
+  "coverImage": "/events/oss-workshop.jpg",
+  "status": "ongoing",
+  "registrationUrl": "https://solsynth.dev/events/oss-workshop/register",
+  "tags": ["工作坊", "开源", "教育"]
+}

@@ -1,0 +1,48 @@
+<script setup lang="ts">
+import { ArrowLeft, Calendar } from 'lucide-vue-next'
+
+const { t, locale } = useI18n()
+const localePath = useLocalePath()
+const route = useRoute()
+
+const lang = computed(() => locale.value)
+const slug = computed(() => route.params.slug as string)
+
+const { data: page } = await useAsyncData(`legal-${lang.value}-${slug.value}`, () => {
+  return queryCollection('legal')
+    .where('path', '=', `/legal/${lang.value}/${slug.value}`)
+    .first()
+})
+
+if (!page.value) {
+  navigateTo(localePath('/legal'))
+}
+</script>
+
+<template>
+  <div v-if="page" class="container mx-auto px-8 py-16 max-w-4xl">
+    <div class="mb-8 -mx-4">
+      <NuxtLink :to="localePath('/legal')" class="btn btn-ghost btn-sm gap-1">
+        <ArrowLeft class="w-4 h-4" />
+        {{ t('legal.backToLegal') }}
+      </NuxtLink>
+    </div>
+
+    <article>
+      <header class="mb-8">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ page.title }}</h1>
+        <div v-if="page.updatedDate" class="flex items-center gap-2 text-sm opacity-70">
+          <Calendar class="w-4 h-4" />
+          <span>{{ lang === 'zh' ? t('legal.lastUpdatedZh') : t('legal.lastUpdated') }} {{ page.updatedDate }}</span>
+        </div>
+        <p v-if="page.description" class="text-lg opacity-70 mt-4">{{ page.description }}</p>
+      </header>
+
+      <div class="divider"></div>
+
+      <div class="prose prose-lg max-w-none">
+        <ContentRenderer :value="page" />
+      </div>
+    </article>
+  </div>
+</template>
