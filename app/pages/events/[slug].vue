@@ -20,6 +20,23 @@ if (!event.value) {
   navigateTo(localePath('/events'))
 }
 
+definePageMeta({
+  title: '',
+  description: '',
+})
+
+useSeoMeta({
+  title: () => event.value?.name ? `${event.value.name} - Solsynth` : 'Event - Solsynth',
+  description: () => event.value?.description || t('seo.events.description'),
+  ogTitle: () => event.value?.name ? `${event.value.name} - Solsynth` : 'Event - Solsynth',
+  ogDescription: () => event.value?.description || t('seo.events.description'),
+  ogImage: () => event.value?.coverImage || undefined,
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => event.value?.name ? `${event.value.name} - Solsynth` : 'Event - Solsynth',
+  twitterDescription: () => event.value?.description || t('seo.events.description'),
+  twitterImage: () => event.value?.coverImage || undefined,
+})
+
 function formatDate(dateStr: string) {
   const date = new Date(dateStr)
   return date.toLocaleDateString(lang.value === 'zh' ? 'zh-CN' : 'en-US', {

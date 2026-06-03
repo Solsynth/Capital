@@ -12,12 +12,33 @@ export default defineNuxtConfig({
   modules: [
     '@nuxtjs/i18n',
     '@nuxt/content',
+    '@nuxtjs/sitemap',
+    '@nuxtjs/robots',
+    'nuxt-og-image',
   ],
 
   css: ['~/assets/css/global.css'],
 
   vite: {
     plugins: [tailwindcss()],
+  },
+
+  site: {
+    url: 'https://solsynth.dev',
+    name: 'Solsynth',
+    defaultLocale: 'en',
+  },
+
+  sitemap: {
+    sources: ['/api/__sitemap__/urls'],
+  },
+
+  ogImage: {
+    enabled: true,
+    defaults: {
+      renderer: 'takumi',
+      component: 'OgImage',
+    },
   },
 
   i18n: {
@@ -60,6 +81,8 @@ export default defineNuxtConfig({
     '/zh/terms': { redirect: '/zh/legal' },
     '/en/terms/**': { redirect: '/en/legal/**' },
     '/zh/terms/**': { redirect: '/zh/legal/**' },
+    '/en/**': { sitemap: { changefreq: 'weekly' } },
+    '/zh/**': { sitemap: { changefreq: 'weekly' } },
   },
 
   app: {

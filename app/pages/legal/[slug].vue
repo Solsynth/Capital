@@ -17,6 +17,18 @@ const { data: page } = await useAsyncData(`legal-${lang.value}-${slug.value}`, (
 if (!page.value) {
   navigateTo(localePath('/legal'))
 }
+
+definePageMeta({
+  title: '',
+  description: '',
+})
+
+useSeoMeta({
+  title: () => page.value?.title ? `${page.value.title} - Solsynth` : 'Legal - Solsynth',
+  description: () => page.value?.description || t('seo.legal.description'),
+  ogTitle: () => page.value?.title ? `${page.value.title} - Solsynth` : 'Legal - Solsynth',
+  ogDescription: () => page.value?.description || t('seo.legal.description'),
+})
 </script>
 
 <template>

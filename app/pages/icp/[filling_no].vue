@@ -111,6 +111,11 @@ useHead({
 
 useSeoMeta({
   description: pageDescription,
+  ogTitle: pageTitle,
+  ogDescription: pageDescription,
+  twitterCard: 'summary',
+  twitterTitle: pageTitle,
+  twitterDescription: pageDescription,
 })
 </script>
 

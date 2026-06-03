@@ -8,6 +8,20 @@ const route = useRoute()
 const lang = computed(() => locale.value)
 const isZh = computed(() => lang.value === 'zh')
 
+definePageMeta({
+  title: 'Events',
+  description: '',
+})
+
+useSeoMeta({
+  description: () => t('seo.events.description'),
+})
+
+defineOgImageComponent('OgImage', {
+  title: t('events.title'),
+  description: t('seo.events.description'),
+})
+
 const urlStatus = computed(() => route.query.status as string || '')
 const urlTag = computed(() => route.query.tag as string || '')
 

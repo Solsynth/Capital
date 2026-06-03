@@ -3,6 +3,20 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 
 const lang = computed(() => locale.value)
+
+definePageMeta({
+  title: 'Updates',
+  description: '',
+})
+
+useSeoMeta({
+  description: () => t('seo.updates.description'),
+})
+
+defineOgImageComponent('OgImage', {
+  title: t('updates.title'),
+  description: t('seo.updates.description'),
+})
 const isZh = computed(() => lang.value === 'zh')
 
 const { getPosts, formatDate, truncateContent } = useApi()

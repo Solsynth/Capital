@@ -30,6 +30,27 @@ function getDisplayTitle(post: { title: string; content: string }): string {
 
 const displayTitle = computed(() => post.value ? getDisplayTitle(post.value) : '')
 const contentHtml = computed(() => post.value?.content ? renderMarkdown(post.value.content) : '')
+
+definePageMeta({
+  title: '',
+  description: '',
+})
+
+useSeoMeta({
+  title: () => displayTitle.value ? `${displayTitle.value} - Solsynth` : 'Update - Solsynth',
+  description: () => post.value?.content
+    ? post.value.content.substring(0, 160).replace(/[#*\n]/g, ' ').trim()
+    : t('seo.updates.description'),
+  ogTitle: () => displayTitle.value ? `${displayTitle.value} - Solsynth` : 'Update - Solsynth',
+  ogImage: () => post.value?.attachments?.[0]?.id
+    ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
+    : undefined,
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => displayTitle.value ? `${displayTitle.value} - Solsynth` : 'Update - Solsynth',
+  twitterImage: () => post.value?.attachments?.[0]?.id
+    ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
+    : undefined,
+})
 </script>
 
 <template>

@@ -5,6 +5,20 @@ const route = useRoute()
 
 const lang = computed(() => locale.value)
 
+definePageMeta({
+  title: 'Products',
+  description: '',
+})
+
+useSeoMeta({
+  description: () => t('seo.products.description'),
+})
+
+defineOgImageComponent('OgImage', {
+  title: t('products.title'),
+  description: t('seo.products.description'),
+})
+
 const urlTag = computed(() => route.query.tag as string || '')
 const urlSeries = computed(() => route.query.series as string || '')
 

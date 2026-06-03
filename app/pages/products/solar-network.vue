@@ -12,10 +12,14 @@ const lang = computed(() => locale.value)
 
 definePageMeta({
   title: 'Solar Network',
+  description: '',
 })
 
 useSeoMeta({
   description: () => t('solarNetwork.tagline'),
+  ogImage: '/solar-network/screenshot.png',
+  twitterCard: 'summary_large_image',
+  twitterImage: '/solar-network/screenshot.png',
 })
 </script>
 

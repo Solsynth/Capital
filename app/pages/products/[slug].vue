@@ -29,6 +29,23 @@ if (!product.value) {
 const title = computed(() => product.value?.title || '')
 const description = computed(() => product.value?.description || '')
 const hasPage = computed(() => product.value?.hasPage !== false)
+
+definePageMeta({
+  title: '',
+  description: '',
+})
+
+useSeoMeta({
+  title: () => title.value ? `${title.value} - Solsynth` : 'Product - Solsynth',
+  description: () => description.value || t('seo.products.description'),
+  ogTitle: () => title.value ? `${title.value} - Solsynth` : 'Product - Solsynth',
+  ogDescription: description,
+  ogImage: () => product.value?.background || undefined,
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => title.value ? `${title.value} - Solsynth` : 'Product - Solsynth',
+  twitterDescription: description,
+  twitterImage: () => product.value?.background || undefined,
+})
 </script>
 
 <template>

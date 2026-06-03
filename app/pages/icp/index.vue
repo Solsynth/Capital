@@ -22,6 +22,21 @@ const pageDescription = computed(() =>
     ? '中华羊国网络信息办公室受信任网站列表'
     : 'Republic of Yang\'s friendly link list',
 )
+
+definePageMeta({
+  title: '',
+  description: '',
+})
+
+useHead({
+  title: pageTitle,
+})
+
+useSeoMeta({
+  description: pageDescription,
+  ogTitle: pageTitle,
+  ogDescription: pageDescription,
+})
 const emptyText = computed(() => t('royIcp.directory.empty'))
 const pendingText = computed(() => isZh.value ? '待审核' : 'Pending')
 

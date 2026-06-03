@@ -6,6 +6,20 @@ const localePath = useLocalePath()
 
 const lang = computed(() => locale.value)
 
+definePageMeta({
+  title: 'Legal',
+  description: '',
+})
+
+useSeoMeta({
+  description: () => t('seo.legal.description'),
+})
+
+defineOgImageComponent('OgImage', {
+  title: t('legal.title'),
+  description: t('seo.legal.description'),
+})
+
 const { data: currentLangPages } = await useAsyncData(`legal-list-${lang.value}`, async () => {
   const pages = await queryCollection('legal')
     .where('path', 'LIKE', `/legal/${lang.value}/%`)

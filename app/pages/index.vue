@@ -2,6 +2,19 @@
 const { t, locale } = useI18n()
 const lang = computed(() => locale.value)
 
+definePageMeta({
+  description: '',
+})
+
+useSeoMeta({
+  description: () => t('seo.home.description'),
+})
+
+defineOgImageComponent('OgImage', {
+  title: 'Solsynth',
+  description: t('seo.home.description'),
+})
+
 const { data: products } = await useAsyncData(`products-home-${lang.value}`, async () => {
   const allProducts = await queryCollection('products')
     .where('path', 'LIKE', `/products/${lang.value}/%`)
