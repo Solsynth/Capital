@@ -31,7 +31,10 @@ useSeoMeta({
   <div class="min-h-screen flex flex-col">
     <AppNavbar banner-height="0px" />
 
-    <main class="flex-1">
+    <main
+      class="flex-1 transition-[margin-top] duration-200 ease-out"
+      style="margin-top: var(--site-page-offset, 164px);"
+    >
       <slot />
     </main>
 

@@ -22,6 +22,12 @@ interface Props {
 
 const props = withDefaults(defineProps<Props>(), { bannerHeight: '20px' })
 
+const emit = defineEmits<{
+  heightChange: [string]
+}>()
+
+const navbarRef = ref<HTMLElement>()
+
 const lang = computed(() => locale.value)
 const pathname = computed(() => route.fullPath)
 
@@ -59,6 +65,16 @@ function toggleTheme() {
 function setNavbarExpanded(shouldExpand: boolean) {
   if (isNavbarExpanded.value === shouldExpand) return
   isNavbarExpanded.value = shouldExpand
+}
+
+function syncNavbarMetrics() {
+  if (import.meta.server) return
+  const el = navbarRef.value || document.getElementById('site-navbar')
+  if (el) {
+    const height = `${el.offsetHeight}px`
+    document.documentElement.style.setProperty('--site-page-offset', height)
+    emit('heightChange', height)
+  }
 }
 
 function handleScroll() {
@@ -145,6 +161,14 @@ onMounted(() => {
       closeMobileMenu()
     })
   })
+
+  const el = navbarRef.value || document.getElementById('site-navbar')
+  if (el && 'ResizeObserver' in window) {
+    const observer = new ResizeObserver(syncNavbarMetrics)
+    observer.observe(el)
+  }
+
+  nextTick(() => syncNavbarMetrics())
 })
 
 onUnmounted(() => {
@@ -156,6 +180,7 @@ onUnmounted(() => {
 
 <template>
   <header
+    ref="navbarRef"
     id="site-navbar"
     class="fixed left-0 right-0 z-40 bg-base-100/95 shadow-sm backdrop-blur transition-[top,box-shadow,background-color] duration-200 ease-out"
     :style="{ top: bannerHeight }"
