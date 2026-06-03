@@ -1,10 +1,4 @@
 <script setup lang="ts">
-interface Props {
-  lang?: string
-}
-
-const props = withDefaults(defineProps<Props>(), { lang: 'en' })
-
 const { t } = useI18n()
 const localePath = useLocalePath()
 const { getPosts, formatDate, truncateContent } = useApi()
@@ -20,24 +14,23 @@ function getDisplayTitle(post: { title: string, content: string }): string {
 </script>
 
 <template>
-  <section v-if="posts && posts.length > 0" class="py-16 px-4">
+  <section v-if="posts && posts.length > 0" class="py-12 px-4">
     <div class="container mx-auto">
-      <div class="text-center mb-12">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold mb-3">
           {{ t('home.updates.title') }}
         </h2>
-        <p class="text-lg md:text-xl opacity-70 max-w-2xl mx-auto">
+        <p class="text-base md:text-lg opacity-60 max-w-2xl mx-auto">
           {{ t('home.updates.subtitle') }}
         </p>
       </div>
 
-      <div class="max-w-3xl mx-auto space-y-4">
+      <div class="max-w-3xl mx-auto space-y-3">
         <NuxtLink
-          v-for="(post, i) in posts.slice(0, 5)"
+          v-for="post in posts.slice(0, 5)"
           :key="post.id"
           :to="localePath(`/updates/${post.id}`)"
-          class="card bg-base-200 p-6 hover:shadow-lg transition-shadow duration-300 block animate-fade-in-up"
-          :style="{ animationDelay: `${i * 100}ms` }"
+          class="card bg-base-200/50 border border-base-200 p-5 transition-colors duration-150 hover:border-base-300 block"
         >
           <div class="flex flex-col sm:flex-row sm:items-center gap-3">
             <div class="flex-1">
@@ -60,8 +53,8 @@ function getDisplayTitle(post: { title: string, content: string }): string {
         </NuxtLink>
       </div>
 
-      <div class="text-center mt-8">
-        <NuxtLink :to="localePath('/updates')" class="btn btn-outline btn-sm">
+      <div class="text-center mt-6">
+        <NuxtLink :to="localePath('/updates')" class="btn btn-outline btn-sm rounded-lg">
           {{ t('home.updates.viewAll') }}
         </NuxtLink>
       </div>
@@ -69,17 +62,3 @@ function getDisplayTitle(post: { title: string, content: string }): string {
   </section>
 </template>
 
-<style scoped>
-.animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-</style>

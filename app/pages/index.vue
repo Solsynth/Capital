@@ -37,9 +37,9 @@ const { data: products } = await useAsyncData(`products-home-${lang.value}`, asy
 
 <template>
   <div>
-    <HeroSection :lang="lang" />
-    <StatsSection :lang="lang" />
-    <ProductsSection :products="products || []" :lang="lang" />
-    <UpdatesSection :lang="lang" />
+    <HeroSection />
+    <StatsSection />
+    <ProductsSection :products="products || []" />
+    <UpdatesSection />
   </div>
 </template>

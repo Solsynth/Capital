@@ -113,7 +113,6 @@ header.fixed,
 }
 
 /* Reduce paint areas for animated elements */
-.animate-float,
 .animate-pulse,
 .animate-fade-in-up {
   will-change: transform;

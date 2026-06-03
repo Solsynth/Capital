@@ -12,27 +12,26 @@ interface Props {
     tags?: string[]
     series?: string
   }>
-  lang?: string
 }
 
-const props = withDefaults(defineProps<Props>(), { lang: 'en' })
+const props = defineProps<Props>()
 
 const { t } = useI18n()
 </script>
 
 <template>
-  <section id="products" class="scroll-mt-24 py-16 px-4">
+  <section id="products" class="scroll-mt-24 py-12 px-4">
     <div class="container mx-auto">
-      <div class="text-center mb-16">
-        <h2 class="text-3xl md:text-4xl font-bold mb-4">
+      <div class="text-center mb-10">
+        <h2 class="text-2xl md:text-3xl font-bold mb-3">
           {{ t('home.products.title') }}
         </h2>
-        <p class="text-lg md:text-xl opacity-70 max-w-2xl mx-auto">
+        <p class="text-base md:text-lg opacity-60 max-w-2xl mx-auto">
           {{ t('home.products.subtitle') }}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
         <ProductCard
           v-for="product in products"
           :key="product.id"
@@ -46,7 +45,6 @@ const { t } = useI18n()
           :slug="product.id"
           :tags="product.tags"
           :series="product.series"
-          :lang="lang"
         />
       </div>
     </div>
