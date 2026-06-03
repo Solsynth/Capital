@@ -9,6 +9,10 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
+  experimental: {
+    viewTransition: true,
+  },
+
   modules: [
     '@nuxtjs/i18n',
     '@nuxt/content',
