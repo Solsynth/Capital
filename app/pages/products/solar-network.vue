@@ -858,7 +858,7 @@ useSeoMeta({
                 v-model="activePlatform"
                 class="hidden"
               />
-              <Smartphone class="w-5 h-5 shrink-0" />
+              <IconsIconIos class="w-5 h-5 shrink-0 fill-current" />
               <span class="hidden md:inline">iOS</span>
             </label>
             <label
@@ -872,7 +872,7 @@ useSeoMeta({
                 v-model="activePlatform"
                 class="hidden"
               />
-              <Smartphone class="w-5 h-5 shrink-0" />
+              <IconsIconAndroid class="w-5 h-5 shrink-0 fill-current" />
               <span class="hidden md:inline">Android</span>
             </label>
             <label
@@ -886,7 +886,7 @@ useSeoMeta({
                 v-model="activePlatform"
                 class="hidden"
               />
-              <Monitor class="w-5 h-5 shrink-0" />
+              <IconsIconMacos class="w-5 h-5 shrink-0 fill-current" />
               <span class="hidden md:inline">macOS</span>
             </label>
             <label
@@ -914,7 +914,7 @@ useSeoMeta({
                 v-model="activePlatform"
                 class="hidden"
               />
-              <Terminal class="w-5 h-5 shrink-0" />
+              <IconsIconLinux class="w-5 h-5 shrink-0 fill-current" />
               <span class="hidden md:inline">Linux</span>
             </label>
           </div>
@@ -945,7 +945,7 @@ useSeoMeta({
             <!-- iOS -->
             <div v-if="activePlatform === 'ios'">
               <div class="flex items-center gap-3 mb-4">
-                <Smartphone class="w-8 h-8 text-primary" />
+                <IconsIconIos class="w-8 h-8 text-primary fill-primary" />
                 <h3 class="text-2xl font-bold">
                   {{ t("solarNetwork.download.ios.title") }}
                 </h3>
@@ -958,7 +958,7 @@ useSeoMeta({
                 target="_blank"
                 class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
               >
-                <Smartphone class="w-5 h-5" />
+                <IconsIconIos class="w-5 h-5 fill-current" />
                 {{ t("solarNetwork.download.ios.testflight") }}
               </a>
             </div>
@@ -966,7 +966,7 @@ useSeoMeta({
             <!-- Android -->
             <div v-if="activePlatform === 'android'">
               <div class="flex items-center gap-3 mb-4">
-                <Smartphone class="w-8 h-8 text-primary" />
+                <IconsIconAndroid class="w-8 h-8 text-primary fill-primary" />
                 <h3 class="text-2xl font-bold">
                   {{ t("solarNetwork.download.android.title") }}
                 </h3>
@@ -974,19 +974,35 @@ useSeoMeta({
               <p class="opacity-70 mb-6">
                 {{ t("solarNetwork.download.android.desc") }}
               </p>
-              <div class="flex flex-wrap gap-3">
+              <div class="flex flex-col gap-3">
                 <a
-                  href="https://fs.solsynth.dev/r2/solian"
+                  href="https://fs.solsynth.dev/d/public/r2/solian/app-arm64-v8a-release.apk"
                   target="_blank"
                   class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
                 >
-                  <ExternalLink class="w-5 h-5" />
-                  {{ t("solarNetwork.download.direct") }}
+                  <IconsIconAndroid class="w-5 h-5 fill-current" />
+                  ARM64 (arm64-v8a)
+                </a>
+                <a
+                  href="https://fs.solsynth.dev/d/public/r2/solian/app-armeabi-v7a-release.apk"
+                  target="_blank"
+                  class="btn btn-outline rounded-full"
+                >
+                  <IconsIconAndroid class="w-5 h-5 fill-current" />
+                  ARMv7 (armeabi-v7a)
+                </a>
+                <a
+                  href="https://fs.solsynth.dev/d/public/r2/solian/app-x86_64-release.apk"
+                  target="_blank"
+                  class="btn btn-outline rounded-full"
+                >
+                  <IconsIconAndroid class="w-5 h-5 fill-current" />
+                  x86_64
                 </a>
                 <a
                   href="https://github.com/Solsynth/Solian/releases"
                   target="_blank"
-                  class="btn btn-outline rounded-full"
+                  class="btn btn-ghost rounded-full"
                 >
                   <Github class="w-5 h-5" />
                   {{ t("solarNetwork.download.github") }}
@@ -997,7 +1013,7 @@ useSeoMeta({
             <!-- macOS -->
             <div v-if="activePlatform === 'macos'">
               <div class="flex items-center gap-3 mb-4">
-                <Monitor class="w-8 h-8 text-primary" />
+                <IconsIconMacos class="w-8 h-8 text-primary fill-primary" />
                 <h3 class="text-2xl font-bold">
                   {{ t("solarNetwork.download.macos.title") }}
                 </h3>
@@ -1024,20 +1040,12 @@ useSeoMeta({
 
               <div class="flex flex-wrap gap-3">
                 <a
-                  href="https://fs.solsynth.dev/r2/solian"
+                  href="https://fs.solsynth.dev/d/public/r2/solian/solian-macos.tar.gz"
                   target="_blank"
                   class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
                 >
                   <ExternalLink class="w-5 h-5" />
                   {{ t("solarNetwork.download.direct") }}
-                </a>
-                <a
-                  href="https://github.com/Solsynth/Solian/releases"
-                  target="_blank"
-                  class="btn btn-outline rounded-full"
-                >
-                  <Github class="w-5 h-5" />
-                  {{ t("solarNetwork.download.github") }}
                 </a>
               </div>
             </div>
@@ -1055,7 +1063,7 @@ useSeoMeta({
               </p>
               <div class="flex flex-wrap gap-3">
                 <a
-                  href="https://fs.solsynth.dev/r2/solian"
+                  href="https://fs.solsynth.dev/d/public/r2/solian/build-output-windows-installer.zip"
                   target="_blank"
                   class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
                 >
@@ -1076,7 +1084,7 @@ useSeoMeta({
             <!-- Linux -->
             <div v-if="activePlatform === 'linux'">
               <div class="flex items-center gap-3 mb-4">
-                <Terminal class="w-8 h-8 text-primary" />
+                <IconsIconLinux class="w-8 h-8 text-primary fill-primary" />
                 <h3 class="text-2xl font-bold">
                   {{ t("solarNetwork.download.linux.title") }}
                 </h3>
@@ -1086,7 +1094,7 @@ useSeoMeta({
               </p>
               <div class="flex flex-wrap gap-3">
                 <a
-                  href="https://fs.solsynth.dev/r2/solian"
+                  href="https://fs.solsynth.dev/d/public/r2/solian/build-output-linux-appimage.zip"
                   target="_blank"
                   class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
                 >
