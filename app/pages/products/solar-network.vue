@@ -1,52 +1,81 @@
 <script setup lang="ts">
 import {
-  Github, ExternalLink, Bug, Tag, Folder, MessageSquare, FileText, Rss,
-  Users, CreditCard, Globe, Sticker, Code, Heart, Sparkles, Zap, Shield, Smartphone,
-  Monitor, Bell, Calendar, Wallet, Image, CheckCircle, Apple, Terminal, Copy, Check,
-} from 'lucide-vue-next'
+  Github,
+  ExternalLink,
+  Bug,
+  Tag,
+  Folder,
+  MessageSquare,
+  FileText,
+  Rss,
+  Users,
+  CreditCard,
+  Globe,
+  Sticker,
+  Code,
+  Heart,
+  Sparkles,
+  Zap,
+  Shield,
+  Smartphone,
+  Monitor,
+  Bell,
+  Calendar,
+  Wallet,
+  Image,
+  CheckCircle,
+  Apple,
+  Terminal,
+  Copy,
+  Check,
+  SmilePlus,
+} from "lucide-vue-next";
 
-const { t, locale } = useI18n()
-const localePath = useLocalePath()
+const { t, locale } = useI18n();
+const localePath = useLocalePath();
 
-const lang = computed(() => locale.value)
+const lang = computed(() => locale.value);
 
-const activePlatform = ref('web')
-const copied = ref(false)
+const activePlatform = ref("web");
+const copied = ref(false);
 
-const { data: latestRelease } = await useFetch('/api/github-release', {
+const { data: latestRelease } = await useFetch("/api/github-release", {
   transform: (data: any) => {
-    if (!data) return null
+    if (!data) return null;
     return {
       tag: data.tag,
       name: data.name,
       body: data.body,
       url: data.url,
-      date: new Date(data.date).toLocaleDateString(locale.value === 'zh' ? 'zh-CN' : 'en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }),
-    }
+      date: new Date(data.date).toLocaleDateString(
+        locale.value === "zh" ? "zh-CN" : "en-US",
+        {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        },
+      ),
+    };
   },
-})
+});
 
 function copyCommand() {
-  navigator.clipboard.writeText('brew install --cask solsynth/solian/solian')
-  copied.value = true
-  setTimeout(() => copied.value = false, 2000)
+  navigator.clipboard.writeText("brew install --cask solsynth/solian/solian");
+  copied.value = true;
+  setTimeout(() => (copied.value = false), 2000);
 }
 
 definePageMeta({
-  title: 'Solar Network',
-  description: '',
-})
+  title: "Solar Network",
+  description: "",
+});
 
 useSeoMeta({
-  description: () => t('solarNetwork.tagline'),
-  ogImage: '/solar-network/screenshot.png',
-  twitterCard: 'summary_large_image',
-  twitterImage: '/solar-network/screenshot.png',
-})
+  description: () => t("solarNetwork.tagline"),
+  ogImage: "/solar-network/main-visual.webp",
+  twitterCard: "summary_large_image",
+  twitterImage: "/solar-network/main-visual.webp",
+});
 </script>
 
 <template>
@@ -54,60 +83,61 @@ useSeoMeta({
     <!-- Hero -->
     <section class="relative h-[60vh] min-h-120 overflow-hidden">
       <NuxtImg
-        src="/solar-network/screenshot.png"
-        class="absolute inset-0 w-full h-full object-cover object-[87%_center] -z-10 opacity-40"
+        src="/solar-network/main-visual.webp"
+        class="absolute inset-0 w-full h-full object-cover object-top -z-10 opacity-40"
         loading="eager"
         format="webp"
         alt=""
       />
       <NuxtImg
-        src="/solar-network/screenshot.png"
-        class="absolute inset-0 w-full h-full object-cover object-[87%_center] -z-10 opacity-40 blur-md [mask-image:linear-gradient(to_right,black_30%,transparent_70%)] [-webkit-mask-image:linear-gradient(to_right,black_30%,transparent_70%)]"
+        src="/solar-network/main-visual.webp"
+        class="absolute inset-0 w-full h-full object-cover object-top -z-10 opacity-40 blur-md [mask-image:linear-gradient(to_right,black_30%,transparent_70%)] [-webkit-mask-image:linear-gradient(to_right,black_30%,transparent_70%)]"
         loading="eager"
         format="webp"
         alt=""
       />
-      <div class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/40 to-transparent"></div>
+      <div
+        class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/40 to-transparent"
+      ></div>
 
       <div class="absolute bottom-0 left-0 right-0 p-8">
-        <div class="container mx-auto flex flex-col md:flex-row items-end gap-6">
-          <img src="/solar-network/icon.png" class="w-28 h-28 rounded-2xl shadow-2xl" alt="Solar Network" />
+        <div
+          class="container mx-auto flex flex-col md:flex-row items-end gap-6"
+        >
+          <img
+            src="/solar-network/icon.png"
+            class="w-28 h-28 rounded-2xl shadow-2xl"
+            alt="Solar Network"
+          />
           <div class="flex-1">
-            <h1 class="text-4xl md:text-5xl font-bold hero-glow mb-2">Solar Network</h1>
-            <p class="text-xl opacity-90 mb-4 hero-glow">{{ t('solarNetwork.tagline') }}</p>
-            <div class="flex flex-wrap gap-2 mt-3">
-              <NuxtLink :to="localePath('/products?series=Solar%20Network')" class="badge badge-primary badge-sm">
-                <Folder class="w-3 h-3 mr-1" />
-                Solar Network
-              </NuxtLink>
-              <NuxtLink :to="localePath('/products?tag=Social%20Network')" class="badge badge-outline badge-sm hover:badge-primary transition-colors">
-                <Tag class="w-3 h-3 mr-1" />
-                Social Network
-              </NuxtLink>
-              <NuxtLink :to="localePath('/products?tag=Community')" class="badge badge-outline badge-sm hover:badge-primary transition-colors">
-                <Tag class="w-3 h-3 mr-1" />
-                Community
-              </NuxtLink>
-              <NuxtLink :to="localePath('/products?tag=ACG')" class="badge badge-outline badge-sm hover:badge-primary transition-colors">
-                <Tag class="w-3 h-3 mr-1" />
-                ACG
-              </NuxtLink>
-              <span class="badge badge-outline badge-sm">
-                <Globe class="w-3 h-3 mr-1" />
-                Fediverse
-              </span>
-            </div>
+            <h1 class="text-4xl md:text-5xl font-bold hero-glow mb-2">
+              Solar Network
+            </h1>
+            <p class="text-xl opacity-90 mb-4 hero-glow">
+              {{ t("solarNetwork.tagline") }}
+            </p>
           </div>
           <div class="flex gap-3 flex-wrap">
-            <a href="https://web.solian.app" target="_blank" class="btn btn-primary btn-lg rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all">
+            <a
+              href="https://web.solian.app"
+              target="_blank"
+              class="btn btn-primary btn-lg rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+            >
               <Sparkles class="w-5 h-5" />
-              {{ t('solarNetwork.getStarted') }}
+              {{ t("solarNetwork.getStarted") }}
             </a>
-            <a href="#download" class="btn btn-accent btn-lg rounded-full hover:scale-105 transition-transform">
+            <a
+              href="#download"
+              class="btn btn-accent btn-lg rounded-full hover:scale-105 transition-transform"
+            >
               <ExternalLink class="w-5 h-5" />
-              {{ t('solarNetwork.download.btn') }}
+              {{ t("solarNetwork.download.btn") }}
             </a>
-            <a href="https://github.com/Solsynth/Solian" target="_blank" class="btn btn-outline btn-lg rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] hover:scale-105 transition-all">
+            <a
+              href="https://github.com/Solsynth/Solian"
+              target="_blank"
+              class="btn btn-outline btn-lg rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] hover:scale-105 transition-all"
+            >
               <Github class="w-5 h-5" />
               GitHub
             </a>
@@ -121,34 +151,60 @@ useSeoMeta({
     <!-- About -->
     <section class="container mx-auto px-4 pt-24 pb-16">
       <div class="text-center mb-12">
-        <span class="badge badge-primary badge-outline mb-4">{{ t('solarNetwork.about.badge') }}</span>
-        <h2 class="text-4xl font-bold mb-4 hero-glow">{{ t('solarNetwork.about.title') }}</h2>
+        <span class="badge badge-primary badge-outline mb-4">{{
+          t("solarNetwork.about.badge")
+        }}</span>
+        <h2 class="text-4xl font-bold mb-4 hero-glow">
+          {{ t("solarNetwork.about.title") }}
+        </h2>
         <p class="text-lg opacity-70 max-w-3xl mx-auto">
-          {{ t('solarNetwork.about.desc') }}
+          {{ t("solarNetwork.about.desc") }}
         </p>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl">
-          <div class="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mb-4">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl"
+        >
+          <div
+            class="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mb-4"
+          >
             <Heart class="w-8 h-8 text-primary" />
           </div>
-          <h3 class="text-xl font-bold mb-2">{{ t('solarNetwork.aboutCard.peaceful.title') }}</h3>
-          <p class="opacity-80">{{ t('solarNetwork.aboutCard.peaceful.desc') }}</p>
+          <h3 class="text-xl font-bold mb-2">
+            {{ t("solarNetwork.aboutCard.peaceful.title") }}
+          </h3>
+          <p class="opacity-80">
+            {{ t("solarNetwork.aboutCard.peaceful.desc") }}
+          </p>
         </div>
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl">
-          <div class="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center mb-4">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl"
+        >
+          <div
+            class="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center mb-4"
+          >
             <Code class="w-8 h-8 text-secondary" />
           </div>
-          <h3 class="text-xl font-bold mb-2">{{ t('solarNetwork.aboutCard.developer.title') }}</h3>
-          <p class="opacity-80">{{ t('solarNetwork.aboutCard.developer.desc') }}</p>
+          <h3 class="text-xl font-bold mb-2">
+            {{ t("solarNetwork.aboutCard.developer.title") }}
+          </h3>
+          <p class="opacity-80">
+            {{ t("solarNetwork.aboutCard.developer.desc") }}
+          </p>
         </div>
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl">
-          <div class="w-16 h-16 rounded-2xl bg-accent/20 flex items-center justify-center mb-4">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl"
+        >
+          <div
+            class="w-16 h-16 rounded-2xl bg-accent/20 flex items-center justify-center mb-4"
+          >
             <Zap class="w-8 h-8 text-accent" />
           </div>
-          <h3 class="text-xl font-bold mb-2">{{ t('solarNetwork.aboutCard.open.title') }}</h3>
-          <p class="opacity-80">{{ t('solarNetwork.aboutCard.open.desc') }}</p>
+          <h3 class="text-xl font-bold mb-2">
+            {{ t("solarNetwork.aboutCard.open.title") }}
+          </h3>
+          <p class="opacity-80">{{ t("solarNetwork.aboutCard.open.desc") }}</p>
         </div>
       </div>
     </section>
@@ -158,10 +214,14 @@ useSeoMeta({
     <!-- Features -->
     <section class="container mx-auto px-4 py-16">
       <div class="text-center mb-16">
-        <span class="badge badge-secondary badge-outline mb-4">{{ t('solarNetwork.features.badge') }}</span>
-        <h2 class="text-4xl font-bold mb-4 hero-glow">{{ t('solarNetwork.features.title') }}</h2>
+        <span class="badge badge-secondary badge-outline mb-4">{{
+          t("solarNetwork.features.badge")
+        }}</span>
+        <h2 class="text-4xl font-bold mb-4 hero-glow">
+          {{ t("solarNetwork.features.title") }}
+        </h2>
         <p class="text-lg opacity-70 max-w-2xl mx-auto">
-          {{ t('solarNetwork.features.desc') }}
+          {{ t("solarNetwork.features.desc") }}
         </p>
       </div>
 
@@ -170,15 +230,25 @@ useSeoMeta({
         <div class="grid md:grid-cols-2 gap-0">
           <div class="p-8 md:p-10 flex flex-col justify-center">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <MessageSquare class="w-6 h-6 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">{{ t('solarNetwork.features.timeline.title') }}</h3>
+              <h3 class="text-2xl font-bold text-primary">
+                {{ t("solarNetwork.features.timeline.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">{{ t('solarNetwork.features.timeline.desc') }}</p>
+            <p class="opacity-80 leading-relaxed">
+              {{ t("solarNetwork.features.timeline.desc") }}
+            </p>
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
-            <NuxtImg src="/solar-network/screenshots/explore.webp" class="rounded-xl shadow-lg w-full max-w-md" alt="Timeline" />
+            <NuxtImg
+              src="/solar-network/screenshots/explore.webp"
+              class="rounded-xl shadow-lg w-full max-w-md"
+              alt="Timeline"
+            />
           </div>
         </div>
       </div>
@@ -186,17 +256,31 @@ useSeoMeta({
       <!-- Featured: Chat -->
       <div class="card bg-base-200 overflow-hidden mb-8">
         <div class="grid md:grid-cols-2 gap-0">
-          <div class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2">
-            <NuxtImg src="/solar-network/screenshots/chat.webp" class="rounded-xl shadow-lg w-full max-w-md" alt="Chat" />
+          <div
+            class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
+          >
+            <NuxtImg
+              src="/solar-network/screenshots/chat.webp"
+              class="rounded-xl shadow-lg w-full max-w-md"
+              alt="Chat"
+            />
           </div>
-          <div class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1">
+          <div
+            class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1"
+          >
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <MessageSquare class="w-6 h-6 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">{{ t('solarNetwork.features.chat.title') }}</h3>
+              <h3 class="text-2xl font-bold text-primary">
+                {{ t("solarNetwork.features.chat.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">{{ t('solarNetwork.features.chat.desc') }}</p>
+            <p class="opacity-80 leading-relaxed">
+              {{ t("solarNetwork.features.chat.desc") }}
+            </p>
           </div>
         </div>
       </div>
@@ -206,47 +290,77 @@ useSeoMeta({
         <div class="grid md:grid-cols-2 gap-0">
           <div class="p-8 md:p-10 flex flex-col justify-center">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <Users class="w-6 h-6 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">{{ t('solarNetwork.features.realms.title') }}</h3>
+              <h3 class="text-2xl font-bold text-primary">
+                {{ t("solarNetwork.features.realms.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">{{ t('solarNetwork.features.realms.desc') }}</p>
+            <p class="opacity-80 leading-relaxed">
+              {{ t("solarNetwork.features.realms.desc") }}
+            </p>
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
-            <NuxtImg src="/solar-network/screenshots/realms.webp" class="rounded-xl shadow-lg w-full max-w-md" alt="Realms" />
+            <NuxtImg
+              src="/solar-network/screenshots/realms.webp"
+              class="rounded-xl shadow-lg w-full max-w-md"
+              alt="Realms"
+            />
           </div>
         </div>
       </div>
 
-      <!-- Grid: Posts + Editor -->
+      <!-- Grid: Posts + Collections -->
       <div class="grid md:grid-cols-2 gap-8 mb-8">
         <div class="card bg-base-200 overflow-hidden">
           <div class="bg-base-300 flex items-center justify-center p-4">
-            <NuxtImg src="/solar-network/screenshots/post-reactions.webp" class="rounded-xl shadow-lg w-full" alt="Posts" />
+            <NuxtImg
+              src="/solar-network/screenshots/post-reactions.webp"
+              class="rounded-xl shadow-lg w-full"
+              alt="Posts"
+            />
           </div>
           <div class="p-6">
             <div class="flex items-center gap-3 mb-3">
-              <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-                <FileText class="w-5 h-5 text-primary" />
+              <div
+                class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
+                <SmilePlus class="w-5 h-5 text-primary" />
               </div>
-              <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.posts.title') }}</h3>
+              <h3 class="text-lg font-bold text-primary">
+                {{ t("solarNetwork.features.reactions.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 text-sm">{{ t('solarNetwork.features.posts.desc') }}</p>
+            <p class="opacity-80 text-sm">
+              {{ t("solarNetwork.features.reactions.desc") }}
+            </p>
           </div>
         </div>
         <div class="card bg-base-200 overflow-hidden">
           <div class="bg-base-300 flex items-center justify-center p-4">
-            <NuxtImg src="/solar-network/screenshots/post-collections.webp" class="rounded-xl shadow-lg w-full" alt="Social" />
+            <NuxtImg
+              src="/solar-network/screenshots/post-collections.webp"
+              class="rounded-xl shadow-lg w-full"
+              alt="Post Collections"
+            />
           </div>
           <div class="p-6">
             <div class="flex items-center gap-3 mb-3">
-              <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
-                <Users class="w-5 h-5 text-primary" />
+              <div
+                class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
+                <Folder class="w-5 h-5 text-primary" />
               </div>
-              <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.social.title') }}</h3>
+              <h3 class="text-lg font-bold text-primary">
+                {{ t("solarNetwork.features.collections.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 text-sm">{{ t('solarNetwork.features.social.desc') }}</p>
+            <p class="opacity-80 text-sm">
+              {{ t("solarNetwork.features.collections.desc") }}
+            </p>
           </div>
         </div>
       </div>
@@ -255,44 +369,74 @@ useSeoMeta({
       <div class="grid md:grid-cols-3 gap-8 mb-8">
         <div class="card bg-base-200 overflow-hidden">
           <div class="bg-base-300 flex items-center justify-center p-4">
-            <NuxtImg src="/solar-network/screenshots/wallet.webp" class="rounded-xl shadow-lg w-full" alt="Wallet" />
+            <NuxtImg
+              src="/solar-network/screenshots/wallet.webp"
+              class="rounded-xl shadow-lg w-full"
+              alt="Wallet"
+            />
           </div>
           <div class="p-6">
             <div class="flex items-center gap-3 mb-3">
-              <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <Wallet class="w-5 h-5 text-primary" />
               </div>
-              <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.wallet.title') }}</h3>
+              <h3 class="text-lg font-bold text-primary">
+                {{ t("solarNetwork.features.wallet.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 text-sm">{{ t('solarNetwork.features.wallet.desc') }}</p>
+            <p class="opacity-80 text-sm">
+              {{ t("solarNetwork.features.wallet.desc") }}
+            </p>
           </div>
         </div>
         <div class="card bg-base-200 overflow-hidden">
           <div class="bg-base-300 flex items-center justify-center p-4">
-            <NuxtImg src="/solar-network/screenshots/stickers.webp" class="rounded-xl shadow-lg w-full" alt="Stickers" />
+            <NuxtImg
+              src="/solar-network/screenshots/stickers.webp"
+              class="rounded-xl shadow-lg w-full"
+              alt="Stickers"
+            />
           </div>
           <div class="p-6">
             <div class="flex items-center gap-3 mb-3">
-              <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <Sticker class="w-5 h-5 text-primary" />
               </div>
-              <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.stickers.title') }}</h3>
+              <h3 class="text-lg font-bold text-primary">
+                {{ t("solarNetwork.features.stickers.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 text-sm">{{ t('solarNetwork.features.stickers.desc') }}</p>
+            <p class="opacity-80 text-sm">
+              {{ t("solarNetwork.features.stickers.desc") }}
+            </p>
           </div>
         </div>
         <div class="card bg-base-200 overflow-hidden">
           <div class="bg-base-300 flex items-center justify-center p-4">
-            <NuxtImg src="/solar-network/screenshots/drive.webp" class="rounded-xl shadow-lg w-full" alt="Files" />
+            <NuxtImg
+              src="/solar-network/screenshots/drive.webp"
+              class="rounded-xl shadow-lg w-full"
+              alt="Files"
+            />
           </div>
           <div class="p-6">
             <div class="flex items-center gap-3 mb-3">
-              <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <Image class="w-5 h-5 text-primary" />
               </div>
-              <h3 class="text-lg font-bold text-primary">{{ t('solarNetwork.features.files.title') }}</h3>
+              <h3 class="text-lg font-bold text-primary">
+                {{ t("solarNetwork.features.files.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 text-sm">{{ t('solarNetwork.features.files.desc') }}</p>
+            <p class="opacity-80 text-sm">
+              {{ t("solarNetwork.features.files.desc") }}
+            </p>
           </div>
         </div>
       </div>
@@ -300,17 +444,31 @@ useSeoMeta({
       <!-- Featured: Badges / Achievements -->
       <div class="card bg-base-200 overflow-hidden mb-8">
         <div class="grid md:grid-cols-2 gap-0">
-          <div class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2">
-            <NuxtImg src="/solar-network/screenshots/badges.webp" class="rounded-xl shadow-lg w-full max-w-md" alt="Achievements" />
+          <div
+            class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
+          >
+            <NuxtImg
+              src="/solar-network/screenshots/badges.webp"
+              class="rounded-xl shadow-lg w-full max-w-md"
+              alt="Achievements"
+            />
           </div>
-          <div class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1">
+          <div
+            class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1"
+          >
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <CheckCircle class="w-6 h-6 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">{{ t('solarNetwork.features.achievements.title') }}</h3>
+              <h3 class="text-2xl font-bold text-primary">
+                {{ t("solarNetwork.features.achievements.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">{{ t('solarNetwork.features.achievements.desc') }}</p>
+            <p class="opacity-80 leading-relaxed">
+              {{ t("solarNetwork.features.achievements.desc") }}
+            </p>
           </div>
         </div>
       </div>
@@ -320,15 +478,25 @@ useSeoMeta({
         <div class="grid md:grid-cols-2 gap-0">
           <div class="p-8 md:p-10 flex flex-col justify-center">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <Calendar class="w-6 h-6 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">{{ t('solarNetwork.features.countdown.title') }}</h3>
+              <h3 class="text-2xl font-bold text-primary">
+                {{ t("solarNetwork.features.polls.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">{{ t('solarNetwork.features.countdown.desc') }}</p>
+            <p class="opacity-80 leading-relaxed">
+              {{ t("solarNetwork.features.polls.desc") }}
+            </p>
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
-            <NuxtImg src="/solar-network/screenshots/polls.webp" class="rounded-xl shadow-lg w-full max-w-md" alt="Polls" />
+            <NuxtImg
+              src="/solar-network/screenshots/polls.webp"
+              class="rounded-xl shadow-lg w-full max-w-md"
+              alt="Polls"
+            />
           </div>
         </div>
       </div>
@@ -338,15 +506,25 @@ useSeoMeta({
         <div class="grid md:grid-cols-2 gap-0">
           <div class="p-8 md:p-10 flex flex-col justify-center">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <Monitor class="w-6 h-6 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">{{ t('solarNetwork.features.dashboard.title') }}</h3>
+              <h3 class="text-2xl font-bold text-primary">
+                {{ t("solarNetwork.features.dashboard.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">{{ t('solarNetwork.features.dashboard.desc') }}</p>
+            <p class="opacity-80 leading-relaxed">
+              {{ t("solarNetwork.features.dashboard.desc") }}
+            </p>
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
-            <NuxtImg src="/solar-network/screenshots/dashboard.webp" class="rounded-xl shadow-lg w-full max-w-md" alt="Dashboard" />
+            <NuxtImg
+              src="/solar-network/screenshots/dashboard.webp"
+              class="rounded-xl shadow-lg w-full max-w-md"
+              alt="Dashboard"
+            />
           </div>
         </div>
       </div>
@@ -354,17 +532,31 @@ useSeoMeta({
       <!-- Featured: Events -->
       <div class="card bg-base-200 overflow-hidden mb-8">
         <div class="grid md:grid-cols-2 gap-0">
-          <div class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2">
-            <NuxtImg src="/solar-network/screenshots/events.webp" class="rounded-xl shadow-lg w-full max-w-md" alt="Events" />
+          <div
+            class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
+          >
+            <NuxtImg
+              src="/solar-network/screenshots/events.webp"
+              class="rounded-xl shadow-lg w-full max-w-md"
+              alt="Events"
+            />
           </div>
-          <div class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1">
+          <div
+            class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1"
+          >
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <Calendar class="w-6 h-6 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">{{ t('solarNetwork.features.events.title') }}</h3>
+              <h3 class="text-2xl font-bold text-primary">
+                {{ t("solarNetwork.features.events.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">{{ t('solarNetwork.features.events.desc') }}</p>
+            <p class="opacity-80 leading-relaxed">
+              {{ t("solarNetwork.features.events.desc") }}
+            </p>
           </div>
         </div>
       </div>
@@ -374,15 +566,25 @@ useSeoMeta({
         <div class="grid md:grid-cols-2 gap-0">
           <div class="p-8 md:p-10 flex flex-col justify-center">
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <Calendar class="w-6 h-6 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">{{ t('solarNetwork.features.eventCalendar.title') }}</h3>
+              <h3 class="text-2xl font-bold text-primary">
+                {{ t("solarNetwork.features.eventCalendar.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">{{ t('solarNetwork.features.eventCalendar.desc') }}</p>
+            <p class="opacity-80 leading-relaxed">
+              {{ t("solarNetwork.features.eventCalendar.desc") }}
+            </p>
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
-            <NuxtImg src="/solar-network/screenshots/event-calendar.webp" class="rounded-xl shadow-lg w-full max-w-md" alt="Event Calendar" />
+            <NuxtImg
+              src="/solar-network/screenshots/event-calendar.webp"
+              class="rounded-xl shadow-lg w-full max-w-md"
+              alt="Event Calendar"
+            />
           </div>
         </div>
       </div>
@@ -390,94 +592,206 @@ useSeoMeta({
       <!-- Featured: Profile Presences -->
       <div class="card bg-base-200 overflow-hidden mb-8">
         <div class="grid md:grid-cols-2 gap-0">
-          <div class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2">
-            <NuxtImg src="/solar-network/screenshots/profile-presences.webp" class="rounded-xl shadow-lg w-full max-w-md" alt="Profile Presences" />
+          <div
+            class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
+          >
+            <NuxtImg
+              src="/solar-network/screenshots/profile-presences.webp"
+              class="rounded-xl shadow-lg w-full max-w-md"
+              alt="Profile Presences"
+            />
           </div>
-          <div class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1">
+          <div
+            class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1"
+          >
             <div class="flex items-center gap-3 mb-4">
-              <div class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center">
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
                 <Sparkles class="w-6 h-6 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">{{ t('solarNetwork.features.presences.title') }}</h3>
+              <h3 class="text-2xl font-bold text-primary">
+                {{ t("solarNetwork.features.presences.title") }}
+              </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">{{ t('solarNetwork.features.presences.desc') }}</p>
+            <p class="opacity-80 leading-relaxed">
+              {{ t("solarNetwork.features.presences.desc") }}
+            </p>
           </div>
         </div>
       </div>
 
       <!-- Compact grid: remaining features -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
+        >
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div
+              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
+              <Users class="w-5 h-5 text-primary" />
+            </div>
+            <h3 class="text-base font-bold text-primary">
+              {{ t("solarNetwork.features.social.title") }}
+            </h3>
+          </div>
+          <p class="opacity-80 text-sm">
+            {{ t("solarNetwork.features.social.desc") }}
+          </p>
+        </div>
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
+              <Calendar class="w-5 h-5 text-primary" />
+            </div>
+            <h3 class="text-base font-bold text-primary">
+              {{ t("solarNetwork.features.countdown.title") }}
+            </h3>
+          </div>
+          <p class="opacity-80 text-sm">
+            {{ t("solarNetwork.features.countdown.desc") }}
+          </p>
+        </div>
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
+        >
+          <div class="flex items-center gap-3 mb-3">
+            <div
+              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
               <Shield class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="text-base font-bold text-primary">{{ t('solarNetwork.features.oauth.title') }}</h3>
+            <h3 class="text-base font-bold text-primary">
+              {{ t("solarNetwork.features.oauth.title") }}
+            </h3>
           </div>
-          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.oauth.desc') }}</p>
+          <p class="opacity-80 text-sm">
+            {{ t("solarNetwork.features.oauth.desc") }}
+          </p>
         </div>
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
+        >
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div
+              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
               <Bell class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="text-base font-bold text-primary">{{ t('solarNetwork.features.checkin.title') }}</h3>
+            <h3 class="text-base font-bold text-primary">
+              {{ t("solarNetwork.features.checkin.title") }}
+            </h3>
           </div>
-          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.checkin.desc') }}</p>
+          <p class="opacity-80 text-sm">
+            {{ t("solarNetwork.features.checkin.desc") }}
+          </p>
         </div>
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
+        >
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div
+              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
               <Rss class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="text-base font-bold text-primary">{{ t('solarNetwork.features.rss.title') }}</h3>
+            <h3 class="text-base font-bold text-primary">
+              {{ t("solarNetwork.features.rss.title") }}
+            </h3>
           </div>
-          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.rss.desc') }}</p>
+          <p class="opacity-80 text-sm">
+            {{ t("solarNetwork.features.rss.desc") }}
+          </p>
         </div>
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
+        >
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div
+              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
               <FileText class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="text-base font-bold text-primary">{{ t('solarNetwork.features.editor.title') }}</h3>
+            <h3 class="text-base font-bold text-primary">
+              {{ t("solarNetwork.features.editor.title") }}
+            </h3>
           </div>
-          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.editor.desc') }}</p>
+          <p class="opacity-80 text-sm">
+            {{ t("solarNetwork.features.editor.desc") }}
+          </p>
         </div>
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
+        >
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div
+              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
               <Globe class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="text-base font-bold text-primary">{{ t('solarNetwork.features.fediverse.title') }}</h3>
+            <h3 class="text-base font-bold text-primary">
+              {{ t("solarNetwork.features.fediverse.title") }}
+            </h3>
           </div>
-          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.fediverse.desc') }}</p>
+          <p class="opacity-80 text-sm">
+            {{ t("solarNetwork.features.fediverse.desc") }}
+          </p>
         </div>
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
+        >
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div
+              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
               <Image class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="text-base font-bold text-primary">{{ t('solarNetwork.features.gallery.title') }}</h3>
+            <h3 class="text-base font-bold text-primary">
+              {{ t("solarNetwork.features.gallery.title") }}
+            </h3>
           </div>
-          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.gallery.desc') }}</p>
+          <p class="opacity-80 text-sm">
+            {{ t("solarNetwork.features.gallery.desc") }}
+          </p>
         </div>
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
+        >
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div
+              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
               <CreditCard class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="text-base font-bold text-primary">{{ t('solarNetwork.features.subscription.title') }}</h3>
+            <h3 class="text-base font-bold text-primary">
+              {{ t("solarNetwork.features.subscription.title") }}
+            </h3>
           </div>
-          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.subscription.desc') }}</p>
+          <p class="opacity-80 text-sm">
+            {{ t("solarNetwork.features.subscription.desc") }}
+          </p>
         </div>
-        <div class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group">
+        <div
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
+        >
           <div class="flex items-center gap-3 mb-3">
-            <div class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+            <div
+              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
+            >
               <Sparkles class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="text-base font-bold text-primary">{{ t('solarNetwork.features.more.title') }}</h3>
+            <h3 class="text-base font-bold text-primary">
+              {{ t("solarNetwork.features.more.title") }}
+            </h3>
           </div>
-          <p class="opacity-80 text-sm">{{ t('solarNetwork.features.more.desc') }}</p>
+          <p class="opacity-80 text-sm">
+            {{ t("solarNetwork.features.more.desc") }}
+          </p>
         </div>
       </div>
     </section>
@@ -494,45 +808,112 @@ useSeoMeta({
               <span class="badge badge-primary">{{ latestRelease.tag }}</span>
               <span class="text-sm opacity-60">{{ latestRelease.date }}</span>
             </div>
-            <a :href="latestRelease.url" target="_blank" class="btn btn-ghost btn-sm gap-2">
+            <a
+              :href="latestRelease.url"
+              target="_blank"
+              class="btn btn-ghost btn-sm gap-2"
+            >
               <ExternalLink class="w-4 h-4" />
-              {{ t('solarNetwork.download.release.viewOnGithub') }}
+              {{ t("solarNetwork.download.release.viewOnGithub") }}
             </a>
           </div>
-          <h3 v-if="latestRelease.name" class="font-bold text-lg mb-3">{{ latestRelease.name }}</h3>
-          <div v-if="latestRelease.body" class="prose prose-sm max-w-none opacity-80 whitespace-pre-wrap">{{ latestRelease.body }}</div>
+          <h3 v-if="latestRelease.name" class="font-bold text-lg mb-3">
+            {{ latestRelease.name }}
+          </h3>
+          <div
+            v-if="latestRelease.body"
+            class="prose prose-sm max-w-none opacity-80 whitespace-pre-wrap"
+          >
+            {{ latestRelease.body }}
+          </div>
         </div>
 
         <div class="grid md:grid-cols-[200px_1fr] gap-6">
           <!-- Platform selector -->
-          <div class="flex md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0">
-            <label class="btn btn-ghost justify-start gap-3 cursor-pointer" :class="{ 'btn-active': activePlatform === 'web' }">
-              <input type="radio" name="platform" value="web" v-model="activePlatform" class="hidden" />
+          <div
+            class="flex md:flex-col gap-2 overflow-x-auto md:overflow-x-visible pb-2 md:pb-0"
+          >
+            <label
+              class="btn btn-ghost justify-start gap-3 cursor-pointer"
+              :class="{ 'btn-active': activePlatform === 'web' }"
+            >
+              <input
+                type="radio"
+                name="platform"
+                value="web"
+                v-model="activePlatform"
+                class="hidden"
+              />
               <Globe class="w-5 h-5 shrink-0" />
               <span class="hidden md:inline">Web</span>
             </label>
-            <label class="btn btn-ghost justify-start gap-3 cursor-pointer" :class="{ 'btn-active': activePlatform === 'ios' }">
-              <input type="radio" name="platform" value="ios" v-model="activePlatform" class="hidden" />
+            <label
+              class="btn btn-ghost justify-start gap-3 cursor-pointer"
+              :class="{ 'btn-active': activePlatform === 'ios' }"
+            >
+              <input
+                type="radio"
+                name="platform"
+                value="ios"
+                v-model="activePlatform"
+                class="hidden"
+              />
               <Smartphone class="w-5 h-5 shrink-0" />
               <span class="hidden md:inline">iOS</span>
             </label>
-            <label class="btn btn-ghost justify-start gap-3 cursor-pointer" :class="{ 'btn-active': activePlatform === 'android' }">
-              <input type="radio" name="platform" value="android" v-model="activePlatform" class="hidden" />
+            <label
+              class="btn btn-ghost justify-start gap-3 cursor-pointer"
+              :class="{ 'btn-active': activePlatform === 'android' }"
+            >
+              <input
+                type="radio"
+                name="platform"
+                value="android"
+                v-model="activePlatform"
+                class="hidden"
+              />
               <Smartphone class="w-5 h-5 shrink-0" />
               <span class="hidden md:inline">Android</span>
             </label>
-            <label class="btn btn-ghost justify-start gap-3 cursor-pointer" :class="{ 'btn-active': activePlatform === 'macos' }">
-              <input type="radio" name="platform" value="macos" v-model="activePlatform" class="hidden" />
+            <label
+              class="btn btn-ghost justify-start gap-3 cursor-pointer"
+              :class="{ 'btn-active': activePlatform === 'macos' }"
+            >
+              <input
+                type="radio"
+                name="platform"
+                value="macos"
+                v-model="activePlatform"
+                class="hidden"
+              />
               <Monitor class="w-5 h-5 shrink-0" />
               <span class="hidden md:inline">macOS</span>
             </label>
-            <label class="btn btn-ghost justify-start gap-3 cursor-pointer" :class="{ 'btn-active': activePlatform === 'windows' }">
-              <input type="radio" name="platform" value="windows" v-model="activePlatform" class="hidden" />
+            <label
+              class="btn btn-ghost justify-start gap-3 cursor-pointer"
+              :class="{ 'btn-active': activePlatform === 'windows' }"
+            >
+              <input
+                type="radio"
+                name="platform"
+                value="windows"
+                v-model="activePlatform"
+                class="hidden"
+              />
               <Monitor class="w-5 h-5 shrink-0" />
               <span class="hidden md:inline">Windows</span>
             </label>
-            <label class="btn btn-ghost justify-start gap-3 cursor-pointer" :class="{ 'btn-active': activePlatform === 'linux' }">
-              <input type="radio" name="platform" value="linux" v-model="activePlatform" class="hidden" />
+            <label
+              class="btn btn-ghost justify-start gap-3 cursor-pointer"
+              :class="{ 'btn-active': activePlatform === 'linux' }"
+            >
+              <input
+                type="radio"
+                name="platform"
+                value="linux"
+                v-model="activePlatform"
+                class="hidden"
+              />
               <Terminal class="w-5 h-5 shrink-0" />
               <span class="hidden md:inline">Linux</span>
             </label>
@@ -544,12 +925,20 @@ useSeoMeta({
             <div v-if="activePlatform === 'web'">
               <div class="flex items-center gap-3 mb-4">
                 <Globe class="w-8 h-8 text-primary" />
-                <h3 class="text-2xl font-bold">{{ t('solarNetwork.download.web.title') }}</h3>
+                <h3 class="text-2xl font-bold">
+                  {{ t("solarNetwork.download.web.title") }}
+                </h3>
               </div>
-              <p class="opacity-70 mb-6">{{ t('solarNetwork.download.web.desc') }}</p>
-              <a href="https://web.solian.app" target="_blank" class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all">
+              <p class="opacity-70 mb-6">
+                {{ t("solarNetwork.download.web.desc") }}
+              </p>
+              <a
+                href="https://web.solian.app"
+                target="_blank"
+                class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+              >
                 <ExternalLink class="w-5 h-5" />
-                {{ t('solarNetwork.journey.openBrowser') }}
+                {{ t("solarNetwork.journey.openBrowser") }}
               </a>
             </div>
 
@@ -557,12 +946,20 @@ useSeoMeta({
             <div v-if="activePlatform === 'ios'">
               <div class="flex items-center gap-3 mb-4">
                 <Smartphone class="w-8 h-8 text-primary" />
-                <h3 class="text-2xl font-bold">{{ t('solarNetwork.download.ios.title') }}</h3>
+                <h3 class="text-2xl font-bold">
+                  {{ t("solarNetwork.download.ios.title") }}
+                </h3>
               </div>
-              <p class="opacity-70 mb-6">{{ t('solarNetwork.download.ios.desc') }}</p>
-              <a href="https://testflight.apple.com/join/YJ0lmN6O" target="_blank" class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all">
+              <p class="opacity-70 mb-6">
+                {{ t("solarNetwork.download.ios.desc") }}
+              </p>
+              <a
+                href="https://testflight.apple.com/join/YJ0lmN6O"
+                target="_blank"
+                class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+              >
                 <Smartphone class="w-5 h-5" />
-                {{ t('solarNetwork.download.ios.testflight') }}
+                {{ t("solarNetwork.download.ios.testflight") }}
               </a>
             </div>
 
@@ -570,17 +967,29 @@ useSeoMeta({
             <div v-if="activePlatform === 'android'">
               <div class="flex items-center gap-3 mb-4">
                 <Smartphone class="w-8 h-8 text-primary" />
-                <h3 class="text-2xl font-bold">{{ t('solarNetwork.download.android.title') }}</h3>
+                <h3 class="text-2xl font-bold">
+                  {{ t("solarNetwork.download.android.title") }}
+                </h3>
               </div>
-              <p class="opacity-70 mb-6">{{ t('solarNetwork.download.android.desc') }}</p>
+              <p class="opacity-70 mb-6">
+                {{ t("solarNetwork.download.android.desc") }}
+              </p>
               <div class="flex flex-wrap gap-3">
-                <a href="https://fs.solsynth.dev/r2/solian" target="_blank" class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all">
+                <a
+                  href="https://fs.solsynth.dev/r2/solian"
+                  target="_blank"
+                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+                >
                   <ExternalLink class="w-5 h-5" />
-                  {{ t('solarNetwork.download.direct') }}
+                  {{ t("solarNetwork.download.direct") }}
                 </a>
-                <a href="https://github.com/Solsynth/Solian/releases" target="_blank" class="btn btn-outline rounded-full">
+                <a
+                  href="https://github.com/Solsynth/Solian/releases"
+                  target="_blank"
+                  class="btn btn-outline rounded-full"
+                >
                   <Github class="w-5 h-5" />
-                  {{ t('solarNetwork.download.github') }}
+                  {{ t("solarNetwork.download.github") }}
                 </a>
               </div>
             </div>
@@ -589,15 +998,24 @@ useSeoMeta({
             <div v-if="activePlatform === 'macos'">
               <div class="flex items-center gap-3 mb-4">
                 <Monitor class="w-8 h-8 text-primary" />
-                <h3 class="text-2xl font-bold">{{ t('solarNetwork.download.macos.title') }}</h3>
+                <h3 class="text-2xl font-bold">
+                  {{ t("solarNetwork.download.macos.title") }}
+                </h3>
               </div>
-              <p class="opacity-70 mb-6">{{ t('solarNetwork.download.macos.desc') }}</p>
+              <p class="opacity-70 mb-6">
+                {{ t("solarNetwork.download.macos.desc") }}
+              </p>
 
               <div class="mb-6">
                 <p class="text-sm font-medium mb-2">Homebrew</p>
                 <div class="bg-base-300 rounded-xl p-4 flex items-center gap-3">
-                  <code class="flex-1 text-sm font-mono">brew install --cask solsynth/solian/solian</code>
-                  <button class="btn btn-ghost btn-sm btn-square" @click="copyCommand">
+                  <code class="flex-1 text-sm font-mono"
+                    >brew install --cask solsynth/solian/solian</code
+                  >
+                  <button
+                    class="btn btn-ghost btn-sm btn-square"
+                    @click="copyCommand"
+                  >
                     <Check v-if="copied" class="w-4 h-4 text-success" />
                     <Copy v-else class="w-4 h-4" />
                   </button>
@@ -605,13 +1023,21 @@ useSeoMeta({
               </div>
 
               <div class="flex flex-wrap gap-3">
-                <a href="https://fs.solsynth.dev/r2/solian" target="_blank" class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all">
+                <a
+                  href="https://fs.solsynth.dev/r2/solian"
+                  target="_blank"
+                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+                >
                   <ExternalLink class="w-5 h-5" />
-                  {{ t('solarNetwork.download.direct') }}
+                  {{ t("solarNetwork.download.direct") }}
                 </a>
-                <a href="https://github.com/Solsynth/Solian/releases" target="_blank" class="btn btn-outline rounded-full">
+                <a
+                  href="https://github.com/Solsynth/Solian/releases"
+                  target="_blank"
+                  class="btn btn-outline rounded-full"
+                >
                   <Github class="w-5 h-5" />
-                  {{ t('solarNetwork.download.github') }}
+                  {{ t("solarNetwork.download.github") }}
                 </a>
               </div>
             </div>
@@ -620,17 +1046,29 @@ useSeoMeta({
             <div v-if="activePlatform === 'windows'">
               <div class="flex items-center gap-3 mb-4">
                 <Monitor class="w-8 h-8 text-primary" />
-                <h3 class="text-2xl font-bold">{{ t('solarNetwork.download.windows.title') }}</h3>
+                <h3 class="text-2xl font-bold">
+                  {{ t("solarNetwork.download.windows.title") }}
+                </h3>
               </div>
-              <p class="opacity-70 mb-6">{{ t('solarNetwork.download.windows.desc') }}</p>
+              <p class="opacity-70 mb-6">
+                {{ t("solarNetwork.download.windows.desc") }}
+              </p>
               <div class="flex flex-wrap gap-3">
-                <a href="https://fs.solsynth.dev/r2/solian" target="_blank" class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all">
+                <a
+                  href="https://fs.solsynth.dev/r2/solian"
+                  target="_blank"
+                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+                >
                   <ExternalLink class="w-5 h-5" />
-                  {{ t('solarNetwork.download.direct') }}
+                  {{ t("solarNetwork.download.direct") }}
                 </a>
-                <a href="https://github.com/Solsynth/Solian/releases" target="_blank" class="btn btn-outline rounded-full">
+                <a
+                  href="https://github.com/Solsynth/Solian/releases"
+                  target="_blank"
+                  class="btn btn-outline rounded-full"
+                >
                   <Github class="w-5 h-5" />
-                  {{ t('solarNetwork.download.github') }}
+                  {{ t("solarNetwork.download.github") }}
                 </a>
               </div>
             </div>
@@ -639,17 +1077,29 @@ useSeoMeta({
             <div v-if="activePlatform === 'linux'">
               <div class="flex items-center gap-3 mb-4">
                 <Terminal class="w-8 h-8 text-primary" />
-                <h3 class="text-2xl font-bold">{{ t('solarNetwork.download.linux.title') }}</h3>
+                <h3 class="text-2xl font-bold">
+                  {{ t("solarNetwork.download.linux.title") }}
+                </h3>
               </div>
-              <p class="opacity-70 mb-6">{{ t('solarNetwork.download.linux.desc') }}</p>
+              <p class="opacity-70 mb-6">
+                {{ t("solarNetwork.download.linux.desc") }}
+              </p>
               <div class="flex flex-wrap gap-3">
-                <a href="https://fs.solsynth.dev/r2/solian" target="_blank" class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all">
+                <a
+                  href="https://fs.solsynth.dev/r2/solian"
+                  target="_blank"
+                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+                >
                   <ExternalLink class="w-5 h-5" />
-                  {{ t('solarNetwork.download.direct') }}
+                  {{ t("solarNetwork.download.direct") }}
                 </a>
-                <a href="https://github.com/Solsynth/Solian/releases" target="_blank" class="btn btn-outline rounded-full">
+                <a
+                  href="https://github.com/Solsynth/Solian/releases"
+                  target="_blank"
+                  class="btn btn-outline rounded-full"
+                >
                   <Github class="w-5 h-5" />
-                  {{ t('solarNetwork.download.github') }}
+                  {{ t("solarNetwork.download.github") }}
                 </a>
               </div>
             </div>
@@ -657,9 +1107,13 @@ useSeoMeta({
         </div>
 
         <div class="text-center mt-6">
-          <a href="https://github.com/Solsynth/Solian" target="_blank" class="btn btn-ghost gap-2">
+          <a
+            href="https://github.com/Solsynth/Solian"
+            target="_blank"
+            class="btn btn-ghost gap-2"
+          >
             <Github class="w-4 h-4" />
-            {{ t('solarNetwork.journey.viewGithub') }}
+            {{ t("solarNetwork.journey.viewGithub") }}
           </a>
         </div>
       </div>
@@ -670,19 +1124,31 @@ useSeoMeta({
     <!-- Help -->
     <section class="container mx-auto px-4 py-16">
       <div class="card bg-base-200 p-8">
-        <div class="flex flex-col md:flex-row items-center justify-between gap-6">
+        <div
+          class="flex flex-col md:flex-row items-center justify-between gap-6"
+        >
           <div>
-            <h2 class="text-3xl font-bold mb-2">{{ t('solarNetwork.help.title') }}</h2>
-            <p class="text-lg opacity-80">{{ t('solarNetwork.help.desc') }}</p>
+            <h2 class="text-3xl font-bold mb-2">
+              {{ t("solarNetwork.help.title") }}
+            </h2>
+            <p class="text-lg opacity-80">{{ t("solarNetwork.help.desc") }}</p>
           </div>
           <div class="flex gap-4">
-            <a href="https://github.com/Solsynth/Solian/issues" target="_blank" class="btn btn-outline btn-lg hover:scale-105 transition-transform">
+            <a
+              href="https://github.com/Solsynth/Solian/issues"
+              target="_blank"
+              class="btn btn-outline btn-lg hover:scale-105 transition-transform"
+            >
               <Bug class="w-5 h-5" />
-              {{ t('solarNetwork.help.reportIssue') }}
+              {{ t("solarNetwork.help.reportIssue") }}
             </a>
-            <a href="https://github.com/Solsynth/Solian/discussions" target="_blank" class="btn btn-ghost btn-lg hover:scale-105 transition-transform">
+            <a
+              href="https://github.com/Solsynth/Solian/discussions"
+              target="_blank"
+              class="btn btn-ghost btn-lg hover:scale-105 transition-transform"
+            >
               <MessageSquare class="w-5 h-5" />
-              {{ t('solarNetwork.help.suggestion') }}
+              {{ t("solarNetwork.help.suggestion") }}
             </a>
           </div>
         </div>
