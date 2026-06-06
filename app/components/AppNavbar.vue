@@ -10,6 +10,7 @@ import {
   X,
   Languages,
   BadgeCheck,
+  CircleUser,
 } from 'lucide-vue-next'
 
 const { t, locale, locales } = useI18n()
@@ -149,6 +150,13 @@ onMounted(() => {
             </li>
           </ul>
         </div>
+
+        <NuxtLink
+          :to="localePath('/auth/login')"
+          class="flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
+        >
+          <CircleUser class="w-5 h-5" />
+        </NuxtLink>
 
         <button
           class="flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"

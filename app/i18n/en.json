@@ -335,5 +335,10 @@
   "royIcpFilling.help.desc": "Have questions about the filing process? We're here to help.",
   "royIcpFilling.help.reportIssue": "Report an Issue",
   "royIcpFilling.help.contact": "Contact Us",
-  "royIcpFilling.disclaimer": "Disclaimer: This service is a friendly link project inspired by Moe Nation ICP. It has no relation to the ICP filing provided by the Ministry of Industry and Information Technology of the People's Republic of China, and has no legal effect. Any entities described on this page are fictional entities under an imaginary worldview, and do not represent any real entities."
+  "royIcpFilling.disclaimer": "Disclaimer: This service is a friendly link project inspired by Moe Nation ICP. It has no relation to the ICP filing provided by the Ministry of Industry and Information Technology of the People's Republic of China, and has no legal effect. Any entities described on this page are fictional entities under an imaginary worldview, and do not represent any real entities.",
+  "login.title": "Sign in",
+  "login.subtitle": "Welcome back",
+  "login.solian": "Continue with Solarpass",
+  "login.or": "or",
+  "login.signIn": "Sign in"
 }

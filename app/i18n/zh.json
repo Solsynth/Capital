@@ -335,5 +335,10 @@
   "royIcpFilling.help.desc": "对备案流程有疑问？我们随时为您服务。",
   "royIcpFilling.help.reportIssue": "报告问题",
   "royIcpFilling.help.contact": "联系我们",
-  "royIcpFilling.disclaimer": "免责声明：本服务是受到萌国 ICP 启发的友链项目，和中华人民共和国工业和信息化部提供的 ICP 备案没有任何关系，不具任何法律效应。本页面描述的任何主体都是在架空世界观下的虚构主体，不代表现实中任何的主体。"
+  "royIcpFilling.disclaimer": "免责声明：本服务是受到萌国 ICP 启发的友链项目，和中华人民共和国工业和信息化部提供的 ICP 备案没有任何关系，不具任何法律效应。本页面描述的任何主体都是在架空世界观下的虚构主体，不代表现实中任何的主体。",
+  "login.title": "登录",
+  "login.subtitle": "欢迎回来",
+  "login.solian": "使用 Solarpass 登录",
+  "login.or": "或",
+  "login.signIn": "登录"
 }

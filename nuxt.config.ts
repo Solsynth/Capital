@@ -20,6 +20,7 @@ export default defineNuxtConfig({
     '@nuxtjs/robots',
     'nuxt-og-image',
     '@nuxt/image',
+    '@nuxt/fonts',
   ],
 
   css: ['~/assets/css/global.css'],

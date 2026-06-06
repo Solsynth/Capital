@@ -18,6 +18,9 @@ logs
 .fleet
 .idea
 
+# Local SQLite database
+server/local.db
+
 # Local env files
 .env
 .env.*
