@@ -1,8 +1,8 @@
 ---
 title: "中羊网备"
 description: "Republic of Yang's friendly link list"
-icon: "/republic-of-yang/filling.png"
-background: "/republic-of-yang/greatwall.webp"
+icon: "/images//republic-of-yang/filling.png"
+background: "/images//republic-of-yang/greatwall.webp"
 url: "https://solsynth.dev/icp"
 repo: "https://github.com/Solsynth/Solian"
 version: "1.0.0"

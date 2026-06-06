@@ -105,7 +105,7 @@ async function fetchSearch(raw: string) {
   <div class="container mx-auto px-4 py-20 max-w-3xl">
     <div class="text-center mb-12">
       <img
-        src="/republic-of-yang/filling.png"
+        src="/images/images//republic-of-yang/filling.png"
         alt="ROY ICP"
         class="w-16 h-16 mx-auto mb-8 rounded-2xl"
       >

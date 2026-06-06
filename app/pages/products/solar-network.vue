@@ -72,18 +72,18 @@ definePageMeta({
 
 useSeoMeta({
   description: () => t("solarNetwork.tagline"),
-  ogImage: "/solar-network/main-visual.webp",
+  ogImage: "/images/solar-network/main-visual.webp",
   twitterCard: "summary_large_image",
-  twitterImage: "/solar-network/main-visual.webp",
+  twitterImage: "/images/solar-network/main-visual.webp",
 });
 </script>
 
 <template>
   <div class="solar-network-page">
     <!-- Hero -->
-    <section class="relative h-[70vh] min-h-120 overflow-hidden -mt-(--site-page-offset,64px)">
+    <section class="relative h-[70vh] min-h-120 overflow-hidden">
       <NuxtImg
-        src="/solar-network/main-visual.webp"
+        src="/images/solar-network/main-visual.webp"
         class="absolute inset-0 w-full h-full object-cover object-top-left -z-10 opacity-80"
         loading="eager"
         format="webp"
@@ -98,7 +98,7 @@ useSeoMeta({
           class="container mx-auto flex flex-col md:flex-row items-end gap-6"
         >
           <img
-            src="/solar-network/icon.png"
+            src="/images/images/solar-network/icon.png"
             class="w-28 h-28 rounded-2xl shadow-2xl"
             alt="Solar Network"
           />
@@ -238,7 +238,7 @@ useSeoMeta({
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/solar-network/screenshots/explore.webp"
+              src="/images/solar-network/screenshots/explore.webp"
               class="rounded-xl shadow-lg w-full max-w-md"
               alt="Timeline"
             />
@@ -253,7 +253,7 @@ useSeoMeta({
             class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
           >
             <NuxtImg
-              src="/solar-network/screenshots/chat.webp"
+              src="/images/solar-network/screenshots/chat.webp"
               class="rounded-xl shadow-lg w-full max-w-md"
               alt="Chat"
             />
@@ -298,7 +298,7 @@ useSeoMeta({
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/solar-network/screenshots/realms.webp"
+              src="/images/solar-network/screenshots/realms.webp"
               class="rounded-xl shadow-lg w-full max-w-md"
               alt="Realms"
             />
@@ -311,7 +311,7 @@ useSeoMeta({
         <div class="card bg-base-200 overflow-hidden">
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/solar-network/screenshots/post-reactions.webp"
+              src="/images/solar-network/screenshots/post-reactions.webp"
               class="rounded-xl shadow-lg w-full"
               alt="Posts"
             />
@@ -335,7 +335,7 @@ useSeoMeta({
         <div class="card bg-base-200 overflow-hidden">
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/solar-network/screenshots/post-collections.webp"
+              src="/images/solar-network/screenshots/post-collections.webp"
               class="rounded-xl shadow-lg w-full"
               alt="Post Collections"
             />
@@ -363,7 +363,7 @@ useSeoMeta({
         <div class="card bg-base-200 overflow-hidden">
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/solar-network/screenshots/wallet.webp"
+              src="/images/solar-network/screenshots/wallet.webp"
               class="rounded-xl shadow-lg w-full"
               alt="Wallet"
             />
@@ -387,7 +387,7 @@ useSeoMeta({
         <div class="card bg-base-200 overflow-hidden">
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/solar-network/screenshots/stickers.webp"
+              src="/images/solar-network/screenshots/stickers.webp"
               class="rounded-xl shadow-lg w-full"
               alt="Stickers"
             />
@@ -411,7 +411,7 @@ useSeoMeta({
         <div class="card bg-base-200 overflow-hidden">
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/solar-network/screenshots/drive.webp"
+              src="/images/solar-network/screenshots/drive.webp"
               class="rounded-xl shadow-lg w-full"
               alt="Files"
             />
@@ -441,7 +441,7 @@ useSeoMeta({
             class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
           >
             <NuxtImg
-              src="/solar-network/screenshots/badges.webp"
+              src="/images/solar-network/screenshots/badges.webp"
               class="rounded-xl shadow-lg w-full max-w-md"
               alt="Achievements"
             />
@@ -486,7 +486,7 @@ useSeoMeta({
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/solar-network/screenshots/polls.webp"
+              src="/images/solar-network/screenshots/polls.webp"
               class="rounded-xl shadow-lg w-full max-w-md"
               alt="Polls"
             />
@@ -514,7 +514,7 @@ useSeoMeta({
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/solar-network/screenshots/dashboard.webp"
+              src="/images/solar-network/screenshots/dashboard.webp"
               class="rounded-xl shadow-lg w-full max-w-md"
               alt="Dashboard"
             />
@@ -529,7 +529,7 @@ useSeoMeta({
             class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
           >
             <NuxtImg
-              src="/solar-network/screenshots/events.webp"
+              src="/images/solar-network/screenshots/events.webp"
               class="rounded-xl shadow-lg w-full max-w-md"
               alt="Events"
             />
@@ -574,7 +574,7 @@ useSeoMeta({
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/solar-network/screenshots/event-calendar.webp"
+              src="/images/solar-network/screenshots/event-calendar.webp"
               class="rounded-xl shadow-lg w-full max-w-md"
               alt="Event Calendar"
             />
@@ -589,7 +589,7 @@ useSeoMeta({
             class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
           >
             <NuxtImg
-              src="/solar-network/screenshots/profile-presences.webp"
+              src="/images/solar-network/screenshots/profile-presences.webp"
               class="rounded-xl shadow-lg w-full max-w-md"
               alt="Profile Presences"
             />

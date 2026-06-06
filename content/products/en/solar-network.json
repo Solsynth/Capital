@@ -1,8 +1,8 @@
 {
   "title": "Solar Network",
   "description": "The amazing social network for technology, programming, ACG fans.",
-  "icon": "/solar-network/icon.png",
-  "background": "/solar-network/main-visual.webp",
+  "icon": "/images/solar-network/icon.png",
+  "background": "/images/solar-network/main-visual.webp",
   "url": "https://web.solian.app",
   "repo": "https://github.com/Solsynth/Solian",
   "version": "3.7.0",

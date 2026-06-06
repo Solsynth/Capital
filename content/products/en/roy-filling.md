@@ -1,8 +1,8 @@
 ---
 title: "ROY ICP Filling"
 description: "Republic of Yang's friendly link list"
-icon: "/republic-of-yang/filling.png"
-background: "/republic-of-yang/greatwall.webp"
+icon: "/images//republic-of-yang/filling.png"
+background: "/images//republic-of-yang/greatwall.webp"
 url: "/icp"
 repo: "https://github.com/Solsynth/Solian"
 version: "1.0.0"
@@ -29,7 +29,7 @@ The filing directory is more than just a web navigation — it represents an end
 - **Website Filing Application**: Submit your website information for manual or automated review
 - **Filing Directory Search**: Browse registered websites by category or keyword
 - **羝 ICP Badge**: Obtain an exclusive badge after approval to display on your website footer
-- **Open API**: Developers can query filing data via API, see [Suki](https://kb.solsynth.dev/republic-of-yang/icp-filling/) for details
+- **Open API**: Developers can query filing data via API, see [Suki](https://kb.solsynth.dev/images//republic-of-yang/icp-filling/) for details
 
 ## Filing Requirements
 
