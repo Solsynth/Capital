@@ -15,7 +15,7 @@ const siteUrl = 'https://solsynth.dev'
 const canonicalUrl = computed(() => `${siteUrl}${route.path}`)
 
 useHead({
-  htmlAttrs: { lang: lang.value },
+  htmlAttrs: { lang: () => locale.value },
   title: fullTitle,
   link: [
     { rel: 'canonical', href: canonicalUrl.value },

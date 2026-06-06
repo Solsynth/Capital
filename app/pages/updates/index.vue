@@ -5,11 +5,11 @@ const { t } = useI18n()
 const localePath = useLocalePath()
 
 definePageMeta({
-  title: 'Updates',
   description: '',
 })
 
 useSeoMeta({
+  title: () => `${t('seo.updates.title')} - ${t('seo.siteName')}`,
   description: () => t('seo.updates.description'),
 })
 

@@ -6,11 +6,11 @@ const route = useRoute()
 const lang = computed(() => locale.value)
 
 definePageMeta({
-  title: 'Products',
   description: '',
 })
 
 useSeoMeta({
+  title: () => `${t('seo.products.title')} - ${t('seo.siteName')}`,
   description: () => t('seo.products.description'),
 })
 

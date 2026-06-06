@@ -2,11 +2,11 @@
 const { t } = useI18n()
 
 definePageMeta({
-  title: 'About Us',
   description: '',
 })
 
 useSeoMeta({
+  title: () => `${t('seo.about.title')} - ${t('seo.siteName')}`,
   description: () => t('seo.about.description'),
 })
 

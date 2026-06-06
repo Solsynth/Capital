@@ -7,11 +7,11 @@ const localePath = useLocalePath()
 const lang = computed(() => locale.value)
 
 definePageMeta({
-  title: 'Legal',
   description: '',
 })
 
 useSeoMeta({
+  title: () => `${t('seo.legal.title')} - ${t('seo.siteName')}`,
   description: () => t('seo.legal.description'),
 })
 

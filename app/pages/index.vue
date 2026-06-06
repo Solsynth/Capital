@@ -12,11 +12,12 @@ definePageMeta({
 })
 
 useSeoMeta({
+  title: () => `${t('seo.home.title')} - ${t('seo.siteName')}`,
   description: () => t('seo.home.description'),
 })
 
 defineOgImageComponent('OgImage', {
-  title: 'Solsynth',
+  title: t('seo.siteName'),
   description: t('seo.home.description'),
 })
 

@@ -42,16 +42,16 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => displayTitle.value ? `${displayTitle.value} - Solsynth` : 'Update - Solsynth',
+  title: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.update.title', { title: '' })} - ${t('seo.siteName')}`,
   description: () => post.value?.content
     ? post.value.content.substring(0, 160).replace(/[#*\n]/g, ' ').trim()
     : t('seo.updates.description'),
-  ogTitle: () => displayTitle.value ? `${displayTitle.value} - Solsynth` : 'Update - Solsynth',
+  ogTitle: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.update.title', { title: '' })} - ${t('seo.siteName')}`,
   ogImage: () => post.value?.attachments?.[0]?.id
     ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
     : undefined,
   twitterCard: 'summary_large_image',
-  twitterTitle: () => displayTitle.value ? `${displayTitle.value} - Solsynth` : 'Update - Solsynth',
+  twitterTitle: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.update.title', { title: '' })} - ${t('seo.siteName')}`,
   twitterImage: () => post.value?.attachments?.[0]?.id
     ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
     : undefined,

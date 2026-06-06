@@ -9,11 +9,11 @@ const lang = computed(() => locale.value)
 const isZh = computed(() => lang.value === 'zh')
 
 definePageMeta({
-  title: 'Events',
   description: '',
 })
 
 useSeoMeta({
+  title: () => `${t('seo.events.title')} - ${t('seo.siteName')}`,
   description: () => t('seo.events.description'),
 })
 

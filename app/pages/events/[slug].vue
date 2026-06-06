@@ -26,13 +26,13 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => event.value?.name ? `${event.value.name} - Solsynth` : 'Event - Solsynth',
+  title: () => event.value?.name ? `${event.value.name} - ${t('seo.siteName')}` : `${t('seo.events.title')} - ${t('seo.siteName')}`,
   description: () => event.value?.description || t('seo.events.description'),
-  ogTitle: () => event.value?.name ? `${event.value.name} - Solsynth` : 'Event - Solsynth',
+  ogTitle: () => event.value?.name ? `${event.value.name} - ${t('seo.siteName')}` : `${t('seo.events.title')} - ${t('seo.siteName')}`,
   ogDescription: () => event.value?.description || t('seo.events.description'),
   ogImage: () => event.value?.coverImage || undefined,
   twitterCard: 'summary_large_image',
-  twitterTitle: () => event.value?.name ? `${event.value.name} - Solsynth` : 'Event - Solsynth',
+  twitterTitle: () => event.value?.name ? `${event.value.name} - ${t('seo.siteName')}` : `${t('seo.events.title')} - ${t('seo.siteName')}`,
   twitterDescription: () => event.value?.description || t('seo.events.description'),
   twitterImage: () => event.value?.coverImage || undefined,
 })

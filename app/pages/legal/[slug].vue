@@ -24,9 +24,9 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => page.value?.title ? `${page.value.title} - Solsynth` : 'Legal - Solsynth',
+  title: () => page.value?.title ? `${page.value.title} - ${t('seo.siteName')}` : `${t('seo.legal.title')} - ${t('seo.siteName')}`,
   description: () => page.value?.description || t('seo.legal.description'),
-  ogTitle: () => page.value?.title ? `${page.value.title} - Solsynth` : 'Legal - Solsynth',
+  ogTitle: () => page.value?.title ? `${page.value.title} - ${t('seo.siteName')}` : `${t('seo.legal.title')} - ${t('seo.siteName')}`,
   ogDescription: () => page.value?.description || t('seo.legal.description'),
 })
 </script>
