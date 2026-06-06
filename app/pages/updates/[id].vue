@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Eye, MessageCircle, Heart, ArrowRight } from 'lucide-vue-next'
+import { ArrowLeft, Eye, MessageCircle, Heart, ArrowRight, Calendar, Paperclip } from 'lucide-vue-next'
 import { renderMarkdown } from '~/utils/marked'
 
 const { t, locale } = useI18n()
@@ -22,10 +22,15 @@ if (!post.value) {
   navigateTo(localePath('/updates'))
 }
 
-function getDisplayTitle(post: { title: string; content: string }): string {
+function getDisplayTitle(post: { title: string, content: string }): string {
   if (post.title && post.title.trim()) return post.title
   const firstLine = post.content?.split('\n')[0]?.trim() || ''
   return firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine || 'View Post'
+}
+
+function getInitials(name: string): string {
+  if (!name || name === 'Unknown') return '?'
+  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 }
 
 const displayTitle = computed(() => post.value ? getDisplayTitle(post.value) : '')
@@ -54,9 +59,9 @@ useSeoMeta({
 </script>
 
 <template>
-  <div v-if="post" class="container mx-auto px-8 py-16 max-w-4xl">
-    <div class="mb-8 -mx-4">
-      <NuxtLink :to="localePath('/updates')" class="btn btn-ghost btn-sm gap-1">
+  <div v-if="post" class="container mx-auto px-4 py-16 max-w-4xl">
+    <div class="mb-8">
+      <NuxtLink :to="localePath('/updates')" class="btn btn-ghost btn-sm gap-1 -ml-2">
         <ArrowLeft class="w-4 h-4" />
         {{ t('updates.backToUpdates') }}
       </NuxtLink>
@@ -64,37 +69,52 @@ useSeoMeta({
 
     <article>
       <header class="mb-8">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ displayTitle }}</h1>
-        <div class="flex flex-wrap items-center gap-4 text-sm opacity-70">
-          <div class="flex items-center gap-2">
-            <img
-              v-if="post.publisher?.picture"
-              :src="getAttachmentUrl(post.publisher.picture.id)"
-              :alt="post.publisher.nick"
-              class="w-6 h-6 rounded-full"
-            >
-            <span>{{ post.publisher?.nick || 'Unknown' }}</span>
+        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">{{ displayTitle }}</h1>
+        <div class="flex items-center gap-3">
+          <div v-if="post.publisher?.picture" class="avatar">
+            <div class="h-10 w-10 rounded-full">
+              <img
+                :src="getAttachmentUrl(post.publisher.picture.id)"
+                :alt="post.publisher.nick"
+                class="h-full w-full rounded-full object-cover"
+              >
+            </div>
           </div>
-          <span>{{ formatDate(post.published_at) }}</span>
-          <span v-if="post.edited_at" class="italic">
-            ({{ isZh ? '已编辑' : 'edited' }})
-          </span>
+          <div v-else class="avatar avatar-placeholder">
+            <div class="h-10 w-10 rounded-full bg-primary text-primary-content">
+              <span class="text-sm font-medium">
+                {{ getInitials(post.publisher?.nick || 'Unknown') }}
+              </span>
+            </div>
+          </div>
+          <div>
+            <span class="font-semibold block">
+              {{ post.publisher?.nick || 'Unknown' }}
+            </span>
+            <span class="text-sm text-base-content/50 flex items-center gap-1">
+              <Calendar class="w-3.5 h-3.5" />
+              {{ formatDate(post.published_at) }}
+              <span v-if="post.edited_at" class="italic ml-1">
+                ({{ isZh ? '已编辑' : 'edited' }})
+              </span>
+            </span>
+          </div>
         </div>
       </header>
 
       <div v-if="post.attachments.length > 0" class="mb-8">
-        <div v-if="post.attachments.length === 1" class="rounded-xl overflow-hidden">
+        <div v-if="post.attachments.length === 1" class="rounded-xl overflow-hidden border border-base-200/60">
           <img
             :src="getAttachmentUrl(post.attachments[0].id)"
             :alt="post.attachments[0].name"
             class="w-full max-h-[500px] object-contain bg-base-200"
           >
         </div>
-        <div v-else class="grid grid-cols-2 md:grid-cols-3 gap-4">
+        <div v-else class="grid grid-cols-2 md:grid-cols-3 gap-3">
           <div
             v-for="attachment in post.attachments"
             :key="attachment.id"
-            class="rounded-xl overflow-hidden bg-base-200"
+            class="rounded-xl overflow-hidden bg-base-200 border border-base-200/60"
           >
             <img
               :src="getAttachmentUrl(attachment.id)"
@@ -107,8 +127,8 @@ useSeoMeta({
 
       <div class="prose prose-lg max-w-none mb-12" v-html="contentHtml" />
 
-      <footer class="pt-2">
-        <div class="flex flex-wrap items-center gap-6 text-sm opacity-70">
+      <footer class="border-t border-base-200 pt-6">
+        <div class="flex flex-wrap items-center gap-6 text-sm text-base-content/50">
           <div class="flex items-center gap-2">
             <Eye class="w-4 h-4" />
             <span>{{ post.views_unique }} {{ t('updates.uniqueViews') }}</span>
@@ -121,11 +141,15 @@ useSeoMeta({
             <Heart class="w-4 h-4" />
             <span>{{ Object.values(post.reactions_count).reduce((a, b) => a + b, 0) }}</span>
           </div>
+          <div v-if="post.attachments.length > 0" class="flex items-center gap-2">
+            <Paperclip class="w-4 h-4" />
+            <span>{{ post.attachments.length }} attachment{{ post.attachments.length > 1 ? 's' : '' }}</span>
+          </div>
         </div>
       </footer>
     </article>
 
-    <div class="mt-12 pt-4">
+    <div class="mt-8">
       <a
         :href="`https://solian.app/posts/${post.id}`"
         target="_blank"

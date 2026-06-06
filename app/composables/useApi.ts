@@ -27,6 +27,16 @@ export interface Post {
       blur: string
     }
   }>
+  tags: Array<{
+    id: string
+    slug: string
+    name: string | null
+  }>
+  categories: Array<{
+    id: string
+    slug: string
+    name: string | null
+  }>
   reactions_count: Record<string, number>
   views_unique: number
   views_total: number
@@ -45,6 +55,21 @@ export function useApi() {
     }
     catch (error) {
       console.error('Failed to fetch posts:', error)
+      return []
+    }
+  }
+
+  async function getRealmPosts(realm: string, take = 10, skip = 0): Promise<Post[]> {
+    try {
+      const response = await fetch(`${API_BASE}/posts?take=${take}&skip=${skip}&realm=${realm}`)
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      const data = await response.json()
+      return data as Post[]
+    }
+    catch (error) {
+      console.error('Failed to fetch realm posts:', error)
       return []
     }
   }
@@ -85,6 +110,7 @@ export function useApi() {
 
   return {
     getPosts,
+    getRealmPosts,
     getPostById,
     formatDate,
     truncateContent,
