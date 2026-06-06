@@ -109,7 +109,7 @@ section {
 /* Optimize fixed elements */
 header.fixed,
 .navbar {
-  contain: layout style paint;
+  contain: layout style;
 }
 
 /* Reduce paint areas for animated elements */

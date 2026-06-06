@@ -79,25 +79,18 @@ useSeoMeta({
 </script>
 
 <template>
-  <div>
+  <div class="solar-network-page">
     <!-- Hero -->
-    <section class="relative h-[60vh] min-h-120 overflow-hidden">
+    <section class="relative h-[70vh] min-h-120 overflow-hidden -mt-(--site-page-offset,64px)">
       <NuxtImg
         src="/solar-network/main-visual.webp"
-        class="absolute inset-0 w-full h-full object-cover object-top -z-10 opacity-40"
-        loading="eager"
-        format="webp"
-        alt=""
-      />
-      <NuxtImg
-        src="/solar-network/main-visual.webp"
-        class="absolute inset-0 w-full h-full object-cover object-top -z-10 opacity-40 blur-md [mask-image:linear-gradient(to_right,black_30%,transparent_70%)] [-webkit-mask-image:linear-gradient(to_right,black_30%,transparent_70%)]"
+        class="absolute inset-0 w-full h-full object-cover object-top-left -z-10 opacity-80"
         loading="eager"
         format="webp"
         alt=""
       />
       <div
-        class="absolute inset-0 bg-gradient-to-t from-base-100 via-base-100/40 to-transparent"
+        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/20 to-transparent dark:via-base-100/40"
       ></div>
 
       <div class="absolute bottom-0 left-0 right-0 p-8">
@@ -121,7 +114,7 @@ useSeoMeta({
             <a
               href="https://web.solian.app"
               target="_blank"
-              class="btn btn-primary btn-lg rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+              class="btn btn-primary btn-lg rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
             >
               <Sparkles class="w-5 h-5" />
               {{ t("solarNetwork.getStarted") }}
@@ -146,7 +139,7 @@ useSeoMeta({
       </div>
     </section>
 
-    <div class="divider"></div>
+    <div class="divider mt-0 height-[1px]"></div>
 
     <!-- About -->
     <section class="container mx-auto px-4 pt-24 pb-16">
@@ -935,7 +928,7 @@ useSeoMeta({
               <a
                 href="https://web.solian.app"
                 target="_blank"
-                class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+                class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
               >
                 <ExternalLink class="w-5 h-5" />
                 {{ t("solarNetwork.journey.openBrowser") }}
@@ -956,7 +949,7 @@ useSeoMeta({
               <a
                 href="https://testflight.apple.com/join/YJ0lmN6O"
                 target="_blank"
-                class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+                class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
               >
                 <IconsIconIos class="w-5 h-5 fill-current" />
                 {{ t("solarNetwork.download.ios.testflight") }}
@@ -978,7 +971,7 @@ useSeoMeta({
                 <a
                   href="https://fs.solsynth.dev/d/public/r2/solian/app-arm64-v8a-release.apk"
                   target="_blank"
-                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
                 >
                   <IconsIconAndroid class="w-5 h-5 fill-current" />
                   ARM64 (arm64-v8a)
@@ -1042,7 +1035,7 @@ useSeoMeta({
                 <a
                   href="https://fs.solsynth.dev/d/public/r2/solian/solian-macos.tar.gz"
                   target="_blank"
-                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
                 >
                   <ExternalLink class="w-5 h-5" />
                   {{ t("solarNetwork.download.direct") }}
@@ -1065,7 +1058,7 @@ useSeoMeta({
                 <a
                   href="https://fs.solsynth.dev/d/public/r2/solian/build-output-windows-installer.zip"
                   target="_blank"
-                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
                 >
                   <ExternalLink class="w-5 h-5" />
                   {{ t("solarNetwork.download.direct") }}
@@ -1096,7 +1089,7 @@ useSeoMeta({
                 <a
                   href="https://fs.solsynth.dev/d/public/r2/solian/build-output-linux-appimage.zip"
                   target="_blank"
-                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(99,102,241,0.5)] hover:shadow-[0_0_30px_rgba(99,102,241,0.7)] hover:scale-105 transition-all"
+                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
                 >
                   <ExternalLink class="w-5 h-5" />
                   {{ t("solarNetwork.download.direct") }}
@@ -1166,11 +1159,25 @@ useSeoMeta({
 </template>
 
 <style scoped>
+.solar-network-page {
+  --color-primary: oklch(70% 0.08 275deg);
+  --color-primary-content: oklch(95% 0.02 275deg);
+}
+
+:deep(.dark) .solar-network-page {
+  --color-primary: oklch(55% 0.08 275deg);
+  --color-primary-content: oklch(95% 0.02 275deg);
+}
+
 .hero-glow {
-  color: white;
+  color: var(--color-base-content);
   text-shadow:
     0 0 10px rgba(255, 255, 255, 0.8),
     0 0 30px rgba(255, 255, 255, 0.4),
-    0 0 60px rgba(99, 102, 241, 0.3);
+    0 0 60px rgba(150, 158, 207, 0.3);
+}
+
+:deep(.dark) .hero-glow {
+  color: white;
 }
 </style>

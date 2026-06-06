@@ -1,4 +1,9 @@
 <script setup lang="ts">
+import HeroSection from "~/components/landing/HeroSection.vue";
+import ProductsSection from "~/components/landing/ProductsSection.vue";
+import StatsSection from "~/components/landing/StatsSection.vue";
+import UpdatesSection from "~/components/landing/UpdatesSection.vue";
+
 const { t, locale } = useI18n()
 const lang = computed(() => locale.value)
 
