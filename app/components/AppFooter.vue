@@ -36,7 +36,7 @@ const isAdmin = computed(() => adminCheck.value?.isAdmin ?? false)
             </p>
             <NuxtLink
               v-if="isAdmin"
-              :to="localePath('/administration')"
+              :to="localePath('/admin')"
               class="link link-hover block text-xs opacity-65 hover:opacity-80 transition-opacity mt-4"
             >
               {{ t('footer.adminPanel') || 'Admin Panel' }}

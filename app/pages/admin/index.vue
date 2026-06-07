@@ -6,6 +6,7 @@ import {
   Clock,
   CheckCircle,
   XCircle,
+  Download,
 } from 'lucide-vue-next'
 
 const { locale } = useI18n()
@@ -41,6 +42,24 @@ const { data: stats } = await useAsyncData('admin-stats', async () => {
   }
 })
 
+const importResult = ref<{ success: boolean; identities?: { imported: number; skipped: number }; sites?: { imported: number; skipped: number }; error?: string } | null>(null)
+const importing = ref(false)
+
+async function importFromPb() {
+  importing.value = true
+  importResult.value = null
+  try {
+    const res = await $fetch('/api/admin/import/pocketbase', { method: 'POST' })
+    importResult.value = res
+  }
+  catch (e: any) {
+    importResult.value = { success: false, error: e?.data?.statusMessage || e?.message || 'Unknown error' }
+  }
+  finally {
+    importing.value = false
+  }
+}
+
 const statCards = computed(() => [
   {
     label: isZh.value ? '待审核' : 'Pending',
@@ -48,7 +67,7 @@ const statCards = computed(() => [
     icon: Clock,
     color: 'text-warning',
     bg: 'bg-warning/10',
-    to: '/administration/submissions?status=pending',
+    to: '/admin/submissions?status=pending',
   },
   {
     label: isZh.value ? '已通过' : 'Approved',
@@ -56,7 +75,7 @@ const statCards = computed(() => [
     icon: CheckCircle,
     color: 'text-success',
     bg: 'bg-success/10',
-    to: '/administration/submissions?status=approved',
+    to: '/admin/submissions?status=approved',
   },
   {
     label: isZh.value ? '已拒绝' : 'Rejected',
@@ -64,7 +83,7 @@ const statCards = computed(() => [
     icon: XCircle,
     color: 'text-error',
     bg: 'bg-error/10',
-    to: '/administration/submissions?status=rejected',
+    to: '/admin/submissions?status=rejected',
   },
   {
     label: isZh.value ? '认证站点' : 'Certified Sites',
@@ -72,7 +91,7 @@ const statCards = computed(() => [
     icon: Globe,
     color: 'text-primary',
     bg: 'bg-primary/10',
-    to: '/administration/sites',
+    to: '/admin/sites',
   },
 ])
 </script>
@@ -107,18 +126,31 @@ const statCards = computed(() => [
         {{ isZh ? '快捷操作' : 'Quick Actions' }}
       </h3>
       <div class="flex flex-wrap gap-3">
-        <NuxtLink :to="localePath('/administration/submissions?status=pending')" class="btn btn-outline btn-sm">
+        <NuxtLink :to="localePath('/admin/submissions?status=pending')" class="btn btn-outline btn-sm">
           <FileText class="w-4 h-4 mr-1" />
           {{ isZh ? '审核提交' : 'Review Submissions' }}
         </NuxtLink>
-        <NuxtLink :to="localePath('/administration/users')" class="btn btn-outline btn-sm">
+        <NuxtLink :to="localePath('/admin/users')" class="btn btn-outline btn-sm">
           <Users class="w-4 h-4 mr-1" />
           {{ isZh ? '管理用户' : 'Manage Users' }}
         </NuxtLink>
-        <NuxtLink :to="localePath('/administration/sites')" class="btn btn-outline btn-sm">
+        <NuxtLink :to="localePath('/admin/sites')" class="btn btn-outline btn-sm">
           <Globe class="w-4 h-4 mr-1" />
           {{ isZh ? '查看站点' : 'View Sites' }}
         </NuxtLink>
+        <button class="btn btn-outline btn-sm" @click="importFromPb">
+          <span v-if="importing" class="loading loading-spinner loading-xs mr-1" />
+          <Download v-else class="w-4 h-4 mr-1" />
+          {{ isZh ? '从 PocketBase 导入' : 'Import from PocketBase' }}
+        </button>
+      </div>
+      <div v-if="importResult" class="mt-3 text-sm">
+        <span v-if="importResult.success" class="text-success">
+          {{ isZh ? `导入完成：${importResult.identities?.imported ?? 0} 个身份，${importResult.sites?.imported ?? 0} 个站点` : `Done: ${importResult.identities?.imported ?? 0} identities, ${importResult.sites?.imported ?? 0} sites` }}
+        </span>
+        <span v-else class="text-error">
+          {{ importResult.error || (isZh ? '导入失败' : 'Import failed') }}
+        </span>
       </div>
     </div>
   </div>

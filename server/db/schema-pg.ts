@@ -110,7 +110,6 @@ export const icpIdentity = pgTable("icp_identity", {
   icon: text("icon"), // Legacy: direct URL string
   iconFileId: text("icon_file_id").references(() => file.id, { onDelete: "set null" }),
   userId: text("user_id")
-    .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
@@ -134,7 +133,6 @@ export const icpSite = pgTable("icp_site", {
   approvedAt: timestamp("approved_at"),
   identityId: text("identity_id").references(() => icpIdentity.id),
   userId: text("user_id")
-    .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")

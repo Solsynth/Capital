@@ -32,23 +32,23 @@ const navSections: NavSection[] = [
     titleEn: 'Overview',
     titleZh: '概览',
     items: [
-      { icon: LayoutDashboard, labelEn: 'Dashboard', labelZh: '仪表盘', to: '/administration' },
+      { icon: LayoutDashboard, labelEn: 'Dashboard', labelZh: '仪表盘', to: '/admin' },
     ],
   },
   {
     titleEn: 'ICP',
     titleZh: '网备',
     items: [
-      { icon: FileText, labelEn: 'Submissions', labelZh: '提交管理', to: '/administration/submissions' },
-      { icon: Globe, labelEn: 'Sites', labelZh: '站点管理', to: '/administration/sites' },
-      { icon: User, labelEn: 'Identities', labelZh: '身份管理', to: '/administration/identities' },
+      { icon: FileText, labelEn: 'Submissions', labelZh: '提交管理', to: '/admin/submissions' },
+      { icon: Globe, labelEn: 'Sites', labelZh: '站点管理', to: '/admin/sites' },
+      { icon: User, labelEn: 'Identities', labelZh: '身份管理', to: '/admin/identities' },
     ],
   },
   {
     titleEn: 'System',
     titleZh: '系统',
     items: [
-      { icon: Users, labelEn: 'Users', labelZh: '用户管理', to: '/administration/users' },
+      { icon: Users, labelEn: 'Users', labelZh: '用户管理', to: '/admin/users' },
     ],
   },
 ]

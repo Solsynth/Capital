@@ -46,11 +46,11 @@ export default defineEventHandler(async (event) => {
         icon: identity.iconUrl || identity.icon,
         iconFileId: identity.iconFileId,
         created: identity.createdAt.toISOString(),
-        user: {
+        user: identity.userId ? {
           id: identity.userId,
           name: identity.userName,
           email: identity.userEmail,
-        },
+        } : null,
       })),
     }
   }

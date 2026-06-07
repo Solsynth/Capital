@@ -125,7 +125,6 @@ export const icpIdentity = sqliteTable("icp_identity", {
   icon: text("icon"), // Legacy: direct URL string
   iconFileId: text("icon_file_id").references(() => file.id, { onDelete: "set null" }),
   userId: text("user_id")
-    .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   createdAt: integer("created_at", { mode: "timestamp_ms" })
     .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
@@ -151,7 +150,6 @@ export const icpSite = sqliteTable("icp_site", {
   approvedAt: integer("approved_at", { mode: "timestamp_ms" }),
   identityId: text("identity_id").references(() => icpIdentity.id),
   userId: text("user_id")
-    .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
   createdAt: integer("created_at", { mode: "timestamp_ms" })
     .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)

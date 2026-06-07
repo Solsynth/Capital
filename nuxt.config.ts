@@ -77,7 +77,9 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    public: {},
+    public: {
+      pbUrl: '',
+    },
   },
 
   routeRules: {
