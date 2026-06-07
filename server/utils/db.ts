@@ -1,23 +1,20 @@
-import { createRequire } from 'module'
-import { isPostgres } from '../db'
-import * as schema from '../db'
+import { isPostgres } from "../db";
+import * as schema from "../db";
+import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
+import { drizzle as drizzleLibsql } from "drizzle-orm/libsql";
+import { Pool } from "pg";
+import { createClient } from "@libsql/client";
 
-const _require = createRequire(import.meta.url)
-const dbUrl = process.env.DATABASE_URL || ''
+const dbUrl = process.env.DATABASE_URL || "";
 
 function createDb() {
   if (isPostgres) {
-    const { drizzle } = _require('drizzle-orm/node-postgres')
-    const { Pool } = _require('pg')
-    const pool = new Pool({ connectionString: dbUrl })
-    return drizzle(pool, { schema })
-  }
-  else {
-    const { drizzle } = _require('drizzle-orm/better-sqlite3')
-    const Database = _require('better-sqlite3')
-    const sqlite = new Database('server/local.db')
-    return drizzle(sqlite, { schema })
+    const pool = new Pool({ connectionString: dbUrl });
+    return drizzlePg(pool, { schema });
+  } else {
+    const sqlite = createClient({ url: dbUrl || "file:server/local.db" });
+    return drizzleLibsql(sqlite, { schema });
   }
 }
 
-export const db = createDb()
+export const db = createDb();
