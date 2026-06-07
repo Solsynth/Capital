@@ -14,11 +14,22 @@ const communityCarouselRef = ref<HTMLElement | null>(null)
 const officialScroll = reactive({ left: false, right: true })
 const communityScroll = reactive({ left: false, right: true })
 
-function getDisplayTitle(post: { title: string, content: string }): string {
+function getDisplayTitle(post: { title: string, content: string }): string | null {
   if (post.title && post.title.trim())
     return post.title
-  const firstLine = post.content?.split('\n')[0]?.trim() || ''
-  return firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine || 'View Post'
+  return null
+}
+
+function isImageAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
+  return attachment.file_meta?.mime_type?.startsWith('image/') ?? false
+}
+
+function isVideoAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
+  return attachment.file_meta?.mime_type?.startsWith('video/') ?? false
+}
+
+function isAudioAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
+  return attachment.file_meta?.mime_type?.startsWith('audio/') ?? false
 }
 
 function getInitials(name: string): string {
@@ -97,13 +108,29 @@ onMounted(() => {
             :to="localePath(`/updates/${post.id}`)"
             class="card bg-base-100 border border-base-200/60 shadow-sm hover:shadow-md transition-all duration-200 snap-start shrink-0 w-[320px] group"
           >
-            <figure v-if="post.attachments.length > 0" class="overflow-hidden rounded-t-xl max-h-48">
+            <figure v-if="post.attachments.length > 0 && isImageAttachment(post.attachments[0])" class="overflow-hidden rounded-t-xl max-h-48">
               <img
                 :src="getAttachmentUrl(post.attachments[0].id)"
                 :alt="post.attachments[0].name"
                 class="w-full object-cover group-hover:scale-105 transition-transform duration-300"
               >
             </figure>
+            <div v-else-if="post.attachments.length > 0 && isVideoAttachment(post.attachments[0])" class="rounded-t-xl overflow-hidden">
+              <video
+                :src="getAttachmentUrl(post.attachments[0].id)"
+                class="w-full max-h-48 object-cover"
+                controls
+                preload="metadata"
+              />
+            </div>
+            <div v-else-if="post.attachments.length > 0 && isAudioAttachment(post.attachments[0])" class="p-3 bg-base-200/40">
+              <audio
+                :src="getAttachmentUrl(post.attachments[0].id)"
+                class="w-full"
+                controls
+                preload="metadata"
+              />
+            </div>
             <div class="card-body p-4 gap-2">
               <div class="flex items-center gap-2">
                 <div v-if="post.publisher?.picture" class="avatar">
@@ -131,7 +158,7 @@ onMounted(() => {
                 </span>
               </div>
 
-              <h3 class="font-bold text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+              <h3 v-if="getDisplayTitle(post)" class="font-bold text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
                 {{ getDisplayTitle(post) }}
               </h3>
 
@@ -213,13 +240,29 @@ onMounted(() => {
             :to="localePath(`/updates/${post.id}`)"
             class="card bg-base-100 border border-base-200/60 shadow-sm hover:shadow-md transition-all duration-200 snap-start shrink-0 w-[320px] group"
           >
-            <figure v-if="post.attachments.length > 0" class="overflow-hidden rounded-t-xl max-h-48">
+            <figure v-if="post.attachments.length > 0 && isImageAttachment(post.attachments[0])" class="overflow-hidden rounded-t-xl max-h-48">
               <img
                 :src="getAttachmentUrl(post.attachments[0].id)"
                 :alt="post.attachments[0].name"
                 class="w-full object-cover group-hover:scale-105 transition-transform duration-300"
               >
             </figure>
+            <div v-else-if="post.attachments.length > 0 && isVideoAttachment(post.attachments[0])" class="rounded-t-xl overflow-hidden">
+              <video
+                :src="getAttachmentUrl(post.attachments[0].id)"
+                class="w-full max-h-48 object-cover"
+                controls
+                preload="metadata"
+              />
+            </div>
+            <div v-else-if="post.attachments.length > 0 && isAudioAttachment(post.attachments[0])" class="p-3 bg-base-200/40">
+              <audio
+                :src="getAttachmentUrl(post.attachments[0].id)"
+                class="w-full"
+                controls
+                preload="metadata"
+              />
+            </div>
             <div class="card-body p-4 gap-2">
               <div class="flex items-center gap-2">
                 <div v-if="post.publisher?.picture" class="avatar">
@@ -247,7 +290,7 @@ onMounted(() => {
                 </span>
               </div>
 
-              <h3 class="font-bold text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+              <h3 v-if="getDisplayTitle(post)" class="font-bold text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
                 {{ getDisplayTitle(post) }}
               </h3>
 

@@ -22,10 +22,21 @@ if (!post.value) {
   navigateTo(localePath('/updates'))
 }
 
-function getDisplayTitle(post: { title: string, content: string }): string {
+function getDisplayTitle(post: { title: string, content: string }): string | null {
   if (post.title && post.title.trim()) return post.title
-  const firstLine = post.content?.split('\n')[0]?.trim() || ''
-  return firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine || 'View Post'
+  return null
+}
+
+function isImageAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
+  return attachment.file_meta?.mime_type?.startsWith('image/') ?? false
+}
+
+function isVideoAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
+  return attachment.file_meta?.mime_type?.startsWith('video/') ?? false
+}
+
+function isAudioAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
+  return attachment.file_meta?.mime_type?.startsWith('audio/') ?? false
 }
 
 function getInitials(name: string): string {
@@ -33,7 +44,7 @@ function getInitials(name: string): string {
   return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 }
 
-const displayTitle = computed(() => post.value ? getDisplayTitle(post.value) : '')
+const displayTitle = computed(() => post.value ? getDisplayTitle(post.value) : null)
 const contentHtml = computed(() => post.value?.content ? renderMarkdown(post.value.content) : '')
 
 definePageMeta({
@@ -42,17 +53,17 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.update.title', { title: '' })} - ${t('seo.siteName')}`,
+  title: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.updates.title')} - ${t('seo.siteName')}`,
   description: () => post.value?.content
     ? post.value.content.substring(0, 160).replace(/[#*\n]/g, ' ').trim()
     : t('seo.updates.description'),
-  ogTitle: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.update.title', { title: '' })} - ${t('seo.siteName')}`,
-  ogImage: () => post.value?.attachments?.[0]?.id
+  ogTitle: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.updates.title')} - ${t('seo.siteName')}`,
+  ogImage: () => post.value?.attachments?.[0]?.file_meta?.mime_type?.startsWith('image/')
     ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
     : undefined,
   twitterCard: 'summary_large_image',
-  twitterTitle: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.update.title', { title: '' })} - ${t('seo.siteName')}`,
-  twitterImage: () => post.value?.attachments?.[0]?.id
+  twitterTitle: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.updates.title')} - ${t('seo.siteName')}`,
+  twitterImage: () => post.value?.attachments?.[0]?.file_meta?.mime_type?.startsWith('image/')
     ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
     : undefined,
 })
@@ -69,7 +80,7 @@ useSeoMeta({
 
     <article>
       <header class="mb-8">
-        <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">{{ displayTitle }}</h1>
+        <h1 v-if="displayTitle" class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">{{ displayTitle }}</h1>
         <div class="flex items-center gap-3">
           <div v-if="post.publisher?.picture" class="avatar">
             <div class="h-10 w-10 rounded-full">
@@ -103,13 +114,39 @@ useSeoMeta({
       </header>
 
       <div v-if="post.attachments.length > 0" class="mb-8">
-        <div v-if="post.attachments.length === 1" class="rounded-xl overflow-hidden border border-base-200/60">
-          <img
-            :src="getAttachmentUrl(post.attachments[0].id)"
-            :alt="post.attachments[0].name"
-            class="w-full max-h-[500px] object-contain bg-base-200"
-          >
+        <!-- Single attachment -->
+        <div v-if="post.attachments.length === 1">
+          <div v-if="isImageAttachment(post.attachments[0])" class="rounded-xl overflow-hidden border border-base-200/60">
+            <img
+              :src="getAttachmentUrl(post.attachments[0].id)"
+              :alt="post.attachments[0].name"
+              class="w-full max-h-[500px] object-contain bg-base-200"
+            >
+          </div>
+          <div v-else-if="isVideoAttachment(post.attachments[0])" class="rounded-xl overflow-hidden border border-base-200/60">
+            <video
+              :src="getAttachmentUrl(post.attachments[0].id)"
+              class="w-full max-h-[500px]"
+              controls
+              preload="metadata"
+            />
+          </div>
+          <div v-else-if="isAudioAttachment(post.attachments[0])" class="rounded-xl border border-base-200/60 p-4 bg-base-200/40">
+            <audio
+              :src="getAttachmentUrl(post.attachments[0].id)"
+              class="w-full"
+              controls
+              preload="metadata"
+            />
+          </div>
+          <div v-else class="rounded-xl border border-base-200/60 p-4 bg-base-200/40">
+            <div class="flex items-center gap-3">
+              <Paperclip class="w-5 h-5 text-base-content/50" />
+              <span class="text-sm">{{ post.attachments[0].name }}</span>
+            </div>
+          </div>
         </div>
+        <!-- Multiple attachments -->
         <div v-else class="grid grid-cols-2 md:grid-cols-3 gap-3">
           <div
             v-for="attachment in post.attachments"
@@ -117,10 +154,30 @@ useSeoMeta({
             class="rounded-xl overflow-hidden bg-base-200 border border-base-200/60"
           >
             <img
+              v-if="isImageAttachment(attachment)"
               :src="getAttachmentUrl(attachment.id)"
               :alt="attachment.name"
               class="w-full aspect-video object-cover"
             >
+            <video
+              v-else-if="isVideoAttachment(attachment)"
+              :src="getAttachmentUrl(attachment.id)"
+              class="w-full aspect-video object-cover"
+              controls
+              preload="metadata"
+            />
+            <div v-else-if="isAudioAttachment(attachment)" class="p-3">
+              <audio
+                :src="getAttachmentUrl(attachment.id)"
+                class="w-full"
+                controls
+                preload="metadata"
+              />
+            </div>
+            <div v-else class="p-3 flex items-center gap-2">
+              <Paperclip class="w-4 h-4 text-base-content/50" />
+              <span class="text-xs truncate">{{ attachment.name }}</span>
+            </div>
           </div>
         </div>
       </div>

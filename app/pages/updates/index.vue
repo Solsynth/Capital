@@ -102,10 +102,21 @@ const filteredPosts = computed(() => {
   )
 })
 
-function getDisplayTitle(post: { title: string, content: string }): string {
+function getDisplayTitle(post: { title: string, content: string }): string | null {
   if (post.title && post.title.trim()) return post.title
-  const firstLine = post.content?.split('\n')[0]?.trim() || ''
-  return firstLine.length > 50 ? firstLine.substring(0, 50) + '...' : firstLine || 'View Post'
+  return null
+}
+
+function isImageAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
+  return attachment.file_meta?.mime_type?.startsWith('image/') ?? false
+}
+
+function isVideoAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
+  return attachment.file_meta?.mime_type?.startsWith('video/') ?? false
+}
+
+function isAudioAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
+  return attachment.file_meta?.mime_type?.startsWith('audio/') ?? false
 }
 
 function getInitials(name: string): string {
@@ -205,12 +216,28 @@ function switchTab(tab: 'official' | 'community') {
         :to="localePath(`/updates/${post.id}`)"
         class="card bg-base-100 border border-base-200/60 shadow-sm hover:shadow-md transition-all duration-200 group overflow-hidden"
       >
-        <div v-if="post.attachments.length > 0" class="aspect-video w-full overflow-hidden">
+        <div v-if="post.attachments.length > 0 && isImageAttachment(post.attachments[0])" class="aspect-video w-full overflow-hidden">
           <img
             :src="getAttachmentUrl(post.attachments[0].id)"
             :alt="post.attachments[0].name"
             class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           >
+        </div>
+        <div v-else-if="post.attachments.length > 0 && isVideoAttachment(post.attachments[0])" class="w-full overflow-hidden">
+          <video
+            :src="getAttachmentUrl(post.attachments[0].id)"
+            class="w-full aspect-video object-cover"
+            controls
+            preload="metadata"
+          />
+        </div>
+        <div v-else-if="post.attachments.length > 0 && isAudioAttachment(post.attachments[0])" class="p-3 bg-base-200/40">
+          <audio
+            :src="getAttachmentUrl(post.attachments[0].id)"
+            class="w-full"
+            controls
+            preload="metadata"
+          />
         </div>
         <div class="card-body p-5 gap-3">
           <div class="flex items-center gap-3">
@@ -242,7 +269,7 @@ function switchTab(tab: 'official' | 'community') {
             </span>
           </div>
 
-          <h2 class="text-lg font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
+          <h2 v-if="getDisplayTitle(post)" class="text-lg font-bold leading-snug line-clamp-2 group-hover:text-primary transition-colors">
             {{ getDisplayTitle(post) }}
           </h2>
 
