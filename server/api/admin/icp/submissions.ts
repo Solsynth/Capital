@@ -1,7 +1,7 @@
 import { db } from '~~/server/utils/db'
-import { icpSubmission, icpSite, user } from '~~/server/db'
+import { icpSubmission, icpSite, user, file } from '~~/server/db'
 import { auth } from '~~/server/utils/auth'
-import { desc, eq } from 'drizzle-orm'
+import { desc, eq, inArray } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const session = await auth.api.getSession({ headers: event.headers })
@@ -51,26 +51,53 @@ export default defineEventHandler(async (event) => {
       .where(conditions.length > 0 ? conditions[0] : undefined)
       .orderBy(desc(icpSubmission.createdAt))
 
+    // Resolve icon file URLs from submission data
+    const fileIds = submissions
+      .map(sub => {
+        try {
+          const data = JSON.parse(sub.data)
+          return data.icon_file_id
+        } catch { return null }
+      })
+      .filter(Boolean) as string[]
+
+    const fileMap = new Map<string, string>()
+    if (fileIds.length > 0) {
+      const files = await db
+        .select({ id: file.id, url: file.url })
+        .from(file)
+        .where(inArray(file.id, fileIds))
+      for (const f of files) {
+        fileMap.set(f.id, f.url)
+      }
+    }
+
     return {
-      submissions: submissions.map(sub => ({
-        id: sub.id,
-        type: sub.type,
-        status: sub.status,
-        site_id: sub.siteId,
-        data: JSON.parse(sub.data),
-        review_note: sub.reviewNote,
-        reviewed_at: sub.reviewedAt?.toISOString() || null,
-        reviewed_by: sub.reviewedBy,
-        created: sub.createdAt.toISOString(),
-        updated: sub.updatedAt.toISOString(),
-        user: {
-          id: sub.userId,
-          name: sub.userName,
-          email: sub.userEmail,
-        },
-        site_filling_no: sub.siteFillingNo,
-        site_name: sub.siteName,
-      })),
+      submissions: submissions.map(sub => {
+        const parsedData = JSON.parse(sub.data)
+        return {
+          id: sub.id,
+          type: sub.type,
+          status: sub.status,
+          site_id: sub.siteId,
+          data: {
+            ...parsedData,
+            icon_url: fileMap.get(parsedData.icon_file_id) || null,
+          },
+          review_note: sub.reviewNote,
+          reviewed_at: sub.reviewedAt?.toISOString() || null,
+          reviewed_by: sub.reviewedBy,
+          created: sub.createdAt.toISOString(),
+          updated: sub.updatedAt.toISOString(),
+          user: {
+            id: sub.userId,
+            name: sub.userName,
+            email: sub.userEmail,
+          },
+          site_filling_no: sub.siteFillingNo,
+          site_name: sub.siteName,
+        }
+      }),
     }
   }
   catch (e) {

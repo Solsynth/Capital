@@ -1,7 +1,7 @@
 import { db } from '~~/server/utils/db'
 import { icpSubmission, icpSite, icpIdentity } from '~~/server/db'
 import { auth } from '~~/server/utils/auth'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, sql } from 'drizzle-orm'
 import { randomUUID } from 'crypto'
 
 export default defineEventHandler(async (event) => {
@@ -57,6 +57,28 @@ export default defineEventHandler(async (event) => {
       site_url: body.site_url,
       categories: body.categories || null,
       identity_id: body.identity_id,
+      icon_file_id: body.iconFileId || null,
+    }
+
+    // Enforce max 3 pending submissions per user
+    if (type === 'create') {
+      const pendingCount = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(icpSubmission)
+        .where(
+          and(
+            eq(icpSubmission.userId, session.user.id),
+            eq(icpSubmission.status, 'pending'),
+          ),
+        )
+        .then(rows => Number(rows[0]?.count ?? 0))
+
+      if (pendingCount >= 3) {
+        throw createError({
+          statusCode: 429,
+          statusMessage: 'You can only have up to 3 pending submissions at a time. Please wait for existing submissions to be reviewed.',
+        })
+      }
     }
 
     const submissionId = randomUUID()
@@ -69,6 +91,11 @@ export default defineEventHandler(async (event) => {
       userId: session.user.id,
       data: JSON.stringify(submissionData),
     })
+
+    // Mark uploaded file as used
+    if (body.iconFileId) {
+      await markFilesUsed([body.iconFileId])
+    }
 
     return { success: true, id: submissionId }
   }

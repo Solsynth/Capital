@@ -1,5 +1,5 @@
 import { db } from '~~/server/utils/db'
-import { icpIdentity, user } from '~~/server/db'
+import { icpIdentity, user, file } from '~~/server/db'
 import { auth } from '~~/server/utils/auth'
 import { desc, eq } from 'drizzle-orm'
 
@@ -25,6 +25,8 @@ export default defineEventHandler(async (event) => {
         type: icpIdentity.type,
         description: icpIdentity.description,
         icon: icpIdentity.icon,
+        iconFileId: icpIdentity.iconFileId,
+        iconUrl: file.url,
         createdAt: icpIdentity.createdAt,
         userId: icpIdentity.userId,
         userName: user.name,
@@ -32,6 +34,7 @@ export default defineEventHandler(async (event) => {
       })
       .from(icpIdentity)
       .leftJoin(user, eq(icpIdentity.userId, user.id))
+      .leftJoin(file, eq(icpIdentity.iconFileId, file.id))
       .orderBy(desc(icpIdentity.createdAt))
 
     return {
@@ -40,7 +43,8 @@ export default defineEventHandler(async (event) => {
         name: identity.name,
         type: identity.type,
         description: identity.description,
-        icon: identity.icon,
+        icon: identity.iconUrl || identity.icon,
+        iconFileId: identity.iconFileId,
         created: identity.createdAt.toISOString(),
         user: {
           id: identity.userId,

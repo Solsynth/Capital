@@ -6,6 +6,7 @@ import {
   Plus,
   User,
   Building2,
+  Image,
 } from 'lucide-vue-next'
 
 const { t, locale } = useI18n()
@@ -58,6 +59,7 @@ const form = reactive({
   description: '',
   site_url: '',
   categories: [] as string[],
+  iconFileId: null as string | null,
 })
 
 const isSubmitting = ref(false)
@@ -110,12 +112,13 @@ async function handleSubmit() {
         description: form.description || null,
         site_url: form.site_url,
         categories: form.categories.length > 0 ? form.categories : null,
+        iconFileId: form.iconFileId?.id || null,
       },
     })
 
     submitSuccess.value = true
     setTimeout(() => {
-      router.push(localePath('/icp/my-submissions'))
+      router.push(localePath('/icp/submissions/me'))
     }, 2000)
   }
   catch (err: any) {
@@ -176,10 +179,8 @@ function getTypeLabel(type: string) {
 
       <form v-if="!submitSuccess" @submit.prevent="handleSubmit" class="space-y-6">
         <!-- Identity Selection -->
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-bold">{{ isZh ? '选择身份' : 'Select Identity' }} *</span>
-          </label>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '选择身份' : 'Select Identity' }} *</legend>
 
           <div v-if="identities.length === 0" class="alert alert-warning">
             <div>
@@ -220,69 +221,58 @@ function getTypeLabel(type: string) {
             </label>
           </div>
 
-          <div class="mt-2">
-            <NuxtLink :to="localePath('/icp/identities')" class="link link-primary text-sm">
+          <p class="label mt-2">
+            <NuxtLink :to="localePath('/icp/identities')" class="link link-primary">
               {{ isZh ? '管理身份' : 'Manage identities' }} →
             </NuxtLink>
-          </div>
-        </div>
+          </p>
+        </fieldset>
 
-        <div class="divider"></div>
-
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-bold">{{ isZh ? '域名' : 'Domain' }} *</span>
-          </label>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '域名' : 'Domain' }} *</legend>
           <input
             v-model="form.domain"
             type="text"
             placeholder="example.com"
-            class="input input-bordered w-full"
+            class="input w-full"
             required
           >
-        </div>
+          <p class="label">{{ isZh ? '不要包含 http:// 前缀' : 'Do not include http:// prefix' }}</p>
+        </fieldset>
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-bold">{{ isZh ? '网站名称' : 'Site Name' }} *</span>
-          </label>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '网站名称' : 'Site Name' }} *</legend>
           <input
             v-model="form.name"
             type="text"
             :placeholder="isZh ? '我的网站' : 'My Website'"
-            class="input input-bordered w-full"
+            class="input w-full"
             required
           >
-        </div>
+        </fieldset>
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-bold">{{ isZh ? '网站链接' : 'Site URL' }} *</span>
-          </label>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '网站链接' : 'Site URL' }} *</legend>
           <input
             v-model="form.site_url"
             type="url"
             placeholder="https://example.com"
-            class="input input-bordered w-full"
+            class="input w-full"
             required
           >
-        </div>
+        </fieldset>
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-bold">{{ isZh ? '网站介绍' : 'Description' }}</span>
-          </label>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '网站介绍' : 'Description' }}</legend>
           <textarea
             v-model="form.description"
             :placeholder="isZh ? '简要介绍您的网站...' : 'Briefly describe your website...'"
-            class="textarea textarea-bordered w-full h-24"
+            class="textarea h-24 w-full"
           />
-        </div>
+        </fieldset>
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-bold">{{ isZh ? '分类' : 'Categories' }}</span>
-          </label>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '分类' : 'Categories' }}</legend>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="cat in categoryOptions"
@@ -295,7 +285,17 @@ function getTypeLabel(type: string) {
               {{ isZh ? cat.labelZh : cat.labelEn }}
             </button>
           </div>
-        </div>
+          <p class="label">{{ isZh ? '选填，可多选' : 'Optional, multiple selection' }}</p>
+        </fieldset>
+
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '网站图标' : 'Site Icon' }}</legend>
+          <FileUpload
+            v-model="form.iconFileId"
+            :hint="isZh ? '支持 JPG, PNG, WebP, SVG，最大 5MB' : 'JPG, PNG, WebP, SVG. Max 5MB'"
+          />
+          <p class="label">{{ isZh ? '选填，建议 256x256 正方形' : 'Optional, 256x256 square recommended' }}</p>
+        </fieldset>
 
         <div class="form-control mt-8">
           <button

@@ -1,7 +1,7 @@
 import { db } from '~~/server/utils/db'
 import { icpSubmission, icpSite, icpIdentity } from '~~/server/db'
 import { auth } from '~~/server/utils/auth'
-import { eq } from 'drizzle-orm'
+import { eq, like, desc } from 'drizzle-orm'
 import { randomUUID } from 'crypto'
 
 export default defineEventHandler(async (event) => {
@@ -49,8 +49,20 @@ export default defineEventHandler(async (event) => {
     if (body.action === 'approve') {
       // Create or update the site
       if (submission.type === 'create') {
-        // Generate a filling number
-        const fillingNo = `ROY-${Date.now().toString(36).toUpperCase()}-${randomUUID().slice(0, 4).toUpperCase()}`
+        // Generate a filling number: YYYYNNNNN (year + 5-digit sequential)
+        const year = new Date().getFullYear().toString()
+        const lastSite = await db
+          .select({ fillingNo: icpSite.fillingNo })
+          .from(icpSite)
+          .where(like(icpSite.fillingNo, `${year}%`))
+          .orderBy(desc(icpSite.fillingNo))
+          .limit(1)
+          .then(rows => rows[0])
+
+        const nextSeq = lastSite
+          ? String(Number(lastSite.fillingNo.slice(4)) + 1).padStart(5, '0')
+          : '00000'
+        const fillingNo = `${year}${nextSeq}`
 
         // Use the identity_id from submission data
         const identityId = data.identity_id || null
@@ -64,11 +76,18 @@ export default defineEventHandler(async (event) => {
           name: data.name,
           description: data.description || null,
           siteUrl: data.site_url,
+          icon: data.icon || null,
+          iconFileId: data.icon_file_id || null,
           categories: data.categories ? JSON.stringify(data.categories) : null,
           approvedAt: new Date(),
           identityId,
           userId: submission.userId,
         })
+
+        // Mark uploaded file as used
+        if (data.icon_file_id) {
+          await markFilesUsed([data.icon_file_id])
+        }
 
         // Update submission
         await db.update(icpSubmission)
@@ -91,6 +110,8 @@ export default defineEventHandler(async (event) => {
             name: data.name,
             description: data.description || null,
             siteUrl: data.site_url,
+            icon: data.icon || null,
+            iconFileId: data.icon_file_id || null,
             categories: data.categories ? JSON.stringify(data.categories) : null,
             updatedAt: new Date(),
           })
@@ -105,6 +126,11 @@ export default defineEventHandler(async (event) => {
             reviewedBy: session.user.id,
           })
           .where(eq(icpSubmission.id, submission.id))
+
+        // Mark uploaded file as used
+        if (data.icon_file_id) {
+          await markFilesUsed([data.icon_file_id])
+        }
 
         return { success: true }
       }

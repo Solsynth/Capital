@@ -18,7 +18,7 @@ definePageMeta({
 })
 
 useHead({
-  title: computed(() => isZh.value ? '身份管理 - 中羊网备' : 'Identities - ROY ICP Admin'),
+  title: computed(() => isZh.value ? '身份管理' : 'Identities'),
 })
 
 interface Identity {
@@ -26,6 +26,8 @@ interface Identity {
   name: string
   type: 'individual' | 'organization'
   description?: string
+  icon?: string
+  iconFileId?: string | null
   created: string
   user: {
     id: string
@@ -36,7 +38,7 @@ interface Identity {
 
 const { data: identitiesData, refresh } = await useAsyncData(
   'admin-identities',
-  () => $fetch<{ identities: Identity[] }>('/api/icp/admin/identities')
+  () => $fetch<{ identities: Identity[] }>('/api/admin/icp/identities')
 )
 
 const identities = computed(() => identitiesData.value?.identities ?? [])
@@ -70,7 +72,7 @@ async function handleDelete(identity: Identity) {
   if (!confirm(confirmMessage)) return
 
   try {
-    await $fetch(`/api/icp/admin/identities/${identity.id}`, {
+    await $fetch(`/api/admin/icp/identities/${identity.id}`, {
       method: 'DELETE',
     })
     await refresh()
@@ -124,8 +126,18 @@ async function handleDelete(identity: Identity) {
           <tr v-for="identity in filteredIdentities" :key="identity.id">
             <td>
               <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg bg-base-300 flex items-center justify-center">
-                  <component :is="getTypeIcon(identity.type)" class="w-4 h-4 opacity-60" />
+                <div class="w-8 h-8 rounded-lg overflow-hidden bg-base-300 flex items-center justify-center">
+                  <img
+                    v-if="identity.icon"
+                    :src="identity.icon"
+                    :alt="identity.name"
+                    class="w-full h-full object-cover"
+                  >
+                  <component
+                    v-else
+                    :is="getTypeIcon(identity.type)"
+                    class="w-4 h-4 opacity-60"
+                  />
                 </div>
                 <div>
                   <p class="font-bold">{{ identity.name }}</p>

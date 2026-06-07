@@ -5,9 +5,6 @@ import {
   CheckCircle,
   Globe,
   CircleQuestionMark,
-  Plus,
-  Shield,
-  User,
 } from 'lucide-vue-next'
 
 const { t, locale } = useI18n()
@@ -119,41 +116,14 @@ async function fetchSearch(raw: string) {
         </p>
         <NuxtLink
           :to="localePath('/products/roy-filling')"
-          class="btn btn-ghost btn-sm btn-circle"
+          class="btn btn-outline btn-sm"
         >
-          <CircleQuestionMark class="w-4 h-4 mr-1" />
+          <CircleQuestionMark class="w-4 h-4" />
+          {{ isZh ? '了解更多' : 'Learn more' }}
         </NuxtLink>
       </div>
 
-      <div class="flex gap-4 justify-center mb-8 flex-wrap">
-        <NuxtLink
-          :to="localePath('/icp/submit')"
-          class="btn btn-primary"
-        >
-          <Plus class="w-4 h-4 mr-1" />
-          {{ isZh ? '提交新站点' : 'Submit New Site' }}
-        </NuxtLink>
-        <NuxtLink
-          :to="localePath('/icp/my-submissions')"
-          class="btn btn-outline"
-        >
-          {{ isZh ? '我的提交' : 'My Submissions' }}
-        </NuxtLink>
-        <NuxtLink
-          :to="localePath('/icp/identities')"
-          class="btn btn-outline"
-        >
-          <User class="w-4 h-4 mr-1" />
-          {{ isZh ? '身份管理' : 'Identities' }}
-        </NuxtLink>
-        <NuxtLink
-          :to="localePath('/administration')"
-          class="btn btn-ghost btn-sm"
-        >
-          <Shield class="w-4 h-4 mr-1" />
-          {{ isZh ? '管理后台' : 'Admin' }}
-        </NuxtLink>
-      </div>
+
 
       <div class="relative max-w-md mx-auto mb-6">
         <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 opacity-50" />

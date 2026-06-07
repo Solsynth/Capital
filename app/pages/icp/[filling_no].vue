@@ -187,18 +187,17 @@ useSeoMeta({
           {{ isZh ? '备案主体' : 'Identity' }}
         </h2>
         <div class="flex flex-row gap-4 items-center">
-          <div
-            v-if="site.identity.iconUrl"
-            class="w-12 h-12 rounded-2xl overflow-hidden shrink-0 bg-base-100 flex items-center justify-center shadow-lg"
-          >
+          <div class="w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-base-100 flex items-center justify-center">
             <img
+              v-if="site.identity.iconUrl"
               :src="site.identity.iconUrl"
               :alt="site.identity.name"
               class="w-full h-full object-cover"
             >
+            <User v-else class="w-5 h-5 opacity-50" />
           </div>
           <div class="flex flex-col">
-            <p class="opacity-80">
+            <p class="font-medium">
               {{ site.identity.name }}
             </p>
             <p v-if="site.identity.description" class="opacity-70 text-sm mt-1">
@@ -250,21 +249,6 @@ useSeoMeta({
               </p>
               <p class="font-medium">
                 {{ new Date(site.approved_at).toLocaleDateString(localeForDate) }}
-              </p>
-            </div>
-          </div>
-
-          <div v-if="site.owner" class="flex items-start gap-3 sm:col-span-2">
-            <User class="w-5 h-5 text-accent mt-0.5 shrink-0" />
-            <div>
-              <p class="text-sm opacity-60 mb-0.5">
-                {{ isZh ? '用户信息' : 'User Info' }}
-              </p>
-              <p class="font-medium">
-                {{ site.owner.name || site.owner.email }}
-              </p>
-              <p class="text-sm opacity-60">
-                {{ site.owner.email }}
               </p>
             </div>
           </div>

@@ -1,6 +1,7 @@
 import { db } from '~~/server/utils/db'
 import { icpIdentity } from '~~/server/db'
 import { auth } from '~~/server/utils/auth'
+import { eq, and, sql } from 'drizzle-orm'
 import { randomUUID } from 'crypto'
 
 export default defineEventHandler(async (event) => {
@@ -22,6 +23,25 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
+    // Enforce max 1 of each identity type per user
+    const existingCount = await db
+      .select({ count: sql<number>`cast(count(*) as integer)` })
+      .from(icpIdentity)
+      .where(
+        and(eq(icpIdentity.userId, session.user.id), eq(icpIdentity.type, body.type)),
+      )
+      .then(rows => Number(rows[0]?.count ?? 0))
+
+    if (existingCount >= 1) {
+      const typeLabel = body.type === 'organization'
+        ? 'organization'
+        : 'individual'
+      throw createError({
+        statusCode: 429,
+        statusMessage: `You can only have one ${typeLabel} identity`,
+      })
+    }
+
     const identityId = randomUUID()
 
     await db.insert(icpIdentity).values({
@@ -30,8 +50,14 @@ export default defineEventHandler(async (event) => {
       type: body.type,
       description: body.description || null,
       icon: body.icon || null,
+      iconFileId: body.iconFileId || null,
       userId: session.user.id,
     })
+
+    // Mark uploaded file as used
+    if (body.iconFileId) {
+      await markFilesUsed([body.iconFileId])
+    }
 
     return { success: true, id: identityId }
   }

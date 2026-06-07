@@ -1,5 +1,7 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, index } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, index } from "drizzle-orm/pg-core";
+
+// ==================== Auth Tables ====================
 
 export const user = pgTable("user", {
   id: text("id").primaryKey(),
@@ -74,21 +76,39 @@ export const verification = pgTable(
   (table) => [index("verification_identifier_idx").on(table.identifier)],
 );
 
-export const userRelations = relations(user, ({ many }) => ({
-  sessions: many(session),
-  accounts: many(account),
-  icpIdentities: many(icpIdentity),
-  icpSubmissions: many(icpSubmission),
-}));
+// ==================== File Table ====================
 
-// ICP Tables
+export const file = pgTable("files", {
+  id: text("id").primaryKey(),
+  key: text("key").notNull().unique(), // S3 object key
+  name: text("name").notNull(), // Original filename
+  mimeType: text("mime_type").notNull(),
+  size: integer("size").notNull(), // bytes
+  bucket: text("bucket").notNull(),
+  url: text("url").notNull(), // Public URL
+  usedAt: timestamp("used_at"), // When the file was last linked to a record
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+}, (table) => [
+  index("file_user_id_idx").on(table.userId),
+  index("file_key_idx").on(table.key),
+]);
+
+// ==================== ICP Tables ====================
 
 export const icpIdentity = pgTable("icp_identity", {
   id: text("id").primaryKey(),
   name: text("name").notNull(),
   type: text("type").notNull().default("individual"), // 'individual' | 'organization'
   description: text("description"),
-  icon: text("icon"),
+  icon: text("icon"), // Legacy: direct URL string
+  iconFileId: text("icon_file_id").references(() => file.id, { onDelete: "set null" }),
   userId: text("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
@@ -108,7 +128,8 @@ export const icpSite = pgTable("icp_site", {
   name: text("name").notNull(),
   description: text("description"),
   siteUrl: text("site_url").notNull(),
-  icon: text("icon"),
+  icon: text("icon"), // Legacy: direct URL string
+  iconFileId: text("icon_file_id").references(() => file.id, { onDelete: "set null" }),
   categories: text("categories"), // JSON string
   approvedAt: timestamp("approved_at"),
   identityId: text("identity_id").references(() => icpIdentity.id),
@@ -147,6 +168,37 @@ export const icpSubmission = pgTable("icp_submission", {
   index("icp_submission_status_idx").on(table.status),
 ]);
 
+// ==================== Relations ====================
+
+export const userRelations = relations(user, ({ many }) => ({
+  sessions: many(session),
+  accounts: many(account),
+  files: many(file),
+  icpIdentities: many(icpIdentity),
+  icpSubmissions: many(icpSubmission),
+}));
+
+export const sessionRelations = relations(session, ({ one }) => ({
+  user: one(user, {
+    fields: [session.userId],
+    references: [user.id],
+  }),
+}));
+
+export const accountRelations = relations(account, ({ one }) => ({
+  user: one(user, {
+    fields: [account.userId],
+    references: [user.id],
+  }),
+}));
+
+export const fileRelations = relations(file, ({ one }) => ({
+  user: one(user, {
+    fields: [file.userId],
+    references: [user.id],
+  }),
+}));
+
 export const icpSiteRelations = relations(icpSite, ({ one, many }) => ({
   user: one(user, {
     fields: [icpSite.userId],
@@ -155,6 +207,11 @@ export const icpSiteRelations = relations(icpSite, ({ one, many }) => ({
   identity: one(icpIdentity, {
     fields: [icpSite.identityId],
     references: [icpIdentity.id],
+  }),
+  iconFile: one(file, {
+    fields: [icpSite.iconFileId],
+    references: [file.id],
+    relationName: "siteIconFile",
   }),
   submissions: many(icpSubmission),
 }));
@@ -179,19 +236,10 @@ export const icpIdentityRelations = relations(icpIdentity, ({ one, many }) => ({
     fields: [icpIdentity.userId],
     references: [user.id],
   }),
+  iconFile: one(file, {
+    fields: [icpIdentity.iconFileId],
+    references: [file.id],
+    relationName: "identityIconFile",
+  }),
   sites: many(icpSite),
-}));
-
-export const sessionRelations = relations(session, ({ one }) => ({
-  user: one(user, {
-    fields: [session.userId],
-    references: [user.id],
-  }),
-}));
-
-export const accountRelations = relations(account, ({ one }) => ({
-  user: one(user, {
-    fields: [account.userId],
-    references: [user.id],
-  }),
 }));

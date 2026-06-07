@@ -1,13 +1,13 @@
 import { db } from '~~/server/utils/db'
-import { icpSite, icpIdentity, user } from '~~/server/db'
-import { eq, like, and, desc } from 'drizzle-orm'
+import { icpSite, icpIdentity, user, file } from '~~/server/db'
+import { eq, like, and, desc, isNotNull } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const searchQuery = (query.q as string || '').trim()
 
   try {
-    const conditions = [eq(icpSite.approvedAt, null).not()]
+    const conditions = [isNotNull(icpSite.approvedAt)]
 
     if (searchQuery) {
       conditions.push(
@@ -25,6 +25,8 @@ export default defineEventHandler(async (event) => {
         description: icpSite.description,
         siteUrl: icpSite.siteUrl,
         icon: icpSite.icon,
+        iconFileId: icpSite.iconFileId,
+        iconUrl: file.url,
         categories: icpSite.categories,
         approvedAt: icpSite.approvedAt,
         createdAt: icpSite.createdAt,
@@ -40,6 +42,7 @@ export default defineEventHandler(async (event) => {
       .from(icpSite)
       .leftJoin(user, eq(icpSite.userId, user.id))
       .leftJoin(icpIdentity, eq(icpSite.identityId, icpIdentity.id))
+      .leftJoin(file, eq(icpSite.iconFileId, file.id))
       .where(and(...conditions))
       .orderBy(desc(icpSite.createdAt))
 
@@ -51,9 +54,10 @@ export default defineEventHandler(async (event) => {
         name: site.name,
         description: site.description,
         site_url: site.siteUrl,
-        icon: site.icon,
+        icon: site.iconUrl || site.icon,
+        iconFileId: site.iconFileId,
         approved: Boolean(site.approvedAt),
-        iconUrl: site.icon || null,
+        iconUrl: site.iconUrl || site.icon || null,
       })),
     }
   }

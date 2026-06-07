@@ -15,6 +15,9 @@ export const userRelations = schema.userRelations
 export const sessionRelations = schema.sessionRelations
 export const accountRelations = schema.accountRelations
 
+export const file = schema.file
+export const fileRelations = schema.fileRelations
+
 export const icpIdentity = schema.icpIdentity
 export const icpSite = schema.icpSite
 export const icpSubmission = schema.icpSubmission

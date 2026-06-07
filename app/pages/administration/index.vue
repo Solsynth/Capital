@@ -19,12 +19,12 @@ definePageMeta({
 })
 
 useHead({
-  title: computed(() => isZh.value ? '管理后台 - 中羊网备' : 'Admin Dashboard - ROY ICP'),
+  title: computed(() => isZh.value ? '管理后台' : 'Admin Dashboard'),
 })
 
 const { data: stats } = await useAsyncData('admin-stats', async () => {
   const [submissions, sites] = await Promise.all([
-    $fetch<{ submissions: any[] }>('/api/icp/admin/submissions').catch(() => ({ submissions: [] })),
+    $fetch<{ submissions: any[] }>('/api/admin/icp/submissions').catch(() => ({ submissions: [] })),
     $fetch<{ sites: any[] }>('/api/icp/sites').catch(() => ({ sites: [] })),
   ])
 

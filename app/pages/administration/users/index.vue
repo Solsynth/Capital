@@ -20,7 +20,7 @@ definePageMeta({
 })
 
 useHead({
-  title: computed(() => isZh.value ? '用户管理 - 中羊网备' : 'Users - ROY ICP Admin'),
+  title: computed(() => isZh.value ? '用户管理' : 'Users'),
 })
 
 interface User {
@@ -36,7 +36,7 @@ interface User {
 
 const { data: usersData, refresh } = await useAsyncData(
   'admin-users',
-  () => $fetch<{ users: User[] }>('/api/icp/admin/users')
+  () => $fetch<{ users: User[] }>('/api/admin/icp/users')
 )
 
 const users = computed(() => usersData.value?.users ?? [])

@@ -18,7 +18,7 @@ definePageMeta({
 })
 
 useHead({
-  title: computed(() => isZh.value ? '站点管理 - 中羊网备' : 'Sites - ROY ICP Admin'),
+  title: computed(() => isZh.value ? '站点管理' : 'Sites'),
 })
 
 interface Site {

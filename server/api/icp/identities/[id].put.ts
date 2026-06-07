@@ -1,7 +1,7 @@
 import { db } from '~~/server/utils/db'
 import { icpIdentity } from '~~/server/db'
 import { auth } from '~~/server/utils/auth'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, ne, sql } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const session = await auth.api.getSession({ headers: event.headers })
@@ -29,7 +29,7 @@ export default defineEventHandler(async (event) => {
   try {
     // Check if identity exists and belongs to user
     const existing = await db
-      .select({ id: icpIdentity.id })
+      .select({ id: icpIdentity.id, type: icpIdentity.type })
       .from(icpIdentity)
       .where(and(eq(icpIdentity.id, id), eq(icpIdentity.userId, session.user.id)))
       .limit(1)
@@ -39,15 +39,46 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 404, statusMessage: 'Identity not found' })
     }
 
+    // If type is changing, enforce max 1 of new type per user
+    if (existing.type !== body.type) {
+      const existingCount = await db
+        .select({ count: sql<number>`cast(count(*) as integer)` })
+        .from(icpIdentity)
+        .where(
+          and(
+            eq(icpIdentity.userId, session.user.id),
+            eq(icpIdentity.type, body.type),
+            ne(icpIdentity.id, id),
+          ),
+        )
+        .then(rows => Number(rows[0]?.count ?? 0))
+
+      if (existingCount >= 1) {
+        const typeLabel = body.type === 'organization'
+          ? 'organization'
+          : 'individual'
+        throw createError({
+          statusCode: 429,
+          statusMessage: `You can only have one ${typeLabel} identity`,
+        })
+      }
+    }
+
     await db.update(icpIdentity)
       .set({
         name: body.name,
         type: body.type,
         description: body.description || null,
         icon: body.icon || null,
-        updatedAt: new Date(),
+        iconFileId: body.iconFileId || null,
+        updatedAt: sql`(cast(unixepoch('subsecond') * 1000 as integer))`,
       })
       .where(eq(icpIdentity.id, id))
+
+    // Mark uploaded file as used
+    if (body.iconFileId) {
+      await markFilesUsed([body.iconFileId])
+    }
 
     return { success: true }
   }

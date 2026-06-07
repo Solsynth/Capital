@@ -8,6 +8,7 @@ import {
   Trash2,
   X,
   Check,
+  Camera,
 } from 'lucide-vue-next'
 
 const { t, locale } = useI18n()
@@ -32,6 +33,7 @@ interface Identity {
   type: 'individual' | 'organization'
   description?: string
   icon?: string
+  iconFileId?: string | null
   created: string
 }
 
@@ -49,6 +51,7 @@ const form = reactive({
   name: '',
   type: 'individual' as 'individual' | 'organization',
   description: '',
+  iconFileId: null as string | null,
 })
 const isSubmitting = ref(false)
 const formError = ref<string | null>(null)
@@ -58,6 +61,7 @@ function openCreateForm() {
   form.name = ''
   form.type = 'individual'
   form.description = ''
+  form.iconFileId = null
   formError.value = null
   showForm.value = true
 }
@@ -67,6 +71,7 @@ function openEditForm(identity: Identity) {
   form.name = identity.name
   form.type = identity.type
   form.description = identity.description || ''
+  form.iconFileId = identity.iconFileId || null
   formError.value = null
   showForm.value = true
 }
@@ -96,6 +101,7 @@ async function handleSubmit() {
           name: form.name.trim(),
           type: form.type,
           description: form.description.trim() || null,
+          iconFileId: form.iconFileId?.id || null,
         },
       })
     } else {
@@ -106,6 +112,7 @@ async function handleSubmit() {
           name: form.name.trim(),
           type: form.type,
           description: form.description.trim() || null,
+          iconFileId: form.iconFileId?.id || null,
         },
       })
     }
@@ -200,11 +207,9 @@ function getTypeIcon(type: string) {
         <span>{{ formError }}</span>
       </div>
 
-      <form @submit.prevent="handleSubmit" class="space-y-4">
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-bold">{{ isZh ? '身份类型' : 'Identity Type' }} *</span>
-          </label>
+      <form @submit.prevent="handleSubmit" class="space-y-6">
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '身份类型' : 'Identity Type' }} *</legend>
           <div class="flex gap-4">
             <label class="flex items-center gap-2 cursor-pointer">
               <input
@@ -227,33 +232,39 @@ function getTypeIcon(type: string) {
               {{ isZh ? '组织' : 'Organization' }}
             </label>
           </div>
-        </div>
+        </fieldset>
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-bold">{{ isZh ? '名称' : 'Name' }} *</span>
-          </label>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '名称' : 'Name' }} *</legend>
           <input
             v-model="form.name"
             type="text"
             :placeholder="form.type === 'organization'
               ? (isZh ? '公司或组织名称' : 'Company or organization name')
               : (isZh ? '您的姓名' : 'Your name')"
-            class="input input-bordered w-full"
+            class="input w-full"
             required
           >
-        </div>
+        </fieldset>
 
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text font-bold">{{ isZh ? '介绍' : 'Description' }}</span>
-          </label>
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '介绍' : 'Description' }}</legend>
           <textarea
             v-model="form.description"
             :placeholder="isZh ? '简要介绍...' : 'Brief description...'"
-            class="textarea textarea-bordered w-full h-20"
+            class="textarea h-20 w-full"
           />
-        </div>
+        </fieldset>
+
+        <fieldset class="fieldset">
+          <legend class="fieldset-legend">{{ isZh ? '图标' : 'Icon' }}</legend>
+          <FileUpload
+            v-model="form.iconFileId"
+            :hint="isZh ? '支持 JPG, PNG, WebP, SVG，最大 5MB' : 'JPG, PNG, WebP, SVG. Max 5MB'"
+            compact
+          />
+          <p class="label">{{ isZh ? '选填，建议 256x256 正方形' : 'Optional, 256x256 square recommended' }}</p>
+        </fieldset>
 
         <div class="flex gap-4">
           <button
@@ -299,8 +310,18 @@ function getTypeIcon(type: string) {
       >
         <div class="flex items-start justify-between gap-4">
           <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-xl bg-base-100 flex items-center justify-center">
-              <component :is="getTypeIcon(identity.type)" class="w-6 h-6 opacity-60" />
+            <div class="w-12 h-12 rounded-xl overflow-hidden bg-base-100 flex items-center justify-center">
+              <img
+                v-if="identity.icon"
+                :src="identity.icon"
+                :alt="identity.name"
+                class="w-full h-full object-cover"
+              >
+              <component
+                v-else
+                :is="getTypeIcon(identity.type)"
+                class="w-6 h-6 opacity-60"
+              />
             </div>
             <div>
               <div class="flex items-center gap-2 mb-1">

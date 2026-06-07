@@ -20,7 +20,7 @@ definePageMeta({
 })
 
 useHead({
-  title: computed(() => isZh.value ? '提交管理 - 中羊网备' : 'Submissions - ROY ICP Admin'),
+  title: computed(() => isZh.value ? '提交管理' : 'Submissions'),
 })
 
 interface Submission {
@@ -35,6 +35,8 @@ interface Submission {
     site_url: string
     categories?: string[]
     identity_id?: string
+    icon_file_id?: string | null
+    icon_url?: string | null
   }
   review_note?: string
   reviewed_at?: string
@@ -52,7 +54,7 @@ const filterStatus = ref<string>((route.query.status as string) || 'pending')
 
 const { data: submissionsData, refresh } = await useAsyncData(
   `admin-submissions-${filterStatus.value}`,
-  () => $fetch<{ submissions: Submission[] }>('/api/icp/admin/submissions', {
+  () => $fetch<{ submissions: Submission[] }>('/api/admin/icp/submissions', {
     params: { status: filterStatus.value || undefined },
   }),
   { watch: [filterStatus] }
@@ -75,7 +77,7 @@ async function handleReview(action: 'approve' | 'reject') {
   isReviewing.value = true
 
   try {
-    await $fetch('/api/icp/admin/review', {
+    await $fetch('/api/admin/icp/review', {
       method: 'POST',
       body: {
         submission_id: selectedSubmission.value.id,
@@ -215,6 +217,19 @@ function getTypeLabel(type: string) {
           </div>
 
           <div class="space-y-4 mb-6">
+            <div v-if="selectedSubmission.data.icon_url" class="flex items-center gap-4 mb-4">
+              <div class="w-16 h-16 rounded-xl overflow-hidden border border-base-300">
+                <img
+                  :src="selectedSubmission.data.icon_url"
+                  :alt="selectedSubmission.data.name"
+                  class="w-full h-full object-cover"
+                >
+              </div>
+              <div>
+                <p class="font-bold">{{ selectedSubmission.data.name }}</p>
+                <p class="text-sm opacity-60">{{ isZh ? '站点图标' : 'Site Icon' }}</p>
+              </div>
+            </div>
             <div>
               <label class="text-sm opacity-60">{{ isZh ? '域名' : 'Domain' }}</label>
               <p class="font-mono">{{ selectedSubmission.data.domain }}</p>
