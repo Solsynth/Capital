@@ -5,6 +5,9 @@ import {
   CheckCircle,
   Globe,
   CircleQuestionMark,
+  Plus,
+  Shield,
+  User,
 } from 'lucide-vue-next'
 
 const { t, locale } = useI18n()
@@ -116,14 +119,11 @@ async function fetchSearch(raw: string) {
         </p>
         <NuxtLink
           :to="localePath('/products/roy-filling')"
-          class="btn btn-outline btn-sm"
+          class="btn btn-ghost btn-sm btn-circle"
         >
-          <CircleQuestionMark class="w-4 h-4" />
-          {{ isZh ? '了解更多' : 'Learn more' }}
+          <CircleQuestionMark class="w-4 h-4 mr-1" />
         </NuxtLink>
       </div>
-
-
 
       <div class="relative max-w-md mx-auto mb-6">
         <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 opacity-50" />

@@ -2,11 +2,12 @@
 import {
   Shield,
   FileText,
-  ExternalLink,
   Bug,
   Mail,
-  BadgeCheck,
+  BadgeCheck, User, Plus
 } from "lucide-vue-next";
+
+const localePath = useLocalePath()
 
 const { t } = useI18n();
 
@@ -34,7 +35,7 @@ useSeoMeta({
         format="webp"
         alt=""
       />
-      <div class="absolute inset-0 bg-gradient-to-b from-transparent to-base-100"></div>
+      <div class="absolute inset-0 bg-linear-to-b from-transparent to-base-100"></div>
 
       <div class="absolute bottom-0 left-0 right-0 p-8">
         <div class="container mx-auto text-center">
@@ -102,15 +103,27 @@ useSeoMeta({
     </section>
 
     <!-- CTA -->
-    <section class="container mx-auto px-4 py-20 text-center">
-      <a
-        href="https://solsynth.dev/icp"
-        target="_blank"
-        class="btn btn-primary btn-lg rounded-full"
+    <section class="container mx-auto px-4 py-20 text-center flex gap-3 justify-center">
+      <NuxtLink
+        :to="localePath('/icp/submit')"
+        class="btn btn-primary rounded-full"
       >
+        <Plus class="w-4 h-4 mr-1" />
         {{ t("royIcpFilling.cta.apply") }}
-        <ExternalLink class="w-4 h-4" />
-      </a>
+      </NuxtLink>
+      <NuxtLink
+        :to="localePath('/icp/submissions/me')"
+        class="btn btn-outline rounded-full"
+      >
+        {{ t("royIcpFilling.cta.submissions") }}
+      </NuxtLink>
+      <NuxtLink
+        :to="localePath('/icp/identities')"
+        class="btn btn-outline rounded-full"
+      >
+        <User class="w-4 h-4 mr-1" />
+        {{ t("royIcpFilling.cta.identities") }}
+      </NuxtLink>
     </section>
 
     <!-- Footer links -->
