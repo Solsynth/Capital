@@ -1,8 +1,8 @@
-import { resolve } from 'path'
-import tailwindcss from '@tailwindcss/vite'
+import { resolve } from "path";
+import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
-  compatibilityDate: '2025-07-15',
+  compatibilityDate: "2025-07-15",
   devtools: { enabled: true },
 
   future: {
@@ -16,45 +16,48 @@ export default defineNuxtConfig({
   nitro: {
     externals: {
       external: [
-        'better-sqlite3',
-        'drizzle-orm/better-sqlite3',
-        'pg',
-        'drizzle-orm/node-postgres',
+        "better-sqlite3",
+        "drizzle-orm/better-sqlite3",
+        "pg",
+        "drizzle-orm/node-postgres",
       ],
+    },
+    rollupConfig: {
+      external: ["better-sqlite3"],
     },
   },
 
   modules: [
-    '@nuxtjs/i18n',
-    '@nuxt/content',
-    '@nuxtjs/sitemap',
-    '@nuxtjs/robots',
-    'nuxt-og-image',
-    '@nuxt/image',
-    '@nuxt/fonts',
+    "@nuxtjs/i18n",
+    "@nuxt/content",
+    "@nuxtjs/sitemap",
+    "@nuxtjs/robots",
+    "nuxt-og-image",
+    "@nuxt/image",
+    "@nuxt/fonts",
   ],
 
-  css: ['~/assets/css/global.css'],
+  css: ["~/assets/css/global.css"],
 
   vite: {
     plugins: [tailwindcss()],
   },
 
   site: {
-    url: 'https://solsynth.dev',
-    name: 'Solsynth',
-    defaultLocale: 'en',
+    url: "https://solsynth.dev",
+    name: "Solsynth",
+    defaultLocale: "en",
   },
 
   sitemap: {
-    sources: ['/api/__sitemap__/urls'],
+    sources: ["/api/__sitemap__/urls"],
   },
 
   ogImage: {
     enabled: true,
     defaults: {
-      renderer: 'takumi',
-      component: 'OgImage',
+      renderer: "takumi",
+      component: "OgImage",
     },
   },
 
@@ -64,42 +67,42 @@ export default defineNuxtConfig({
       strictMessage: false,
     },
     locales: [
-      { code: 'en', name: 'English', file: 'en.json' },
-      { code: 'zh', name: '中文', file: 'zh.json' },
+      { code: "en", name: "English", file: "en.json" },
+      { code: "zh", name: "中文", file: "zh.json" },
     ],
-    defaultLocale: 'en',
+    defaultLocale: "en",
     lazy: true,
-    langDir: 'i18n/',
-    strategy: 'prefix',
+    langDir: "i18n/",
+    strategy: "prefix",
     detectBrowserLanguage: {
       useCookie: true,
-      cookieKey: 'i18n_redirected',
-      redirectOn: 'no prefix',
+      cookieKey: "i18n_redirected",
+      redirectOn: "no prefix",
     },
   },
 
   content: {
     contentSources: {
       content: {
-        driver: 'fs',
-        base: resolve(process.cwd(), 'content'),
+        driver: "fs",
+        base: resolve(process.cwd(), "content"),
       },
     },
   },
 
   runtimeConfig: {
     public: {
-      pbUrl: '',
+      pbUrl: "",
     },
   },
 
   routeRules: {
-    '/en/terms': { redirect: '/en/legal' },
-    '/zh/terms': { redirect: '/zh/legal' },
-    '/en/terms/**': { redirect: '/en/legal/**' },
-    '/zh/terms/**': { redirect: '/zh/legal/**' },
-    '/en/**': { sitemap: { changefreq: 'weekly' } },
-    '/zh/**': { sitemap: { changefreq: 'weekly' } },
+    "/en/terms": { redirect: "/en/legal" },
+    "/zh/terms": { redirect: "/zh/legal" },
+    "/en/terms/**": { redirect: "/en/legal/**" },
+    "/zh/terms/**": { redirect: "/zh/legal/**" },
+    "/en/**": { sitemap: { changefreq: "weekly" } },
+    "/zh/**": { sitemap: { changefreq: "weekly" } },
   },
 
   app: {
@@ -107,20 +110,21 @@ export default defineNuxtConfig({
       script: [
         {
           innerHTML: `(function(){try{var t=localStorage.getItem('theme')||'auto';var d=t==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light':t;document.documentElement.setAttribute('data-theme',d)}catch(e){}})()`,
-          tagPosition: 'head',
+          tagPosition: "head",
         },
       ],
       link: [
         {
-          rel: 'icon',
-          type: 'image/png',
-          href: '/favicon.png',
+          rel: "icon",
+          type: "image/png",
+          href: "/favicon.png",
         },
         {
-          rel: 'stylesheet',
-          href: 'https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap',
+          rel: "stylesheet",
+          href: "https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap",
         },
       ],
     },
   },
-})
+});
+
