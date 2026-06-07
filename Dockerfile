@@ -6,6 +6,7 @@ COPY package.json ./
 RUN npm install
 
 ENV NITRO_DATA_DIR=/data/nitro
+RUN mkdir -p /data/nitro
 
 COPY . .
 RUN npm run build

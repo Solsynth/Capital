@@ -1,3 +1,4 @@
+import { mkdirSync } from "node:fs";
 import { join } from "node:path";
 import { isPostgres } from "../db";
 import * as schema from "../db";
@@ -17,13 +18,21 @@ function resolveSqlitePath() {
   return join(nitroDataDir, "local.db");
 }
 
+function ensureSqliteDirectory(sqlitePath: string) {
+  const lastSlash = sqlitePath.lastIndexOf("/");
+  const dir = lastSlash >= 0 ? sqlitePath.slice(0, lastSlash) : ".";
+  mkdirSync(dir, { recursive: true });
+}
+
 function createDb() {
   if (isPostgres) {
     const pool = new Pool({ connectionString: dbUrl });
     return drizzlePg(pool, { schema });
   }
 
-  const sqlite = new Database(resolveSqlitePath());
+  const sqlitePath = resolveSqlitePath();
+  ensureSqliteDirectory(sqlitePath);
+  const sqlite = new Database(sqlitePath);
   return drizzleSqlite(sqlite, { schema });
 }
 
