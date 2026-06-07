@@ -26,7 +26,7 @@ ENV NUXT_PORT=3000
 
 ENV NITRO_DATA_DIR=/data/nitro
 
-RUN mkdir -p /data && chown -R nuxt:nodejs /data
+RUN mkdir -p /data/nitro && chown -R nuxt:nodejs /data
 
 USER nuxt
 

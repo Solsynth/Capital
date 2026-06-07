@@ -7,7 +7,7 @@ services:
       - NODE_ENV=production
       - NITRO_DATA_DIR=/data/nitro
       - PUBLIC_PB_URL=${PUBLIC_PB_URL:-https://your-pocketbase-instance.com}
-      - DATABASE_URL=${DATABASE_URL:-file:./local.db}
+      - DATABASE_URL=${DATABASE_URL:-file:/data/nitro/local.db}
       - BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-change-me}
       - BETTER_AUTH_URL=${BETTER_AUTH_URL:-http://localhost:3000}
       - SOLIAN_CLIENT_ID=${SOLIAN_CLIENT_ID}

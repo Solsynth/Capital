@@ -46,10 +46,16 @@ The app auto-detects the database type from `DATABASE_URL`.
 
 ### SQLite (default — local dev)
 
-No setup needed. The database file is created at `server/local.db`.
+No setup needed. In local development, the database file is created from `DATABASE_URL`. If `DATABASE_URL` is unset, the app falls back to `server/local.db`.
 
 ```env
 DATABASE_URL=file:./local.db
+```
+
+In the Docker image, use a writable persistent path instead, for example:
+
+```env
+DATABASE_URL=file:/data/nitro/local.db
 ```
 
 ### PostgreSQL (production)

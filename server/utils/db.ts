@@ -1,20 +1,30 @@
+import { join } from "node:path";
 import { isPostgres } from "../db";
 import * as schema from "../db";
+import Database from "better-sqlite3";
+import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
-import { drizzle as drizzleLibsql } from "drizzle-orm/libsql";
 import { Pool } from "pg";
-import { createClient } from "@libsql/client";
 
 const dbUrl = process.env.DATABASE_URL || "";
+
+function resolveSqlitePath() {
+  if (dbUrl.startsWith("file:")) {
+    return dbUrl.slice("file:".length);
+  }
+
+  const nitroDataDir = process.env.NITRO_DATA_DIR || "server";
+  return join(nitroDataDir, "local.db");
+}
 
 function createDb() {
   if (isPostgres) {
     const pool = new Pool({ connectionString: dbUrl });
     return drizzlePg(pool, { schema });
-  } else {
-    const sqlite = createClient({ url: dbUrl || "file:server/local.db" });
-    return drizzleLibsql(sqlite, { schema });
   }
+
+  const sqlite = new Database(resolveSqlitePath());
+  return drizzleSqlite(sqlite, { schema });
 }
 
 export const db = createDb();
