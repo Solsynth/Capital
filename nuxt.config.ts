@@ -13,6 +13,17 @@ export default defineNuxtConfig({
     viewTransition: true,
   },
 
+  nitro: {
+    externals: {
+      external: [
+        'better-sqlite3',
+        'drizzle-orm/better-sqlite3',
+        'pg',
+        'drizzle-orm/node-postgres',
+      ],
+    },
+  },
+
   modules: [
     '@nuxtjs/i18n',
     '@nuxt/content',
