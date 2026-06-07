@@ -8,6 +8,20 @@
       "when": 1780809473415,
       "tag": "0000_clean_stephen_strange",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1780826468248,
+      "tag": "0001_yellow_cassandra_nova",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1780834050005,
+      "tag": "0002_next_gateway",
+      "breakpoints": true
     }
   ]
 }

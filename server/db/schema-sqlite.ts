@@ -90,6 +90,115 @@ export const verification = sqliteTable(
 export const userRelations = relations(user, ({ many }) => ({
   sessions: many(session),
   accounts: many(account),
+  icpIdentities: many(icpIdentity),
+  icpSubmissions: many(icpSubmission),
+}));
+
+// ICP Tables
+
+export const icpIdentity = sqliteTable("icp_identity", {
+  id: text("id").primaryKey(),
+  name: text("name").notNull(),
+  type: text("type").notNull().default("individual"), // 'individual' | 'organization'
+  description: text("description"),
+  icon: text("icon"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: integer("created_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .$onUpdate(() => new Date())
+    .notNull(),
+}, (table) => [
+  index("icp_identity_user_id_idx").on(table.userId),
+]);
+
+export const icpSite = sqliteTable("icp_site", {
+  id: text("id").primaryKey(),
+  fillingNo: text("filling_no").notNull().unique(),
+  domain: text("domain").notNull(),
+  name: text("name").notNull(),
+  description: text("description"),
+  siteUrl: text("site_url").notNull(),
+  icon: text("icon"),
+  categories: text("categories"), // JSON string
+  approvedAt: integer("approved_at", { mode: "timestamp_ms" }),
+  identityId: text("identity_id").references(() => icpIdentity.id),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  createdAt: integer("created_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .$onUpdate(() => new Date())
+    .notNull(),
+}, (table) => [
+  index("icp_site_filling_no_idx").on(table.fillingNo),
+  index("icp_site_user_id_idx").on(table.userId),
+]);
+
+export const icpSubmission = sqliteTable("icp_submission", {
+  id: text("id").primaryKey(),
+  type: text("type").notNull(), // 'create' | 'update'
+  status: text("status").notNull().default("pending"), // 'pending' | 'approved' | 'rejected'
+  siteId: text("site_id").references(() => icpSite.id),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  data: text("data").notNull(), // JSON string with submission data
+  reviewNote: text("review_note"),
+  reviewedAt: integer("reviewed_at", { mode: "timestamp_ms" }),
+  reviewedBy: text("reviewed_by").references(() => user.id),
+  createdAt: integer("created_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .notNull(),
+  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+    .$onUpdate(() => new Date())
+    .notNull(),
+}, (table) => [
+  index("icp_submission_user_id_idx").on(table.userId),
+  index("icp_submission_status_idx").on(table.status),
+]);
+
+export const icpSiteRelations = relations(icpSite, ({ one, many }) => ({
+  user: one(user, {
+    fields: [icpSite.userId],
+    references: [user.id],
+  }),
+  identity: one(icpIdentity, {
+    fields: [icpSite.identityId],
+    references: [icpIdentity.id],
+  }),
+  submissions: many(icpSubmission),
+}));
+
+export const icpSubmissionRelations = relations(icpSubmission, ({ one }) => ({
+  site: one(icpSite, {
+    fields: [icpSubmission.siteId],
+    references: [icpSite.id],
+  }),
+  user: one(user, {
+    fields: [icpSubmission.userId],
+    references: [user.id],
+  }),
+  reviewer: one(user, {
+    fields: [icpSubmission.reviewedBy],
+    references: [user.id],
+  }),
+}));
+
+export const icpIdentityRelations = relations(icpIdentity, ({ one, many }) => ({
+  user: one(user, {
+    fields: [icpIdentity.userId],
+    references: [user.id],
+  }),
+  sites: many(icpSite),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({

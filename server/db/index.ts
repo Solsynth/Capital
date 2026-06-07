@@ -14,3 +14,10 @@ export const verification = schema.verification
 export const userRelations = schema.userRelations
 export const sessionRelations = schema.sessionRelations
 export const accountRelations = schema.accountRelations
+
+export const icpIdentity = schema.icpIdentity
+export const icpSite = schema.icpSite
+export const icpSubmission = schema.icpSubmission
+export const icpSiteRelations = schema.icpSiteRelations
+export const icpSubmissionRelations = schema.icpSubmissionRelations
+export const icpIdentityRelations = schema.icpIdentityRelations

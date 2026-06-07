@@ -8,3 +8,12 @@ export function useAuth() {
     fetchOptions: { headers },
   })
 }
+
+export async function useServerSession() {
+  if (!import.meta.server) {
+    throw new Error('useServerSession can only be used on the server')
+  }
+  
+  const event = useRequestEvent()
+  return event.context.session || null
+}

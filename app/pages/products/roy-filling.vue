@@ -17,9 +17,9 @@ definePageMeta({
 
 useSeoMeta({
   description: () => t("royIcpFilling.tagline"),
-  ogImage: "/images//republic-of-yang/filling.png",
+  ogImage: "/images/republic-of-yang/filling.png",
   twitterCard: "summary_large_image",
-  twitterImage: "/images//republic-of-yang/filling.png",
+  twitterImage: "/images/republic-of-yang/filling.png",
 });
 </script>
 
@@ -28,7 +28,7 @@ useSeoMeta({
     <!-- Hero -->
     <section class="relative h-[60vh] min-h-100 overflow-hidden -mt-(--site-page-offset,64px)">
       <NuxtImg
-        src="/images//republic-of-yang/greatwall.webp"
+        src="/images/republic-of-yang/greatwall.webp"
         class="absolute inset-0 w-full h-full object-cover object-center -z-10 opacity-60"
         loading="eager"
         format="webp"
@@ -39,7 +39,7 @@ useSeoMeta({
       <div class="absolute bottom-0 left-0 right-0 p-8">
         <div class="container mx-auto text-center">
           <img
-            src="/images/images//republic-of-yang/filling.png"
+            src="/images/republic-of-yang/filling.png"
             class="w-20 h-20 rounded-2xl shadow-2xl mx-auto mb-4"
             alt="ROY ICP Filling"
           />

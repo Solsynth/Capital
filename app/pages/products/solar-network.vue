@@ -98,7 +98,7 @@ useSeoMeta({
           class="container mx-auto flex flex-col md:flex-row items-end gap-6"
         >
           <img
-            src="/images/images/solar-network/icon.png"
+            src="/images/solar-network/icon.png"
             class="w-28 h-28 rounded-2xl shadow-2xl"
             alt="Solar Network"
           />

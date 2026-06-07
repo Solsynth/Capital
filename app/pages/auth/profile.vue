@@ -1,11 +1,22 @@
 <script setup lang="ts">
 import { CircleUser, Mail, ShieldCheck, Calendar, Edit3, Check, X } from 'lucide-vue-next'
-import { authClient } from '~/lib/auth-client'
 
 definePageMeta({ middleware: 'auth' })
 
 const { t } = useI18n()
-const { data: session, refresh } = await authClient.useSession(useFetch)
+
+// Use server-side session on server, client-side on client
+let session: any = null
+let refresh: any = null
+if (import.meta.server) {
+  const serverSession = await useServerSession()
+  session = ref(serverSession)
+  refresh = () => {} // No-op on server
+} else {
+  const { data, refresh: clientRefresh } = await useAuth().useSession(useFetch)
+  session = data
+  refresh = clientRefresh
+}
 
 const isEditing = ref(false)
 const editName = ref('')

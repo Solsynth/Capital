@@ -77,9 +77,7 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
-    public: {
-      pbUrl: process.env.PUBLIC_PB_URL || '',
-    },
+    public: {},
   },
 
   routeRules: {
@@ -93,6 +91,12 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      script: [
+        {
+          innerHTML: `(function(){try{var t=localStorage.getItem('theme')||'auto';var d=t==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light':t;document.documentElement.setAttribute('data-theme',d)}catch(e){}})()`,
+          tagPosition: 'head',
+        },
+      ],
       link: [
         {
           rel: 'icon',

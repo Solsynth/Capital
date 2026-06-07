@@ -5,6 +5,9 @@ import {
   CheckCircle,
   Globe,
   CircleQuestionMark,
+  Plus,
+  Shield,
+  User,
 } from 'lucide-vue-next'
 
 const { t, locale } = useI18n()
@@ -12,8 +15,6 @@ const localePath = useLocalePath()
 
 const lang = computed(() => locale.value)
 const isZh = computed(() => lang.value === 'zh')
-const config = useRuntimeConfig()
-const pbUrl = config.public.pbUrl as string
 const maxVisibleSites = 3
 
 const pageTitle = computed(() => isZh.value ? '中羊网备' : 'ROY ICP Filling')
@@ -50,7 +51,7 @@ interface SiteItem {
 }
 
 const { data: sitesData } = await useAsyncData(`icp-sites-${lang.value}`, () =>
-  $fetch<{ sites: SiteItem[] }>('/api/icp-sites'))
+  $fetch<{ sites: SiteItem[] }>('/api/icp/sites'))
 
 const allSites = computed(() => sitesData.value?.sites ?? [])
 const visibleSites = computed(() => allSites.value.slice(0, maxVisibleSites))
@@ -84,7 +85,7 @@ function onSearchInput(e: Event) {
 async function fetchSearch(raw: string) {
   const currentId = ++requestId
   try {
-    const data = await $fetch<{ sites: SiteItem[] }>('/api/icp-sites', {
+    const data = await $fetch<{ sites: SiteItem[] }>('/api/icp/sites', {
       params: { q: raw.trim() },
     })
     if (currentId !== requestId) return
@@ -105,7 +106,7 @@ async function fetchSearch(raw: string) {
   <div class="container mx-auto px-4 py-20 max-w-3xl">
     <div class="text-center mb-12">
       <img
-        src="/images/images//republic-of-yang/filling.png"
+        src="/images/republic-of-yang/filling.png"
         alt="ROY ICP"
         class="w-16 h-16 mx-auto mb-8 rounded-2xl"
       >
@@ -121,6 +122,36 @@ async function fetchSearch(raw: string) {
           class="btn btn-ghost btn-sm btn-circle"
         >
           <CircleQuestionMark class="w-4 h-4 mr-1" />
+        </NuxtLink>
+      </div>
+
+      <div class="flex gap-4 justify-center mb-8 flex-wrap">
+        <NuxtLink
+          :to="localePath('/icp/submit')"
+          class="btn btn-primary"
+        >
+          <Plus class="w-4 h-4 mr-1" />
+          {{ isZh ? '提交新站点' : 'Submit New Site' }}
+        </NuxtLink>
+        <NuxtLink
+          :to="localePath('/icp/my-submissions')"
+          class="btn btn-outline"
+        >
+          {{ isZh ? '我的提交' : 'My Submissions' }}
+        </NuxtLink>
+        <NuxtLink
+          :to="localePath('/icp/identities')"
+          class="btn btn-outline"
+        >
+          <User class="w-4 h-4 mr-1" />
+          {{ isZh ? '身份管理' : 'Identities' }}
+        </NuxtLink>
+        <NuxtLink
+          :to="localePath('/administration')"
+          class="btn btn-ghost btn-sm"
+        >
+          <Shield class="w-4 h-4 mr-1" />
+          {{ isZh ? '管理后台' : 'Admin' }}
         </NuxtLink>
       </div>
 

@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import { CircleUser, Mail, KeyRound, ArrowRight, ShieldCheck, UserPlus } from 'lucide-vue-next'
-import { authClient } from '~/lib/auth-client'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
+
+const auth = useAuth()
 
 const email = ref('')
 const password = ref('')
@@ -55,11 +56,16 @@ async function handleSeedAdmin() {
 async function handleEmailSignIn() {
   error.value = ''
   isLoading.value = true
-  const { error: signInError } = await authClient.signIn.email({
+  console.log('[Login] Attempting email sign in for:', email.value)
+  const { error: signInError } = await auth.signIn.email({
     email: email.value,
     password: password.value,
     callbackURL: localePath('/'),
   })
+  console.log('[Login] Sign in result:', signInError ? 'error' : 'success')
+  if (signInError) {
+    console.log('[Login] Sign in error:', signInError)
+  }
   isLoading.value = false
   if (signInError) {
     error.value = signInError.message || 'Sign in failed'
@@ -69,10 +75,15 @@ async function handleEmailSignIn() {
 async function handleSolianSignIn() {
   error.value = ''
   isLoading.value = true
-  const { error: signInError } = await authClient.signIn.social({
+  console.log('[Login] Attempting Solian sign in')
+  const { error: signInError } = await auth.signIn.social({
     provider: 'solian',
     callbackURL: localePath('/'),
   })
+  console.log('[Login] Solian sign in result:', signInError ? 'error' : 'success')
+  if (signInError) {
+    console.log('[Login] Solian sign in error:', signInError)
+  }
   isLoading.value = false
   if (signInError) {
     error.value = signInError.message || 'Sign in failed'

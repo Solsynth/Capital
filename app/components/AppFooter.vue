@@ -1,6 +1,24 @@
 <script setup lang="ts">
 const { t } = useI18n()
 const localePath = useLocalePath()
+
+// Use server-side session on server, client-side on client
+let session: any = null
+if (import.meta.server) {
+  const serverSession = await useServerSession()
+  session = ref(serverSession)
+} else {
+  const { data } = useAuth().useSession(useFetch)
+  session = data
+}
+
+// Check if user is admin via API
+const { data: adminCheck } = await useAsyncData(
+  'admin-check',
+  () => $fetch<{ isAdmin: boolean }>('/api/icp/admin/check').catch(() => ({ isAdmin: false })),
+  { watch: [session] }
+)
+const isAdmin = computed(() => adminCheck.value?.isAdmin ?? false)
 </script>
 
 <template>
@@ -17,8 +35,16 @@ const localePath = useLocalePath()
               {{ t('footer.tagline') }}
             </p>
             <NuxtLink
-              :to="localePath('/icp/202600000')"
+              v-if="isAdmin"
+              :to="localePath('/administration')"
               class="link link-hover block text-xs opacity-65 hover:opacity-80 transition-opacity mt-4"
+            >
+              {{ t('footer.adminPanel') || 'Admin Panel' }}
+            </NuxtLink>
+            <NuxtLink
+              :to="localePath('/icp/202600000')"
+              class="link link-hover block text-xs opacity-65 hover:opacity-80 transition-opacity"
+              :class="isAdmin ? 'mt-1' : 'mt-4'"
             >
               羝 ICP 备 202600000 号
             </NuxtLink>

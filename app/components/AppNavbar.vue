@@ -2,6 +2,7 @@
 import {
   Sun,
   Moon,
+  Monitor,
   Compass,
   Layers,
   Calendar,
@@ -14,13 +15,20 @@ import {
   LogOut,
   UserRound,
 } from 'lucide-vue-next'
-import { authClient } from '~/lib/auth-client'
 
 const { t, locale, locales } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 
-const { data: session } = await authClient.useSession(useFetch)
+// Use server-side session on server, client-side on client
+let session: any = null
+if (import.meta.server) {
+  const serverSession = await useServerSession()
+  session = ref(serverSession)
+} else {
+  const { data } = await useAuth().useSession(useFetch)
+  session = data
+}
 
 interface Props {
   bannerHeight?: string
@@ -40,18 +48,32 @@ const navItems = computed(() => [
 
 const isMobileMenuOpen = ref(false)
 const isDark = ref(false)
+const themeMode = ref<'auto' | 'light' | 'dark'>('auto')
+
+function getSystemTheme(): 'light' | 'dark' {
+  return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+function applyTheme(mode: 'auto' | 'light' | 'dark') {
+  if (import.meta.server) return
+  const resolved = mode === 'auto' ? getSystemTheme() : mode
+  document.documentElement.setAttribute('data-theme', resolved)
+  isDark.value = resolved === 'dark'
+}
 
 function syncTheme() {
   if (import.meta.server) return
-  isDark.value = document.documentElement.getAttribute('data-theme') === 'dark'
+  const stored = localStorage.getItem('theme') as 'auto' | 'light' | 'dark' | null
+  themeMode.value = stored || 'auto'
+  applyTheme(themeMode.value)
 }
 
-function toggleTheme() {
+function cycleTheme() {
   if (import.meta.server) return
-  const theme = isDark.value ? 'light' : 'dark'
-  document.documentElement.setAttribute('data-theme', theme)
-  localStorage.setItem('theme', theme)
-  isDark.value = !isDark.value
+  const next = themeMode.value === 'auto' ? 'light' : themeMode.value === 'light' ? 'dark' : 'auto'
+  themeMode.value = next
+  localStorage.setItem('theme', next)
+  applyTheme(next)
 }
 
 function closeMobileMenu() {
@@ -86,10 +108,9 @@ const languageNames: Record<string, string> = {
 onMounted(() => {
   syncTheme()
 
-  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-    if (!localStorage.getItem('theme')) {
-      document.documentElement.setAttribute('data-theme', e.matches ? 'dark' : 'light')
-      isDark.value = e.matches
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+    if (themeMode.value === 'auto') {
+      applyTheme('auto')
     }
   })
 
@@ -179,7 +200,7 @@ onMounted(() => {
               </NuxtLink>
             </li>
             <li>
-              <button class="rounded-xl gap-2" @click.stop="authClient.signOut()">
+              <button class="rounded-xl gap-2" @click.stop="useAuth().signOut()">
                 <LogOut class="w-4 h-4" />
                 {{ t('nav.signOut', 'Sign out') }}
               </button>
@@ -198,9 +219,11 @@ onMounted(() => {
 
         <button
           class="flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
-          @click="toggleTheme"
+          :title="themeMode === 'auto' ? 'Auto (System)' : themeMode === 'dark' ? 'Dark' : 'Light'"
+          @click="cycleTheme"
         >
-          <Sun v-if="isDark" class="w-5 h-5" />
+          <Monitor v-if="themeMode === 'auto'" class="w-5 h-5" />
+          <Sun v-else-if="themeMode === 'dark'" class="w-5 h-5" />
           <Moon v-else class="w-5 h-5" />
         </button>
 

@@ -46,7 +46,7 @@ interface SiteDetail {
 
 const { data, error } = await useAsyncData(
   `icp-site-${fillingNo.value}`,
-  () => $fetch<{ site: SiteDetail }>('/api/icp-site-detail', {
+  () => $fetch<{ site: SiteDetail }>('/api/icp/site', {
     params: { filling_no: fillingNo.value },
   }),
 )

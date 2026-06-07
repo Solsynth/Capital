@@ -1,8 +1,15 @@
-import { authClient } from '~/lib/auth-client'
-
 export default defineNuxtRouteMiddleware(async (to) => {
-  const { data: session } = await authClient.useSession(useFetch)
-  if (!session.value) {
-    return navigateTo({ path: '/auth/login', query: { redirect: to.fullPath } })
+  if (import.meta.server) {
+    // Server-side: use direct database access
+    const session = await useServerSession()
+    if (!session) {
+      return navigateTo({ path: '/auth/login', query: { redirect: to.fullPath } })
+    }
+  } else {
+    // Client-side: use HTTP request
+    const { data: session } = await useAuth().useSession(useFetch)
+    if (!session.value) {
+      return navigateTo({ path: '/auth/login', query: { redirect: to.fullPath } })
+    }
   }
 })
