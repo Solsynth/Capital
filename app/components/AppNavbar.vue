@@ -11,11 +11,16 @@ import {
   Languages,
   BadgeCheck,
   CircleUser,
+  LogOut,
+  UserRound,
 } from 'lucide-vue-next'
+import { authClient } from '~/lib/auth-client'
 
 const { t, locale, locales } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
+
+const { data: session } = await authClient.useSession(useFetch)
 
 interface Props {
   bannerHeight?: string
@@ -151,7 +156,40 @@ onMounted(() => {
           </ul>
         </div>
 
+        <!-- Logged in: user dropdown -->
+        <div v-if="session?.user" class="dropdown dropdown-end z-50">
+          <div
+            tabindex="0"
+            role="button"
+            class="flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
+          >
+            <img
+              v-if="session.user.image"
+              :src="session.user.image"
+              :alt="session.user.name"
+              class="w-5 h-5 rounded-full object-cover"
+            >
+            <CircleUser v-else class="w-5 h-5" />
+          </div>
+          <ul tabindex="0" class="dropdown-content menu z-[100] w-48 rounded-2xl border border-base-content/10 bg-base-100/80 p-2 shadow-xl shadow-black/10 backdrop-blur-2xl dark:border-base-content/5 dark:bg-base-100/60">
+            <li>
+              <NuxtLink :to="localePath('/auth/profile')" class="rounded-xl gap-2" @click.stop>
+                <UserRound class="w-4 h-4" />
+                {{ t('nav.profile', 'Profile') }}
+              </NuxtLink>
+            </li>
+            <li>
+              <button class="rounded-xl gap-2" @click.stop="authClient.signOut()">
+                <LogOut class="w-4 h-4" />
+                {{ t('nav.signOut', 'Sign out') }}
+              </button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Logged out: login link -->
         <NuxtLink
+          v-else
           :to="localePath('/auth/login')"
           class="flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
         >

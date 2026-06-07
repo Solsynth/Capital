@@ -340,5 +340,14 @@
   "login.subtitle": "欢迎回来",
   "login.solian": "使用 Solarpass 登录",
   "login.or": "或",
-  "login.signIn": "登录"
+  "login.signIn": "登录",
+  "nav.signOut": "退出登录",
+  "nav.profile": "个人资料",
+  "profile.verified": "邮箱已验证",
+  "profile.unverified": "未验证",
+  "profile.editName": "编辑昵称",
+  "profile.namePlaceholder": "您的昵称",
+  "profile.email": "邮箱",
+  "profile.joined": "加入时间",
+  "profile.id": "用户 ID"
 }

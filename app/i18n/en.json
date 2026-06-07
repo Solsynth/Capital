@@ -340,5 +340,14 @@
   "login.subtitle": "Welcome back",
   "login.solian": "Continue with Solarpass",
   "login.or": "or",
-  "login.signIn": "Sign in"
+  "login.signIn": "Sign in",
+  "nav.signOut": "Sign out",
+  "nav.profile": "Profile",
+  "profile.verified": "Email verified",
+  "profile.unverified": "Unverified",
+  "profile.editName": "Edit name",
+  "profile.namePlaceholder": "Your name",
+  "profile.email": "Email",
+  "profile.joined": "Joined",
+  "profile.id": "User ID"
 }

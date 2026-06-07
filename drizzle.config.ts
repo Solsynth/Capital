@@ -1,10 +1,13 @@
 import { defineConfig } from 'drizzle-kit'
 
+const dbUrl = process.env.DATABASE_URL || ''
+const isPostgres = dbUrl.startsWith('postgresql://') || dbUrl.startsWith('postgres://')
+
 export default defineConfig({
-  out: './drizzle',
-  schema: './server/db/schema.ts',
-  dialect: 'sqlite',
-  dbCredentials: {
-    url: 'server/local.db',
-  },
+  out: isPostgres ? './drizzle-pg' : './drizzle',
+  schema: isPostgres ? './server/db/schema-pg.ts' : './server/db/schema-sqlite.ts',
+  dialect: isPostgres ? 'postgresql' : 'sqlite',
+  dbCredentials: isPostgres
+    ? { url: dbUrl }
+    : { url: 'server/local.db' },
 })
