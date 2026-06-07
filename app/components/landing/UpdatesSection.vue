@@ -20,16 +20,16 @@ function getDisplayTitle(post: { title: string, content: string }): string | nul
   return null
 }
 
-function isImageAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
-  return attachment.file_meta?.mime_type?.startsWith('image/') ?? false
+function isImageAttachment(attachment: { mime_type: string }): boolean {
+  return attachment.mime_type?.startsWith('image/') ?? false
 }
 
-function isVideoAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
-  return attachment.file_meta?.mime_type?.startsWith('video/') ?? false
+function isVideoAttachment(attachment: { mime_type: string }): boolean {
+  return attachment.mime_type?.startsWith('video/') ?? false
 }
 
-function isAudioAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
-  return attachment.file_meta?.mime_type?.startsWith('audio/') ?? false
+function isAudioAttachment(attachment: { mime_type: string }): boolean {
+  return attachment.mime_type?.startsWith('audio/') ?? false
 }
 
 function getInitials(name: string): string {

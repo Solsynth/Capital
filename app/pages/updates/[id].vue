@@ -27,16 +27,16 @@ function getDisplayTitle(post: { title: string, content: string }): string | nul
   return null
 }
 
-function isImageAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
-  return attachment.file_meta?.mime_type?.startsWith('image/') ?? false
+function isImageAttachment(attachment: { mime_type: string }): boolean {
+  return attachment.mime_type?.startsWith('image/') ?? false
 }
 
-function isVideoAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
-  return attachment.file_meta?.mime_type?.startsWith('video/') ?? false
+function isVideoAttachment(attachment: { mime_type: string }): boolean {
+  return attachment.mime_type?.startsWith('video/') ?? false
 }
 
-function isAudioAttachment(attachment: { file_meta: { mime_type: string } }): boolean {
-  return attachment.file_meta?.mime_type?.startsWith('audio/') ?? false
+function isAudioAttachment(attachment: { mime_type: string }): boolean {
+  return attachment.mime_type?.startsWith('audio/') ?? false
 }
 
 function getInitials(name: string): string {
@@ -58,12 +58,12 @@ useSeoMeta({
     ? post.value.content.substring(0, 160).replace(/[#*\n]/g, ' ').trim()
     : t('seo.updates.description'),
   ogTitle: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.updates.title')} - ${t('seo.siteName')}`,
-  ogImage: () => post.value?.attachments?.[0]?.file_meta?.mime_type?.startsWith('image/')
+  ogImage: () => post.value?.attachments?.[0]?.mime_type?.startsWith('image/')
     ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
     : undefined,
   twitterCard: 'summary_large_image',
   twitterTitle: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.updates.title')} - ${t('seo.siteName')}`,
-  twitterImage: () => post.value?.attachments?.[0]?.file_meta?.mime_type?.startsWith('image/')
+  twitterImage: () => post.value?.attachments?.[0]?.mime_type?.startsWith('image/')
     ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
     : undefined,
 })
