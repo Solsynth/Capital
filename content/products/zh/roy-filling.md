@@ -1,10 +1,10 @@
 ---
 title: "中羊网备"
 description: "Republic of Yang's friendly link list"
-icon: "/images//republic-of-yang/filling.png"
-background: "/images//republic-of-yang/greatwall.webp"
+icon: "/images/republic-of-yang/filling.png"
+background: "/images/republic-of-yang/greatwall.webp"
 url: "https://solsynth.dev/icp"
-repo: "https://github.com/Solsynth/Solian"
+repo: "https://github.com/Solsynth/Capital.Next"
 version: "1.0.0"
 releasedDate: "2026-05-24"
 hasPage: true
@@ -14,7 +14,7 @@ series: "Republic of Yang"
 
 **免责声明：本服务是受到 [萌国 ICP](https://icp.gov.moe) 启发的友链项目，和中华人民共和国工业和信息化部提供的 ICP 备案没有任何关系，不具任何法律效应。本页面描述的任何主体都是在架空世界观下的虚构主体，不代表现实中任何的主体，如有雷同，纯属巧合。我们不为列表中的任何网站提供担保，对于其可能遭受的 DNS 污染 / 劫持等引发的安全问题以及诈骗风险，我们不承担任何责任。**
 
-*叠甲的部份结束了，现在是幻想时间 >_<*
+_叠甲的部份结束了，现在是幻想时间 >\_<_
 
 **羝 (dī) ICP 备**是由中华羊国网络信息办公室授权索尔幸兹设立的一套网络内容提供商 (Internet Content Provider aka ICP) 的备案服务。
 方便让羊国以及其他国家的公民查阅到受 Solsynth 及其合作伙伴认证的网站，提高网络世界的内容质量以及扶持羊国本土互联网企业发展的计划。
@@ -50,7 +50,7 @@ series: "Republic of Yang"
 为了验证您对域名的所有权，您需要通过 DNS TXT 记录完成挑战：
 
 1. 如果您拥有 **Solarpass** 账户，直接在 `_roy_challenge.<您的域名>` 添加一条 TXT 记录，值为您的 Solarpass 用户名（**包含 @ 符号**）
-2. 如果您还没有 Solarpass 账户，请先发送邮件至 **lily@solsynth.dev** 申请一个挑战字符串，然后将其添加到 `_roy_challenge.<您的域名>` 的 TXT 记录中
+2. 如果您还没有 Solarpass 账户，请先发送邮件至 **<lily@solsynth.dev>** 申请一个挑战字符串，然后将其添加到 `_roy_challenge.<您的域名>` 的 TXT 记录中
 
 添加完成后，系统会自动验证并通过备案。
 
@@ -60,7 +60,7 @@ series: "Republic of Yang"
 
 如果您不方便使用在线表单，也可以通过邮件提交备案申请。
 
-发送邮件至 **lily@solsynth.dev**，主题为 **ROY 备案申请**，并在邮件中包含以下信息：
+发送邮件至 **<lily@solsynth.dev>**，主题为 **ROY 备案申请**，并在邮件中包含以下信息：
 
 - **网站名称**：您的网站名称
 - **网站地址**：您的网站完整 URL

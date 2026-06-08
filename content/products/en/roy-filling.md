@@ -1,10 +1,10 @@
 ---
 title: "ROY ICP Filling"
 description: "Republic of Yang's friendly link list"
-icon: "/images//republic-of-yang/filling.png"
-background: "/images//republic-of-yang/greatwall.webp"
+icon: "/images/republic-of-yang/filling.png"
+background: "/images/republic-of-yang/greatwall.webp"
 url: "/icp"
-repo: "https://github.com/Solsynth/Solian"
+repo: "https://github.com/Solsynth/Capital.Next"
 version: "1.0.0"
 releasedDate: "2026-05-24"
 hasPage: true
@@ -14,7 +14,7 @@ series: "Republic of Yang"
 
 **Disclaimer: This service is a friendly link project inspired by [Moe ICP](https://icp.gov.moe). It has no affiliation with the ICP filing system provided by the Ministry of Industry and Information Technology of the People's Republic of China and carries no legal effect. Any entities described on this page are fictional constructs under a fictional world setting and do not represent any real-world entities. Any resemblance is purely coincidental. We do not provide any warranty for the websites listed, and we assume no responsibility for security issues such as DNS pollution/hijacking or fraud risks they may encounter.**
 
-*The disclaimer is over — now it's fantasy time >_<*
+_The disclaimer is over — now it's fantasy time >\_<_
 
 **羝 (dī) ICP Filing** is a content provider registration service established by Solsynth under the authorization of the Republic of Yang's Network Information Office. It allows citizens of the Republic of Yang and other countries to browse websites certified by Solsynth and its partners, improving content quality on the internet and supporting the growth of local internet enterprises in the Republic of Yang.
 
@@ -49,7 +49,7 @@ Submit your website information on the [羝 ICP Filing page](https://solsynth.de
 To verify your ownership of the domain, you need to complete a challenge via DNS TXT record:
 
 1. If you have a **Solarpass** account, add a TXT record at `_roy_challenge.<your domain>` with the value being your Solarpass username (**including the @ symbol**)
-2. If you don't have a Solarpass account yet, email **lily@solsynth.dev** first to request a challenge string, then add it to the TXT record at `_roy_challenge.<your domain>`
+2. If you don't have a Solarpass account yet, email **<lily@solsynth.dev>** first to request a challenge string, then add it to the TXT record at `_roy_challenge.<your domain>`
 
 Once added, the system will automatically verify and approve your filing.
 
@@ -59,7 +59,7 @@ Once added, the system will automatically verify and approve your filing.
 
 If you prefer not to use the online form, you can also submit your application via email.
 
-Send an email to **lily@solsynth.dev** with the subject **ROY 备案申请** and include the following information:
+Send an email to **<lily@solsynth.dev>** with the subject **ROY 备案申请** and include the following information:
 
 - **Site Name**: The name of your website
 - **Site URL**: The full URL of your website
