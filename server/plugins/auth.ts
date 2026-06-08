@@ -9,7 +9,7 @@ export default defineNitroPlugin(async (nitroApp) => {
       return
     }
     
-    // Parse the session token from cookies
+    // Parse cookies to check for session token (handles both secure and non-secure cookie names)
     const cookies = cookieHeader.split(';').reduce((acc, cookie) => {
       const [key, value] = cookie.trim().split('=')
       if (key && value) {
@@ -18,7 +18,8 @@ export default defineNitroPlugin(async (nitroApp) => {
       return acc
     }, {} as Record<string, string>)
     
-    const sessionToken = cookies['better-auth.session_token']
+    // Check for both standard and secure-prefixed cookie names
+    const sessionToken = cookies['better-auth.session_token'] || cookies['__Secure-better-auth.session_token']
     if (!sessionToken) {
       event.context.session = null
       return
