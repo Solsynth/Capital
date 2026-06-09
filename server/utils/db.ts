@@ -4,6 +4,7 @@ import { isPostgres } from "../db";
 import * as schema from "../db";
 import Database from "better-sqlite3";
 import { drizzle as drizzleSqlite } from "drizzle-orm/better-sqlite3";
+import { migrate as migrateSqlite } from "drizzle-orm/better-sqlite3/migrator";
 import { drizzle as drizzlePg } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 
@@ -33,7 +34,10 @@ function createDb() {
   const sqlitePath = resolveSqlitePath();
   ensureSqliteDirectory(sqlitePath);
   const sqlite = new Database(sqlitePath);
-  return drizzleSqlite(sqlite, { schema });
+  sqlite.pragma("journal_mode = WAL");
+  const instance = drizzleSqlite(sqlite, { schema });
+  migrateSqlite(instance, { migrationsFolder: "drizzle" });
+  return instance;
 }
 
 export const db = createDb();

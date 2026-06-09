@@ -25,3 +25,5 @@ server/local.db
 .env
 .env.*
 !.env.example
+
+local.db*
