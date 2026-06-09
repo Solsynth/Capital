@@ -47,12 +47,7 @@ export default defineNuxtConfig({
   },
 
   ogImage: {
-    enabled: true,
-    compatibility: {
-      runtime: {
-        satori: false
-      }
-    }
+    enabled: true
   },
 
   i18n: {
