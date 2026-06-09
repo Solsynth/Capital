@@ -14,7 +14,7 @@ useSeoMeta({
   description: () => t('seo.products.description'),
 })
 
-defineOgImageComponent('OgImage', {
+defineOgImage('OgImage', {
   title: t('products.title'),
   description: t('seo.products.description'),
 })

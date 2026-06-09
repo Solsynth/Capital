@@ -22,6 +22,13 @@ useSeoMeta({
   twitterCard: "summary_large_image",
   twitterImage: "/images/republic-of-yang/filling.png",
 });
+
+defineOgImage('OgImage', {
+  title: () => t('royIcpFilling.title'),
+  description: () => t('royIcpFilling.tagline'),
+  iconImage: '/images/republic-of-yang/filling.png',
+  backgroundImage: '/images/republic-of-yang/greatwall.webp',
+})
 </script>
 
 <template>

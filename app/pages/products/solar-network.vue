@@ -28,9 +28,6 @@ import {
 } from "@lucide/vue";
 
 const { t, locale } = useI18n();
-const localePath = useLocalePath();
-
-const lang = computed(() => locale.value);
 
 const activePlatform = ref("web");
 const copied = ref(false);
@@ -63,7 +60,7 @@ function copyCommand() {
 
 definePageMeta({
   title: "Solar Network",
-  description: "",
+  description: "The peaceful Social Network.",
 });
 
 useSeoMeta({
@@ -72,6 +69,13 @@ useSeoMeta({
   twitterCard: "summary_large_image",
   twitterImage: "/images/solar-network/main-visual.webp",
 });
+
+defineOgImage('OgImage', {
+  title: 'Solar Network',
+  description: () => t('solarNetwork.tagline'),
+  iconImage: '/images/solar-network/icon.png',
+  backgroundImage: '/images/solar-network/main-visual.webp',
+})
 </script>
 
 <template>

@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import HeroSection from "~/components/landing/HeroSection.vue";
-import ProductsSection from "~/components/landing/ProductsSection.vue";
-import StatsSection from "~/components/landing/StatsSection.vue";
-import UpdatesSection from "~/components/landing/UpdatesSection.vue";
+import HeroSection from "../components/Landing/HeroSection.vue";
+import ProductsSection from "../components/Landing/ProductsSection.vue";
+import StatsSection from "../components/Landing/StatsSection.vue";
+import UpdatesSection from "../components/Landing/UpdatesSection.vue";
 
 const { t, locale } = useI18n()
 const lang = computed(() => locale.value)
@@ -18,7 +18,7 @@ useSeoMeta({
 
 defineOgImage('OgImage', {
   title: t('seo.siteName'),
-  description: t('seo.home.description'),
+  description: t('seo.home.description')
 })
 
 const { data: products } = await useAsyncData(`products-home-${lang.value}`, async () => {

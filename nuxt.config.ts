@@ -23,6 +23,13 @@ export default defineNuxtConfig({
     "@nuxt/fonts",
   ],
 
+  fonts: {
+    families: [
+      { name: 'Nunito', weights: [400, 700], global: true },
+      { name: 'Noto Sans SC', weights: [400, 700], global: true },
+    ],
+  },
+
   css: ["~/assets/css/global.css"],
 
   vite: {
@@ -41,10 +48,11 @@ export default defineNuxtConfig({
 
   ogImage: {
     enabled: true,
-    defaults: {
-      renderer: "takumi",
-      component: "OgImage",
-    },
+    compatibility: {
+      runtime: {
+        satori: false
+      }
+    }
   },
 
   i18n: {
