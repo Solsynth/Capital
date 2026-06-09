@@ -36,7 +36,9 @@ function createDb() {
   const sqlite = new Database(sqlitePath);
   sqlite.pragma("journal_mode = WAL");
   const instance = drizzleSqlite(sqlite, { schema });
-  migrateSqlite(instance, { migrationsFolder: "drizzle" });
+  if (import.meta.dev) {
+    migrateSqlite(instance, { migrationsFolder: "drizzle" });
+  }
   return instance;
 }
 
