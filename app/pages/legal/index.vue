@@ -15,7 +15,7 @@ useSeoMeta({
   description: () => t('seo.legal.description'),
 })
 
-defineOgImage('OgImage', {
+defineOgImage('OgImage.takumi', {
   title: t('legal.title'),
   description: t('seo.legal.description'),
 })

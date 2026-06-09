@@ -47,7 +47,7 @@ export default defineNuxtConfig({
   },
 
   ogImage: {
-    enabled: true
+    enabled: true,
   },
 
   i18n: {

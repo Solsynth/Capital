@@ -17,7 +17,7 @@ useSeoMeta({
   description: () => t('seo.events.description'),
 })
 
-defineOgImage('OgImage', {
+defineOgImage('OgImage.takumi', {
   title: t('events.title'),
   description: t('seo.events.description'),
 })

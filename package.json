@@ -36,6 +36,7 @@
     "nuxt": "^4.4.8",
     "nuxt-og-image": "^6.5.3",
     "pg": "^8.21.0",
+    "playwright-core": "^1.60.0",
     "pocketbase": "^0.26.9",
     "satori": "^0.26.0",
     "tailwindcss": "^4.3.0",
