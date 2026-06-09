@@ -14,7 +14,7 @@ import {
   CircleUser,
   LogOut,
   UserRound,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 
 const { t, locale, locales } = useI18n()
 const localePath = useLocalePath()

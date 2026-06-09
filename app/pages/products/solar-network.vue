@@ -1,9 +1,8 @@
 <script setup lang="ts">
 import {
-  Github,
+  CodeXml,
   ExternalLink,
   Bug,
-  Tag,
   Folder,
   MessageSquare,
   FileText,
@@ -17,19 +16,16 @@ import {
   Sparkles,
   Zap,
   Shield,
-  Smartphone,
   Monitor,
   Bell,
   Calendar,
   Wallet,
   Image,
   CheckCircle,
-  Apple,
-  Terminal,
   Copy,
   Check,
   SmilePlus,
-} from "lucide-vue-next";
+} from "@lucide/vue";
 
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
@@ -131,7 +127,7 @@ useSeoMeta({
               target="_blank"
               class="btn btn-outline btn-lg rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] hover:scale-105 transition-all"
             >
-              <Github class="w-5 h-5" />
+              <CodeXml class="w-5 h-5" />
               GitHub
             </a>
           </div>
@@ -997,7 +993,7 @@ useSeoMeta({
                   target="_blank"
                   class="btn btn-ghost rounded-full"
                 >
-                  <Github class="w-5 h-5" />
+                  <CodeXml class="w-5 h-5" />
                   {{ t("solarNetwork.download.github") }}
                 </a>
               </div>
@@ -1068,7 +1064,7 @@ useSeoMeta({
                   target="_blank"
                   class="btn btn-outline rounded-full"
                 >
-                  <Github class="w-5 h-5" />
+                  <CodeXml class="w-5 h-5" />
                   {{ t("solarNetwork.download.github") }}
                 </a>
               </div>
@@ -1099,7 +1095,7 @@ useSeoMeta({
                   target="_blank"
                   class="btn btn-outline rounded-full"
                 >
-                  <Github class="w-5 h-5" />
+                  <CodeXml class="w-5 h-5" />
                   {{ t("solarNetwork.download.github") }}
                 </a>
               </div>
@@ -1113,7 +1109,7 @@ useSeoMeta({
             target="_blank"
             class="btn btn-ghost gap-2"
           >
-            <Github class="w-4 h-4" />
+            <CodeXml class="w-4 h-4" />
             {{ t("solarNetwork.journey.viewGithub") }}
           </a>
         </div>

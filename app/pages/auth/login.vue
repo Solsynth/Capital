@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CircleUser, Mail, KeyRound, ArrowRight, ShieldCheck, UserPlus } from 'lucide-vue-next'
+import { CircleUser, Mail, KeyRound, ArrowRight, ShieldCheck, UserPlus } from '@lucide/vue'
 
 const { t } = useI18n()
 const localePath = useLocalePath()

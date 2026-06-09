@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Upload, X, Loader2 } from 'lucide-vue-next'
+import { Upload, X, Loader2 } from '@lucide/vue'
 import type { UploadedFile } from '~/composables/useFileUpload'
 
 interface Props {

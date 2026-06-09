@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Github, ExternalLink, Info } from "lucide-vue-next";
+import { CodeXml, ExternalLink, Info } from "@lucide/vue";
 
 interface Props {
   name: string;
@@ -40,7 +40,7 @@ const localePath = useLocalePath();
           target="_blank"
           class="btn btn-circle btn-xs bg-white/80 hover:bg-white text-black border-none"
         >
-          <Github class="w-3.5 h-3.5" />
+          <CodeXml class="w-3.5 h-3.5" />
         </a>
         <a
           v-if="url"

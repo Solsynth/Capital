@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, Paperclip, Eye, MessageCircle, Heart, ArrowRight, Hash, X, Loader2 } from 'lucide-vue-next'
+import { Calendar, Paperclip, Eye, MessageCircle, Heart, ArrowRight, Hash, X, Loader2 } from '@lucide/vue'
 
 const { t } = useI18n()
 const localePath = useLocalePath()

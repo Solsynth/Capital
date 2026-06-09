@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Github, ExternalLink, Bug, ArrowLeft, Tag, Folder } from 'lucide-vue-next'
+import { CodeXml, ExternalLink, Bug, ArrowLeft, Tag, Folder } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
@@ -92,7 +92,7 @@ useSeoMeta({
                 {{ t('product.open') }}
               </a>
               <a v-if="product.repo" :href="product.repo" target="_blank" class="btn btn-outline">
-                <Github class="w-5 h-5" />
+                <CodeXml class="w-5 h-5" />
                 {{ t('product.github') }}
               </a>
             </div>
@@ -148,7 +148,7 @@ useSeoMeta({
                 {{ t('product.getStarted') }}
               </a>
               <a v-if="product.repo" :href="product.repo" target="_blank" class="btn btn-outline btn-lg rounded-full">
-                <Github class="w-5 h-5" />
+                <CodeXml class="w-5 h-5" />
                 {{ t('product.github') }}
               </a>
             </div>
@@ -217,7 +217,7 @@ useSeoMeta({
                 {{ t('product.openBrowser') }}
               </a>
               <a v-if="product.repo" :href="product.repo" target="_blank" class="btn btn-outline">
-                <Github class="w-5 h-5" />
+                <CodeXml class="w-5 h-5" />
                 {{ t('product.viewGithub') }}
               </a>
             </div>
@@ -285,7 +285,7 @@ useSeoMeta({
                 {{ t('product.open') }}
               </a>
               <a v-if="product.repo" :href="product.repo" target="_blank" class="btn btn-outline">
-                <Github class="w-5 h-5" />
+                <CodeXml class="w-5 h-5" />
                 {{ t('product.github') }}
               </a>
             </div>
@@ -335,7 +335,7 @@ useSeoMeta({
               {{ t('product.visitWebsite') }}
             </a>
             <a v-if="product.repo" :href="product.repo" target="_blank" class="btn btn-outline btn-sm">
-              <Github class="w-4 h-4" />
+              <CodeXml class="w-4 h-4" />
               {{ t('product.sourceCode') }}
             </a>
             <NuxtLink :to="localePath('/products')" class="btn btn-ghost btn-sm">

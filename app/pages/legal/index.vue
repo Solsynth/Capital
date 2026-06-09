@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FileText, Scale, Shield, Code } from 'lucide-vue-next'
+import { FileText, Scale, Shield, Code } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { CircleUser, Mail, ShieldCheck, Calendar, Edit3, Check, X } from 'lucide-vue-next'
+import { CircleUser, Mail, ShieldCheck, Calendar, Edit3, Check, X } from '@lucide/vue'
 
 definePageMeta({ middleware: 'auth' })
 

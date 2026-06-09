@@ -5,7 +5,7 @@ import {
   Bug,
   Mail,
   BadgeCheck, User, Plus
-} from "lucide-vue-next";
+} from "@lucide/vue";
 
 const localePath = useLocalePath()
 

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, MapPin, Tag, ArrowRight } from 'lucide-vue-next'
+import { Calendar, MapPin, Tag, ArrowRight } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()

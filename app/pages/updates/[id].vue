@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Eye, MessageCircle, Heart, ArrowRight, Calendar, Paperclip } from 'lucide-vue-next'
+import { ArrowLeft, Eye, MessageCircle, Heart, ArrowRight, Calendar, Paperclip } from '@lucide/vue'
 import { renderMarkdown } from '~/utils/marked'
 
 const { t, locale } = useI18n()

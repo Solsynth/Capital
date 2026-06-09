@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Calendar } from 'lucide-vue-next'
+import { ArrowLeft, Calendar } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()

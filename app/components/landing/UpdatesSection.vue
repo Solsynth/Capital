@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ChevronLeft, ChevronRight, Calendar, Paperclip, ArrowRight, Hash } from 'lucide-vue-next'
+import { ChevronLeft, ChevronRight, Calendar, Paperclip, ArrowRight, Hash } from '@lucide/vue'
 
 const { t } = useI18n()
 const localePath = useLocalePath()

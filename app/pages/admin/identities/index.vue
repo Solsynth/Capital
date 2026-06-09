@@ -4,7 +4,7 @@ import {
   Building2,
   Search,
   Trash2,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 
 const { locale } = useI18n()
 const localePath = useLocalePath()

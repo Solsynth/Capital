@@ -7,7 +7,7 @@ import {
   User,
   Building2,
   Image,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()

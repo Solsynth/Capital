@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Heart, Code, Users, Sparkles, Github, ArrowLeft, AlertTriangle } from 'lucide-vue-next'
+import { Heart, Code, Users, Sparkles, Github, ArrowLeft, AlertTriangle } from '@lucide/vue'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
@@ -205,7 +205,7 @@ const stats = computed(() => [
                 target="_blank"
                 class="btn btn-outline btn-sm"
               >
-                <Github class="w-4 h-4" />
+                <CodeXml class="w-4 h-4" />
                 GitHub
               </a>
             </div>

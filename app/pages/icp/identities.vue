@@ -9,7 +9,7 @@ import {
   X,
   Check,
   Camera,
-} from 'lucide-vue-next'
+} from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
