@@ -24,9 +24,9 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => page.value?.title ? `${page.value.title} - ${t('seo.siteName')}` : `${t('seo.legal.title')} - ${t('seo.siteName')}`,
+  title: () => page.value?.title ? `${page.value.title}` : `${t('seo.legal.title')}`,
   description: () => page.value?.description || t('seo.legal.description'),
-  ogTitle: () => page.value?.title ? `${page.value.title} - ${t('seo.siteName')}` : `${t('seo.legal.title')} - ${t('seo.siteName')}`,
+  ogTitle: () => page.value?.title ? `${page.value.title}` : `${t('seo.legal.title')}`,
   ogDescription: () => page.value?.description || t('seo.legal.description'),
 })
 

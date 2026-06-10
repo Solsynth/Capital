@@ -26,13 +26,13 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => event.value?.name ? `${event.value.name} - ${t('seo.siteName')}` : `${t('seo.events.title')} - ${t('seo.siteName')}`,
+  title: () => event.value?.name ? `${event.value.name}` : `${t('seo.events.title')}`,
   description: () => event.value?.description || t('seo.events.description'),
-  ogTitle: () => event.value?.name ? `${event.value.name} - ${t('seo.siteName')}` : `${t('seo.events.title')} - ${t('seo.siteName')}`,
+  ogTitle: () => event.value?.name ? `${event.value.name}` : `${t('seo.events.title')}`,
   ogDescription: () => event.value?.description || t('seo.events.description'),
   ogImage: () => event.value?.coverImage || undefined,
   twitterCard: 'summary_large_image',
-  twitterTitle: () => event.value?.name ? `${event.value.name} - ${t('seo.siteName')}` : `${t('seo.events.title')} - ${t('seo.siteName')}`,
+  twitterTitle: () => event.value?.name ? `${event.value.name}` : `${t('seo.events.title')}`,
   twitterDescription: () => event.value?.description || t('seo.events.description'),
   twitterImage: () => event.value?.coverImage || undefined,
 })

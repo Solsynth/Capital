@@ -9,7 +9,7 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => `${t('seo.updates.title')} - ${t('seo.siteName')}`,
+  title: () => `${t('seo.updates.title')}`,
   description: () => t('seo.updates.description'),
 })
 

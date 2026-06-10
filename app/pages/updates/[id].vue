@@ -53,16 +53,16 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.updates.title')} - ${t('seo.siteName')}`,
+  title: () => displayTitle.value ? `${displayTitle.value}` : `${t('seo.updates.title')}`,
   description: () => post.value?.content
     ? post.value.content.substring(0, 160).replace(/[#*\n]/g, ' ').trim()
     : t('seo.updates.description'),
-  ogTitle: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.updates.title')} - ${t('seo.siteName')}`,
+  ogTitle: () => displayTitle.value ? `${displayTitle.value}` : `${t('seo.updates.title')}`,
   ogImage: () => post.value?.attachments?.[0]?.mime_type?.startsWith('image/')
     ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
     : undefined,
   twitterCard: 'summary_large_image',
-  twitterTitle: () => displayTitle.value ? `${displayTitle.value} - ${t('seo.siteName')}` : `${t('seo.updates.title')} - ${t('seo.siteName')}`,
+  twitterTitle: () => displayTitle.value ? `${displayTitle.value}` : `${t('seo.updates.title')}`,
   twitterImage: () => post.value?.attachments?.[0]?.mime_type?.startsWith('image/')
     ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
     : undefined,

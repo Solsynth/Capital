@@ -36,13 +36,13 @@ definePageMeta({
 })
 
 useSeoMeta({
-  title: () => title.value ? `${title.value} - ${t('seo.siteName')}` : `${t('seo.product.title', { name: '' })} - ${t('seo.siteName')}`,
+  title: () => title.value ? `${title.value}` : `${t('seo.product.title', { name: '' })}`,
   description: () => description.value || t('seo.products.description'),
-  ogTitle: () => title.value ? `${title.value} - ${t('seo.siteName')}` : `${t('seo.product.title', { name: '' })} - ${t('seo.siteName')}`,
+  ogTitle: () => title.value ? `${title.value}` : `${t('seo.product.title', { name: '' })}`,
   ogDescription: description,
   ogImage: () => product.value?.background || undefined,
   twitterCard: 'summary_large_image',
-  twitterTitle: () => title.value ? `${title.value} - ${t('seo.siteName')}` : `${t('seo.product.title', { name: '' })} - ${t('seo.siteName')}`,
+  twitterTitle: () => title.value ? `${title.value}` : `${t('seo.product.title', { name: '' })}`,
   twitterDescription: description,
   twitterImage: () => product.value?.background || undefined,
 })
