@@ -15,10 +15,31 @@ useSeoMeta({
   description: () => t('seo.legal.description'),
 })
 
-defineOgImage('OgImage.takumi', {
+defineOgImage('OgImage', {
   title: t('legal.title'),
   description: t('seo.legal.description'),
 })
+
+// Schema.org Structured Data for Legal Pages Collection
+useSchemaOrg([
+  defineCollectionPage({
+    name: () => t('seo.legal.title'),
+    description: () => t('seo.legal.description'),
+    url: () => `https://solsynth.dev${useRoute().path}`,
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      {
+        name: t('seo.home.title'),
+        item: 'https://solsynth.dev',
+      },
+      {
+        name: t('seo.legal.title'),
+        item: () => `https://solsynth.dev${useRoute().path}`,
+      },
+    ],
+  }),
+])
 
 const { data: currentLangPages } = await useAsyncData(`legal-list-${lang.value}`, async () => {
   const pages = await queryCollection('legal')

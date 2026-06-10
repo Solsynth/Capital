@@ -13,10 +13,31 @@ useSeoMeta({
   description: () => t('seo.updates.description'),
 })
 
-defineOgImage('OgImage.takumi', {
+defineOgImage('OgImage', {
   title: t('updates.title'),
   description: t('seo.updates.description'),
 })
+
+// Schema.org Structured Data for Updates Page
+useSchemaOrg([
+  defineCollectionPage({
+    name: () => t('seo.updates.title'),
+    description: () => t('seo.updates.description'),
+    url: () => `https://solsynth.dev${useRoute().path}`,
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      {
+        name: t('seo.home.title'),
+        item: 'https://solsynth.dev',
+      },
+      {
+        name: t('seo.updates.title'),
+        item: () => `https://solsynth.dev${useRoute().path}`,
+      },
+    ],
+  }),
+])
 
 const { getPosts, getRealmPosts, formatDate, truncateContent, getAttachmentUrl } = useApi()
 

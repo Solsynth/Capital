@@ -1,4 +1,3 @@
-import { resolve } from "path";
 import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
@@ -13,15 +12,7 @@ export default defineNuxtConfig({
     viewTransition: true,
   },
 
-  modules: [
-    "@nuxtjs/i18n",
-    "@nuxt/content",
-    "@nuxtjs/sitemap",
-    "@nuxtjs/robots",
-    "nuxt-og-image",
-    "@nuxt/image",
-    "@nuxt/fonts",
-  ],
+  modules: ["@nuxtjs/i18n", "@nuxt/content", "@nuxtjs/sitemap", "@nuxtjs/robots", "nuxt-og-image", "@nuxt/image", "@nuxt/fonts", "nuxt-seo-utils", "nuxt-schema-org"],
 
   fonts: {
     families: [
@@ -40,6 +31,22 @@ export default defineNuxtConfig({
     url: "https://solsynth.dev",
     name: "Solsynth",
     defaultLocale: "en",
+  },
+
+  // SEO Module Configurations
+  robots: {
+    allow: '/',
+    disallow: ['/admin', '/auth', '/api'],
+    sitemap: 'https://solsynth.dev/sitemap.xml',
+  },
+
+  schemaOrg: {
+    identity: {
+      type: 'Organization',
+      name: 'Solsynth',
+      url: 'https://solsynth.dev',
+      logo: 'https://solsynth.dev/favicon.png',
+    },
   },
 
   sitemap: {

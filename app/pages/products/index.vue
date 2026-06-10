@@ -14,10 +14,31 @@ useSeoMeta({
   description: () => t('seo.products.description'),
 })
 
-defineOgImage('OgImage.takumi', {
+defineOgImage('OgImage', {
   title: t('products.title'),
   description: t('seo.products.description'),
 })
+
+// Schema.org Structured Data for Products Collection Page
+useSchemaOrg([
+  defineCollectionPage({
+    name: () => t('seo.products.title'),
+    description: () => t('seo.products.description'),
+    url: () => `https://solsynth.dev${route.path}`,
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      {
+        name: t('seo.home.title'),
+        item: 'https://solsynth.dev',
+      },
+      {
+        name: t('seo.products.title'),
+        item: () => `https://solsynth.dev${route.path}`,
+      },
+    ],
+  }),
+])
 
 const urlTag = computed(() => route.query.tag as string || '')
 const urlSeries = computed(() => route.query.series as string || '')

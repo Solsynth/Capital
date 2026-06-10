@@ -70,7 +70,7 @@ useSeoMeta({
   twitterImage: "/images/solar-network/main-visual.webp",
 });
 
-defineOgImage('OgImage.takumi', {
+defineOgImage('OgImage', {
   title: 'Solar Network',
   description: () => t('solarNetwork.tagline'),
   iconImage: '/images/solar-network/icon.png',

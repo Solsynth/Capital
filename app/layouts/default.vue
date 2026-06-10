@@ -40,6 +40,36 @@ useSeoMeta({
   twitterTitle: fullTitle,
   twitterDescription: () => route.meta?.description as string || t('seo.home.description'),
 })
+
+// Schema.org Structured Data
+useSchemaOrg([
+  defineOrganization({
+    name: 'Solsynth',
+    url: 'https://solsynth.dev',
+    logo: 'https://solsynth.dev/favicon.png',
+    sameAs: [
+      'https://github.com/solsynth',
+    ],
+  }),
+  defineWebSite({
+    name: siteName,
+    url: siteUrl,
+    inLanguage: () => locale.value,
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: `${siteUrl}/search?q={search_term_string}`,
+      'query-input': 'required name=search_term_string',
+    },
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      {
+        name: t('seo.home.title'),
+        item: siteUrl,
+      },
+    ],
+  }),
+])
 </script>
 
 <template>

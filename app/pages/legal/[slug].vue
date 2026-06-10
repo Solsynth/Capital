@@ -29,6 +29,41 @@ useSeoMeta({
   ogTitle: () => page.value?.title ? `${page.value.title} - ${t('seo.siteName')}` : `${t('seo.legal.title')} - ${t('seo.siteName')}`,
   ogDescription: () => page.value?.description || t('seo.legal.description'),
 })
+
+// Schema.org Structured Data for Legal Document
+useSchemaOrg([
+  defineArticle({
+    headline: () => page.value?.title || '',
+    description: () => page.value?.description || '',
+    datePublished: () => page.value?.updatedDate || undefined,
+    dateModified: () => page.value?.updatedDate || undefined,
+    publisher: {
+      '@type': 'Organization',
+      name: 'Solsynth',
+      url: 'https://solsynth.dev',
+    },
+    mainEntityOfPage: {
+      '@type': 'WebPage',
+      '@id': () => `https://solsynth.dev${route.path}`,
+    },
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      {
+        name: t('seo.home.title'),
+        item: 'https://solsynth.dev',
+      },
+      {
+        name: t('seo.legal.title'),
+        item: `https://solsynth.dev${localePath('/legal')}`,
+      },
+      {
+        name: () => page.value?.title || '',
+        item: () => `https://solsynth.dev${route.path}`,
+      },
+    ],
+  }),
+])
 </script>
 
 <template>

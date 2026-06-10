@@ -17,10 +17,31 @@ useSeoMeta({
   description: () => t('seo.events.description'),
 })
 
-defineOgImage('OgImage.takumi', {
+defineOgImage('OgImage', {
   title: t('events.title'),
   description: t('seo.events.description'),
 })
+
+// Schema.org Structured Data for Events Collection Page
+useSchemaOrg([
+  defineCollectionPage({
+    name: () => t('seo.events.title'),
+    description: () => t('seo.events.description'),
+    url: () => `https://solsynth.dev${route.path}`,
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      {
+        name: t('seo.home.title'),
+        item: 'https://solsynth.dev',
+      },
+      {
+        name: t('seo.events.title'),
+        item: () => `https://solsynth.dev${route.path}`,
+      },
+    ],
+  }),
+])
 
 const urlStatus = computed(() => route.query.status as string || '')
 const urlTag = computed(() => route.query.tag as string || '')

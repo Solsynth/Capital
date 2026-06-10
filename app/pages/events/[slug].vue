@@ -37,6 +37,59 @@ useSeoMeta({
   twitterImage: () => event.value?.coverImage || undefined,
 })
 
+// Schema.org Structured Data for Event
+useSchemaOrg([
+  defineEvent({
+    name: () => event.value?.name || '',
+    description: () => event.value?.description || '',
+    image: () => event.value?.coverImage,
+    startDate: () => event.value?.startDate || '',
+    endDate: () => event.value?.endDate || '',
+    eventStatus: () => {
+      if (!event.value) return 'https://schema.org/EventScheduled'
+      switch (event.value.status) {
+        case 'upcoming': return 'https://schema.org/EventScheduled'
+        case 'ongoing': return 'https://schema.org/EventScheduled'
+        case 'past': return 'https://schema.org/EventCompleted'
+        default: return 'https://schema.org/EventScheduled'
+      }
+    },
+    eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+    location: () => event.value?.location ? {
+      '@type': 'Place',
+      name: event.value.location,
+    } : undefined,
+    organizer: {
+      '@type': 'Organization',
+      name: 'Solsynth',
+      url: 'https://solsynth.dev',
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+      url: () => event.value?.registrationUrl || `https://solsynth.dev${route.path}`,
+    },
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      {
+        name: t('seo.home.title'),
+        item: 'https://solsynth.dev',
+      },
+      {
+        name: t('seo.events.title'),
+        item: `https://solsynth.dev${useLocalePath()('/events')}`,
+      },
+      {
+        name: () => event.value?.name || '',
+        item: () => `https://solsynth.dev${route.path}`,
+      },
+    ],
+  }),
+])
+
 function formatDate(dateStr: string) {
   const date = new Date(dateStr)
   return date.toLocaleDateString(lang.value === 'zh' ? 'zh-CN' : 'en-US', {

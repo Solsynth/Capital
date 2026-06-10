@@ -46,6 +46,42 @@ useSeoMeta({
   twitterDescription: description,
   twitterImage: () => product.value?.background || undefined,
 })
+
+// Schema.org Structured Data for Product
+useSchemaOrg([
+  defineProduct({
+    name: title,
+    description: description,
+    image: () => product.value?.background,
+    url: () => `https://solsynth.dev${route.path}`,
+    brand: {
+      '@type': 'Brand',
+      name: 'Solsynth',
+    },
+    offers: {
+      '@type': 'Offer',
+      price: '0',
+      priceCurrency: 'USD',
+      availability: 'https://schema.org/InStock',
+    },
+  }),
+  defineBreadcrumb({
+    itemListElement: [
+      {
+        name: t('seo.home.title'),
+        item: 'https://solsynth.dev',
+      },
+      {
+        name: t('seo.products.title'),
+        item: `https://solsynth.dev${useLocalePath()('/products')}`,
+      },
+      {
+        name: title,
+        item: () => `https://solsynth.dev${route.path}`,
+      },
+    ],
+  }),
+])
 </script>
 
 <template>

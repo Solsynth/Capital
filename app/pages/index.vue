@@ -16,10 +16,27 @@ useSeoMeta({
   description: () => t('seo.home.description'),
 })
 
-defineOgImage('OgImage.takumi', {
+defineOgImage('OgImage', {
   title: t('seo.siteName'),
   description: t('seo.home.description')
 })
+
+// Schema.org Structured Data for Homepage
+useSchemaOrg([
+  defineWebPage({
+    name: () => t('seo.home.title'),
+    description: () => t('seo.home.description'),
+    url: 'https://solsynth.dev',
+  }),
+  defineOrganization({
+    name: 'Solsynth',
+    url: 'https://solsynth.dev',
+    logo: 'https://solsynth.dev/favicon.png',
+    sameAs: [
+      'https://github.com/solsynth',
+    ],
+  }),
+])
 
 const { data: products } = await useAsyncData(`products-home-${lang.value}`, async () => {
   const allProducts = await queryCollection('products')
