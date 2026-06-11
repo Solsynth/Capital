@@ -63,6 +63,15 @@ const { data: products } = await useAsyncData(`products-home-${lang.value}`, asy
     <HeroSection />
     <StatsSection />
     <ProductsSection :products="products || []" />
-    <UpdatesSection />
+    <ClientOnly>
+      <UpdatesSection />
+      <template #fallback>
+        <div class="py-16 px-4">
+          <div class="container mx-auto">
+            <div class="h-64 animate-pulse bg-base-200 rounded-lg"></div>
+          </div>
+        </div>
+      </template>
+    </ClientOnly>
   </div>
 </template>
