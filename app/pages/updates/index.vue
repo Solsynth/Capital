@@ -13,7 +13,7 @@ useSeoMeta({
   description: () => t('seo.updates.description'),
 })
 
-defineOgImage('OgImage', {
+defineOgImage('UniOgImage', {
   title: t('updates.title'),
   description: t('seo.updates.description'),
 })

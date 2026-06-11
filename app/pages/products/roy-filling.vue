@@ -23,7 +23,7 @@ useSeoMeta({
   twitterImage: "/images/republic-of-yang/filling.png",
 });
 
-defineOgImage('OgImage', {
+defineOgImage('UniOgImage', {
   title: () => t('royIcpFilling.title'),
   description: () => t('royIcpFilling.tagline'),
   iconImage: '/images/republic-of-yang/filling.png',
