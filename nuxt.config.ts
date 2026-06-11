@@ -107,28 +107,6 @@ export default defineNuxtConfig({
     },
   },
 
-  routeRules: {
-    // Prerender static pages
-    "/en/**": { prerender: true, sitemap: { changefreq: "weekly" } },
-    "/zh/**": { prerender: true, sitemap: { changefreq: "weekly" } },
-
-    // Exclude dynamic update pages from prerendering
-    "/en/updates/**": { prerender: false },
-    "/zh/updates/**": { prerender: false },
-
-    // Exclude ICP and admin routes from prerendering
-    "/en/icp/**": { prerender: false },
-    "/zh/icp/**": { prerender: false },
-    "/en/admin/**": { prerender: false },
-    "/zh/admin/**": { prerender: false },
-
-    // Redirects
-    "/en/terms": { redirect: "/en/legal" },
-    "/zh/terms": { redirect: "/zh/legal" },
-    "/en/terms/**": { redirect: "/en/legal/**" },
-    "/zh/terms/**": { redirect: "/zh/legal/**" },
-  },
-
   app: {
     head: {
       titleTemplate: "%s | Solsynth",
