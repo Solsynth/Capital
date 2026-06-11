@@ -65,17 +65,14 @@ definePageMeta({
 
 useSeoMeta({
   description: () => t("solarNetwork.tagline"),
-  ogImage: "/images/solar-network/main-visual.webp",
-  twitterCard: "summary_large_image",
-  twitterImage: "/images/solar-network/main-visual.webp",
 });
 
-defineOgImage('UniOgImage', {
-  title: 'Solar Network',
-  description: () => t('solarNetwork.tagline'),
-  iconImage: '/images/solar-network/icon.png',
-  backgroundImage: '/images/solar-network/main-visual.webp',
-})
+defineOgImage("UniOgImage", {
+  title: "Solar Network",
+  description: () => t("solarNetwork.tagline"),
+  iconImage: "/images/solar-network/icon.png",
+  backgroundImage: "/images/solar-network/main-visual.png",
+});
 </script>
 
 <template>

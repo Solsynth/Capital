@@ -4,10 +4,12 @@ import {
   FileText,
   Bug,
   Mail,
-  BadgeCheck, User, Plus
+  BadgeCheck,
+  User,
+  Plus,
 } from "@lucide/vue";
 
-const localePath = useLocalePath()
+const localePath = useLocalePath();
 
 const { t } = useI18n();
 
@@ -23,18 +25,20 @@ useSeoMeta({
   twitterImage: "/images/republic-of-yang/filling.png",
 });
 
-defineOgImage('UniOgImage', {
-  title: () => t('royIcpFilling.title'),
-  description: () => t('royIcpFilling.tagline'),
-  iconImage: '/images/republic-of-yang/filling.png',
-  backgroundImage: '/images/republic-of-yang/greatwall.webp',
-})
+defineOgImage("UniOgImage", {
+  title: () => t("royIcpFilling.title"),
+  description: () => t("royIcpFilling.tagline"),
+  iconImage: "/images/republic-of-yang/filling.png",
+  backgroundImage: "/images/republic-of-yang/greatwall.png",
+});
 </script>
 
 <template>
   <div class="roy-filling-page">
     <!-- Hero -->
-    <section class="relative h-[60vh] min-h-100 overflow-hidden -mt-(--site-page-offset,64px)">
+    <section
+      class="relative h-[60vh] min-h-100 overflow-hidden -mt-(--site-page-offset,64px)"
+    >
       <NuxtImg
         src="/images/republic-of-yang/greatwall.webp"
         class="absolute inset-0 w-full h-full object-cover object-center -z-10 opacity-60"
@@ -42,7 +46,9 @@ defineOgImage('UniOgImage', {
         format="webp"
         alt=""
       />
-      <div class="absolute inset-0 bg-linear-to-b from-transparent to-base-100"></div>
+      <div
+        class="absolute inset-0 bg-linear-to-b from-transparent to-base-100"
+      ></div>
 
       <div class="absolute bottom-0 left-0 right-0 p-8">
         <div class="container mx-auto text-center">
@@ -85,32 +91,52 @@ defineOgImage('UniOgImage', {
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div class="text-center">
-            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+            <div
+              class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3"
+            >
               <FileText class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="font-semibold mb-1">{{ t("royIcpFilling.howToApply.step1.title") }}</h3>
-            <p class="text-sm opacity-60">{{ t("royIcpFilling.howToApply.step1.desc") }}</p>
+            <h3 class="font-semibold mb-1">
+              {{ t("royIcpFilling.howToApply.step1.title") }}
+            </h3>
+            <p class="text-sm opacity-60">
+              {{ t("royIcpFilling.howToApply.step1.desc") }}
+            </p>
           </div>
           <div class="text-center">
-            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+            <div
+              class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3"
+            >
               <Shield class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="font-semibold mb-1">{{ t("royIcpFilling.howToApply.step2.title") }}</h3>
-            <p class="text-sm opacity-60">{{ t("royIcpFilling.howToApply.step2.desc") }}</p>
+            <h3 class="font-semibold mb-1">
+              {{ t("royIcpFilling.howToApply.step2.title") }}
+            </h3>
+            <p class="text-sm opacity-60">
+              {{ t("royIcpFilling.howToApply.step2.desc") }}
+            </p>
           </div>
           <div class="text-center">
-            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3">
+            <div
+              class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-3"
+            >
               <BadgeCheck class="w-5 h-5 text-primary" />
             </div>
-            <h3 class="font-semibold mb-1">{{ t("royIcpFilling.howToApply.step3.title") }}</h3>
-            <p class="text-sm opacity-60">{{ t("royIcpFilling.howToApply.step3.desc") }}</p>
+            <h3 class="font-semibold mb-1">
+              {{ t("royIcpFilling.howToApply.step3.title") }}
+            </h3>
+            <p class="text-sm opacity-60">
+              {{ t("royIcpFilling.howToApply.step3.desc") }}
+            </p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- CTA -->
-    <section class="container mx-auto px-4 py-20 text-center flex gap-3 justify-center">
+    <section
+      class="container mx-auto px-4 py-20 text-center flex gap-3 justify-center"
+    >
       <NuxtLink
         :to="localePath('/icp/submit')"
         class="btn btn-primary rounded-full"
@@ -136,11 +162,18 @@ defineOgImage('UniOgImage', {
     <!-- Footer links -->
     <section class="container mx-auto px-4 pb-16 text-center">
       <div class="flex justify-center gap-6 text-sm opacity-50">
-        <a href="https://github.com/Solsynth/Solian/issues" target="_blank" class="hover:opacity-100 transition-opacity">
+        <a
+          href="https://github.com/Solsynth/Solian/issues"
+          target="_blank"
+          class="hover:opacity-100 transition-opacity"
+        >
           <Bug class="w-4 h-4 inline mr-1" />
           {{ t("royIcpFilling.help.reportIssue") }}
         </a>
-        <a href="mailto:lily@solsynth.dev" class="hover:opacity-100 transition-opacity">
+        <a
+          href="mailto:lily@solsynth.dev"
+          class="hover:opacity-100 transition-opacity"
+        >
           <Mail class="w-4 h-4 inline mr-1" />
           {{ t("royIcpFilling.help.contact") }}
         </a>
