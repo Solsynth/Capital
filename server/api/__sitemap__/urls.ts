@@ -1,6 +1,6 @@
 import { defineSitemapEventHandler } from '#imports'
 
-export default defineSitemapEventHandler(async () => {
+export default defineSitemapEventHandler(async (event) => {
   const urls: Array<{ loc: string; changefreq: string; priority: number; lastmod?: string }> = []
 
   const locales = ['en', 'zh']
@@ -26,7 +26,7 @@ export default defineSitemapEventHandler(async () => {
 
   // Add dynamic product pages
   try {
-    const products = await queryCollection('products')
+    const products = await queryCollection(event, 'products')
       .where('hasPage', '=', true)
       .select(['path', 'title'])
       .all()
@@ -48,7 +48,7 @@ export default defineSitemapEventHandler(async () => {
 
   // Add dynamic legal pages
   try {
-    const legalPages = await queryCollection('legal')
+    const legalPages = await queryCollection(event, 'legal')
       .select(['path', 'updatedDate'])
       .all()
 
@@ -70,7 +70,7 @@ export default defineSitemapEventHandler(async () => {
 
   // Add dynamic event pages
   try {
-    const events = await queryCollection('events')
+    const events = await queryCollection(event, 'events')
       .select(['path', 'startDate', 'endDate', 'status'])
       .all()
 
