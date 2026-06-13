@@ -26,8 +26,76 @@ export default defineNuxtConfig({
 
   fonts: {
     families: [
-      { name: "Nunito", weights: [400, 700], global: true },
-      { name: "Noto Sans SC", weights: [400, 700], global: true },
+      {
+        name: "Nunito",
+        src: "/fonts/Nunito-Regular.woff2",
+        weight: 400,
+        style: "normal",
+        global: true,
+      },
+      {
+        name: "Nunito",
+        src: "/fonts/Nunito-Italic.woff2",
+        weight: 400,
+        style: "italic",
+        global: true,
+      },
+      {
+        name: "Nunito",
+        src: "/fonts/Nunito-Bold.woff2",
+        weight: 700,
+        style: "normal",
+        global: true,
+      },
+      {
+        name: "Nunito",
+        src: "/fonts/Nunito-BoldItalic.woff2",
+        weight: 700,
+        style: "italic",
+        global: true,
+      },
+      {
+        name: "Nunito",
+        src: "/fonts/Nunito-SemiBold.woff2",
+        weight: 600,
+        style: "normal",
+        global: true,
+      },
+      {
+        name: "Nunito",
+        src: "/fonts/Nunito-ExtraBold.woff2",
+        weight: 800,
+        style: "normal",
+        global: true,
+      },
+      {
+        name: "Noto Sans SC",
+        src: "/fonts/NotoSansSC-Regular.woff2",
+        weight: 400,
+        style: "normal",
+        global: true,
+      },
+      {
+        name: "Noto Sans SC",
+        src: "/fonts/NotoSansSC-Bold.woff2",
+        weight: 600,
+        style: "normal",
+        global: true,
+      },
+      {
+        name: "Noto Sans SC",
+        src: "/fonts/NotoSansSC-Bold.woff2",
+        weight: 700,
+        style: "normal",
+        global: true,
+      },
+      {
+        name: "Noto Sans SC",
+        src: "/fonts/NotoSansSC-Bold.woff2",
+        weight: 800,
+        style: "normal",
+        global: true,
+      },
     ],
   },
 
@@ -65,10 +133,6 @@ export default defineNuxtConfig({
 
   ogImage: {
     enabled: true,
-    defaults: {
-      width: 900,
-      height: 450,
-    },
     security: {
       renderTimeout: 60000,
     },
@@ -121,10 +185,6 @@ export default defineNuxtConfig({
           rel: "icon",
           type: "image/png",
           href: "/favicon.png",
-        },
-        {
-          rel: "stylesheet",
-          href: "https://fonts.googleapis.com/css2?family=Nunito:ital,wght@0,200..1000;1,200..1000&display=swap",
         },
       ],
     },

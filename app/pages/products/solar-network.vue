@@ -71,7 +71,7 @@ defineOgImage("UniOgImage", {
   title: "Solar Network",
   description: () => t("solarNetwork.tagline"),
   iconImage: "/images/solar-network/icon.png",
-  backgroundImage: "/images/solar-network/main-visual.png",
+  backgroundImage: "/images/solar-network/main-visual-og.png",
 });
 </script>
 

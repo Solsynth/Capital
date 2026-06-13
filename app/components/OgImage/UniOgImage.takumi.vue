@@ -3,7 +3,7 @@ const {
   title = "Solsynth",
   description = "",
   iconImage,
-  backgroundImage = "/images/hero/background.png",
+  backgroundImage = "/images/hero/background-og.png",
 } = defineProps<{
   title?: string;
   description?: string;

@@ -29,7 +29,7 @@ defineOgImage("UniOgImage", {
   title: () => t("royIcpFilling.title"),
   description: () => t("royIcpFilling.tagline"),
   iconImage: "/images/republic-of-yang/filling.png",
-  backgroundImage: "/images/republic-of-yang/greatwall.png",
+  backgroundImage: "/images/republic-of-yang/greatwall-og.png",
 });
 </script>
 
