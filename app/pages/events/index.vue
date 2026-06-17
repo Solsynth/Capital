@@ -24,7 +24,7 @@ defineOgImage('UniOgImage', {
 
 // Schema.org Structured Data for Events Collection Page
 useSchemaOrg([
-  defineCollectionPage({
+  defineWebPage({
     name: () => t('seo.events.title'),
     description: () => t('seo.events.description'),
     url: () => `https://solsynth.dev${route.path}`,

@@ -21,7 +21,7 @@ defineOgImage('UniOgImage', {
 
 // Schema.org Structured Data for Products Collection Page
 useSchemaOrg([
-  defineCollectionPage({
+  defineWebPage({
     name: () => t('seo.products.title'),
     description: () => t('seo.products.description'),
     url: () => `https://solsynth.dev${route.path}`,

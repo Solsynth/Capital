@@ -3,6 +3,7 @@ import { FileText, Scale, Shield, Code } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
+const route = useRoute()
 
 const lang = computed(() => locale.value)
 
@@ -22,10 +23,10 @@ defineOgImage('UniOgImage', {
 
 // Schema.org Structured Data for Legal Pages Collection
 useSchemaOrg([
-  defineCollectionPage({
+  defineWebPage({
     name: () => t('seo.legal.title'),
     description: () => t('seo.legal.description'),
-    url: () => `https://solsynth.dev${useRoute().path}`,
+    url: () => `https://solsynth.dev${route.path}`,
   }),
   defineBreadcrumb({
     itemListElement: [
@@ -35,7 +36,7 @@ useSchemaOrg([
       },
       {
         name: t('seo.legal.title'),
-        item: () => `https://solsynth.dev${useRoute().path}`,
+        item: () => `https://solsynth.dev${route.path}`,
       },
     ],
   }),

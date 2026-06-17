@@ -3,6 +3,7 @@ import { Calendar, Paperclip, Eye, MessageCircle, Heart, ArrowRight, Hash, X, Lo
 
 const { t } = useI18n()
 const localePath = useLocalePath()
+const route = useRoute()
 
 definePageMeta({
   description: '',
@@ -20,10 +21,10 @@ defineOgImage('UniOgImage', {
 
 // Schema.org Structured Data for Updates Page
 useSchemaOrg([
-  defineCollectionPage({
+  defineWebPage({
     name: () => t('seo.updates.title'),
     description: () => t('seo.updates.description'),
-    url: () => `https://solsynth.dev${useRoute().path}`,
+    url: () => `https://solsynth.dev${route.path}`,
   }),
   defineBreadcrumb({
     itemListElement: [
@@ -33,7 +34,7 @@ useSchemaOrg([
       },
       {
         name: t('seo.updates.title'),
-        item: () => `https://solsynth.dev${useRoute().path}`,
+        item: () => `https://solsynth.dev${route.path}`,
       },
     ],
   }),
