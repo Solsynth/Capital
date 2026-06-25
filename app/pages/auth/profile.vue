@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { CircleUser, Mail, ShieldCheck, Calendar, Edit3, Check, X } from '@lucide/vue'
+import { CircleUser, Mail, ShieldCheck, Edit3, Check, X, ExternalLink, Zap } from '@lucide/vue'
+import { useSolarProfile, useSolarFileUrl } from '~/composables/useSolarProfile'
 
 definePageMeta({ middleware: 'auth' })
 
@@ -18,7 +19,14 @@ if (import.meta.server) {
   refresh = clientRefresh
 }
 
+// Solar Network profile
+const { data: solarProfile, loading: solarLoading, fetch: fetchSolar } = useSolarProfile()
+onMounted(() => fetchSolar())
+const pictureUrl = computed(() => useSolarFileUrl(solarProfile.value?.profile?.picture))
+const backgroundUrl = computed(() => useSolarFileUrl(solarProfile.value?.profile?.background))
+
 const isEditing = ref(false)
+const showEmail = ref(false)
 const editName = ref('')
 const editError = ref('')
 const isSaving = ref(false)
@@ -68,33 +76,57 @@ function formatDate(ts: string | Date) {
     <div class="w-full max-w-md">
       <!-- Header -->
       <div class="mb-8 text-center">
-        <div class="relative mx-auto mb-4 w-20 h-20">
-          <img
-            v-if="session?.user.image"
-            :src="session.user.image"
-            :alt="session.user.name"
-            class="w-20 h-20 rounded-full object-cover ring-2 ring-base-content/10"
-          >
-          <div v-else class="w-20 h-20 rounded-full bg-base-content/5 flex items-center justify-center ring-2 ring-base-content/10">
-            <CircleUser class="w-10 h-10 text-base-content/30" />
-          </div>
+        <!-- Background + Avatar -->
+        <div class="relative">
           <div
-            v-if="session?.user.emailVerified"
-            class="absolute -bottom-1 -right-1 badge badge-sm badge-success gap-1 px-1.5"
-            :title="t('profile.verified', 'Email verified')"
-          >
-            <ShieldCheck class="w-3 h-3" />
+            v-if="backgroundUrl"
+            class="h-24 rounded-2xl bg-cover bg-center"
+            :style="{ backgroundImage: `url(${backgroundUrl})` }"
+          />
+          <div v-else class="h-24 rounded-2xl bg-gradient-to-r from-primary/20 to-secondary/20" />
+          <!-- Avatar -->
+          <div class="relative mx-auto -mt-10 mb-4 w-20 h-20">
+            <img
+              v-if="pictureUrl"
+              :src="pictureUrl"
+              :alt="solarProfile?.nick || session?.user.name"
+              class="w-20 h-20 rounded-full object-cover ring-2 ring-base-content/10"
+            >
+            <img
+              v-else-if="session?.user.image"
+              :src="session.user.image"
+              :alt="session.user.name"
+              class="w-20 h-20 rounded-full object-cover ring-2 ring-base-content/10"
+            >
+            <div v-else class="w-20 h-20 rounded-full bg-base-content/5 flex items-center justify-center ring-2 ring-base-content/10">
+              <CircleUser class="w-10 h-10 text-base-content/30" />
+            </div>
+            <div
+              v-if="session?.user.emailVerified"
+              class="absolute -bottom-1 -right-1 badge badge-sm badge-success gap-1 px-1.5"
+              :title="t('profile.verified', 'Email verified')"
+            >
+              <ShieldCheck class="w-3 h-3" />
+            </div>
           </div>
         </div>
 
         <!-- Name -->
-        <div v-if="!isEditing">
+        <div v-if="solarLoading" class="flex justify-center">
+          <span class="loading loading-spinner loading-xs" />
+        </div>
+        <div v-else-if="!isEditing">
           <h1 class="text-2xl font-bold">
-            {{ session?.user.name }}
+            {{ solarProfile?.nick || session?.user.name }}
           </h1>
-          <p class="text-sm text-base-content/50 mt-1">
-            {{ session?.user.email }}
-          </p>
+          <!-- Perk -->
+          <div
+            v-if="solarProfile?.perk_subscription?.is_active"
+            class="badge badge-warning badge-outline badge-sm gap-1 mt-2"
+          >
+            <Zap class="w-3 h-3" />
+            {{ solarProfile.perk_subscription.display_name }} · Lv{{ solarProfile.perk_subscription.perk_level }}
+          </div>
           <button
             class="btn btn-ghost btn-xs gap-1 mt-2 text-base-content/50"
             @click="startEdit"
@@ -138,6 +170,7 @@ function formatDate(ts: string | Date) {
 
       <!-- Info cards -->
       <div class="flex flex-col gap-3">
+        <!-- Email (blurred by default) -->
         <div class="card bg-base-100/50 border border-base-content/5">
           <div class="card-body p-4 gap-3">
             <div class="flex items-center gap-3">
@@ -146,7 +179,11 @@ function formatDate(ts: string | Date) {
                 <p class="text-xs text-base-content/40">
                   {{ t('profile.email', 'Email') }}
                 </p>
-                <p class="text-sm truncate">
+                <p
+                  class="text-sm truncate cursor-pointer transition-all duration-200"
+                  :class="showEmail ? '' : 'blur-sm select-none'"
+                  @click="showEmail = true"
+                >
                   {{ session?.user.email }}
                 </p>
               </div>
@@ -160,33 +197,39 @@ function formatDate(ts: string | Date) {
           </div>
         </div>
 
-        <div class="card bg-base-100/50 border border-base-content/5">
-          <div class="card-body p-4 gap-3">
-            <div class="flex items-center gap-3">
-              <Calendar class="w-4 h-4 text-base-content/40 shrink-0" />
-              <div class="min-w-0">
-                <p class="text-xs text-base-content/40">
-                  {{ t('profile.joined', 'Joined') }}
-                </p>
-                <p class="text-sm">
-                  {{ session?.user.createdAt ? formatDate(session.user.createdAt) : '—' }}
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <!-- Capital User ID -->
         <div class="card bg-base-100/50 border border-base-content/5">
           <div class="card-body p-4">
             <div class="flex items-center gap-3">
               <ShieldCheck class="w-4 h-4 text-base-content/40 shrink-0" />
               <div class="min-w-0">
                 <p class="text-xs text-base-content/40">
-                  {{ t('profile.id', 'User ID') }}
+                  {{ t('profile.id', 'Capital User ID') }}
                 </p>
                 <p class="text-xs font-mono text-base-content/60 truncate">
                   {{ session?.user.id }}
                 </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Solar Network -->
+        <div v-if="solarProfile" class="card bg-base-100/50 border border-base-content/5">
+          <div class="card-body p-4">
+            <div class="flex items-center gap-3">
+              <ExternalLink class="w-4 h-4 text-base-content/40 shrink-0" />
+              <div class="min-w-0">
+                <p class="text-xs text-base-content/40">
+                  Solar Network
+                </p>
+                <a
+                  :href="`https://id.solian.app/@${solarProfile.name}`"
+                  target="_blank"
+                  class="text-sm text-primary/70 hover:text-primary transition-colors"
+                >
+                  @{{ solarProfile.name }}
+                </a>
               </div>
             </div>
           </div>

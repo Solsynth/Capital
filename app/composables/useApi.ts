@@ -1,4 +1,6 @@
 const API_BASE = 'https://api.solian.app/sphere'
+const PASSPORT_BASE = 'https://api.solian.app/passport'
+const DRIVE_BASE = 'https://api.solian.app/drive'
 
 export interface Post {
   id: string
@@ -108,6 +110,14 @@ export function useApi() {
     return `https://api.solian.app/drive/files/${attachmentId}`
   }
 
+  function getPictureUrl(fileId: string): string {
+    return `${DRIVE_BASE}/files/${fileId}`
+  }
+
+  function getPassportUrl(path: string): string {
+    return `${PASSPORT_BASE}${path}`
+  }
+
   return {
     getPosts,
     getRealmPosts,
@@ -115,5 +125,7 @@ export function useApi() {
     formatDate,
     truncateContent,
     getAttachmentUrl,
+    getPictureUrl,
+    getPassportUrl,
   }
 }
