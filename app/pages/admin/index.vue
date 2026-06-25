@@ -42,7 +42,7 @@ const { data: stats } = await useAsyncData('admin-stats', async () => {
   }
 })
 
-const importResult = ref<{ success: boolean; identities?: { imported: number; skipped: number }; sites?: { imported: number; skipped: number }; error?: string } | null>(null)
+const importResult = ref<{ success: boolean; identities?: { imported: number; skipped: number }; sites?: { imported: number; skipped: number }; assetsUploaded?: number; error?: string } | null>(null)
 const importing = ref(false)
 
 async function importFromPb() {
@@ -146,7 +146,7 @@ const statCards = computed(() => [
       </div>
       <div v-if="importResult" class="mt-3 text-sm">
         <span v-if="importResult.success" class="text-success">
-          {{ isZh ? `导入完成：${importResult.identities?.imported ?? 0} 个身份，${importResult.sites?.imported ?? 0} 个站点` : `Done: ${importResult.identities?.imported ?? 0} identities, ${importResult.sites?.imported ?? 0} sites` }}
+          {{ isZh ? `导入完成：${importResult.identities?.imported ?? 0} 个身份，${importResult.sites?.imported ?? 0} 个站点，${importResult.assetsUploaded ?? 0} 个资源已上传到 R2` : `Done: ${importResult.identities?.imported ?? 0} identities, ${importResult.sites?.imported ?? 0} sites, ${importResult.assetsUploaded ?? 0} assets uploaded to R2` }}
         </span>
         <span v-else class="text-error">
           {{ importResult.error || (isZh ? '导入失败' : 'Import failed') }}

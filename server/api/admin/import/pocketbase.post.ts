@@ -1,6 +1,9 @@
 import { db } from '~~/server/utils/db'
-import { icpSite, icpIdentity } from '~~/server/db'
+import { icpSite, icpIdentity, file } from '~~/server/db'
 import { eq } from 'drizzle-orm'
+import { PutObjectCommand } from '@aws-sdk/client-s3'
+import { randomUUID } from 'crypto'
+import { getS3Client, getR2Bucket, buildKey, buildPublicUrl } from '~~/server/utils/s3'
 
 interface PbRecord {
   id: string
@@ -35,7 +38,6 @@ async function fetchAllFromPb(pbUrl: string, collection: string): Promise<PbReco
 
 function parsePbDate(val: any): Date | null {
   if (!val) return null
-  // PocketBase uses space instead of T in ISO dates — fix for JS Date
   const d = new Date(String(val).replace(' ', 'T'))
   return isNaN(d.getTime()) ? null : d
 }
@@ -43,6 +45,68 @@ function parsePbDate(val: any): Date | null {
 function pbFileUrl(pbUrl: string, record: PbRecord, filename: string | null): string | null {
   if (!filename) return null
   return `${pbUrl}/api/files/${record.collectionId}/${record.id}/${filename}`
+}
+
+function getMimeType(filename: string): string {
+  const ext = filename.split('.').pop()?.toLowerCase()
+  const mimeTypes: Record<string, string> = {
+    'jpg': 'image/jpeg',
+    'jpeg': 'image/jpeg',
+    'png': 'image/png',
+    'gif': 'image/gif',
+    'webp': 'image/webp',
+    'svg': 'image/svg+xml',
+  }
+  return mimeTypes[ext || ''] || 'application/octet-stream'
+}
+
+async function downloadAndUploadToR2(
+  url: string,
+  filename: string,
+  folder: string
+): Promise<{ fileId: string; url: string } | null> {
+  try {
+    // Download from PocketBase
+    const response = await fetch(url)
+    if (!response.ok) return null
+    
+    const buffer = Buffer.from(await response.arrayBuffer())
+    const mimeType = getMimeType(filename)
+    
+    // Upload to R2
+    const s3 = getS3Client()
+    const bucket = getR2Bucket()
+    const ext = filename.split('.').pop() || 'png'
+    const key = buildKey(folder, `${randomUUID()}.${ext}`)
+    
+    await s3.send(new PutObjectCommand({
+      Bucket: bucket,
+      Key: key,
+      Body: buffer,
+      ContentType: mimeType,
+      ContentLength: buffer.length,
+    }))
+    
+    const publicUrl = buildPublicUrl(key)
+    const fileId = randomUUID()
+    
+    // Save file record
+    await db.insert(file).values({
+      id: fileId,
+      key,
+      name: filename,
+      mimeType,
+      size: buffer.length,
+      bucket,
+      url: publicUrl,
+      userId: null,
+    })
+    
+    return { fileId, url: publicUrl }
+  } catch (err) {
+    console.error(`Failed to download/upload ${url}:`, err)
+    return null
+  }
 }
 
 export default defineEventHandler(async () => {
@@ -55,6 +119,7 @@ export default defineEventHandler(async () => {
   let importedIdentities = 0
   let skippedSites = 0
   let skippedIdentities = 0
+  let uploadedAssets = 0
 
   // Import identities
   try {
@@ -72,14 +137,28 @@ export default defineEventHandler(async () => {
         continue
       }
 
-      const iconUrl = pbFileUrl(pbUrl, iden, iden.icon)
+      // Download and upload icon to R2
+      let iconUrl = null
+      let iconFileId = null
+      if (iden.icon) {
+        const pbIconUrl = pbFileUrl(pbUrl, iden, iden.icon)
+        if (pbIconUrl) {
+          const result = await downloadAndUploadToR2(pbIconUrl, iden.icon, 'icp/identities')
+          if (result) {
+            iconUrl = result.url
+            iconFileId = result.fileId
+            uploadedAssets++
+          }
+        }
+      }
 
       await db.insert(icpIdentity).values({
         id: iden.id,
         name: iden.name,
-        type: 'organization', // Default, PocketBase has no type field
+        type: 'organization',
         description: iden.description || null,
         icon: iconUrl,
+        iconFileId,
         userId: null,
       })
       importedIdentities++
@@ -105,14 +184,25 @@ export default defineEventHandler(async () => {
         continue
       }
 
-      const iconUrl = pbFileUrl(pbUrl, site, site.icon)
+      // Download and upload icon to R2
+      let iconUrl = null
+      let iconFileId = null
+      if (site.icon) {
+        const pbIconUrl = pbFileUrl(pbUrl, site, site.icon)
+        if (pbIconUrl) {
+          const result = await downloadAndUploadToR2(pbIconUrl, site.icon, 'icp/sites')
+          if (result) {
+            iconUrl = result.url
+            iconFileId = result.fileId
+            uploadedAssets++
+          }
+        }
+      }
 
-      // Handle categories: PocketBase returns array of strings
       const categories = Array.isArray(site.categories) && site.categories.length > 0
         ? JSON.stringify(site.categories)
         : null
 
-      // approved_at can be empty string
       const approvedAt = parsePbDate(site.approved_at)
 
       await db.insert(icpSite).values({
@@ -123,6 +213,7 @@ export default defineEventHandler(async () => {
         description: site.description || null,
         siteUrl: site.site_url,
         icon: iconUrl,
+        iconFileId,
         categories,
         approvedAt,
         identityId: site.identity || null,
@@ -139,5 +230,6 @@ export default defineEventHandler(async () => {
     success: true,
     identities: { imported: importedIdentities, skipped: skippedIdentities },
     sites: { imported: importedSites, skipped: skippedSites },
+    assetsUploaded: uploadedAssets,
   }
 })
