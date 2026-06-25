@@ -60,7 +60,7 @@ async function handleEmailSignIn() {
   const { error: signInError } = await auth.signIn.email({
     email: email.value,
     password: password.value,
-    callbackURL: localePath('/'),
+    callbackURL: localePath('/auth/profile'),
   })
   console.log('[Login] Sign in result:', signInError ? 'error' : 'success')
   if (signInError) {
@@ -78,7 +78,7 @@ async function handleSolianSignIn() {
   console.log('[Login] Attempting Solian sign in')
   const { error: signInError } = await auth.signIn.social({
     provider: 'solian',
-    callbackURL: localePath('/'),
+    callbackURL: localePath('/auth/profile'),
   })
   console.log('[Login] Solian sign in result:', signInError ? 'error' : 'success')
   if (signInError) {
