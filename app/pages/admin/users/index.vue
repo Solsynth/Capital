@@ -6,6 +6,11 @@ import {
   FileText,
   Globe,
   Search,
+  Edit,
+  Trash2,
+  X,
+  Check,
+  Shield,
 } from '@lucide/vue'
 
 const { locale } = useI18n()
@@ -50,6 +55,70 @@ const filteredUsers = computed(() => {
     u.email.toLowerCase().includes(q)
   )
 })
+
+// Edit state
+const editingUser = ref<User | null>(null)
+const editForm = reactive({
+  name: '',
+  email: '',
+  emailVerified: false,
+})
+const isSaving = ref(false)
+
+function startEdit(user: User) {
+  editingUser.value = user
+  editForm.name = user.name
+  editForm.email = user.email
+  editForm.emailVerified = user.emailVerified
+}
+
+function cancelEdit() {
+  editingUser.value = null
+}
+
+async function saveEdit() {
+  if (!editingUser.value || isSaving.value) return
+
+  isSaving.value = true
+
+  try {
+    await $fetch(`/api/admin/users/${editingUser.value.id}`, {
+      method: 'PATCH',
+      body: {
+        name: editForm.name,
+        email: editForm.email,
+        emailVerified: editForm.emailVerified,
+      },
+    })
+
+    editingUser.value = null
+    await refresh()
+  }
+  catch (err: any) {
+    alert(err.data?.statusMessage || (isZh.value ? '保存失败' : 'Save failed'))
+  }
+  finally {
+    isSaving.value = false
+  }
+}
+
+async function handleDelete(user: User) {
+  const confirmMessage = isZh.value
+    ? `确定要删除用户"${user.name || user.email}"吗？此操作不可撤销。`
+    : `Are you sure you want to delete user "${user.name || user.email}"? This cannot be undone.`
+
+  if (!confirm(confirmMessage)) return
+
+  try {
+    await $fetch(`/api/admin/users/${user.id}`, {
+      method: 'DELETE',
+    })
+    await refresh()
+  }
+  catch (err: any) {
+    alert(err.data?.statusMessage || (isZh.value ? '删除失败' : 'Delete failed'))
+  }
+}
 </script>
 
 <template>
@@ -73,6 +142,78 @@ const filteredUsers = computed(() => {
       >
     </div>
 
+    <!-- Edit Modal -->
+    <dialog v-if="editingUser" class="modal modal-open">
+      <div class="modal-box">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-lg">
+            {{ isZh ? '编辑用户' : 'Edit User' }}
+          </h3>
+          <button class="btn btn-ghost btn-sm btn-circle" @click="cancelEdit">
+            <X class="w-4 h-4" />
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Name -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">{{ isZh ? '用户名' : 'Name' }} *</span>
+            </label>
+            <input
+              v-model="editForm.name"
+              type="text"
+              class="input input-bordered w-full"
+              required
+            >
+          </div>
+
+          <!-- Email -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">{{ isZh ? '邮箱' : 'Email' }} *</span>
+            </label>
+            <input
+              v-model="editForm.email"
+              type="email"
+              class="input input-bordered w-full"
+              required
+            >
+          </div>
+
+          <!-- Email Verified -->
+          <div class="form-control">
+            <label class="cursor-pointer label justify-start gap-3">
+              <input
+                v-model="editForm.emailVerified"
+                type="checkbox"
+                class="checkbox checkbox-primary"
+              >
+              <span class="label-text">{{ isZh ? '邮箱已验证' : 'Email Verified' }}</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="modal-action">
+          <button class="btn" @click="cancelEdit">
+            {{ isZh ? '取消' : 'Cancel' }}
+          </button>
+          <button
+            class="btn btn-primary"
+            :disabled="isSaving || !editForm.name || !editForm.email"
+            @click="saveEdit"
+          >
+            <span v-if="isSaving" class="loading loading-spinner loading-sm" />
+            <Check v-else class="w-4 h-4 mr-1" />
+            {{ isZh ? '保存' : 'Save' }}
+          </button>
+        </div>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button @click="cancelEdit">close</button>
+      </form>
+    </dialog>
+
     <div v-if="filteredUsers.length === 0" class="card bg-base-200 p-12 text-center">
       <Users class="w-16 h-16 mx-auto mb-4 opacity-30" />
       <p class="text-lg opacity-60">
@@ -90,6 +231,7 @@ const filteredUsers = computed(() => {
             <th>{{ isZh ? '提交数' : 'Submissions' }}</th>
             <th>{{ isZh ? '站点数' : 'Sites' }}</th>
             <th>{{ isZh ? '注册时间' : 'Joined' }}</th>
+            <th>{{ isZh ? '操作' : 'Actions' }}</th>
           </tr>
         </thead>
         <tbody>
@@ -135,6 +277,22 @@ const filteredUsers = computed(() => {
               <span class="text-sm opacity-60">
                 {{ new Date(u.created).toLocaleDateString(isZh ? 'zh-CN' : 'en-US') }}
               </span>
+            </td>
+            <td>
+              <div class="flex gap-1">
+                <button
+                  class="btn btn-ghost btn-xs"
+                  @click="startEdit(u)"
+                >
+                  <Edit class="w-3 h-3" />
+                </button>
+                <button
+                  class="btn btn-ghost btn-xs text-error"
+                  @click="handleDelete(u)"
+                >
+                  <Trash2 class="w-3 h-3" />
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>

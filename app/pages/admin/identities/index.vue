@@ -4,6 +4,9 @@ import {
   Building2,
   Search,
   Trash2,
+  Edit,
+  X,
+  Check,
 } from '@lucide/vue'
 
 const { locale } = useI18n()
@@ -54,6 +57,17 @@ const filteredIdentities = computed(() => {
   )
 })
 
+// Edit state
+const editingIdentity = ref<Identity | null>(null)
+const editForm = reactive({
+  name: '',
+  type: 'individual' as 'individual' | 'organization',
+  description: '',
+  iconFileId: null as string | null,
+  iconUrl: null as string | null,
+})
+const isSaving = ref(false)
+
 function getTypeLabel(type: string) {
   return type === 'organization'
     ? (isZh.value ? '组织' : 'Organization')
@@ -62,6 +76,59 @@ function getTypeLabel(type: string) {
 
 function getTypeIcon(type: string) {
   return type === 'organization' ? Building2 : User
+}
+
+function startEdit(identity: Identity) {
+  editingIdentity.value = identity
+  editForm.name = identity.name
+  editForm.type = identity.type
+  editForm.description = identity.description || ''
+  editForm.iconFileId = identity.iconFileId || null
+  editForm.iconUrl = identity.icon || null
+}
+
+function cancelEdit() {
+  editingIdentity.value = null
+  editForm.iconFileId = null
+  editForm.iconUrl = null
+}
+
+function handleIconUploaded(fileId: string, url: string) {
+  editForm.iconFileId = fileId
+  editForm.iconUrl = url
+}
+
+function handleIconRemoved() {
+  editForm.iconFileId = null
+  editForm.iconUrl = null
+}
+
+async function saveEdit() {
+  if (!editingIdentity.value || isSaving.value) return
+
+  isSaving.value = true
+
+  try {
+    await $fetch(`/api/admin/icp/identities/${editingIdentity.value.id}`, {
+      method: 'PATCH',
+      body: {
+        name: editForm.name,
+        type: editForm.type,
+        description: editForm.description || null,
+        iconFileId: editForm.iconFileId,
+        icon: editForm.iconUrl,
+      },
+    })
+
+    editingIdentity.value = null
+    await refresh()
+  }
+  catch (err: any) {
+    alert(err.data?.statusMessage || (isZh.value ? '保存失败' : 'Save failed'))
+  }
+  finally {
+    isSaving.value = false
+  }
 }
 
 async function handleDelete(identity: Identity) {
@@ -103,6 +170,106 @@ async function handleDelete(identity: Identity) {
         :placeholder="isZh ? '搜索身份...' : 'Search identities...'"
       >
     </div>
+
+    <!-- Edit Modal -->
+    <dialog v-if="editingIdentity" class="modal modal-open">
+      <div class="modal-box">
+        <div class="flex items-center justify-between mb-4">
+          <h3 class="font-bold text-lg">
+            {{ isZh ? '编辑身份' : 'Edit Identity' }}
+          </h3>
+          <button class="btn btn-ghost btn-sm btn-circle" @click="cancelEdit">
+            <X class="w-4 h-4" />
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          <!-- Icon Upload -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">{{ isZh ? '图标' : 'Icon' }}</span>
+            </label>
+            <IconUpload
+              :current-icon="editForm.iconUrl"
+              folder="icp/identities"
+              @uploaded="handleIconUploaded"
+              @removed="handleIconRemoved"
+            />
+          </div>
+
+          <!-- Type -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">{{ isZh ? '类型' : 'Type' }} *</span>
+            </label>
+            <div class="flex gap-4">
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  v-model="editForm.type"
+                  type="radio"
+                  value="individual"
+                  class="radio radio-primary"
+                >
+                <User class="w-4 h-4" />
+                {{ isZh ? '个人' : 'Individual' }}
+              </label>
+              <label class="flex items-center gap-2 cursor-pointer">
+                <input
+                  v-model="editForm.type"
+                  type="radio"
+                  value="organization"
+                  class="radio radio-primary"
+                >
+                <Building2 class="w-4 h-4" />
+                {{ isZh ? '组织' : 'Organization' }}
+              </label>
+            </div>
+          </div>
+
+          <!-- Name -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">{{ isZh ? '名称' : 'Name' }} *</span>
+            </label>
+            <input
+              v-model="editForm.name"
+              type="text"
+              class="input input-bordered w-full"
+              required
+            >
+          </div>
+
+          <!-- Description -->
+          <div class="form-control">
+            <label class="label">
+              <span class="label-text">{{ isZh ? '介绍' : 'Description' }}</span>
+            </label>
+            <textarea
+              v-model="editForm.description"
+              class="textarea textarea-bordered w-full h-20"
+            />
+          </div>
+        </div>
+
+        <div class="modal-action">
+          <button class="btn" @click="cancelEdit">
+            {{ isZh ? '取消' : 'Cancel' }}
+          </button>
+          <button
+            class="btn btn-primary"
+            :disabled="isSaving || !editForm.name"
+            @click="saveEdit"
+          >
+            <span v-if="isSaving" class="loading loading-spinner loading-sm" />
+            <Check v-else class="w-4 h-4 mr-1" />
+            {{ isZh ? '保存' : 'Save' }}
+          </button>
+        </div>
+      </div>
+      <form method="dialog" class="modal-backdrop">
+        <button @click="cancelEdit">close</button>
+      </form>
+    </dialog>
 
     <div v-if="filteredIdentities.length === 0" class="card bg-base-200 p-12 text-center">
       <User class="w-16 h-16 mx-auto mb-4 opacity-30" />
@@ -164,12 +331,20 @@ async function handleDelete(identity: Identity) {
               </span>
             </td>
             <td>
-              <button
-                class="btn btn-ghost btn-xs text-error"
-                @click="handleDelete(identity)"
-              >
-                <Trash2 class="w-3 h-3" />
-              </button>
+              <div class="flex gap-1">
+                <button
+                  class="btn btn-ghost btn-xs"
+                  @click="startEdit(identity)"
+                >
+                  <Edit class="w-3 h-3" />
+                </button>
+                <button
+                  class="btn btn-ghost btn-xs text-error"
+                  @click="handleDelete(identity)"
+                >
+                  <Trash2 class="w-3 h-3" />
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
