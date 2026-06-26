@@ -253,7 +253,8 @@ onMounted(() => {
       @click="closeMobileMenu"
     />
     <div
-      class="absolute left-5 right-5 rounded-2xl border border-base-content/10 bg-base-100/70 p-3 shadow-xl shadow-black/10 backdrop-blur-2xl transition-all duration-300 pointer-events-auto dark:border-base-content/5 dark:bg-base-100/50"
+      class="absolute left-5 right-5 rounded-2xl border border-base-content/10 bg-base-100/70 p-3 shadow-xl shadow-black/10 backdrop-blur-2xl transition-all duration-300 dark:border-base-content/5 dark:bg-base-100/50"
+      :class="{ 'pointer-events-auto': isMobileMenuOpen, 'pointer-events-none': !isMobileMenuOpen }"
       :style="{
         top: `calc(${bannerHeight} + 96px)`,
         opacity: isMobileMenuOpen ? 1 : 0,
