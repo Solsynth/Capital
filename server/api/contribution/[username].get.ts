@@ -65,13 +65,13 @@ export default defineEventHandler(async (event) => {
     ? await getGithubStats(githubUserId, githubUsername)
     : { prCount: 0, issueCount: 0, commitCount: 0 }
 
-  const total = stats.prCount + stats.issueCount + stats.commitCount
+  const total = stats.prCount * 5 + stats.issueCount * 3 + stats.commitCount
 
-  // Count how many users have more total contributions
+  // Count how many users have a higher weighted score
   const [{ count: higherCount }] = await db
     .select({ count: sql<number>`count(*)` })
     .from(contribGithubStats)
-    .where(sql`(pr_count + issue_count + commit_count) > ${total}`)
+    .where(sql`(pr_count * 5 + issue_count * 3 + commit_count) > ${total}`)
 
   const rank = Number(higherCount) + 1
 

@@ -1,11 +1,19 @@
 <script setup lang="ts">
-import { Trophy, GitPullRequest, CircleDot, GitCommitHorizontal, Loader2, ExternalLink, Crown } from '@lucide/vue'
+import { Trophy, GitPullRequest, CircleDot, GitCommitHorizontal, Loader2, Crown, Users } from '@lucide/vue'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
 
 const { data, status } = await useAsyncData('leaderboard', () =>
-  $fetch<{ leaderboard: Array<{ rank: number; githubUsername: string; prCount: number; issueCount: number; commitCount: number; total: number }> }>('/api/contribution/leaderboard'),
+  $fetch<{ leaderboard: Array<{
+    rank: number
+    githubUsername: string
+    solarUsername: string | null
+    prCount: number
+    issueCount: number
+    commitCount: number
+    total: number
+  }> }>('/api/contribution/leaderboard'),
 )
 
 useSeoMeta({
@@ -32,7 +40,7 @@ useSeoMeta({
         <thead>
           <tr class="text-xs opacity-60">
             <th class="w-16">{{ t('contributions.rank') }}</th>
-            <th>GitHub</th>
+            <th>{{ t('contributions.contributor') }}</th>
             <th class="text-right w-20">
               <GitPullRequest class="w-4 h-4 inline" />
             </th>
@@ -42,7 +50,7 @@ useSeoMeta({
             <th class="text-right w-20">
               <GitCommitHorizontal class="w-4 h-4 inline" />
             </th>
-            <th class="text-right w-24">{{ t('contributions.total') }}</th>
+            <th class="text-right w-24">{{ t('contributions.score') }}</th>
           </tr>
         </thead>
         <tbody>
@@ -60,24 +68,43 @@ useSeoMeta({
               </div>
             </td>
             <td>
-              <a
-                :href="`https://github.com/${row.githubUsername}`"
-                target="_blank"
-                rel="noopener"
-                class="flex items-center gap-2 hover:text-primary transition-colors"
+              <NuxtLink
+                v-if="row.solarUsername"
+                :to="localePath(`/contributions/${row.solarUsername}`)"
+                class="flex items-center gap-3 hover:text-primary transition-colors group"
               >
                 <img
                   :src="`https://github.com/${row.githubUsername}.png`"
                   :alt="row.githubUsername"
-                  class="w-7 h-7 rounded-full"
+                  class="w-8 h-8 rounded-full"
                 >
-                <span class="font-medium text-sm">{{ row.githubUsername }}</span>
+                <div>
+                  <p class="font-medium text-sm group-hover:text-primary transition-colors">{{ row.solarUsername }}</p>
+                  <p class="text-xs opacity-50">{{ row.githubUsername }}</p>
+                </div>
+              </NuxtLink>
+              <a
+                v-else
+                :href="`https://github.com/${row.githubUsername}`"
+                target="_blank"
+                rel="noopener"
+                class="flex items-center gap-3 hover:text-primary transition-colors"
+              >
+                <img
+                  :src="`https://github.com/${row.githubUsername}.png`"
+                  :alt="row.githubUsername"
+                  class="w-8 h-8 rounded-full"
+                >
+                <div>
+                  <p class="font-medium text-sm">{{ row.githubUsername }}</p>
+                  <p class="text-xs opacity-50">GitHub</p>
+                </div>
               </a>
             </td>
             <td class="text-right tabular-nums text-sm opacity-80">{{ row.prCount }}</td>
             <td class="text-right tabular-nums text-sm opacity-80">{{ row.issueCount }}</td>
             <td class="text-right tabular-nums text-sm opacity-80">{{ row.commitCount }}</td>
-            <td class="text-right font-bold tabular-nums text-sm">{{ row.total }}</td>
+            <td class="text-right font-bold tabular-nums text-sm">{{ row.prCount * 5 + row.issueCount * 3 + row.commitCount }}</td>
           </tr>
         </tbody>
       </table>

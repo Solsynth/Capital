@@ -1,10 +1,9 @@
 import { db } from '~~/server/utils/db'
-import { contribGithubStats } from '~~/server/db/schema'
-import { desc, sql } from 'drizzle-orm'
-
-const SOLAR_API = 'https://api.solian.app'
+import { contribGithubStats, contribClaSignature, account } from '~~/server/db/schema'
+import { desc, sql, eq } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
+  // Get all stats with a join to find the Solar account ID via CLA signature
   const rows = await db
     .select({
       githubUserId: contribGithubStats.githubUserId,
@@ -12,20 +11,45 @@ export default defineEventHandler(async (event) => {
       prCount: contribGithubStats.prCount,
       issueCount: contribGithubStats.issueCount,
       commitCount: contribGithubStats.commitCount,
-      total: sql<number>`${contribGithubStats.prCount} + ${contribGithubStats.issueCount} + ${contribGithubStats.commitCount}`,
+      total: sql<number>`${contribGithubStats.prCount} * 5 + ${contribGithubStats.issueCount} * 3 + ${contribGithubStats.commitCount}`,
+      solarAccountId: account.accountId,
     })
     .from(contribGithubStats)
-    .orderBy(desc(sql`${contribGithubStats.prCount} + ${contribGithubStats.issueCount} + ${contribGithubStats.commitCount}`))
+    .leftJoin(
+      contribClaSignature,
+      eq(contribClaSignature.githubUsername, contribGithubStats.githubUsername),
+    )
+    .leftJoin(
+      account,
+      sql`${account.userId} = ${contribClaSignature.userId} AND ${account.providerId} = 'solian'`,
+    )
+    .orderBy(desc(sql`${contribGithubStats.prCount} * 5 + ${contribGithubStats.issueCount} * 3 + ${contribGithubStats.commitCount}`))
     .limit(50)
 
-  return {
-    leaderboard: rows.map((row, i) => ({
-      rank: i + 1,
+  // Resolve Solar usernames from account IDs
+  const leaderboard = []
+  for (const row of rows) {
+    let solarUsername: string | null = null
+    if (row.solarAccountId) {
+      try {
+        const resp = await fetch(`https://api.solian.app/users/${row.solarAccountId}`)
+        if (resp.ok) {
+          const user = await resp.json()
+          solarUsername = user.preferred_username || user.name
+        }
+      } catch {}
+    }
+
+    leaderboard.push({
+      rank: leaderboard.length + 1,
       githubUsername: row.githubUsername,
+      solarUsername,
       prCount: row.prCount,
       issueCount: row.issueCount,
       commitCount: row.commitCount,
       total: row.total,
-    })),
+    })
   }
+
+  return { leaderboard }
 })

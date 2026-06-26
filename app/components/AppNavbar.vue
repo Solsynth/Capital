@@ -10,7 +10,6 @@ import {
   Menu,
   X,
   Languages,
-  BadgeCheck,
   CircleUser,
   LogOut,
   UserRound,
@@ -45,7 +44,6 @@ const pathname = computed(() => route.fullPath)
 const navItems = computed(() => [
   { to: localePath('/'), label: t('nav.explore'), icon: Compass },
   { to: localePath('/products'), label: t('nav.products'), icon: Layers },
-  { to: localePath('/icp'), label: t('nav.icp'), icon: BadgeCheck },
   { to: localePath('/updates'), label: t('nav.updates'), icon: Newspaper },
 ])
 

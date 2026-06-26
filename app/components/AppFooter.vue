@@ -8,7 +8,7 @@ if (import.meta.server) {
   const serverSession = await useServerSession()
   session = ref(serverSession)
 } else {
-  const { data } = useAuth().useSession(useFetch)
+  const { data } = useAuth().useSession(useFetch) as any
   session = data
 }
 
@@ -34,18 +34,13 @@ const isAdmin = computed(() => adminCheck.value?.isAdmin ?? false)
             <p class="text-sm opacity-70">
               {{ t('footer.tagline') }}
             </p>
-            <NuxtLink
-              v-if="isAdmin"
-              :to="localePath('/admin')"
-              class="link link-hover block text-xs opacity-65 hover:opacity-80 transition-opacity mt-4"
-            >
+            <NuxtLink v-if="isAdmin" :to="localePath('/admin')"
+              class="link link-hover block text-xs opacity-65 hover:opacity-80 transition-opacity mt-4">
               {{ t('footer.adminPanel') || 'Admin Panel' }}
             </NuxtLink>
-            <NuxtLink
-              :to="localePath('/icp/202600000')"
+            <NuxtLink :to="localePath('/icp/202600000')"
               class="link link-hover block text-xs opacity-65 hover:opacity-80 transition-opacity"
-              :class="isAdmin ? 'mt-1' : 'mt-4'"
-            >
+              :class="isAdmin ? 'mt-1' : 'mt-4'">
               羝 ICP 备 202600000 号
             </NuxtLink>
           </div>
@@ -54,6 +49,12 @@ const isAdmin = computed(() => adminCheck.value?.isAdmin ?? false)
           <h6 class="footer-title">
             {{ t('footer.products') }}
           </h6>
+          <NuxtLink :to="localePath('/icp')" class="link link-hover block text-sm">
+            {{ t('seo.icp.title') }}
+          </NuxtLink>
+          <NuxtLink :to="localePath('/contributions')" class="link link-hover block text-sm">
+            {{ t('footer.contributions') }}
+          </NuxtLink>
           <a href="https://solian.app" target="_blank" class="link link-hover block text-sm">Solar Network</a>
           <NuxtLink :to="localePath('/products')" class="link link-hover block text-sm">
             {{ t('footer.catalog') }}
@@ -61,7 +62,7 @@ const isAdmin = computed(() => adminCheck.value?.isAdmin ?? false)
         </nav>
         <nav>
           <h6 class="footer-title">
-            {{ t('footer.company') }}
+            {{ t('footer.community') }}
           </h6>
           <NuxtLink :to="localePath('/about')" class="link link-hover block text-sm">
             {{ t('footer.aboutUs') }}
