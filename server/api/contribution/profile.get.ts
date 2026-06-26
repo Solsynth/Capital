@@ -4,7 +4,7 @@ import { claSignature } from '~~/server/db/schema'
 import { eq, and } from 'drizzle-orm'
 import { CLA_VERSION } from '~~/server/utils/cla'
 import { getGithubConnection } from '~~/server/utils/sn'
-import { getGithubPrCount } from '~~/server/utils/github-stats'
+import { getGithubStats } from '~~/server/utils/github-stats'
 
 export default defineEventHandler(async (event) => {
   const session = await auth.api.getSession({ headers: event.headers })
@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
   const connection = await getGithubConnection(session.user.id)
 
   if (!connection) {
-    return { signed: false, githubConnected: false, githubUsername: null, prCount: 0 }
+    return { signed: false, githubConnected: false, githubUsername: null, prCount: 0, issueCount: 0, commitCount: 0 }
   }
 
   const githubUserId = parseInt(String(connection.meta?.user_id ?? '0').replace(/^"|"$/g, ''))
@@ -30,14 +30,14 @@ export default defineEventHandler(async (event) => {
     ))
     .limit(1)
 
-  const prCount = githubUserId ? await getGithubPrCount(githubUserId, githubUsername) : 0
+  const stats = githubUserId ? await getGithubStats(githubUserId, githubUsername) : { prCount: 0, issueCount: 0, commitCount: 0 }
 
   if (existing) {
     return {
       signed: true,
       githubConnected: true,
       githubUsername,
-      prCount,
+      ...stats,
       signature: {
         signedAt: existing.signedAt,
         claVersion: existing.claVersion,
@@ -45,5 +45,5 @@ export default defineEventHandler(async (event) => {
     }
   }
 
-  return { signed: false, githubConnected: true, githubUsername, prCount }
+  return { signed: false, githubConnected: true, githubUsername, ...stats }
 })

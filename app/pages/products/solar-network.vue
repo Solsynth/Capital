@@ -78,7 +78,9 @@ defineOgImage("UniOgImage", {
 <template>
   <div class="solar-network-page">
     <!-- Hero -->
-    <section class="relative h-[70vh] min-h-120 overflow-hidden">
+    <section
+      class="relative h-[70vh] min-h-120 overflow-hidden -mt-(--site-page-offset,64px)"
+    >
       <NuxtImg
         src="/images/solar-network/main-visual.webp"
         class="absolute inset-0 w-full h-full object-cover object-top-left -z-10 opacity-80"

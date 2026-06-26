@@ -22,6 +22,27 @@
       "when": 1782475023304,
       "tag": "0002_mean_giant_girl",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782475592146,
+      "tag": "0003_lumpy_vengeance",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1782476292686,
+      "tag": "0004_glamorous_the_hand",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1782478026403,
+      "tag": "0005_free_bastion",
+      "breakpoints": true
     }
   ]
 }

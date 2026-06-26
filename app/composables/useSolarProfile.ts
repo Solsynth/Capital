@@ -106,7 +106,8 @@ export function useSolarProfile() {
   return { data, loading, error, fetch }
 }
 
-export function useSolarFileUrl(file: SolarFile | null | undefined): string | null {
+export function useSolarFileUrl(file: SolarFile | null | undefined, original = false): string | null {
   if (!file) return null
-  return `https://api.solian.app/drive/files/${file.id}`
+  const base = `https://api.solian.app/drive/files/${file.id}`
+  return original ? `${base}?original=1` : base
 }

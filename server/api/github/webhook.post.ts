@@ -1,8 +1,9 @@
 import { createHmac } from 'crypto'
-import { readFileSync } from 'fs'
 import { db } from '~~/server/utils/db'
 import { claSignature } from '~~/server/db/schema'
 import { eq, and } from 'drizzle-orm'
+import { CLA_VERSION } from '~~/server/utils/cla'
+import { getGithubAppToken } from '~~/server/utils/github'
 
 function verifySignature(body: string, signature: string | undefined): boolean {
   const secret = process.env.GITHUB_WEBHOOK_SECRET
@@ -13,49 +14,6 @@ function verifySignature(body: string, signature: string | undefined): boolean {
   const expectedBuf = Buffer.from(expected)
   if (sigBuf.length !== expectedBuf.length) return false
   return require('crypto').timingSafeEqual(sigBuf, expectedBuf)
-}
-
-async function getGithubToken(): Promise<string> {
-  const appId = process.env.GITHUB_APP_ID
-  const keyPath = process.env.GITHUB_APP_PRIVATE_KEY_PATH
-  const installationId = process.env.GITHUB_APP_INSTALLATION_ID
-
-  if (!appId || !keyPath || !installationId) {
-    throw new Error('Missing GITHUB_APP_* env vars')
-  }
-
-  const privateKey = readFileSync(keyPath, 'utf-8')
-  const jwt = await createJwt(appId, privateKey)
-
-  const resp = await fetch(
-    `https://api.github.com/app/installations/${installationId}/access_tokens`,
-    {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${jwt}`,
-        Accept: 'application/vnd.github+json',
-        'X-GitHub-Api-Version': '2022-11-28',
-      },
-    }
-  )
-
-  if (!resp.ok) throw new Error(`GitHub token error: ${resp.status}`)
-  const data = await resp.json()
-  return data.token
-}
-
-async function createJwt(appId: string, privateKey: string): Promise<string> {
-  // ponytail: use jose for JWT — already a transitive dep in Nuxt ecosystem
-  const { SignJWT } = await import('jose').catch(() => {
-    throw new Error('jose is required — install with: npm i jose')
-  })
-  const key = await import('jose').then(j => j.importPKCS8(privateKey, 'RS256'))
-  return new SignJWT({})
-    .setProtectedHeader({ alg: 'RS256' })
-    .setIssuedAt()
-    .setExpirationTime('10m')
-    .setIssuer(appId)
-    .sign(key)
 }
 
 function getClaVersion(): string {
@@ -101,7 +59,7 @@ export default defineEventHandler(async (event) => {
   const signed = !!match
   const signUrl = 'https://capital.solsynth.dev/contributions/licensing'
 
-  const token = await getGithubToken()
+  const token = await getGithubAppToken()
 
   // Set commit status
   await fetch(`https://api.github.com/repos/${owner}/${repo}/statuses/${sha}`, {

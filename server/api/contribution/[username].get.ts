@@ -3,7 +3,15 @@ import { claSignature, account } from '~~/server/db/schema'
 import { eq, and, desc } from 'drizzle-orm'
 import { CLA_VERSION } from '~~/server/utils/cla'
 import { getSolarUser } from '~~/server/utils/sn'
-import { getGithubPrCount } from '~~/server/utils/github-stats'
+import { getGithubStats } from '~~/server/utils/github-stats'
+
+const SOLAR_DRIVE = 'https://api.solian.app/drive/files'
+
+function fileUrl(file: any, original = false): string | null {
+  if (!file?.id) return null
+  const base = `${SOLAR_DRIVE}/${file.id}`
+  return original ? `${base}?original=1` : base
+}
 
 export default defineEventHandler(async (event) => {
   const username = getRouterParam(event, 'username')
@@ -25,13 +33,20 @@ export default defineEventHandler(async (event) => {
     ))
     .limit(1)
 
+  const avatar = fileUrl(solarUser.profile?.picture)
+  const background = fileUrl(solarUser.profile?.background, true)
+
   if (!linkedAccount) {
     return {
       solarUsername: username,
       solarDisplayName: solarUser.nick || solarUser.name,
+      avatar,
+      background,
       githubUsername: null,
       claSigned: false,
       prCount: 0,
+      issueCount: 0,
+      commitCount: 0,
       linked: false,
     }
   }
@@ -46,16 +61,20 @@ export default defineEventHandler(async (event) => {
   const githubUsername = signature?.githubUsername ?? null
   const githubUserId = signature?.githubUserId ?? 0
   const claSigned = signature?.claVersion === CLA_VERSION
-  const prCount = githubUsername && githubUserId ? await getGithubPrCount(githubUserId, githubUsername) : 0
+  const stats = githubUsername && githubUserId
+    ? await getGithubStats(githubUserId, githubUsername)
+    : { prCount: 0, issueCount: 0, commitCount: 0 }
 
   return {
     solarUsername: username,
     solarDisplayName: solarUser.nick || solarUser.name,
+    avatar,
+    background,
     githubUsername,
     claSigned,
     claVersion: signature?.claVersion ?? null,
     signedAt: signature?.signedAt ?? null,
-    prCount,
+    ...stats,
     linked: true,
   }
 })

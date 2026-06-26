@@ -1,0 +1,1 @@
+ALTER TABLE "github_stats" ADD COLUMN "last_manual_refresh" timestamp;

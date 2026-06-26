@@ -239,7 +239,12 @@ export const githubStats = pgTable("github_stats", {
   githubUserId: integer("github_user_id").primaryKey(),
   githubUsername: text("github_username").notNull(),
   prCount: integer("pr_count").notNull().default(0),
+  issueCount: integer("issue_count").notNull().default(0),
+  commitCount: integer("commit_count").notNull().default(0),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  lastManualRefresh: timestamp("last_manual_refresh"),
+  heatmapData: text("heatmap_data"), // JSON: { date: count }[]
+  heatmapUpdatedAt: timestamp("heatmap_updated_at"),
 });
 
 export const claSignatureRelations = relations(claSignature, ({ one }) => ({
