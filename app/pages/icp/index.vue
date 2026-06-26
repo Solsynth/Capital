@@ -14,15 +14,10 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 
 const lang = computed(() => locale.value)
-const isZh = computed(() => lang.value === 'zh')
 const maxVisibleSites = 3
 
-const pageTitle = computed(() => isZh.value ? '中羊网备' : 'ROY ICP Filling')
-const pageDescription = computed(() =>
-  isZh.value
-    ? '中华羊国网络信息办公室受信任网站列表'
-    : 'Republic of Yang\'s friendly link list',
-)
+const pageTitle = computed(() => t('seo.icp.title'))
+const pageDescription = computed(() => t('seo.icp.description'))
 
 definePageMeta({
   title: '',
@@ -38,8 +33,6 @@ useSeoMeta({
   ogTitle: pageTitle,
   ogDescription: pageDescription,
 })
-const emptyText = computed(() => t('royIcp.directory.empty'))
-const pendingText = computed(() => isZh.value ? '待审核' : 'Pending')
 
 interface SiteItem {
   id: string
@@ -130,7 +123,7 @@ async function fetchSearch(raw: string) {
         <input
           type="text"
           class="input input-bordered w-full pl-12 input-lg"
-          :placeholder="isZh ? '搜索域名或网站名称...' : 'Search domain or site name...'"
+          :placeholder="t('royIcp.search.placeholder')"
           @input="onSearchInput"
         >
         <span
@@ -142,7 +135,7 @@ async function fetchSearch(raw: string) {
 
     <section>
       <h2 class="text-xl font-bold mb-6">
-        {{ isZh ? '已认证域名' : 'Certified Domains' }}
+        {{ t('royIcp.certifiedDomains') }}
       </h2>
 
       <div v-if="allSites.length === 0 && !searchQuery.trim()" class="card bg-base-200 p-12 text-center">
@@ -177,7 +170,7 @@ async function fetchSearch(raw: string) {
                   </h3>
                   <CheckCircle v-if="site.approved" class="w-4 h-4 text-success shrink-0" />
                   <span v-else class="badge badge-warning badge-outline shrink-0">
-                    {{ pendingText }}
+                    {{ t('royIcp.mySubmissions.pending') }}
                   </span>
                 </div>
                 <code class="text-xs opacity-60 truncate">{{ site.domain }}</code>
@@ -200,7 +193,7 @@ async function fetchSearch(raw: string) {
           v-if="hiddenSiteCount > 0 && !searchQuery.trim()"
           class="mt-4 text-center text-sm opacity-60"
         >
-          {{ isZh ? `+ ${hiddenSiteCount} 个更多网站` : `+ ${hiddenSiteCount} more sites` }}
+          {{ t('royIcp.moreSites', { count: hiddenSiteCount }) }}
         </p>
       </template>
     </section>

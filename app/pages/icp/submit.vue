@@ -6,35 +6,24 @@ import {
   Plus,
   User,
   Building2,
-  Image,
 } from '@lucide/vue'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const localePath = useLocalePath()
 const router = useRouter()
-
-const lang = computed(() => locale.value)
-const isZh = computed(() => lang.value === 'zh')
-
-const pageTitle = computed(() => isZh.value ? '提交新站点 - 中羊网备' : 'Submit New Site - ROY ICP')
-const pageDescription = computed(() =>
-  isZh.value
-    ? '提交您的网站以获取中羊网备认证'
-    : 'Submit your website for ROY ICP certification',
-)
 
 definePageMeta({
   middleware: 'auth',
 })
 
 useHead({
-  title: pageTitle,
+  title: t('royIcp.submit.title'),
 })
 
 useSeoMeta({
-  description: pageDescription,
-  ogTitle: pageTitle,
-  ogDescription: pageDescription,
+  description: t('royIcp.submit.desc'),
+  ogTitle: t('royIcp.submit.title'),
+  ogDescription: t('royIcp.submit.desc'),
 })
 
 interface Identity {
@@ -46,10 +35,9 @@ interface Identity {
   iconUrl?: string | null
 }
 
-// Fetch user's identities
 const { data: identitiesData } = await useAsyncData(
   'icp-identities-for-submit',
-  () => $fetch<{ identities: Identity[] }>('/api/icp/identities')
+  () => $fetch<{ identities: Identity[] }>('/api/icp/identities'),
 )
 
 const identities = computed(() => identitiesData.value?.identities ?? [])
@@ -62,14 +50,12 @@ const form = reactive({
   site_url: '',
   categories: [] as string[],
   iconFileId: null as string | null,
-  // Identity update fields
   updateIdentity: false,
   identityName: '',
   identityDescription: '',
   identityIconFileId: null as string | null,
 })
 
-// Sync identity fields when selection changes
 watch(() => form.identity_id, (id) => {
   const identity = identities.value.find(i => i.id === id)
   if (identity) {
@@ -84,33 +70,30 @@ const submitError = ref<string | null>(null)
 const submitSuccess = ref(false)
 
 const categoryOptions = [
-  { value: 'official', labelEn: 'ROY Official', labelZh: '羊国官方' },
-  { value: 'entertainment', labelEn: 'Entertainment', labelZh: '娱乐' },
-  { value: 'technology', labelEn: 'Technology', labelZh: '科技' },
-  { value: 'education', labelEn: 'Education', labelZh: '教育' },
-  { value: 'social', labelEn: 'Social', labelZh: '社交' },
-  { value: 'business', labelEn: 'Business', labelZh: '商业' },
-  { value: 'personal', labelEn: 'Personal', labelZh: '个人' },
-  { value: 'media', labelEn: 'Media', labelZh: '媒体' },
-  { value: 'community', labelEn: 'Community', labelZh: '社区' },
-  { value: 'tools', labelEn: 'Tools', labelZh: '工具' },
-  { value: 'blog', labelEn: 'Blog', labelZh: '博客' },
+  { value: 'official', label: t('categories.official', 'ROY Official') },
+  { value: 'entertainment', label: t('categories.entertainment', 'Entertainment') },
+  { value: 'technology', label: t('categories.technology', 'Technology') },
+  { value: 'education', label: t('categories.education', 'Education') },
+  { value: 'social', label: t('categories.social', 'Social') },
+  { value: 'business', label: t('categories.business', 'Business') },
+  { value: 'personal', label: t('categories.personal', 'Personal') },
+  { value: 'media', label: t('categories.media', 'Media') },
+  { value: 'community', label: t('categories.community', 'Community') },
+  { value: 'tools', label: t('categories.tools', 'Tools') },
+  { value: 'blog', label: t('categories.blog', 'Blog') },
 ]
 
 function toggleCategory(value: string) {
   const index = form.categories.indexOf(value)
-  if (index === -1) {
-    form.categories.push(value)
-  } else {
-    form.categories.splice(index, 1)
-  }
+  if (index === -1) form.categories.push(value)
+  else form.categories.splice(index, 1)
 }
 
 async function handleSubmit() {
   if (isSubmitting.value) return
 
   if (!form.identity_id) {
-    submitError.value = isZh.value ? '请选择一个身份' : 'Please select an identity'
+    submitError.value = t('royIcp.submit.selectIdentity')
     return
   }
 
@@ -130,7 +113,6 @@ async function handleSubmit() {
       iconFileId: form.iconFileId?.id || null,
     }
 
-    // Include identity updates if toggled
     if (form.updateIdentity) {
       body.identity_name = form.identityName.trim() || null
       body.identity_description = form.identityDescription.trim() || null
@@ -148,7 +130,7 @@ async function handleSubmit() {
     }, 2000)
   }
   catch (err: any) {
-    submitError.value = err.data?.statusMessage || (isZh.value ? '提交失败，请重试' : 'Submission failed, please try again')
+    submitError.value = err.data?.statusMessage || t('royIcp.submission.error')
   }
   finally {
     isSubmitting.value = false
@@ -160,9 +142,7 @@ function getTypeIcon(type: string) {
 }
 
 function getTypeLabel(type: string) {
-  return type === 'organization'
-    ? (isZh.value ? '组织' : 'Organization')
-    : (isZh.value ? '个人' : 'Individual')
+  return type === 'organization' ? t('royIcp.identities.organization') : t('royIcp.identities.individual')
 }
 </script>
 
@@ -173,7 +153,7 @@ function getTypeLabel(type: string) {
       class="btn btn-ghost btn-sm mb-8"
     >
       <ArrowLeft class="w-4 h-4 mr-1" />
-      {{ isZh ? '返回目录' : 'Back to Directory' }}
+      {{ t('common.back') }}
     </NuxtLink>
 
     <div class="card bg-base-200 p-8">
@@ -181,10 +161,10 @@ function getTypeLabel(type: string) {
         <Globe class="w-10 h-10 text-primary" />
         <div>
           <h1 class="text-3xl font-bold">
-            {{ isZh ? '提交新站点' : 'Submit New Site' }}
+            {{ t('royIcp.submit.title') }}
           </h1>
           <p class="opacity-70">
-            {{ pageDescription }}
+            {{ t('royIcp.submit.desc') }}
           </p>
         </div>
       </div>
@@ -193,7 +173,7 @@ function getTypeLabel(type: string) {
         <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <span>{{ isZh ? '提交成功！正在跳转...' : 'Submission successful! Redirecting...' }}</span>
+        <span>{{ t('royIcp.submit.success') }}</span>
       </div>
 
       <div v-if="submitError" class="alert alert-error mb-6">
@@ -206,16 +186,16 @@ function getTypeLabel(type: string) {
       <form v-if="!submitSuccess" @submit.prevent="handleSubmit" class="space-y-6">
         <!-- Identity Selection -->
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '选择身份' : 'Select Identity' }} *</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.submit.selectIdentity') }} *</legend>
 
           <div v-if="identities.length === 0" class="alert alert-warning">
             <div>
-              <p class="font-bold">{{ isZh ? '暂无身份' : 'No identities found' }}</p>
-              <p class="text-sm">{{ isZh ? '请先创建一个身份' : 'Please create an identity first' }}</p>
+              <p class="font-bold">{{ t('royIcp.submit.noIdentity') }}</p>
+              <p class="text-sm">{{ t('royIcp.submit.createIdentityFirst') }}</p>
             </div>
             <NuxtLink :to="localePath('/icp/identities')" class="btn btn-sm btn-primary">
               <Plus class="w-4 h-4 mr-1" />
-              {{ isZh ? '创建身份' : 'Create Identity' }}
+              {{ t('royIcp.submit.createIdentity') }}
             </NuxtLink>
           </div>
 
@@ -250,7 +230,7 @@ function getTypeLabel(type: string) {
 
           <p class="label mt-2">
             <NuxtLink :to="localePath('/icp/identities')" class="link link-primary">
-              {{ isZh ? '管理身份' : 'Manage identities' }} →
+              {{ t('royIcp.submit.manageIdentities') }} →
             </NuxtLink>
           </p>
         </fieldset>
@@ -259,29 +239,29 @@ function getTypeLabel(type: string) {
         <div v-if="form.identity_id" class="space-y-4">
           <label class="flex items-center gap-3 cursor-pointer">
             <input v-model="form.updateIdentity" type="checkbox" class="checkbox checkbox-primary">
-            <span class="text-sm font-medium">{{ isZh ? '同时更新身份信息' : 'Also update identity info' }}</span>
+            <span class="text-sm font-medium">{{ t('royIcp.submit.identityUpdate') }}</span>
           </label>
 
           <div v-if="form.updateIdentity" class="space-y-4 pl-7 border-l-2 border-primary/20">
-            <fieldset class="fieldset">
-              <legend class="fieldset-legend">{{ isZh ? '身份名称' : 'Identity Name' }}</legend>
-              <input v-model="form.identityName" type="text" class="input w-full">
-            </fieldset>
+            <div>
+              <label class="text-sm opacity-60">{{ t('royIcp.submit.identityName') }}</label>
+              <input v-model="form.identityName" type="text" class="input w-full mt-1">
+            </div>
 
-            <fieldset class="fieldset">
-              <legend class="fieldset-legend">{{ isZh ? '身份介绍' : 'Identity Description' }}</legend>
-              <textarea v-model="form.identityDescription" class="textarea h-16 w-full" />
-            </fieldset>
+            <div>
+              <label class="text-sm opacity-60">{{ t('royIcp.submit.identityDesc') }}</label>
+              <textarea v-model="form.identityDescription" class="textarea h-16 w-full mt-1" />
+            </div>
 
-            <fieldset class="fieldset">
-              <legend class="fieldset-legend">{{ isZh ? '身份图标' : 'Identity Icon' }}</legend>
-              <FileUpload v-model="form.identityIconFileId" compact />
-            </fieldset>
+            <div>
+              <label class="text-sm opacity-60">{{ t('royIcp.submit.identityIcon') }}</label>
+              <FileUpload v-model="form.identityIconFileId" compact class="mt-1" />
+            </div>
           </div>
         </div>
 
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '域名' : 'Domain' }} *</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.submit.domain') }} *</legend>
           <input
             v-model="form.domain"
             type="text"
@@ -289,22 +269,22 @@ function getTypeLabel(type: string) {
             class="input w-full"
             required
           >
-          <p class="label">{{ isZh ? '不要包含 http:// 前缀' : 'Do not include http:// prefix' }}</p>
+          <p class="label">{{ t('royIcp.submit.domainHint') }}</p>
         </fieldset>
 
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '网站名称' : 'Site Name' }} *</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.submit.siteName') }} *</legend>
           <input
             v-model="form.name"
             type="text"
-            :placeholder="isZh ? '我的网站' : 'My Website'"
+            :placeholder="t('royIcp.submit.siteNamePlaceholder')"
             class="input w-full"
             required
           >
         </fieldset>
 
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '网站链接' : 'Site URL' }} *</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.submit.siteUrl') }} *</legend>
           <input
             v-model="form.site_url"
             type="url"
@@ -315,16 +295,16 @@ function getTypeLabel(type: string) {
         </fieldset>
 
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '网站介绍' : 'Description' }}</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.submit.description') }}</legend>
           <textarea
             v-model="form.description"
-            :placeholder="isZh ? '简要介绍您的网站...' : 'Briefly describe your website...'"
+            :placeholder="t('royIcp.submit.descriptionPlaceholder')"
             class="textarea h-24 w-full"
           />
         </fieldset>
 
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '分类' : 'Categories' }}</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.submit.categories') }}</legend>
           <div class="flex flex-wrap gap-2">
             <button
               v-for="cat in categoryOptions"
@@ -334,19 +314,19 @@ function getTypeLabel(type: string) {
               :class="form.categories.includes(cat.value) ? 'badge-primary' : 'badge-outline hover:badge-primary'"
               @click="toggleCategory(cat.value)"
             >
-              {{ isZh ? cat.labelZh : cat.labelEn }}
+              {{ cat.label }}
             </button>
           </div>
-          <p class="label">{{ isZh ? '选填，可多选' : 'Optional, multiple selection' }}</p>
+          <p class="label">{{ t('royIcp.submit.categoriesHint') }}</p>
         </fieldset>
 
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '网站图标' : 'Site Icon' }}</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.submit.siteIcon') }}</legend>
           <FileUpload
             v-model="form.iconFileId"
-            :hint="isZh ? '支持 JPG, PNG, WebP, SVG，最大 5MB' : 'JPG, PNG, WebP, SVG. Max 5MB'"
+            :hint="t('royIcp.submit.iconHint')"
           />
-          <p class="label">{{ isZh ? '选填，建议 256x256 正方形' : 'Optional, 256x256 square recommended' }}</p>
+          <p class="label">{{ t('royIcp.submit.iconRecommended') }}</p>
         </fieldset>
 
         <div class="form-control mt-8">
@@ -357,7 +337,7 @@ function getTypeLabel(type: string) {
           >
             <span v-if="isSubmitting" class="loading loading-spinner loading-sm" />
             <Send v-else class="w-5 h-5 mr-2" />
-            {{ isZh ? '提交申请' : 'Submit Application' }}
+            {{ t('royIcp.submit.submitBtn') }}
           </button>
         </div>
       </form>

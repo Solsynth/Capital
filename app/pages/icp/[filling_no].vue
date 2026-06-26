@@ -10,14 +10,12 @@ import {
   Edit,
 } from '@lucide/vue'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 const { data: authData } = await useAuth().useSession(useFetch)
 
-const lang = computed(() => locale.value)
 const fillingNo = computed(() => route.params.filling_no as string)
-const isZh = computed(() => lang.value === 'zh')
 
 interface SiteDetail {
   id: string
@@ -60,14 +58,11 @@ if (error.value || !data.value?.site) {
 const site = computed(() => data.value?.site)
 
 const pageTitle = computed(() =>
-  site.value
-    ? isZh.value
-      ? `${site.value.name} - 中羊网备`
-      : `${site.value.name} - ROY ICP Filling`
-    : '',
+  site.value ? `${site.value.name} - ${t('seo.icp.title')}` : '',
 )
 
 const isApproved = computed(() => Boolean(site.value?.approved_at))
+
 const isOwner = computed(() => {
   if (!authData.value?.user || !site.value?.owner) return false
   return authData.value.user.id === site.value.owner.id
@@ -78,23 +73,23 @@ const pageDescription = computed(() => {
   return (
     site.value.description
     || (isApproved.value
-      ? isZh.value ? '已通过中羊网备认证' : 'ROY ICP certified website'
-      : isZh.value ? '等待中羊网备审核' : 'Awaiting ROY ICP approval')
+      ? t('royIcp.site.certified')
+      : t('royIcp.site.pendingApproval'))
   )
 })
 
-const categoryLabels: Record<string, [string, string]> = {
-  official: ['ROY Official', '羊国官方'],
-  entertainment: ['Entertainment', '娱乐'],
-  technology: ['Technology', '科技'],
-  education: ['Education', '教育'],
-  social: ['Social', '社交'],
-  business: ['Business', '商业'],
-  personal: ['Personal', '个人'],
-  media: ['Media', '媒体'],
-  community: ['Community', '社区'],
-  tools: ['Tools', '工具'],
-  blog: ['Blog', '博客'],
+const categoryLabels: Record<string, string> = {
+  official: 'categories.official',
+  entertainment: 'categories.entertainment',
+  technology: 'categories.technology',
+  education: 'categories.education',
+  social: 'categories.social',
+  business: 'categories.business',
+  personal: 'categories.personal',
+  media: 'categories.media',
+  community: 'categories.community',
+  tools: 'categories.tools',
+  blog: 'categories.blog',
 }
 
 const activeCategories = computed(() => {
@@ -104,12 +99,10 @@ const activeCategories = computed(() => {
     ? raw
     : Object.entries(raw).filter(([, v]) => v).map(([k]) => k)
   return keys.map((key) => {
-    const label = categoryLabels[key]
-    return label ? (isZh.value ? label[1] : label[0]) : key
+    const i18nKey = categoryLabels[key]
+    return i18nKey ? t(i18nKey, key) : key
   })
 })
-
-const localeForDate = computed(() => (lang.value === 'zh' ? 'zh-CN' : 'en-US'))
 
 useHead({
   title: pageTitle,
@@ -132,7 +125,7 @@ useSeoMeta({
       class="btn btn-ghost btn-sm mb-8"
     >
       <ArrowLeft class="w-4 h-4 mr-1" />
-      {{ isZh ? '返回目录' : 'Back to Directory' }}
+      {{ t('royIcp.site.back') }}
     </NuxtLink>
 
     <div class="card bg-base-200 p-8">
@@ -153,9 +146,7 @@ useSeoMeta({
             </h1>
             <div
               class="tooltip"
-              :data-tip="isZh
-                ? isApproved ? '已通过 ROY ICP 认证' : '等待 ROY ICP 审核'
-                : isApproved ? 'ROY ICP Certified' : 'Awaiting ROY ICP approval'"
+              :data-tip="isApproved ? t('royIcp.site.certified') : t('royIcp.site.pendingApproval')"
             >
               <CheckCircle
                 class="w-6 h-6 shrink-0"
@@ -175,7 +166,7 @@ useSeoMeta({
               class="btn btn-primary"
             >
               <ExternalLink class="w-4 h-4 mr-1" />
-              {{ isZh ? '访问网站' : 'Visit Website' }}
+              {{ t('royIcp.site.visit') }}
             </a>
             <NuxtLink
               v-if="isOwner"
@@ -183,7 +174,7 @@ useSeoMeta({
               class="btn btn-outline"
             >
               <Edit class="w-4 h-4 mr-1" />
-              {{ isZh ? '编辑' : 'Edit' }}
+              {{ t('royIcp.site.edit') }}
             </NuxtLink>
           </div>
         </div>
@@ -191,7 +182,7 @@ useSeoMeta({
 
       <div v-if="site.description" class="mb-8">
         <h2 class="text-lg font-bold mb-2">
-          {{ isZh ? '网站介绍' : 'About' }}
+          {{ t('royIcp.site.about') }}
         </h2>
         <p class="opacity-80">
           {{ site.description }}
@@ -200,7 +191,7 @@ useSeoMeta({
 
       <div v-if="site.identity" class="mb-8">
         <h2 class="text-lg font-bold mb-2">
-          {{ isZh ? '备案主体' : 'Identity' }}
+          {{ t('royIcp.site.identity') }}
         </h2>
         <div class="flex flex-row gap-4 items-center">
           <div class="w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-base-100 flex items-center justify-center">
@@ -226,7 +217,7 @@ useSeoMeta({
       <div v-if="activeCategories.length > 0" class="flex items-start gap-3 sm:col-span-2 mb-8">
         <div>
           <p class="text-sm opacity-60 mb-2">
-            {{ isZh ? '分类' : 'Categories' }}
+            {{ t('royIcp.site.categories') }}
           </p>
           <div class="flex flex-wrap gap-2">
             <span v-for="label in activeCategories" :key="label" class="badge badge-primary">
@@ -238,7 +229,7 @@ useSeoMeta({
 
       <div class="border-t border-base-300 pt-6">
         <h2 class="text-lg font-bold mb-4">
-          {{ isZh ? '认证信息' : 'Certification Details' }}
+          {{ t('royIcp.site.certDetails') }}
         </h2>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -246,13 +237,10 @@ useSeoMeta({
             <Shield class="w-5 h-5 text-success mt-0.5 shrink-0" />
             <div>
               <p class="text-sm opacity-60 mb-0.5">
-                {{ isZh ? '认证状态' : 'Status' }}
+                {{ t('royIcp.site.status') }}
               </p>
               <p class="font-medium">
-                {{ isApproved
-                  ? (isZh ? '已通过' : 'Certified')
-                  : (isZh ? '待审核' : 'Pending approval')
-                }}
+                {{ isApproved ? t('royIcp.site.certified') : t('royIcp.site.pendingApproval') }}
               </p>
             </div>
           </div>
@@ -261,10 +249,10 @@ useSeoMeta({
             <Calendar class="w-5 h-5 text-primary mt-0.5 shrink-0" />
             <div>
               <p class="text-sm opacity-60 mb-0.5">
-                {{ isZh ? '认证日期' : 'Certified on' }}
+                {{ t('royIcp.site.certifiedOn') }}
               </p>
               <p class="font-medium">
-                {{ new Date(site.approved_at).toLocaleDateString(localeForDate) }}
+                {{ new Date(site.approved_at).toLocaleDateString() }}
               </p>
             </div>
           </div>

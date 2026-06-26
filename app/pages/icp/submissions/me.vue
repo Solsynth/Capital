@@ -8,20 +8,15 @@ import {
   Plus,
 } from '@lucide/vue'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const localePath = useLocalePath()
-
-const lang = computed(() => locale.value)
-const isZh = computed(() => lang.value === 'zh')
-
-const pageTitle = computed(() => isZh.value ? '我的提交 - 中羊网备' : 'My Submissions - ROY ICP')
 
 definePageMeta({
   middleware: 'auth',
 })
 
 useHead({
-  title: pageTitle,
+  title: t('royIcp.mySubmissions.title'),
 })
 
 interface Submission {
@@ -36,6 +31,8 @@ interface Submission {
     site_url: string
     categories?: string[]
     identity_id?: string
+    identity_name?: string
+    identity_description?: string
   }
   review_note?: string
   reviewed_at?: string
@@ -46,50 +43,37 @@ interface Submission {
 
 const { data: submissionsData } = await useAsyncData(
   'icp-my-submissions',
-  () => $fetch<{ submissions: Submission[] }>('/api/icp/submissions')
+  () => $fetch<{ submissions: Submission[] }>('/api/icp/submissions'),
 )
 
 const submissions = computed(() => submissionsData.value?.submissions ?? [])
 
 function getStatusBadge(status: string) {
   switch (status) {
-    case 'pending':
-      return 'badge-warning'
-    case 'approved':
-      return 'badge-success'
-    case 'rejected':
-      return 'badge-error'
-    default:
-      return 'badge-ghost'
+    case 'pending': return 'badge-warning'
+    case 'approved': return 'badge-success'
+    case 'rejected': return 'badge-error'
+    default: return 'badge-ghost'
   }
 }
 
 function getStatusLabel(status: string) {
-  const labels: Record<string, Record<string, string>> = {
-    pending: { en: 'Pending', zh: '待审核' },
-    approved: { en: 'Approved', zh: '已通过' },
-    rejected: { en: 'Rejected', zh: '已拒绝' },
-  }
-  return labels[status]?.[isZh.value ? 'zh' : 'en'] || status
+  return t(`royIcp.mySubmissions.${status}`, status)
 }
 
 function getStatusIcon(status: string) {
   switch (status) {
-    case 'pending':
-      return Clock
-    case 'approved':
-      return CheckCircle
-    case 'rejected':
-      return XCircle
-    default:
-      return FileText
+    case 'pending': return Clock
+    case 'approved': return CheckCircle
+    case 'rejected': return XCircle
+    default: return FileText
   }
 }
 
 function getTypeLabel(type: string) {
   return type === 'create'
-    ? (isZh.value ? '新建站点' : 'New Site')
-    : (isZh.value ? '更新站点' : 'Update Site')
+    ? t('royIcp.mySubmissions.create')
+    : t('royIcp.mySubmissions.update')
 }
 </script>
 
@@ -100,7 +84,7 @@ function getTypeLabel(type: string) {
       class="btn btn-ghost btn-sm mb-8"
     >
       <ArrowLeft class="w-4 h-4 mr-1" />
-      {{ isZh ? '返回目录' : 'Back to Directory' }}
+      {{ t('common.back') }}
     </NuxtLink>
 
     <div class="flex items-center justify-between mb-8">
@@ -108,10 +92,10 @@ function getTypeLabel(type: string) {
         <FileText class="w-10 h-10 text-primary" />
         <div>
           <h1 class="text-3xl font-bold">
-            {{ isZh ? '我的提交' : 'My Submissions' }}
+            {{ t('royIcp.mySubmissions.title') }}
           </h1>
           <p class="opacity-70">
-            {{ isZh ? '查看您的站点提交状态' : 'View your site submission status' }}
+            {{ t('royIcp.mySubmissions.desc') }}
           </p>
         </div>
       </div>
@@ -121,21 +105,21 @@ function getTypeLabel(type: string) {
         class="btn btn-primary"
       >
         <Plus class="w-4 h-4 mr-1" />
-        {{ isZh ? '新建提交' : 'New Submission' }}
+        {{ t('royIcp.mySubmissions.new') }}
       </NuxtLink>
     </div>
 
     <div v-if="submissions.length === 0" class="card bg-base-200 p-12 text-center">
       <FileText class="w-16 h-16 mx-auto mb-4 opacity-30" />
       <p class="text-lg opacity-60 mb-4">
-        {{ isZh ? '暂无提交' : 'No submissions yet' }}
+        {{ t('royIcp.mySubmissions.empty') }}
       </p>
       <NuxtLink
         :to="localePath('/icp/submit')"
         class="btn btn-primary"
       >
         <Plus class="w-4 h-4 mr-1" />
-        {{ isZh ? '提交新站点' : 'Submit New Site' }}
+        {{ t('royIcp.mySubmissions.submitNew') }}
       </NuxtLink>
     </div>
 
@@ -170,7 +154,7 @@ function getTypeLabel(type: string) {
         </div>
 
         <div class="text-sm opacity-60 mb-4">
-          <p>{{ isZh ? '提交时间' : 'Submitted' }}: {{ new Date(sub.created).toLocaleDateString(isZh ? 'zh-CN' : 'en-US') }}</p>
+          <p>{{ t('royIcp.mySubmissions.submitted') }}: {{ new Date(sub.created).toLocaleDateString() }}</p>
         </div>
 
         <div v-if="sub.data.description" class="mb-4">
@@ -183,23 +167,23 @@ function getTypeLabel(type: string) {
           </span>
         </div>
 
+        <div v-if="sub.data.identity_name || sub.data.identity_description" class="mt-3 p-3 bg-primary/5 rounded-lg">
+          <p class="text-xs font-bold mb-1 opacity-60">{{ t('royIcp.mySubmissions.identityUpdates') }}</p>
+          <p v-if="sub.data.identity_name" class="text-sm">{{ sub.data.identity_name }}</p>
+          <p v-if="sub.data.identity_description" class="text-xs opacity-70">{{ sub.data.identity_description }}</p>
+        </div>
+
         <div v-if="sub.status === 'approved' && sub.site_filling_no" class="mt-4">
           <NuxtLink
             :to="localePath(`/icp/${sub.site_filling_no}`)"
             class="btn btn-sm btn-outline btn-primary"
           >
-            {{ isZh ? '查看站点' : 'View Site' }}
+            {{ t('royIcp.mySubmissions.viewSite') }}
           </NuxtLink>
         </div>
 
-        <div v-if="sub.data.identity_name || sub.data.identity_description" class="mt-3 p-3 bg-primary/5 rounded-lg">
-          <p class="text-xs font-bold mb-1 opacity-60">{{ isZh ? '身份更新' : 'Identity Updates' }}</p>
-          <p v-if="sub.data.identity_name" class="text-sm">{{ sub.data.identity_name }}</p>
-          <p v-if="sub.data.identity_description" class="text-xs opacity-70">{{ sub.data.identity_description }}</p>
-        </div>
-
         <div v-if="sub.review_note" class="mt-4 p-3 bg-base-300 rounded-lg">
-          <p class="text-sm font-bold mb-1">{{ isZh ? '审核备注' : 'Review Note' }}</p>
+          <p class="text-sm font-bold mb-1">{{ t('royIcp.mySubmissions.reviewNote') }}</p>
           <p class="text-sm opacity-80">{{ sub.review_note }}</p>
         </div>
       </div>

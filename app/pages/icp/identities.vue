@@ -8,23 +8,17 @@ import {
   Trash2,
   X,
   Check,
-  Camera,
 } from '@lucide/vue'
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const localePath = useLocalePath()
-
-const lang = computed(() => locale.value)
-const isZh = computed(() => lang.value === 'zh')
-
-const pageTitle = computed(() => isZh.value ? '管理身份 - 中羊网备' : 'Manage Identities - ROY ICP')
 
 definePageMeta({
   middleware: 'auth',
 })
 
 useHead({
-  title: pageTitle,
+  title: t('royIcp.identities.title'),
 })
 
 interface Identity {
@@ -39,12 +33,11 @@ interface Identity {
 
 const { data: identitiesData, refresh } = await useAsyncData(
   'icp-identities',
-  () => $fetch<{ identities: Identity[] }>('/api/icp/identities')
+  () => $fetch<{ identities: Identity[] }>('/api/icp/identities'),
 )
 
 const identities = computed(() => identitiesData.value?.identities ?? [])
 
-// Form state
 const showForm = ref(false)
 const editingIdentity = ref<Identity | null>(null)
 const form = reactive({
@@ -85,7 +78,7 @@ function closeForm() {
 async function handleSubmit() {
   if (isSubmitting.value) return
   if (!form.name.trim()) {
-    formError.value = isZh.value ? '请输入名称' : 'Name is required'
+    formError.value = t('royIcp.identities.name') + ' *'
     return
   }
 
@@ -94,7 +87,6 @@ async function handleSubmit() {
 
   try {
     if (editingIdentity.value) {
-      // Update existing identity
       await $fetch(`/api/icp/identities/${editingIdentity.value.id}`, {
         method: 'PUT',
         body: {
@@ -105,7 +97,6 @@ async function handleSubmit() {
         },
       })
     } else {
-      // Create new identity
       await $fetch('/api/icp/identities/create', {
         method: 'POST',
         body: {
@@ -121,7 +112,7 @@ async function handleSubmit() {
     await refresh()
   }
   catch (err: any) {
-    formError.value = err.data?.statusMessage || (isZh.value ? '操作失败，请重试' : 'Action failed, please try again')
+    formError.value = err.data?.statusMessage || t('common.error', 'Action failed')
   }
   finally {
     isSubmitting.value = false
@@ -129,10 +120,7 @@ async function handleSubmit() {
 }
 
 async function handleDelete(identity: Identity) {
-  const confirmMessage = isZh.value
-    ? `确定要删除身份"${identity.name}"吗？`
-    : `Are you sure you want to delete identity "${identity.name}"?`
-
+  const confirmMessage = t('royIcp.identities.deleteConfirm', { name: identity.name })
   if (!confirm(confirmMessage)) return
 
   try {
@@ -142,14 +130,12 @@ async function handleDelete(identity: Identity) {
     await refresh()
   }
   catch (err: any) {
-    alert(err.data?.statusMessage || (isZh.value ? '删除失败' : 'Delete failed'))
+    alert(err.data?.statusMessage || t('common.error', 'Delete failed'))
   }
 }
 
 function getTypeLabel(type: string) {
-  return type === 'organization'
-    ? (isZh.value ? '组织' : 'Organization')
-    : (isZh.value ? '个人' : 'Individual')
+  return type === 'organization' ? t('royIcp.identities.organization') : t('royIcp.identities.individual')
 }
 
 function getTypeIcon(type: string) {
@@ -164,7 +150,7 @@ function getTypeIcon(type: string) {
       class="btn btn-ghost btn-sm mb-8"
     >
       <ArrowLeft class="w-4 h-4 mr-1" />
-      {{ isZh ? '返回目录' : 'Back to Directory' }}
+      {{ t('royIcp.identities.back') }}
     </NuxtLink>
 
     <div class="flex items-center justify-between mb-8">
@@ -172,10 +158,10 @@ function getTypeIcon(type: string) {
         <User class="w-10 h-10 text-primary" />
         <div>
           <h1 class="text-3xl font-bold">
-            {{ isZh ? '管理身份' : 'Manage Identities' }}
+            {{ t('royIcp.identities.title') }}
           </h1>
           <p class="opacity-70">
-            {{ isZh ? '创建和管理您的备案主体' : 'Create and manage your filing identities' }}
+            {{ t('royIcp.identities.desc') }}
           </p>
         </div>
       </div>
@@ -185,7 +171,7 @@ function getTypeIcon(type: string) {
         @click="openCreateForm"
       >
         <Plus class="w-4 h-4 mr-1" />
-        {{ isZh ? '新建身份' : 'New Identity' }}
+        {{ t('royIcp.identities.new') }}
       </button>
     </div>
 
@@ -193,10 +179,7 @@ function getTypeIcon(type: string) {
     <div v-if="showForm" class="card bg-base-200 p-6 mb-8">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-xl font-bold">
-          {{ editingIdentity
-            ? (isZh ? '编辑身份' : 'Edit Identity')
-            : (isZh ? '新建身份' : 'New Identity')
-          }}
+          {{ editingIdentity ? t('royIcp.identities.edit') : t('royIcp.identities.create') }}
         </h2>
         <button class="btn btn-ghost btn-sm btn-circle" @click="closeForm">
           <X class="w-4 h-4" />
@@ -209,7 +192,7 @@ function getTypeIcon(type: string) {
 
       <form @submit.prevent="handleSubmit" class="space-y-6">
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '身份类型' : 'Identity Type' }} *</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.identities.type') }} *</legend>
           <div class="flex gap-4">
             <label class="flex items-center gap-2 cursor-pointer">
               <input
@@ -219,7 +202,7 @@ function getTypeIcon(type: string) {
                 class="radio radio-primary"
               >
               <User class="w-4 h-4" />
-              {{ isZh ? '个人' : 'Individual' }}
+              {{ t('royIcp.identities.individual') }}
             </label>
             <label class="flex items-center gap-2 cursor-pointer">
               <input
@@ -229,41 +212,41 @@ function getTypeIcon(type: string) {
                 class="radio radio-primary"
               >
               <Building2 class="w-4 h-4" />
-              {{ isZh ? '组织' : 'Organization' }}
+              {{ t('royIcp.identities.organization') }}
             </label>
           </div>
         </fieldset>
 
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '名称' : 'Name' }} *</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.identities.name') }} *</legend>
           <input
             v-model="form.name"
             type="text"
             :placeholder="form.type === 'organization'
-              ? (isZh ? '公司或组织名称' : 'Company or organization name')
-              : (isZh ? '您的姓名' : 'Your name')"
+              ? t('royIcp.identities.namePlaceholderOrg')
+              : t('royIcp.identities.namePlaceholderIndividual')"
             class="input w-full"
             required
           >
         </fieldset>
 
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '介绍' : 'Description' }}</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.identities.description') }}</legend>
           <textarea
             v-model="form.description"
-            :placeholder="isZh ? '简要介绍...' : 'Brief description...'"
+            :placeholder="t('royIcp.identities.descriptionPlaceholder')"
             class="textarea h-20 w-full"
           />
         </fieldset>
 
         <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ isZh ? '图标' : 'Icon' }}</legend>
+          <legend class="fieldset-legend">{{ t('royIcp.identities.icon') }}</legend>
           <FileUpload
             v-model="form.iconFileId"
-            :hint="isZh ? '支持 JPG, PNG, WebP, SVG，最大 5MB' : 'JPG, PNG, WebP, SVG. Max 5MB'"
+            :hint="t('royIcp.identities.iconHint')"
             compact
           />
-          <p class="label">{{ isZh ? '选填，建议 256x256 正方形' : 'Optional, 256x256 square recommended' }}</p>
+          <p class="label">{{ t('royIcp.identities.iconRecommended') }}</p>
         </fieldset>
 
         <div class="flex gap-4">
@@ -274,17 +257,14 @@ function getTypeIcon(type: string) {
           >
             <span v-if="isSubmitting" class="loading loading-spinner loading-sm" />
             <Check v-else class="w-4 h-4 mr-1" />
-            {{ editingIdentity
-              ? (isZh ? '保存' : 'Save')
-              : (isZh ? '创建' : 'Create')
-            }}
+            {{ editingIdentity ? t('royIcp.identities.save') : t('royIcp.identities.createBtn') }}
           </button>
           <button
             type="button"
             class="btn btn-ghost"
             @click="closeForm"
           >
-            {{ isZh ? '取消' : 'Cancel' }}
+            {{ t('royIcp.identities.cancel') }}
           </button>
         </div>
       </form>
@@ -294,11 +274,11 @@ function getTypeIcon(type: string) {
     <div v-if="identities.length === 0 && !showForm" class="card bg-base-200 p-12 text-center">
       <User class="w-16 h-16 mx-auto mb-4 opacity-30" />
       <p class="text-lg opacity-60 mb-4">
-        {{ isZh ? '暂无身份' : 'No identities yet' }}
+        {{ t('royIcp.identities.empty') }}
       </p>
       <button class="btn btn-primary" @click="openCreateForm">
         <Plus class="w-4 h-4 mr-1" />
-        {{ isZh ? '创建第一个身份' : 'Create your first identity' }}
+        {{ t('royIcp.identities.createFirst') }}
       </button>
     </div>
 
@@ -334,7 +314,7 @@ function getTypeIcon(type: string) {
                 {{ identity.description }}
               </p>
               <p class="text-xs opacity-50 mt-2">
-                {{ isZh ? '创建于' : 'Created' }}: {{ new Date(identity.created).toLocaleDateString(isZh ? 'zh-CN' : 'en-US') }}
+                {{ t('royIcp.identities.created') }}: {{ new Date(identity.created).toLocaleDateString() }}
               </p>
             </div>
           </div>
