@@ -1,8 +1,8 @@
 import { auth } from '~~/server/utils/auth'
 import { db } from '~~/server/utils/db'
-import { contribClaSignature, contribGithubStats } from '~~/server/db/schema'
-import { eq } from 'drizzle-orm'
-import { getGithubConnection } from '~~/server/utils/sn'
+import { contribClaSignature, contribGithubStats, account } from '~~/server/db/schema'
+import { eq, and } from 'drizzle-orm'
+import { getGithubConnection, cacheSolarUser } from '~~/server/utils/sn'
 import { graphqlQuery } from '~~/server/utils/github'
 
 const MANUAL_REFRESH_COOLDOWN = 6 * 60 * 60 * 1000 // 6 hours
@@ -101,6 +101,15 @@ export default defineEventHandler(async (event) => {
 
   console.log(`[refresh] ${githubUsername}: ${heatmap.length} heatmap days, ${heatmap.reduce((s, d) => s + d.count, 0)} total commits`)
 
+  // Resolve Solar account for caching
+  const [solarAccount] = await db
+    .select({ accountId: account.accountId })
+    .from(account)
+    .where(and(eq(account.userId, session.user.id), eq(account.providerId, 'solian')))
+    .limit(1)
+  const solarAccountId = solarAccount?.accountId ?? null
+  const solarUsername = solarAccountId ? await cacheSolarUser(githubUsername, solarAccountId) : null
+
   const now = new Date()
 
   await db
@@ -108,6 +117,8 @@ export default defineEventHandler(async (event) => {
     .values({
       githubUserId,
       githubUsername,
+      solarUserId: solarAccountId,
+      solarUsername,
       prCount,
       issueCount,
       commitCount,
@@ -123,6 +134,8 @@ export default defineEventHandler(async (event) => {
         issueCount,
         commitCount,
         githubUsername,
+        solarUserId: solarAccountId,
+        solarUsername,
         updatedAt: now,
         lastManualRefresh: now,
         heatmapData: JSON.stringify(heatmap),

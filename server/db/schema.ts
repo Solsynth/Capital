@@ -254,6 +254,8 @@ export const contribPendingCheck = pgTable("contrib_pending_check", {
 export const contribGithubStats = pgTable("contrib_github_stats", {
   githubUserId: integer("github_user_id").primaryKey(),
   githubUsername: text("github_username").notNull(),
+  solarUserId: text("solar_user_id"),
+  solarUsername: text("solar_username"),
   prCount: integer("pr_count").notNull().default(0),
   issueCount: integer("issue_count").notNull().default(0),
   commitCount: integer("commit_count").notNull().default(0),

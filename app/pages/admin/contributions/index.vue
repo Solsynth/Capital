@@ -59,6 +59,20 @@ async function batchRefresh() {
     batchRefreshing.value = false
   }
 }
+
+// Backfill Solar usernames
+const backfilling = ref(false)
+const backfillResult = ref<{ total: number; updated: number } | null>(null)
+async function backfillSolar() {
+  backfilling.value = true
+  backfillResult.value = null
+  try {
+    backfillResult.value = await $fetch('/api/admin/contrib/backfill-solar', { method: 'POST' })
+    await refreshStats()
+  } catch {} finally {
+    backfilling.value = false
+  }
+}
 </script>
 
 <template>
@@ -68,6 +82,14 @@ async function batchRefresh() {
         {{ isZh ? '贡献管理' : 'Contributions' }}
       </h2>
       <div class="flex gap-2">
+        <button
+          class="btn btn-sm btn-outline gap-2"
+          :disabled="backfilling"
+          @click="backfillSolar"
+        >
+          <RefreshCw class="w-4 h-4" :class="{ 'animate-spin': backfilling }" />
+          {{ isZh ? '缓存 Solar 用户名' : 'Backfill Solar Names' }}
+        </button>
         <NuxtLink :to="localePath('/admin/contributions/cla')" class="btn btn-sm btn-ghost gap-2">
           <FileCheck class="w-4 h-4" />
           {{ isZh ? '查看 CLA 签署' : 'View CLA Signatures' }}
@@ -126,7 +148,10 @@ async function batchRefresh() {
       </div>
     </div>
 
-    <!-- Pending PR checks -->
+    <!-- Backfill result -->
+    <div v-if="backfillResult" class="alert alert-success mb-6 text-sm">
+      <span>{{ isZh ? `已更新 ${backfillResult.updated} / ${backfillResult.total} 个用户的 Solar 用户名` : `Updated ${backfillResult.updated} / ${backfillResult.total} users with Solar usernames` }}</span>
+    </div>
     <div class="card bg-base-200/60 border border-base-content/5">
       <div class="flex items-center justify-between p-4 border-b border-base-content/5">
         <h3 class="font-semibold text-sm">
