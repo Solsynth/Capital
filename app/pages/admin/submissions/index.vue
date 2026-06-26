@@ -256,6 +256,16 @@ function getTypeLabel(type: string) {
               <label class="text-sm opacity-60">{{ isZh ? '备案主体 ID' : 'Identity ID' }}</label>
               <p class="font-mono text-sm">{{ selectedSubmission.data.identity_id }}</p>
             </div>
+            <div v-if="selectedSubmission.data.identity_name || selectedSubmission.data.identity_description || selectedSubmission.data.identity_icon_file_id" class="p-3 bg-primary/10 rounded-lg">
+              <p class="text-sm font-bold mb-2">{{ isZh ? '身份更新' : 'Identity Updates' }}</p>
+              <div v-if="selectedSubmission.data.identity_name" class="text-sm">
+                <span class="opacity-60">{{ isZh ? '名称' : 'Name' }}:</span> {{ selectedSubmission.data.identity_name }}
+              </div>
+              <div v-if="selectedSubmission.data.identity_description" class="text-sm">
+                <span class="opacity-60">{{ isZh ? '介绍' : 'Description' }}:</span> {{ selectedSubmission.data.identity_description }}
+              </div>
+              <p v-if="selectedSubmission.data.identity_icon_file_id" class="text-sm">{{ isZh ? '包含新图标' : 'Includes new icon' }}</p>
+            </div>
           </div>
 
           <div class="divider" />

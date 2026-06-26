@@ -192,6 +192,12 @@ function getTypeLabel(type: string) {
           </NuxtLink>
         </div>
 
+        <div v-if="sub.data.identity_name || sub.data.identity_description" class="mt-3 p-3 bg-primary/5 rounded-lg">
+          <p class="text-xs font-bold mb-1 opacity-60">{{ isZh ? '身份更新' : 'Identity Updates' }}</p>
+          <p v-if="sub.data.identity_name" class="text-sm">{{ sub.data.identity_name }}</p>
+          <p v-if="sub.data.identity_description" class="text-xs opacity-70">{{ sub.data.identity_description }}</p>
+        </div>
+
         <div v-if="sub.review_note" class="mt-4 p-3 bg-base-300 rounded-lg">
           <p class="text-sm font-bold mb-1">{{ isZh ? '审核备注' : 'Review Note' }}</p>
           <p class="text-sm opacity-80">{{ sub.review_note }}</p>

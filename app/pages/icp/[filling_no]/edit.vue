@@ -38,10 +38,19 @@ if (error.value || !data.value?.site) {
 
 const site = computed(() => data.value?.site)
 
+interface Identity {
+  id: string
+  name: string
+  type: 'individual' | 'organization'
+  description?: string
+  icon?: string
+  iconUrl?: string | null
+}
+
 // Fetch identities
 const { data: identitiesData } = await useAsyncData(
   'icp-identities-for-edit',
-  () => $fetch<{ identities: any[] }>('/api/icp/identities'),
+  () => $fetch<{ identities: Identity[] }>('/api/icp/identities'),
 )
 
 const identities = computed(() => identitiesData.value?.identities ?? [])
@@ -55,6 +64,21 @@ const form = reactive({
   site_url: site.value?.site_url || '',
   categories: [] as string[],
   iconFileId: site.value?.iconUrl ? { id: site.value.icon_file_id } : null,
+  // Identity update fields
+  updateIdentity: false,
+  identityName: '',
+  identityDescription: '',
+  identityIconFileId: null as string | null,
+})
+
+// Sync identity fields when selection changes
+watch(() => form.identity_id, (id) => {
+  const identity = identities.value.find(i => i.id === id)
+  if (identity) {
+    form.identityName = identity.name
+    form.identityDescription = identity.description || ''
+    form.identityIconFileId = null
+  }
 })
 
 // Parse existing categories
@@ -101,19 +125,27 @@ async function handleSubmit() {
   submitSuccess.value = false
 
   try {
+    const body: any = {
+      type: 'update',
+      site_id: site.value.id,
+      identity_id: form.identity_id,
+      domain: form.domain,
+      name: form.name,
+      description: form.description || null,
+      site_url: form.site_url,
+      categories: form.categories.length > 0 ? form.categories : null,
+      iconFileId: form.iconFileId?.id || null,
+    }
+
+    if (form.updateIdentity) {
+      body.identity_name = form.identityName.trim() || null
+      body.identity_description = form.identityDescription.trim() || null
+      body.identity_icon_file_id = form.identityIconFileId?.id || null
+    }
+
     await $fetch('/api/icp/submissions/create', {
       method: 'POST',
-      body: {
-        type: 'update',
-        site_id: site.value.id,
-        identity_id: form.identity_id,
-        domain: form.domain,
-        name: form.name,
-        description: form.description || null,
-        site_url: form.site_url,
-        categories: form.categories.length > 0 ? form.categories : null,
-        iconFileId: form.iconFileId?.id || null,
-      },
+      body,
     })
 
     submitSuccess.value = true
@@ -194,8 +226,9 @@ function getTypeLabel(type: string) {
                 :value="identity.id"
                 class="radio radio-primary"
               >
-              <div class="w-10 h-10 rounded-lg bg-base-200 flex items-center justify-center">
-                <component :is="getTypeIcon(identity.type)" class="w-5 h-5 opacity-60" />
+              <div class="w-10 h-10 rounded-lg bg-base-200 flex items-center justify-center overflow-hidden">
+                <img v-if="identity.iconUrl" :src="identity.iconUrl" :alt="identity.name" class="w-full h-full object-cover">
+                <component v-else :is="getTypeIcon(identity.type)" class="w-5 h-5 opacity-60" />
               </div>
               <div class="flex-1">
                 <div class="flex items-center gap-2">
@@ -208,6 +241,31 @@ function getTypeLabel(type: string) {
             </label>
           </div>
         </fieldset>
+
+        <!-- Identity Update Toggle -->
+        <div v-if="form.identity_id" class="space-y-4">
+          <label class="flex items-center gap-3 cursor-pointer">
+            <input v-model="form.updateIdentity" type="checkbox" class="checkbox checkbox-primary">
+            <span class="text-sm font-medium">{{ isZh ? '同时更新身份信息' : 'Also update identity info' }}</span>
+          </label>
+
+          <div v-if="form.updateIdentity" class="space-y-4 pl-7 border-l-2 border-primary/20">
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">{{ isZh ? '身份名称' : 'Identity Name' }}</legend>
+              <input v-model="form.identityName" type="text" class="input w-full">
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">{{ isZh ? '身份介绍' : 'Identity Description' }}</legend>
+              <textarea v-model="form.identityDescription" class="textarea h-16 w-full" />
+            </fieldset>
+
+            <fieldset class="fieldset">
+              <legend class="fieldset-legend">{{ isZh ? '身份图标' : 'Identity Icon' }}</legend>
+              <FileUpload v-model="form.identityIconFileId" compact />
+            </fieldset>
+          </div>
+        </div>
 
         <fieldset class="fieldset">
           <legend class="fieldset-legend">{{ isZh ? '域名' : 'Domain' }} *</legend>

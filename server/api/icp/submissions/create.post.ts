@@ -50,7 +50,7 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    const submissionData = {
+    const submissionData: any = {
       domain: body.domain,
       name: body.name,
       description: body.description || null,
@@ -58,6 +58,13 @@ export default defineEventHandler(async (event) => {
       categories: body.categories || null,
       identity_id: body.identity_id,
       icon_file_id: body.iconFileId || null,
+    }
+
+    // Include identity update fields if provided
+    if (body.identity_name || body.identity_description || body.identity_icon_file_id) {
+      submissionData.identity_name = body.identity_name || null
+      submissionData.identity_description = body.identity_description || null
+      submissionData.identity_icon_file_id = body.identity_icon_file_id || null
     }
 
     // Enforce max 3 pending submissions per user

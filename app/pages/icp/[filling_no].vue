@@ -7,11 +7,13 @@ import {
   User,
   Calendar,
   Shield,
+  Edit,
 } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
+const { data: authData } = await useAuth().useSession(useFetch)
 
 const lang = computed(() => locale.value)
 const fillingNo = computed(() => route.params.filling_no as string)
@@ -66,6 +68,10 @@ const pageTitle = computed(() =>
 )
 
 const isApproved = computed(() => Boolean(site.value?.approved_at))
+const isOwner = computed(() => {
+  if (!authData.value?.user || !site.value?.owner) return false
+  return authData.value.user.id === site.value.owner.id
+})
 
 const pageDescription = computed(() => {
   if (!site.value) return ''
@@ -161,15 +167,25 @@ useSeoMeta({
           <p class="text-sm opacity-70 font-mono mb-4">
             {{ t('royIcp.directory.icpNumber', { id: site.filling_no }) }}
           </p>
-          <a
-            :href="site.site_url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-primary"
-          >
-            <ExternalLink class="w-4 h-4 mr-1" />
-            {{ isZh ? '访问网站' : 'Visit Website' }}
-          </a>
+          <div class="flex gap-2">
+            <a
+              :href="site.site_url"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary"
+            >
+              <ExternalLink class="w-4 h-4 mr-1" />
+              {{ isZh ? '访问网站' : 'Visit Website' }}
+            </a>
+            <NuxtLink
+              v-if="isOwner"
+              :to="localePath(`/icp/${fillingNo}/edit`)"
+              class="btn btn-outline"
+            >
+              <Edit class="w-4 h-4 mr-1" />
+              {{ isZh ? '编辑' : 'Edit' }}
+            </NuxtLink>
+          </div>
         </div>
       </div>
 

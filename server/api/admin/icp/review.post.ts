@@ -89,6 +89,22 @@ export default defineEventHandler(async (event) => {
           await markFilesUsed([data.icon_file_id])
         }
 
+        // Apply identity updates if included
+        if (data.identity_name || data.identity_description || data.identity_icon_file_id) {
+          const identityUpdate: any = {}
+          if (data.identity_name) identityUpdate.name = data.identity_name
+          if (data.identity_description) identityUpdate.description = data.identity_description
+          if (data.identity_icon_file_id) {
+            identityUpdate.iconFileId = data.identity_icon_file_id
+            await markFilesUsed([data.identity_icon_file_id])
+          }
+          if (identityId && Object.keys(identityUpdate).length > 0) {
+            await db.update(icpIdentity)
+              .set(identityUpdate)
+              .where(eq(icpIdentity.id, identityId))
+          }
+        }
+
         // Update submission
         await db.update(icpSubmission)
           .set({
@@ -116,6 +132,22 @@ export default defineEventHandler(async (event) => {
             updatedAt: new Date(),
           })
           .where(eq(icpSite.id, submission.siteId))
+
+        // Apply identity updates if included
+        if (data.identity_name || data.identity_description || data.identity_icon_file_id) {
+          const identityUpdate: any = {}
+          if (data.identity_name) identityUpdate.name = data.identity_name
+          if (data.identity_description) identityUpdate.description = data.identity_description
+          if (data.identity_icon_file_id) {
+            identityUpdate.iconFileId = data.identity_icon_file_id
+            await markFilesUsed([data.identity_icon_file_id])
+          }
+          if (data.identity_id && Object.keys(identityUpdate).length > 0) {
+            await db.update(icpIdentity)
+              .set(identityUpdate)
+              .where(eq(icpIdentity.id, data.identity_id))
+          }
+        }
 
         // Update submission
         await db.update(icpSubmission)
