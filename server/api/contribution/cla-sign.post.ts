@@ -1,6 +1,6 @@
 import { auth } from '~~/server/utils/auth'
 import { db } from '~~/server/utils/db'
-import { claSignature } from '~~/server/db/schema'
+import { contribClaSignature } from '~~/server/db/schema'
 import { eq, and } from 'drizzle-orm'
 import { randomUUID } from 'crypto'
 import { CLA_VERSION } from '~~/server/utils/cla'
@@ -24,10 +24,10 @@ export default defineEventHandler(async (event) => {
 
   const [existing] = await db
     .select()
-    .from(claSignature)
+    .from(contribClaSignature)
     .where(and(
-      eq(claSignature.githubUserId, githubUserId),
-      eq(claSignature.claVersion, claVersion),
+      eq(contribClaSignature.githubUserId, githubUserId),
+      eq(contribClaSignature.claVersion, claVersion),
     ))
     .limit(1)
 
@@ -36,7 +36,7 @@ export default defineEventHandler(async (event) => {
   }
 
   const [inserted] = await db
-    .insert(claSignature)
+    .insert(contribClaSignature)
     .values({
       id: randomUUID(),
       userId: session.user.id,

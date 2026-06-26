@@ -1,6 +1,6 @@
 import { createHmac } from 'crypto'
 import { db } from '~~/server/utils/db'
-import { claSignature } from '~~/server/db/schema'
+import { contribClaSignature } from '~~/server/db/schema'
 import { eq, and } from 'drizzle-orm'
 import { CLA_VERSION } from '~~/server/utils/cla'
 import { getGithubAppToken } from '~~/server/utils/github'
@@ -49,10 +49,10 @@ export default defineEventHandler(async (event) => {
 
   const [match] = await db
     .select()
-    .from(claSignature)
+    .from(contribClaSignature)
     .where(and(
-      eq(claSignature.githubUsername, authorLogin),
-      eq(claSignature.claVersion, claVersion),
+      eq(contribClaSignature.githubUsername, authorLogin),
+      eq(contribClaSignature.claVersion, claVersion),
     ))
     .limit(1)
 

@@ -1,19 +1,33 @@
 import { auth } from '~~/server/utils/auth'
 import { db } from '~~/server/utils/db'
-import { claSignature, githubStats } from '~~/server/db/schema'
-import { eq, and } from 'drizzle-orm'
+import { contribClaSignature, contribGithubStats } from '~~/server/db/schema'
+import { eq } from 'drizzle-orm'
 import { getGithubConnection } from '~~/server/utils/sn'
 import { graphqlQuery } from '~~/server/utils/github'
 
 const MANUAL_REFRESH_COOLDOWN = 6 * 60 * 60 * 1000 // 6 hours
 
-const CONTRIBUTIONS_QUERY = `
+const GITHUB_ORG = 'solsynth'
+
+const REFRESH_QUERY = `
   query ($username: String!) {
     user(login: $username) {
       contributionsCollection {
         totalPullRequestContributions
         totalIssueContributions
         totalCommitContributions
+        commitContributionsByRepository(maxRepositories: 100) {
+          repository {
+            name
+            owner { login }
+          }
+          contributions(first: 100) {
+            nodes {
+              occurredAt
+              commitCount
+            }
+          }
+        }
       }
     }
   }
@@ -37,27 +51,29 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Invalid GitHub connection' })
   }
 
-  // Check cooldown
-  const [existing] = await db
+  // Check cooldown (skip in local dev)
+  if (!process.env.CONTRIB_SKIP_COOLDOWN) {
+    const [existing] = await db
     .select()
-    .from(githubStats)
-    .where(eq(githubStats.githubUserId, githubUserId))
+    .from(contribGithubStats)
+    .where(eq(contribGithubStats.githubUserId, githubUserId))
     .limit(1)
 
   if (existing?.lastManualRefresh) {
     const elapsed = Date.now() - new Date(existing.lastManualRefresh).getTime()
     if (elapsed < MANUAL_REFRESH_COOLDOWN) {
-      const remaining = Math.ceil((MANUAL_REFRESH_COOLDOWN - elapsed) / 60_000)
+      const remainingMinutes = Math.ceil((MANUAL_REFRESH_COOLDOWN - elapsed) / 60_000)
       throw createError({
         statusCode: 429,
-        statusMessage: `Please wait ${remaining} minutes before refreshing again.`,
+        statusMessage: `Please wait ${remainingMinutes} minutes before refreshing again.`,
       })
     }
   }
+  }
 
-  // Fetch fresh data
+  // Fetch both stats + heatmap in one GraphQL call
   const data = await graphqlQuery<{ user: { contributionsCollection: any } }>(
-    CONTRIBUTIONS_QUERY,
+    REFRESH_QUERY,
     { username: githubUsername }
   )
 
@@ -65,15 +81,61 @@ export default defineEventHandler(async (event) => {
   const prCount = c.totalPullRequestContributions
   const issueCount = c.totalIssueContributions
   const commitCount = c.totalCommitContributions
+
+  // Build heatmap from repo contributions
+  const repos = c.commitContributionsByRepository
+  console.log(`[refresh] ${githubUsername}: ${repos.length} repos, orgs: ${repos.map((r: any) => r.repository.owner.login).join(', ')}`)
+  const byDate: Record<string, number> = {}
+
+  for (const repo of repos) {
+    if (repo.repository.owner.login.toLowerCase() !== GITHUB_ORG) continue
+    for (const node of repo.contributions.nodes) {
+      const day = node.occurredAt.slice(0, 10)
+      byDate[day] = (byDate[day] ?? 0) + node.commitCount
+    }
+  }
+
+  const heatmap = Object.entries(byDate)
+    .map(([date, count]) => ({ date, count }))
+    .sort((a, b) => a.date.localeCompare(b.date))
+
+  console.log(`[refresh] ${githubUsername}: ${heatmap.length} heatmap days, ${heatmap.reduce((s, d) => s + d.count, 0)} total commits`)
+
   const now = new Date()
 
   await db
-    .insert(githubStats)
-    .values({ githubUserId, githubUsername, prCount, issueCount, commitCount, updatedAt: now, lastManualRefresh: now })
+    .insert(contribGithubStats)
+    .values({
+      githubUserId,
+      githubUsername,
+      prCount,
+      issueCount,
+      commitCount,
+      updatedAt: now,
+      lastManualRefresh: now,
+      heatmapData: JSON.stringify(heatmap),
+      heatmapUpdatedAt: now,
+    })
     .onConflictDoUpdate({
-      target: githubStats.githubUserId,
-      set: { prCount, issueCount, commitCount, githubUsername, updatedAt: now, lastManualRefresh: now },
+      target: contribGithubStats.githubUserId,
+      set: {
+        prCount,
+        issueCount,
+        commitCount,
+        githubUsername,
+        updatedAt: now,
+        lastManualRefresh: now,
+        heatmapData: JSON.stringify(heatmap),
+        heatmapUpdatedAt: now,
+      },
     })
 
-  return { prCount, issueCount, commitCount, updatedAt: now }
+  return {
+    prCount,
+    issueCount,
+    commitCount,
+    heatmapDays: heatmap.length,
+    updatedAt: now,
+    nextRefreshAt: new Date(now.getTime() + MANUAL_REFRESH_COOLDOWN),
+  }
 })

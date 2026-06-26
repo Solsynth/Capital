@@ -1,5 +1,5 @@
 import { db } from '~~/server/utils/db'
-import { githubStats } from '~~/server/db/schema'
+import { contribGithubStats } from '~~/server/db/schema'
 import { eq } from 'drizzle-orm'
 import { graphqlQuery } from '~~/server/utils/github'
 
@@ -24,8 +24,8 @@ const GITHUB_ORG = 'solsynth'
 export async function getGithubStats(githubUserId: number, githubUsername: string): Promise<GithubContributionStats> {
   const [row] = await db
     .select()
-    .from(githubStats)
-    .where(eq(githubStats.githubUserId, githubUserId))
+    .from(contribGithubStats)
+    .where(eq(contribGithubStats.githubUserId, githubUserId))
     .limit(1)
 
   const now = Date.now()
@@ -50,8 +50,8 @@ export async function getGithubStats(githubUserId: number, githubUsername: strin
 export async function getHeatmap(githubUserId: number, githubUsername: string): Promise<HeatmapDay[]> {
   const [row] = await db
     .select()
-    .from(githubStats)
-    .where(eq(githubStats.githubUserId, githubUserId))
+    .from(contribGithubStats)
+    .where(eq(contribGithubStats.githubUserId, githubUserId))
     .limit(1)
 
   const now = Date.now()
@@ -120,10 +120,10 @@ async function refreshGithubStats(githubUserId: number, githubUsername: string):
     const commitCount = c.totalCommitContributions
 
     await db
-      .insert(githubStats)
+      .insert(contribGithubStats)
       .values({ githubUserId, githubUsername, prCount, issueCount, commitCount })
       .onConflictDoUpdate({
-        target: githubStats.githubUserId,
+        target: contribGithubStats.githubUserId,
         set: { prCount, issueCount, commitCount, githubUsername, updatedAt: new Date() },
       })
   } catch {
@@ -142,7 +142,7 @@ async function refreshHeatmap(githubUserId: number, githubUsername: string): Pro
     const byDate: Record<string, number> = {}
 
     for (const repo of repos) {
-      if (repo.repository.owner.login !== GITHUB_ORG) continue
+      if (repo.repository.owner.login.toLowerCase() !== GITHUB_ORG) continue
       for (const node of repo.contributions.nodes) {
         const day = node.occurredAt.slice(0, 10)
         byDate[day] = (byDate[day] ?? 0) + node.commitCount
@@ -153,12 +153,17 @@ async function refreshHeatmap(githubUserId: number, githubUsername: string): Pro
       .map(([date, count]) => ({ date, count }))
       .sort((a, b) => a.date.localeCompare(b.date))
 
+    console.log(`[heatmap] ${githubUsername}: ${heatmap.length} days stored, total ${heatmap.reduce((s, d) => s + d.count, 0)} commits`)
+
     const now = new Date()
     await db
-      .update(githubStats)
-      .set({ heatmapData: JSON.stringify(heatmap), heatmapUpdatedAt: now })
-      .where(eq(githubStats.githubUserId, githubUserId))
-  } catch {
-    // silently fail
+      .insert(contribGithubStats)
+      .values({ githubUserId, githubUsername, heatmapData: JSON.stringify(heatmap), heatmapUpdatedAt: now })
+      .onConflictDoUpdate({
+        target: contribGithubStats.githubUserId,
+        set: { heatmapData: JSON.stringify(heatmap), heatmapUpdatedAt: now },
+      })
+  } catch (e) {
+    console.error('[heatmap] refresh failed:', e)
   }
 }

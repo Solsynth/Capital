@@ -219,9 +219,9 @@ export const icpSubmissionRelations = relations(icpSubmission, ({ one }) => ({
   }),
 }));
 
-// ==================== CLA Tables ====================
+// ==================== Contribution Tables ====================
 
-export const claSignature = pgTable("cla_signature", {
+export const contribClaSignature = pgTable("contrib_cla_signature", {
   id: text("id").primaryKey(),
   userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
   githubUserId: integer("github_user_id").notNull(),
@@ -229,13 +229,13 @@ export const claSignature = pgTable("cla_signature", {
   claVersion: text("cla_version").notNull(),
   signedAt: timestamp("signed_at").defaultNow().notNull(),
 }, (table) => [
-  index("cla_signature_user_idx").on(table.userId),
-  index("cla_signature_github_idx").on(table.githubUserId),
-  index("cla_signature_version_idx").on(table.claVersion),
-  unique("cla_signature_github_version_unique").on(table.githubUserId, table.claVersion),
+  index("contrib_cla_signature_user_idx").on(table.userId),
+  index("contrib_cla_signature_github_idx").on(table.githubUserId),
+  index("contrib_cla_signature_version_idx").on(table.claVersion),
+  unique("contrib_cla_signature_github_version_unique").on(table.githubUserId, table.claVersion),
 ]);
 
-export const githubStats = pgTable("github_stats", {
+export const contribGithubStats = pgTable("contrib_github_stats", {
   githubUserId: integer("github_user_id").primaryKey(),
   githubUsername: text("github_username").notNull(),
   prCount: integer("pr_count").notNull().default(0),
@@ -247,9 +247,9 @@ export const githubStats = pgTable("github_stats", {
   heatmapUpdatedAt: timestamp("heatmap_updated_at"),
 });
 
-export const claSignatureRelations = relations(claSignature, ({ one }) => ({
+export const contribClaSignatureRelations = relations(contribClaSignature, ({ one }) => ({
   user: one(user, {
-    fields: [claSignature.userId],
+    fields: [contribClaSignature.userId],
     references: [user.id],
   }),
 }));
@@ -260,7 +260,7 @@ export const userRelations = relations(user, ({ many }) => ({
   files: many(file),
   icpIdentities: many(icpIdentity),
   icpSubmissions: many(icpSubmission),
-  claSignatures: many(claSignature),
+  contribClaSignatures: many(contribClaSignature),
 }));
 
 export const icpIdentityRelations = relations(icpIdentity, ({ one, many }) => ({

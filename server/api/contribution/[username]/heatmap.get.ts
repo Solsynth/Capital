@@ -1,5 +1,5 @@
 import { db } from '~~/server/utils/db'
-import { claSignature, account } from '~~/server/db/schema'
+import { contribClaSignature, account } from '~~/server/db/schema'
 import { eq, and, desc } from 'drizzle-orm'
 import { getSolarUser } from '~~/server/utils/sn'
 import { getHeatmap } from '~~/server/utils/github-stats'
@@ -28,9 +28,9 @@ export default defineEventHandler(async (event) => {
 
   const [signature] = await db
     .select()
-    .from(claSignature)
-    .where(eq(claSignature.userId, linkedAccount.userId))
-    .orderBy(desc(claSignature.signedAt))
+    .from(contribClaSignature)
+    .where(eq(contribClaSignature.userId, linkedAccount.userId))
+    .orderBy(desc(contribClaSignature.signedAt))
     .limit(1)
 
   if (!signature?.githubUserId) return { days: [] }

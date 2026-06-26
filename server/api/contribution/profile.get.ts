@@ -1,6 +1,6 @@
 import { auth } from '~~/server/utils/auth'
 import { db } from '~~/server/utils/db'
-import { claSignature } from '~~/server/db/schema'
+import { contribClaSignature } from '~~/server/db/schema'
 import { eq, and } from 'drizzle-orm'
 import { CLA_VERSION } from '~~/server/utils/cla'
 import { getGithubConnection } from '~~/server/utils/sn'
@@ -23,10 +23,10 @@ export default defineEventHandler(async (event) => {
 
   const [existing] = await db
     .select()
-    .from(claSignature)
+    .from(contribClaSignature)
     .where(and(
-      eq(claSignature.githubUserId, githubUserId),
-      eq(claSignature.claVersion, CLA_VERSION),
+      eq(contribClaSignature.githubUserId, githubUserId),
+      eq(contribClaSignature.claVersion, CLA_VERSION),
     ))
     .limit(1)
 

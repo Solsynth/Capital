@@ -17,8 +17,10 @@ definePageMeta({ middleware: 'auth' })
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 
-const { status: contribution, loading, refreshing, error, refresh, refreshStats, sign } = useContribution()
+const { status: contribution, loading, refreshing, error, nextRefreshAt, refresh, refreshStats, sign } = useContribution()
 const { data: solarProfile, fetch: fetchSolar } = useSolarProfile()
+const toast = useToast()
+const refreshHeatmapKey = ref(0)
 
 await Promise.all([refresh(), fetchSolar()])
 
@@ -48,6 +50,16 @@ function onDialogOpen() {
 async function handleSign() {
   await sign()
   if (!error.value) dialogOpen.value = false
+}
+
+async function handleRefresh() {
+  const result = await refreshStats()
+  if (result?.success) {
+    refreshHeatmapKey.value++
+    toast.success(t('contributions.refreshSuccess'))
+  } else if (result?.error) {
+    toast.error(result.error)
+  }
 }
 
 useSeoMeta({
@@ -103,7 +115,7 @@ useSeoMeta({
               v-if="contribution.githubConnected"
               class="btn btn-ghost btn-sm gap-2 mb-1"
               :disabled="refreshing"
-              @click="refreshStats()"
+              @click="handleRefresh()"
             >
               <Loader2 v-if="refreshing" class="w-4 h-4 animate-spin" />
               <GitCommitHorizontal v-else class="w-4 h-4" />
@@ -148,7 +160,7 @@ useSeoMeta({
         </div>
 
         <!-- Heatmap -->
-        <ContributionHeatmap v-if="solarProfile?.name && contribution.githubUsername" :username="solarProfile.name" class="mb-6" />
+        <ContributionHeatmap v-if="solarProfile?.name && contribution.githubUsername" :key="refreshHeatmapKey" :username="solarProfile.name" class="mb-6" />
 
         <!-- GitHub not connected -->
         <div v-if="!contribution.githubConnected" class="card bg-warning/10 border border-warning/30 p-5 mb-6">

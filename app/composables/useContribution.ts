@@ -16,6 +16,7 @@ export function useContribution() {
   const loading = ref(false)
   const refreshing = ref(false)
   const error = ref<string | null>(null)
+  const nextRefreshAt = ref<string | null>(null)
 
   async function refresh() {
     loading.value = true
@@ -40,8 +41,11 @@ export function useContribution() {
         status.value.issueCount = result.issueCount
         status.value.commitCount = result.commitCount
       }
+      nextRefreshAt.value = result.nextRefreshAt
+      return { success: true }
     } catch (e: any) {
       error.value = e?.data?.statusMessage || e?.message || 'Failed to refresh stats'
+      return { success: false, error: error.value }
     } finally {
       refreshing.value = false
     }
@@ -60,5 +64,5 @@ export function useContribution() {
     }
   }
 
-  return { status, loading, refreshing, error, refresh, refreshStats, sign }
+  return { status, loading, refreshing, error, nextRefreshAt, refresh, refreshStats, sign }
 }

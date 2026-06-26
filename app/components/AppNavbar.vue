@@ -23,12 +23,15 @@ const route = useRoute()
 // Use server-side session on server, client-side on client
 let session: any = null
 if (import.meta.server) {
-  const serverSession = await useServerSession()
-  session = ref(serverSession)
+  session = ref(await useServerSession())
 } else {
   const { data } = await useAuth().useSession(useFetch)
   session = data
 }
+
+const { data: solarProfile, fetch: fetchSolar } = useSolarProfile()
+onMounted(() => { if (session?.value?.user) fetchSolar() })
+const solarAvatar = computed(() => useSolarFileUrl(solarProfile.value?.profile?.picture))
 
 interface Props {
   bannerHeight?: string
@@ -185,7 +188,13 @@ onMounted(() => {
             class="flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
           >
             <img
-              v-if="session.user.image"
+              v-if="solarAvatar"
+              :src="solarAvatar"
+              :alt="session.user.name"
+              class="w-9 h-9 rounded-full object-cover"
+            >
+            <img
+              v-else-if="session.user.image"
               :src="session.user.image"
               :alt="session.user.name"
               class="w-5 h-5 rounded-full object-cover"

@@ -73,18 +73,20 @@ useSchemaOrg([
 </script>
 
 <template>
-  <div class="min-h-screen flex flex-col">
-    <AppNavbar banner-height="0px" />
+  <AppToast>
+    <div class="min-h-screen flex flex-col">
+      <AppNavbar banner-height="0px" />
 
-    <main
-      class="flex-1"
-      style="margin-top: var(--site-page-offset, 64px);"
-    >
-      <slot />
-    </main>
+      <main
+        class="flex-1"
+        style="margin-top: var(--site-page-offset, 64px);"
+      >
+        <slot />
+      </main>
 
-    <AppFooter />
-  </div>
+      <AppFooter />
+    </div>
+  </AppToast>
 </template>
 
 <script lang="ts">
