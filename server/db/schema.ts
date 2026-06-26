@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, integer, index } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, index, unique } from "drizzle-orm/pg-core";
 
 // ==================== Auth Tables ====================
 
@@ -166,16 +166,6 @@ export const icpSubmission = pgTable("icp_submission", {
   index("icp_submission_status_idx").on(table.status),
 ]);
 
-// ==================== Relations ====================
-
-export const userRelations = relations(user, ({ many }) => ({
-  sessions: many(session),
-  accounts: many(account),
-  files: many(file),
-  icpIdentities: many(icpIdentity),
-  icpSubmissions: many(icpSubmission),
-}));
-
 export const sessionRelations = relations(session, ({ one }) => ({
   user: one(user, {
     fields: [session.userId],
@@ -227,6 +217,45 @@ export const icpSubmissionRelations = relations(icpSubmission, ({ one }) => ({
     fields: [icpSubmission.reviewedBy],
     references: [user.id],
   }),
+}));
+
+// ==================== CLA Tables ====================
+
+export const claSignature = pgTable("cla_signature", {
+  id: text("id").primaryKey(),
+  userId: text("user_id").notNull().references(() => user.id, { onDelete: "cascade" }),
+  githubUserId: integer("github_user_id").notNull(),
+  githubUsername: text("github_username").notNull(),
+  claVersion: text("cla_version").notNull(),
+  signedAt: timestamp("signed_at").defaultNow().notNull(),
+}, (table) => [
+  index("cla_signature_user_idx").on(table.userId),
+  index("cla_signature_github_idx").on(table.githubUserId),
+  index("cla_signature_version_idx").on(table.claVersion),
+  unique("cla_signature_github_version_unique").on(table.githubUserId, table.claVersion),
+]);
+
+export const githubStats = pgTable("github_stats", {
+  githubUserId: integer("github_user_id").primaryKey(),
+  githubUsername: text("github_username").notNull(),
+  prCount: integer("pr_count").notNull().default(0),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+export const claSignatureRelations = relations(claSignature, ({ one }) => ({
+  user: one(user, {
+    fields: [claSignature.userId],
+    references: [user.id],
+  }),
+}));
+
+export const userRelations = relations(user, ({ many }) => ({
+  sessions: many(session),
+  accounts: many(account),
+  files: many(file),
+  icpIdentities: many(icpIdentity),
+  icpSubmissions: many(icpSubmission),
+  claSignatures: many(claSignature),
 }));
 
 export const icpIdentityRelations = relations(icpIdentity, ({ one, many }) => ({

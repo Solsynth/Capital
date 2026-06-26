@@ -93,7 +93,7 @@ export function useSolarProfile() {
     loading.value = true
     error.value = null
     try {
-      const result = await $fetch<SolarProfile>('/api/auth/solar-profile')
+      const result = await $fetch<SolarProfile>('/api/sn/profile')
       data.value = result
     } catch (e: any) {
       error.value = e?.data?.statusMessage || e?.message || 'Failed to fetch profile'

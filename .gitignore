@@ -26,4 +26,7 @@ server/local.db
 .env.*
 !.env.example
 
+# Private keys
+keys/
+
 local.db*

@@ -1,74 +1,29 @@
 <script setup lang="ts">
-import { CircleUser, Mail, ShieldCheck, Edit3, Check, X, ExternalLink, Zap } from '@lucide/vue'
+import { CircleUser, Mail, ShieldCheck, ExternalLink, Zap, GitBranch } from '@lucide/vue'
 import { useSolarProfile, useSolarFileUrl } from '~/composables/useSolarProfile'
 
 definePageMeta({ middleware: 'auth' })
 
 const { t } = useI18n()
+const localePath = useLocalePath()
 
-// Use server-side session on server, client-side on client
 let session: any = null
-let refresh: any = null
 if (import.meta.server) {
-  const serverSession = await useServerSession()
-  session = ref(serverSession)
-  refresh = () => {} // No-op on server
+  session = ref(await useServerSession())
 } else {
-  const { data, refresh: clientRefresh } = await useAuth().useSession(useFetch)
+  const { data } = await useAuth().useSession(useFetch)
   session = data
-  refresh = clientRefresh
 }
 
-// Solar Network profile
 const { data: solarProfile, loading: solarLoading, fetch: fetchSolar } = useSolarProfile()
 onMounted(() => fetchSolar())
 const pictureUrl = computed(() => useSolarFileUrl(solarProfile.value?.profile?.picture))
 const backgroundUrl = computed(() => useSolarFileUrl(solarProfile.value?.profile?.background))
 
-const isEditing = ref(false)
+const { status: claStatus, refresh: refreshCla } = useContribution()
+onMounted(() => refreshCla())
+
 const showEmail = ref(false)
-const editName = ref('')
-const editError = ref('')
-const isSaving = ref(false)
-
-function startEdit() {
-  editName.value = session.value?.user.name || ''
-  editError.value = ''
-  isEditing.value = true
-}
-
-function cancelEdit() {
-  isEditing.value = false
-}
-
-async function saveName() {
-  if (!editName.value.trim()) {
-    editError.value = 'Name cannot be empty'
-    return
-  }
-  isSaving.value = true
-  editError.value = ''
-  try {
-    await $fetch('/api/auth/update-user', {
-      method: 'POST',
-      body: { name: editName.value.trim() },
-    })
-    await refresh()
-    isEditing.value = false
-  }
-  catch (e: any) {
-    editError.value = e?.data?.statusMessage || e?.message || 'Failed to update'
-  }
-  finally {
-    isSaving.value = false
-  }
-}
-
-function formatDate(ts: string | Date) {
-  return new Date(ts).toLocaleDateString(undefined, {
-    year: 'numeric', month: 'long', day: 'numeric',
-  })
-}
 </script>
 
 <template>
@@ -76,7 +31,6 @@ function formatDate(ts: string | Date) {
     <div class="w-full max-w-md">
       <!-- Header -->
       <div class="mb-8 text-center">
-        <!-- Background + Avatar -->
         <div class="relative">
           <div
             v-if="backgroundUrl"
@@ -84,7 +38,6 @@ function formatDate(ts: string | Date) {
             :style="{ backgroundImage: `url(${backgroundUrl})` }"
           />
           <div v-else class="h-24 rounded-2xl bg-gradient-to-r from-primary/20 to-secondary/20" />
-          <!-- Avatar -->
           <div class="relative mx-auto -mt-10 mb-4 w-20 h-20">
             <img
               v-if="pictureUrl"
@@ -111,15 +64,13 @@ function formatDate(ts: string | Date) {
           </div>
         </div>
 
-        <!-- Name -->
         <div v-if="solarLoading" class="flex justify-center">
           <span class="loading loading-spinner loading-xs" />
         </div>
-        <div v-else-if="!isEditing">
+        <div v-else>
           <h1 class="text-2xl font-bold">
             {{ solarProfile?.nick || session?.user.name }}
           </h1>
-          <!-- Perk -->
           <div
             v-if="solarProfile?.perk_subscription?.is_active"
             class="badge badge-warning badge-outline badge-sm gap-1 mt-2"
@@ -127,50 +78,12 @@ function formatDate(ts: string | Date) {
             <Zap class="w-3 h-3" />
             {{ solarProfile.perk_subscription.display_name }} · Lv{{ solarProfile.perk_subscription.perk_level }}
           </div>
-          <button
-            class="btn btn-ghost btn-xs gap-1 mt-2 text-base-content/50"
-            @click="startEdit"
-          >
-            <Edit3 class="w-3 h-3" />
-            {{ t('profile.editName', 'Edit name') }}
-          </button>
         </div>
-
-        <!-- Edit name -->
-        <form v-else class="mt-2 flex flex-col items-center gap-2" @submit.prevent="saveName">
-          <div class="join">
-            <input
-              v-model="editName"
-              type="text"
-              class="input input-bordered input-sm join-item w-48"
-              :placeholder="t('profile.namePlaceholder', 'Your name')"
-              autofocus
-            >
-            <button
-              type="submit"
-              class="btn btn-sm btn-primary join-item"
-              :disabled="isSaving"
-            >
-              <Check v-if="!isSaving" class="w-4 h-4" />
-              <span v-else class="loading loading-spinner loading-xs" />
-            </button>
-            <button
-              type="button"
-              class="btn btn-sm join-item"
-              @click="cancelEdit"
-            >
-              <X class="w-4 h-4" />
-            </button>
-          </div>
-          <p v-if="editError" class="text-xs text-error">
-            {{ editError }}
-          </p>
-        </form>
       </div>
 
       <!-- Info cards -->
       <div class="flex flex-col gap-3">
-        <!-- Email (blurred by default) -->
+        <!-- Email -->
         <div class="card bg-base-100/50 border border-base-content/5">
           <div class="card-body p-4 gap-3">
             <div class="flex items-center gap-3">
@@ -230,6 +143,38 @@ function formatDate(ts: string | Date) {
                 >
                   @{{ solarProfile.name }}
                 </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- GitHub Connection -->
+        <div v-if="claStatus?.githubConnected" class="card bg-base-100/50 border border-base-content/5">
+          <div class="card-body p-4">
+            <div class="flex items-center gap-3">
+              <GitBranch class="w-4 h-4 text-base-content/40 shrink-0" />
+              <div class="min-w-0">
+                <p class="text-xs text-base-content/40">
+                  GitHub
+                </p>
+                <div class="flex gap-2 items-center">
+                  <a
+                    :href="`https://github.com/${claStatus.githubUsername}`"
+                    target="_blank"
+                    class="text-sm text-primary/70 hover:text-primary transition-colors"
+                  >
+                    @{{ claStatus.githubUsername }}
+                  </a>
+                  <NuxtLink
+                    :to="localePath('/contributions/me')"
+                    class="btn btn-ghost btn-xs"
+                  >
+                    {{ t('profile.viewContribution') }}
+                  </NuxtLink>
+                </div>
+              </div>
+              <div v-if="claStatus.signed" class="badge badge-success badge-xs ml-auto shrink-0">
+                CLA
               </div>
             </div>
           </div>
