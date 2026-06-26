@@ -256,6 +256,7 @@ export const contribGithubStats = pgTable("contrib_github_stats", {
   githubUsername: text("github_username").notNull(),
   solarUserId: text("solar_user_id"),
   solarUsername: text("solar_username"),
+  solarDisplayName: text("solar_display_name"),
   prCount: integer("pr_count").notNull().default(0),
   issueCount: integer("issue_count").notNull().default(0),
   commitCount: integer("commit_count").notNull().default(0),

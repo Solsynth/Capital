@@ -56,11 +56,12 @@ export async function cacheSolarUser(githubUsername: string, solarAccountId: str
     if (!resp.ok) return null
     const user = await resp.json()
     const solarUsername = user.preferred_username || user.name
+    const solarDisplayName = user.nick || user.name
     if (!solarUsername) return null
 
     await db
       .update(contribGithubStats)
-      .set({ solarUserId: solarAccountId, solarUsername })
+      .set({ solarUserId: solarAccountId, solarUsername, solarDisplayName })
       .where(eq(contribGithubStats.githubUsername, githubUsername))
 
     return solarUsername

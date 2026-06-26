@@ -9,6 +9,7 @@ const { data, status } = await useAsyncData('leaderboard', () =>
     rank: number
     githubUsername: string
     solarUsername: string | null
+    solarDisplayName: string | null
     prCount: number
     issueCount: number
     commitCount: number
@@ -74,13 +75,13 @@ useSeoMeta({
                 class="flex items-center gap-3 hover:text-primary transition-colors group"
               >
                 <img
-                  :src="`https://github.com/${row.githubUsername}.png`"
-                  :alt="row.githubUsername"
+                  :src="`https://api.solian.app/passport/accounts/${row.solarUsername}/picture`"
+                  :alt="row.solarUsername"
                   class="w-8 h-8 rounded-full"
                 >
                 <div>
-                  <p class="font-medium text-sm group-hover:text-primary transition-colors">{{ row.solarUsername }}</p>
-                  <p class="text-xs opacity-50">{{ row.githubUsername }}</p>
+                  <p class="font-medium text-sm group-hover:text-primary transition-colors">{{ row.solarDisplayName || row.solarUsername }}</p>
+                  <p class="text-xs opacity-50">@{{ row.solarUsername }} · {{ row.githubUsername }}</p>
                 </div>
               </NuxtLink>
               <a
