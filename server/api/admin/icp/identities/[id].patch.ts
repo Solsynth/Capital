@@ -63,6 +63,7 @@ export default defineEventHandler(async (event) => {
         description: body.description !== undefined ? body.description : existing.description,
         icon: iconUrl,
         iconFileId: body.iconFileId !== undefined ? body.iconFileId : existing.iconFileId,
+        userId: body.userId ?? existing.userId,
         updatedAt: new Date(),
       })
       .where(eq(icpIdentity.id, id))
