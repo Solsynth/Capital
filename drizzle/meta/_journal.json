@@ -50,6 +50,13 @@
       "when": 1782480000000,
       "tag": "0006_contrib_rename",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1782481000000,
+      "tag": "0007_pending_check",
+      "breakpoints": true
     }
   ]
 }

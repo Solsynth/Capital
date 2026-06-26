@@ -235,6 +235,22 @@ export const contribClaSignature = pgTable("contrib_cla_signature", {
   unique("contrib_cla_signature_github_version_unique").on(table.githubUserId, table.claVersion),
 ]);
 
+export const contribPendingCheck = pgTable("contrib_pending_check", {
+  id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+  githubUsername: text("github_username").notNull(),
+  repoOwner: text("repo_owner").notNull(),
+  repoName: text("repo_name").notNull(),
+  prNumber: integer("pr_number").notNull(),
+  sha: text("sha").notNull(),
+  status: text("status").notNull().default("pending"), // pending | resolved
+  resolvedAt: timestamp("resolved_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("contrib_pending_check_username_idx").on(table.githubUsername),
+  index("contrib_pending_check_status_idx").on(table.status),
+  unique("contrib_pending_check_repo_pr_unique").on(table.repoOwner, table.repoName, table.prNumber),
+]);
+
 export const contribGithubStats = pgTable("contrib_github_stats", {
   githubUserId: integer("github_user_id").primaryKey(),
   githubUsername: text("github_username").notNull(),
