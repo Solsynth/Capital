@@ -377,7 +377,7 @@
   "royIcp.identities.createBtn": "创建",
   "royIcp.identities.cancel": "取消",
   "royIcp.identities.created": "创建于",
-  "royIcp.identities.deleteConfirm": "确定要删除身份"{name}"吗？",
+  "royIcp.identities.deleteConfirm": "确定要删除身份 '{name}' 吗？",
   "royIcp.mySubmissions.title": "我的提交",
   "royIcp.mySubmissions.desc": "查看您的站点提交状态",
   "royIcp.mySubmissions.new": "新建提交",
