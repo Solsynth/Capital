@@ -81,26 +81,16 @@ useSeoMeta({
                 >
                 <div>
                   <p class="font-medium text-sm group-hover:text-primary transition-colors">{{ row.solarDisplayName || row.solarUsername }}</p>
-                  <p class="text-xs opacity-50">@{{ row.solarUsername }} · {{ row.githubUsername }}</p>
+                  <p class="text-xs opacity-50">@{{ row.solarUsername }}</p>
                 </div>
               </NuxtLink>
-              <a
-                v-else
-                :href="`https://github.com/${row.githubUsername}`"
-                target="_blank"
-                rel="noopener"
-                class="flex items-center gap-3 hover:text-primary transition-colors"
-              >
-                <img
-                  :src="`https://github.com/${row.githubUsername}.png`"
-                  :alt="row.githubUsername"
-                  class="w-8 h-8 rounded-full"
-                >
+              <div v-else class="flex items-center gap-3 opacity-60">
+                <div class="w-8 h-8 rounded-full bg-base-300" />
                 <div>
                   <p class="font-medium text-sm">{{ row.githubUsername }}</p>
                   <p class="text-xs opacity-50">GitHub</p>
                 </div>
-              </a>
+              </div>
             </td>
             <td class="text-right tabular-nums text-sm opacity-80">{{ row.prCount }}</td>
             <td class="text-right tabular-nums text-sm opacity-80">{{ row.issueCount }}</td>
