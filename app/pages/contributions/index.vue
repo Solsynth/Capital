@@ -84,13 +84,6 @@ useSeoMeta({
                   <p class="text-xs opacity-50">@{{ row.solarUsername }}</p>
                 </div>
               </NuxtLink>
-              <div v-else class="flex items-center gap-3 opacity-60">
-                <div class="w-8 h-8 rounded-full bg-base-300" />
-                <div>
-                  <p class="font-medium text-sm">{{ row.githubUsername }}</p>
-                  <p class="text-xs opacity-50">GitHub</p>
-                </div>
-              </div>
             </td>
             <td class="text-right tabular-nums text-sm opacity-80">{{ row.prCount }}</td>
             <td class="text-right tabular-nums text-sm opacity-80">{{ row.issueCount }}</td>
