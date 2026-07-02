@@ -26,6 +26,8 @@ const { data: contest } = await useAsyncData(
   },
 );
 
+const voteLoading = ref(false)
+
 const { data: voteData, refresh: refreshVote } = await useAsyncData(
   `vote-${submissionId.value}`,
   () => {
@@ -47,11 +49,21 @@ async function handleVote(vote: {
   integration: number;
   isPositive: boolean;
 }) {
-  await $fetch(`/api/contests/submissions/${submissionId.value}/vote`, {
-    method: "POST",
-    body: vote,
-  });
-  await refreshVote();
+  voteLoading.value = true;
+  try {
+    await $fetch(`/api/contests/submissions/${submissionId.value}/vote`, {
+      method: "POST",
+      body: {
+        creativity: vote.creativity,
+        functionality: vote.functionality,
+        integration: vote.integration,
+        is_positive: vote.isPositive,
+      },
+    });
+    await refreshVote();
+  } finally {
+    voteLoading.value = false;
+  }
 }
 </script>
 
@@ -151,6 +163,7 @@ async function handleVote(vote: {
         <VoteCard
           :existing-vote="voteData?.vote"
           :contest-state="contest?.state || null"
+          :loading="voteLoading"
           @submit="handleVote"
         />
       </div>

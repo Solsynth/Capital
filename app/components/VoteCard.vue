@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Star, ThumbsUp, ThumbsDown, Send } from '@lucide/vue'
+import { watch } from 'vue'
 
 const { t } = useI18n()
 
@@ -22,6 +23,15 @@ const creativity = ref(props.existingVote?.creativity ?? 0)
 const functionality = ref(props.existingVote?.functionality ?? 0)
 const integration = ref(props.existingVote?.integration ?? 0)
 const isPositive = ref(props.existingVote?.isPositive ?? true)
+
+watch(() => props.existingVote, (vote) => {
+  if (vote) {
+    creativity.value = vote.creativity
+    functionality.value = vote.functionality
+    integration.value = vote.integration
+    isPositive.value = vote.isPositive
+  }
+})
 
 const isVoting = computed(() => props.contestState?.votingEnabled ?? false)
 const isResults = computed(() => props.contestState?.phase === 'results')

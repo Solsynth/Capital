@@ -6,7 +6,7 @@ import { eq, and } from 'drizzle-orm'
 export default defineEventHandler(async (event) => {
   const session = await auth.api.getSession({ headers: event.headers })
   if (!session) {
-    return { vote: null }
+    throw createError({ statusCode: 401, statusMessage: 'Not authenticated' })
   }
 
   const submissionId = event.context.params?.id as string

@@ -67,7 +67,9 @@ const contestStatus = computed(
 function statusLabel(status: string) {
   const key = `contests.statusLabel.${status}`;
   const label = t(key);
-  return label !== key ? label : status.charAt(0).toUpperCase() + status.slice(1);
+  return label !== key
+    ? label
+    : status.charAt(0).toUpperCase() + status.slice(1);
 }
 </script>
 
@@ -93,10 +95,10 @@ function statusLabel(status: string) {
       <div class="relative container mx-auto px-4 py-12">
         <NuxtLink
           :to="localePath('/contests')"
-          class="btn btn-ghost btn-sm mb-6 inline-flex"
+          class="btn btn-outline btn-sm mb-6 inline-flex"
         >
           <ArrowLeft class="w-4 h-4 mr-2" />
-          {{ t('contests.backToContests') }}
+          {{ t("contests.backToContests") }}
         </NuxtLink>
 
         <div class="flex items-center gap-3 mb-4">
@@ -134,7 +136,7 @@ function statusLabel(status: string) {
           class="btn btn-primary"
         >
           <FileText class="w-4 h-4 mr-2" />
-          {{ t('contests.submitProject') }}
+          {{ t("contests.submitProject") }}
         </NuxtLink>
         <NuxtLink
           v-if="canVote"
@@ -142,23 +144,23 @@ function statusLabel(status: string) {
           class="btn btn-secondary"
         >
           <Vote class="w-4 h-4 mr-2" />
-          {{ t('contests.vote') }}
+          {{ t("contests.vote") }}
         </NuxtLink>
-          <NuxtLink
-            :to="localePath(`/contests/${slug}/submissions`)"
-            class="btn btn-outline"
-          >
-            {{ t('contests.viewSubmissions') }}
-            <span v-if="submissionCount > 0" class="badge badge-sm ml-2">
-              {{ submissionCount }}
-            </span>
-          </NuxtLink>
-          <NuxtLink
-            :to="localePath(`/contests/${slug}/mine`)"
-            class="btn btn-ghost"
-          >
-            {{ t('contests.mySubmissions') }}
-          </NuxtLink>
+        <NuxtLink
+          :to="localePath(`/contests/${slug}/submissions`)"
+          class="btn btn-outline"
+        >
+          {{ t("contests.viewSubmissions") }}
+          <span v-if="submissionCount > 0" class="badge badge-sm ml-2">
+            {{ submissionCount }}
+          </span>
+        </NuxtLink>
+        <NuxtLink
+          :to="localePath(`/contests/${slug}/mine`)"
+          class="btn btn-ghost"
+        >
+          {{ t("contests.mySubmissions") }}
+        </NuxtLink>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -166,7 +168,7 @@ function statusLabel(status: string) {
         <div class="lg:col-span-2 space-y-8">
           <!-- Rules -->
           <section v-if="contest.rules && contest.rules.length > 0">
-            <h2 class="text-2xl font-bold mb-4">{{ t('contests.rules') }}</h2>
+            <h2 class="text-2xl font-bold mb-4">{{ t("contests.rules") }}</h2>
             <ul class="space-y-2">
               <li
                 v-for="(rule, idx) in contest.rules"
@@ -183,7 +185,7 @@ function statusLabel(status: string) {
 
           <!-- Prizes -->
           <section v-if="contest.prizes && contest.prizes.length > 0">
-            <h2 class="text-2xl font-bold mb-4">{{ t('contests.prizes') }}</h2>
+            <h2 class="text-2xl font-bold mb-4">{{ t("contests.prizes") }}</h2>
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div
                 v-for="prize in contest.prizes"
@@ -206,15 +208,19 @@ function statusLabel(status: string) {
         <div class="lg:col-span-1">
           <div class="card bg-base-200 sticky top-4">
             <div class="card-body">
-              <h3 class="card-title text-lg">{{ t('contests.contestInfo') }}</h3>
+              <h3 class="card-title text-lg">
+                {{ t("contests.contestInfo") }}
+              </h3>
 
               <div class="space-y-4 mt-4">
                 <div class="flex items-start gap-3">
                   <FileText class="w-5 h-5 mt-0.5 opacity-70" />
                   <div>
-                    <p class="font-medium">{{ t('contests.viewSubmissions') }}</p>
+                    <p class="font-medium">
+                      {{ t("contests.viewSubmissions") }}
+                    </p>
                     <p class="text-sm opacity-70">
-                      {{ submissionCount }} {{ t('contests.accepted') }}
+                      {{ submissionCount }} {{ t("contests.accepted") }}
                     </p>
                   </div>
                 </div>
@@ -222,7 +228,7 @@ function statusLabel(status: string) {
                 <div v-if="dbData?.state" class="flex items-start gap-3">
                   <Vote class="w-5 h-5 mt-0.5 opacity-70" />
                   <div>
-                    <p class="font-medium">{{ t('contests.currentPhase') }}</p>
+                    <p class="font-medium">{{ t("contests.currentPhase") }}</p>
                     <p class="text-sm opacity-70">{{ phaseLabel }}</p>
                   </div>
                 </div>
@@ -232,7 +238,9 @@ function statusLabel(status: string) {
                 v-if="dbData?.userSubmission"
                 class="mt-6 pt-4 border-t border-base-300"
               >
-                <p class="text-sm font-medium mb-2">{{ t('contests.yourSubmission') }}</p>
+                <p class="text-sm font-medium mb-2">
+                  {{ t("contests.yourSubmission") }}
+                </p>
                 <span
                   class="badge"
                   :class="{
@@ -249,7 +257,7 @@ function statusLabel(status: string) {
               <div v-if="contest.tags && contest.tags.length > 0" class="mt-6">
                 <h4 class="text-sm font-medium mb-2 flex items-center gap-2">
                   <Tag class="w-4 h-4" />
-                  {{ t('contests.tags') }}
+                  {{ t("contests.tags") }}
                 </h4>
                 <div class="flex flex-wrap gap-1">
                   <span
@@ -269,7 +277,7 @@ function statusLabel(status: string) {
       <div class="mt-12 pt-8 border-t border-base-300">
         <NuxtLink :to="localePath('/contests')" class="btn btn-ghost">
           <ArrowLeft class="w-4 h-4 mr-2" />
-          {{ t('contests.backToContests') }}
+          {{ t("contests.backToContests") }}
         </NuxtLink>
       </div>
     </div>

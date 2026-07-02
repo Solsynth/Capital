@@ -1,5 +1,5 @@
 import { db } from '~~/server/utils/db'
-import { contestVote, contestState } from '~~/server/db'
+import { contestVote, contestState, contestSubmission } from '~~/server/db'
 import { auth } from '~~/server/utils/auth'
 import { eq, and, sql } from 'drizzle-orm'
 import { randomUUID } from 'crypto'
