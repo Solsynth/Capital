@@ -140,14 +140,15 @@ onMounted(() => {
 <template>
   <header
     id="site-navbar"
-    class="fixed left-5 right-5 z-40 overflow-visible md:left-1/2 md:-translate-x-1/2 md:w-[min(90rem,calc(100%-3rem))]"
-    :style="{ top: `calc(${bannerHeight} + 20px)` }"
+    class="fixed left-0 right-0 z-40 overflow-visible"
+    :style="{ top: `calc(${bannerHeight})` }"
   >
-    <div
-      class="relative flex h-14 items-center justify-between rounded-full border border-base-content/10 bg-base-100/60 px-4 shadow-lg shadow-black/5 before:absolute before:inset-0 before:-z-10 before:rounded-full before:backdrop-blur-2xl before:content-[''] dark:border-base-content/5 dark:bg-base-100/40 dark:shadow-black/20 md:h-16 md:px-6"
-    >
+    <div class="navbar-glass">
       <!-- Brand -->
-      <NuxtLink :to="localePath('/')" class="flex items-center gap-2 shrink-0">
+      <NuxtLink
+        :to="localePath('/')"
+        class="flex items-center gap-2 shrink-0 ms-4"
+      >
         <img src="/favicon.png" :alt="t('nav.brandName')" class="w-8 h-8" />
         <span class="font-bold text-lg hidden sm:inline">{{
           t("nav.brandName")
@@ -162,7 +163,7 @@ onMounted(() => {
           <li v-for="item in navItems" :key="item.to">
             <NuxtLink
               :to="item.to"
-              class="flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
+              class="nav-link"
               active-class="!bg-base-content/10 !text-base-content"
             >
               <component :is="item.icon" class="w-4 h-4" />
@@ -173,7 +174,7 @@ onMounted(() => {
       </nav>
 
       <!-- Actions -->
-      <div class="relative z-50 flex items-center gap-1 shrink-0">
+      <div class="relative z-50 flex items-center gap-1 shrink-0 md:me-4">
         <div class="dropdown dropdown-end z-50">
           <div
             tabindex="0"
@@ -185,7 +186,7 @@ onMounted(() => {
           </div>
           <ul
             tabindex="0"
-            class="dropdown-content menu z-[100] w-40 rounded-2xl border border-base-content/10 bg-base-100/80 p-2 shadow-xl shadow-black/10 backdrop-blur-2xl dark:border-base-content/5 dark:bg-base-100/60"
+            class="dropdown-content menu z-100 w-40 rounded-2xl border border-base-content/10 bg-base-100/80 p-2 shadow-xl shadow-black/10 backdrop-blur-2xl dark:border-base-content/5 dark:bg-base-100/60"
           >
             <li v-for="l in locales" :key="typeof l === 'string' ? l : l.code">
               <NuxtLink
@@ -337,3 +338,60 @@ onMounted(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.navbar-glass {
+  position: relative;
+  display: flex;
+  height: 4rem; /* md:h-16 */
+  padding-inline: 1.5rem; /* md:px-6 */
+  align-items: center;
+  justify-content: space-between;
+  padding-inline: 1rem; /* px-4 */
+  background-color: color-mix(in srgb, var(--color-base-100) 60%, transparent);
+  box-shadow:
+    var(--tw-shadow, 0 0 #0000), var(--tw-shadow-colored, 0 0 #0000),
+    var(--tw-ring-shadow, 0 0 #0000);
+  --tw-shadow:
+    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+  --tw-shadow-colored:
+    0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
+  --tw-shadow-color: rgb(0 0 0 / 0.05);
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -10;
+    backdrop-filter: blur(40px);
+  }
+}
+
+:global(.dark) .navbar-glass {
+  background-color: color-mix(in srgb, var(--color-base-100) 40%, transparent);
+  border-color: color-mix(in srgb, var(--color-base-content) 5%, transparent);
+  --tw-shadow-color: rgb(0 0 0 / 0.2);
+}
+
+.nav-link {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 9999px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+  font-weight: 500;
+  color: color-mix(in srgb, var(--color-base-content) 70%, transparent);
+  transition: all 0.2s;
+
+  &:hover {
+    background-color: color-mix(
+      in srgb,
+      var(--color-base-content) 5%,
+      transparent
+    );
+    color: var(--color-base-content);
+  }
+}
+</style>

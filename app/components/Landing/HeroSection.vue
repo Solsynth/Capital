@@ -9,14 +9,14 @@ const localePath = useLocalePath();
   >
     <NuxtImg
       src="/images/hero/background.webp"
-      class="absolute inset-0 w-full h-full object-cover object-[87%_bottom] -z-10 opacity-40"
+      class="absolute inset-0 w-full h-full object-cover object-top-bottom -z-10 opacity-40"
       loading="eager"
       format="webp"
       alt=""
     />
     <NuxtImg
       src="/images/hero/background.webp"
-      class="absolute inset-0 w-full h-full object-cover object-[87%_bottom] -z-10 opacity-40 blur-md mask-[linear-gradient(to_right,black_30%,transparent_70%)] [-webkit-mask-image:linear-gradient(to_right,black_30%,transparent_70%)]"
+      class="absolute inset-0 w-full h-full object-cover object-top-bottom -z-10 opacity-40 blur-md mask-[linear-gradient(to_right,black_30%,transparent_70%)] [-webkit-mask-image:linear-gradient(to_right,black_30%,transparent_70%)]"
       loading="eager"
       format="webp"
       alt=""
