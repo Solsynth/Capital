@@ -5,72 +5,81 @@ import {
   Users,
   User,
   Globe,
-  ChevronLeft,
+  Home,
   Shield,
   GitPullRequest,
   FileCheck,
   Trophy,
-} from '@lucide/vue'
+} from "@lucide/vue";
 
-const { locale } = useI18n()
-const localePath = useLocalePath()
-const lang = computed(() => locale.value)
-const isZh = computed(() => lang.value === 'zh')
+const { t } = useI18n();
+const localePath = useLocalePath();
 
 interface NavItem {
-  icon: any
-  labelEn: string
-  labelZh: string
-  to: string
+  icon: any;
+  label: string;
+  to: string;
 }
 
 interface NavSection {
-  titleEn: string
-  titleZh: string
-  items: NavItem[]
+  title: string;
+  items: NavItem[];
 }
 
-const navSections: NavSection[] = [
+const navSections = computed<NavSection[]>(() => [
   {
-    titleEn: 'Overview',
-    titleZh: '概览',
+    title: t("admin.nav.overview"),
     items: [
-      { icon: LayoutDashboard, labelEn: 'Dashboard', labelZh: '仪表盘', to: '/admin' },
+      { icon: LayoutDashboard, label: t("admin.nav.dashboard"), to: "/admin" },
     ],
   },
   {
-    titleEn: 'ICP',
-    titleZh: '网备',
+    title: t("admin.nav.icp"),
     items: [
-      { icon: FileText, labelEn: 'Submissions', labelZh: '提交管理', to: '/admin/submissions' },
-      { icon: Globe, labelEn: 'Sites', labelZh: '站点管理', to: '/admin/sites' },
-      { icon: User, labelEn: 'Identities', labelZh: '身份管理', to: '/admin/identities' },
+      {
+        icon: FileText,
+        label: t("admin.nav.submissions"),
+        to: "/admin/submissions",
+      },
+      { icon: Globe, label: t("admin.nav.sites"), to: "/admin/sites" },
+      { icon: User, label: t("admin.nav.identities"), to: "/admin/identities" },
     ],
   },
   {
-    titleEn: 'System',
-    titleZh: '系统',
+    title: t("admin.nav.system"),
+    items: [{ icon: Users, label: t("admin.nav.users"), to: "/admin/users" }],
+  },
+  {
+    title: t("admin.nav.contributions"),
     items: [
-      { icon: Users, labelEn: 'Users', labelZh: '用户管理', to: '/admin/users' },
+      {
+        icon: GitPullRequest,
+        label: t("admin.nav.contributionsManage"),
+        to: "/admin/contributions",
+      },
+      {
+        icon: FileCheck,
+        label: t("admin.nav.claSignatures"),
+        to: "/admin/contributions/cla",
+      },
     ],
   },
   {
-    titleEn: 'Contributions',
-    titleZh: '贡献',
+    title: t("admin.nav.contests"),
     items: [
-      { icon: GitPullRequest, labelEn: 'Contributions', labelZh: '贡献管理', to: '/admin/contributions' },
-      { icon: FileCheck, labelEn: 'CLA Signatures', labelZh: 'CLA 签署', to: '/admin/contributions/cla' },
+      {
+        icon: Trophy,
+        label: t("admin.nav.contestsManage"),
+        to: "/admin/contests",
+      },
+      {
+        icon: FileText,
+        label: t("admin.nav.allSubmissions"),
+        to: "/admin/contests/submissions",
+      },
     ],
   },
-  {
-    titleEn: 'Contests',
-    titleZh: '竞赛',
-    items: [
-      { icon: Trophy, labelEn: 'Contests', labelZh: '竞赛管理', to: '/admin/contests' },
-      { icon: FileText, labelEn: 'All Submissions', labelZh: '所有提交', to: '/admin/contests/submissions' },
-    ],
-  },
-]
+]);
 </script>
 
 <template>
@@ -79,15 +88,16 @@ const navSections: NavSection[] = [
     <header class="border-b border-base-300 bg-base-100 sticky top-0 z-50">
       <div class="flex items-center justify-between px-6 h-14">
         <div class="flex items-center gap-4">
-          <NuxtLink :to="localePath('/')" class="btn btn-ghost btn-sm gap-2">
-            <ChevronLeft class="w-4 h-4" />
-            {{ isZh ? '返回前台' : 'Back to Site' }}
+          <NuxtLink
+            :to="localePath('/')"
+            class="btn btn-ghost btn-circle btn-sm gap-2"
+          >
+            <Home class="w-4 h-4" />
           </NuxtLink>
-          <div class="divider divider-horizontal h-6" />
           <div class="flex items-center gap-2">
             <Shield class="w-4 h-4 text-primary" />
             <h1 class="font-bold text-sm">
-              {{ isZh ? '管理后台' : 'Admin Panel' }}
+              {{ t("admin.panel.title") }}
             </h1>
           </div>
         </div>
@@ -96,11 +106,13 @@ const navSections: NavSection[] = [
 
     <div class="flex">
       <!-- Sidebar -->
-      <aside class="w-56 border-r border-base-300 min-h-[calc(100vh-3.5rem)] p-4">
+      <aside
+        class="w-56 border-r border-base-300 min-h-[calc(100vh-3.5rem)] p-4"
+      >
         <nav class="space-y-4">
-          <div v-for="section in navSections" :key="section.titleEn">
+          <div v-for="section in navSections" :key="section.title">
             <p class="px-3 mb-1 text-xs font-semibold uppercase opacity-50">
-              {{ isZh ? section.titleZh : section.titleEn }}
+              {{ section.title }}
             </p>
             <div class="space-y-0.5">
               <NuxtLink
@@ -112,7 +124,7 @@ const navSections: NavSection[] = [
                 :class="'hover:bg-base-200'"
               >
                 <component :is="item.icon" class="w-4 h-4" />
-                {{ isZh ? item.labelZh : item.labelEn }}
+                {{ item.label }}
               </NuxtLink>
             </div>
           </div>
