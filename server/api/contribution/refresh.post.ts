@@ -1,8 +1,8 @@
 import { auth } from '~~/server/utils/auth'
 import { db } from '~~/server/utils/db'
-import { contribClaSignature, contribGithubStats, account } from '~~/server/db/schema'
-import { eq, and } from 'drizzle-orm'
-import { getGithubConnection, cacheSolarUser } from '~~/server/utils/sn'
+import { contribClaSignature, contribGithubStats } from '~~/server/db/schema'
+import { eq } from 'drizzle-orm'
+import { getGithubConnection } from '~~/server/utils/sn'
 import { graphqlQuery } from '~~/server/utils/github'
 
 const MANUAL_REFRESH_COOLDOWN = 6 * 60 * 60 * 1000 // 6 hours
@@ -51,27 +51,25 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 400, statusMessage: 'Invalid GitHub connection' })
   }
 
-  // Check cooldown (skip in local dev)
   if (!process.env.CONTRIB_SKIP_COOLDOWN) {
     const [existing] = await db
-    .select()
-    .from(contribGithubStats)
-    .where(eq(contribGithubStats.githubUserId, githubUserId))
-    .limit(1)
+      .select()
+      .from(contribGithubStats)
+      .where(eq(contribGithubStats.githubUserId, githubUserId))
+      .limit(1)
 
-  if (existing?.lastManualRefresh) {
-    const elapsed = Date.now() - new Date(existing.lastManualRefresh).getTime()
-    if (elapsed < MANUAL_REFRESH_COOLDOWN) {
-      const remainingMinutes = Math.ceil((MANUAL_REFRESH_COOLDOWN - elapsed) / 60_000)
-      throw createError({
-        statusCode: 429,
-        statusMessage: `Please wait ${remainingMinutes} minutes before refreshing again.`,
-      })
+    if (existing?.lastManualRefresh) {
+      const elapsed = Date.now() - new Date(existing.lastManualRefresh).getTime()
+      if (elapsed < MANUAL_REFRESH_COOLDOWN) {
+        const remainingMinutes = Math.ceil((MANUAL_REFRESH_COOLDOWN - elapsed) / 60_000)
+        throw createError({
+          statusCode: 429,
+          statusMessage: `Please wait ${remainingMinutes} minutes before refreshing again.`,
+        })
+      }
     }
   }
-  }
 
-  // Fetch both stats + heatmap in one GraphQL call
   const data = await graphqlQuery<{ user: { contributionsCollection: any } }>(
     REFRESH_QUERY,
     { username: githubUsername }
@@ -82,7 +80,6 @@ export default defineEventHandler(async (event) => {
   const issueCount = c.totalIssueContributions
   const commitCount = c.totalCommitContributions
 
-  // Build heatmap from repo contributions
   const repos = c.commitContributionsByRepository
   console.log(`[refresh] ${githubUsername}: ${repos.length} repos, orgs: ${repos.map((r: any) => r.repository.owner.login).join(', ')}`)
   const byDate: Record<string, number> = {}
@@ -101,15 +98,6 @@ export default defineEventHandler(async (event) => {
 
   console.log(`[refresh] ${githubUsername}: ${heatmap.length} heatmap days, ${heatmap.reduce((s, d) => s + d.count, 0)} total commits`)
 
-  // Resolve Solar account for caching
-  const [solarAccount] = await db
-    .select({ accountId: account.accountId })
-    .from(account)
-    .where(and(eq(account.userId, session.user.id), eq(account.providerId, 'solian')))
-    .limit(1)
-  const solarAccountId = solarAccount?.accountId ?? null
-  const solarUsername = solarAccountId ? await cacheSolarUser(githubUsername, solarAccountId) : null
-
   const now = new Date()
 
   await db
@@ -117,8 +105,6 @@ export default defineEventHandler(async (event) => {
     .values({
       githubUserId,
       githubUsername,
-      solarUserId: solarAccountId,
-      solarUsername,
       prCount,
       issueCount,
       commitCount,
@@ -134,8 +120,6 @@ export default defineEventHandler(async (event) => {
         issueCount,
         commitCount,
         githubUsername,
-        solarUserId: solarAccountId,
-        solarUsername,
         updatedAt: now,
         lastManualRefresh: now,
         heatmapData: JSON.stringify(heatmap),

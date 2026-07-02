@@ -1,10 +1,10 @@
 import { auth } from '~~/server/utils/auth'
 import { db } from '~~/server/utils/db'
-import { contribClaSignature, contribGithubStats, account } from '~~/server/db/schema'
+import { contribClaSignature } from '~~/server/db/schema'
 import { eq, and } from 'drizzle-orm'
 import { randomUUID } from 'crypto'
 import { CLA_VERSION } from '~~/server/utils/cla'
-import { getGithubConnection, cacheSolarUser } from '~~/server/utils/sn'
+import { getGithubConnection } from '~~/server/utils/sn'
 
 export default defineEventHandler(async (event) => {
   const session = await auth.api.getSession({ headers: event.headers })
@@ -45,16 +45,6 @@ export default defineEventHandler(async (event) => {
       claVersion,
     })
     .returning()
-
-  // Populate Solar cache for this contributor
-  const [solarAccount] = await db
-    .select({ accountId: account.accountId })
-    .from(account)
-    .where(and(eq(account.userId, session.user.id), eq(account.providerId, 'solian')))
-    .limit(1)
-  if (solarAccount) {
-    await cacheSolarUser(githubUsername, solarAccount.accountId)
-  }
 
   return { signature: inserted, alreadySigned: false }
 })

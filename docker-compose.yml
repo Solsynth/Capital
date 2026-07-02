@@ -12,7 +12,7 @@ services:
       - BETTER_AUTH_URL=${BETTER_AUTH_URL:-http://localhost:3000}
       - SOLIAN_CLIENT_ID=${SOLIAN_CLIENT_ID}
       - SOLIAN_CLIENT_SECRET=${SOLIAN_CLIENT_SECRET}
-      - SEED_ADMIN_SECRET=${SEED_ADMIN_SECRET}
+      - ADMIN_EMAILS=${ADMIN_EMAILS}
     volumes:
       - capital-data:/data
     restart: unless-stopped

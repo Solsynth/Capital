@@ -1,14 +1,14 @@
+import { auth } from '~~/server/utils/auth'
+import { getIsAdmin } from '~~/server/utils/admin'
 import { ListBucketsCommand, PutObjectCommand } from '@aws-sdk/client-s3'
 
 export default defineEventHandler(async (event) => {
-  // Admin only
   const session = await auth.api.getSession({ headers: event.headers })
   if (!session) {
     throw createError({ statusCode: 401, statusMessage: 'Not authenticated' })
   }
 
-  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean)
-  const isAdmin = adminEmails.includes(session.user.email) || adminEmails.length === 0
+  const isAdmin = await getIsAdmin(session)
   if (!isAdmin) {
     throw createError({ statusCode: 403, statusMessage: 'Forbidden' })
   }
@@ -20,7 +20,6 @@ export default defineEventHandler(async (event) => {
 
     const results: Record<string, any> = {}
 
-    // Test 1: List buckets (verifies credentials are valid)
     try {
       const listResult = await s3.send(new ListBucketsCommand({}))
       results.buckets = (listResult.Buckets || []).map(b => b.Name)
@@ -29,7 +28,6 @@ export default defineEventHandler(async (event) => {
       results.buckets_error = `${e.name}: ${e.message}`
     }
 
-    // Test 2: Try a small probe put to the target bucket
     try {
       const probeKey = prefix ? `${prefix}/.probe` : '.probe'
       await s3.send(new PutObjectCommand({

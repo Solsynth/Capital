@@ -9,6 +9,10 @@ export const user = pgTable("user", {
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").default(false).notNull(),
   image: text("image"),
+  isAdmin: boolean("is_admin").default(false).notNull(),
+  solarAccountId: text("solar_account_id"),
+  solarProfile: jsonb("solar_profile"),
+  solarProfileUpdatedAt: timestamp("solar_profile_updated_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()
@@ -254,9 +258,6 @@ export const contribPendingCheck = pgTable("contrib_pending_check", {
 export const contribGithubStats = pgTable("contrib_github_stats", {
   githubUserId: integer("github_user_id").primaryKey(),
   githubUsername: text("github_username").notNull(),
-  solarUserId: text("solar_user_id"),
-  solarUsername: text("solar_username"),
-  solarDisplayName: text("solar_display_name"),
   prCount: integer("pr_count").notNull().default(0),
   issueCount: integer("issue_count").notNull().default(0),
   commitCount: integer("commit_count").notNull().default(0),

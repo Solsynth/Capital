@@ -1,7 +1,5 @@
 import { db } from '~~/server/utils/db'
 import { cached } from '~~/server/utils/cache'
-import { contribGithubStats } from '~~/server/db/schema'
-import { eq } from 'drizzle-orm'
 
 const SOLAR_API = 'https://api.solian.app'
 
@@ -50,22 +48,4 @@ export async function fetchSolarApi(token: string, path: string) {
   return response.json()
 }
 
-export async function cacheSolarUser(githubUsername: string, solarAccountId: string) {
-  try {
-    const resp = await fetch(`${SOLAR_API}/users/${solarAccountId}`)
-    if (!resp.ok) return null
-    const user = await resp.json()
-    const solarUsername = user.preferred_username || user.name
-    const solarDisplayName = user.nick || user.name
-    if (!solarUsername) return null
 
-    await db
-      .update(contribGithubStats)
-      .set({ solarUserId: solarAccountId, solarUsername, solarDisplayName })
-      .where(eq(contribGithubStats.githubUsername, githubUsername))
-
-    return solarUsername
-  } catch {
-    return null
-  }
-}

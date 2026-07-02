@@ -1,5 +1,5 @@
 import { db } from '~~/server/utils/db'
-import { contribClaSignature, contribGithubStats, account } from '~~/server/db/schema'
+import { contribClaSignature, account, user } from '~~/server/db/schema'
 import { eq, and, desc, sql } from 'drizzle-orm'
 import { CLA_VERSION } from '~~/server/utils/cla'
 import { getSolarUser } from '~~/server/utils/sn'
@@ -51,6 +51,12 @@ export default defineEventHandler(async (event) => {
     }
   }
 
+  const [linkedUser] = await db
+    .select({ solarProfile: user.solarProfile })
+    .from(user)
+    .where(eq(user.id, linkedAccount.userId))
+    .limit(1)
+
   const [signature] = await db
     .select()
     .from(contribClaSignature)
@@ -67,7 +73,6 @@ export default defineEventHandler(async (event) => {
 
   const total = stats.prCount * 5 + stats.issueCount * 3 + stats.commitCount
 
-  // Count how many users have a higher weighted score
   const [{ count: higherCount }] = await db
     .select({ count: sql<number>`count(*)` })
     .from(contribGithubStats)
@@ -75,9 +80,11 @@ export default defineEventHandler(async (event) => {
 
   const rank = Number(higherCount) + 1
 
+  const cachedProfile = linkedUser?.solarProfile as any
+
   return {
     solarUsername: username,
-    solarDisplayName: solarUser.nick || solarUser.name,
+    solarDisplayName: solarUser.nick || solarUser.name || cachedProfile?.nick || cachedProfile?.name,
     avatar,
     background,
     githubUsername,

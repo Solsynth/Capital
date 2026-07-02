@@ -1,4 +1,5 @@
 import { auth } from '~~/server/utils/auth'
+import { getIsAdmin } from '~~/server/utils/admin'
 
 export default defineEventHandler(async (event) => {
   const session = await auth.api.getSession({ headers: event.headers })
@@ -6,10 +7,7 @@ export default defineEventHandler(async (event) => {
     throw createError({ statusCode: 401, statusMessage: 'Not authenticated' })
   }
 
-  // Admin only
-  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean)
-  const isAdmin = adminEmails.includes(session.user.email) || adminEmails.length === 0
-
+  const isAdmin = await getIsAdmin(session)
   if (!isAdmin) {
     throw createError({ statusCode: 403, statusMessage: 'Forbidden: Admin access required' })
   }
