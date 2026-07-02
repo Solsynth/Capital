@@ -1,0 +1,22 @@
+{
+  "title": "和 Solar Network 一起开发 2026",
+  "slug": "develop-with-sn-2026",
+  "description": "使用 Solar Network 的各种能力开发创新项目。不限编程语言，不限形式 — 在 Solar Network 平台上展示你的创意与技术。",
+  "shortDescription": "2026 夏季特别活动。使用 Solar Network 开发，展示你的能力。",
+  "coverImage": "/images/contests/mws-2026-cover.jpg",
+  "status": "upcoming",
+  "rules": [
+    "不限编程语言",
+    "不限项目形式（硬件、软件、网站等均可）",
+    "不限团队成员数量（但仅提供一份奖品）",
+    "必须使用 Solar Network 的至少一项能力",
+    "不推荐构建 Solar Network 第三方客户端参赛（评委将给予较低创意分）"
+  ],
+  "prizes": [
+    { "place": "特等奖（0~1名）", "reward": "待定" },
+    { "place": "一等奖", "reward": "待定" },
+    { "place": "二等奖（3名）", "reward": "待定" },
+    { "place": "三等奖（10名）", "reward": "待定" }
+  ],
+  "tags": ["竞赛", "开发", "Solar Network", "2026"]
+}

@@ -64,6 +64,20 @@
       "when": 1782482000000,
       "tag": "0008_solar_cache",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1782483000000,
+      "tag": "0009_contest_tables",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1782484000000,
+      "tag": "0010_contest_state_fields",
+      "breakpoints": true
     }
   ]
 }

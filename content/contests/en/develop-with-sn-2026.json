@@ -1,0 +1,22 @@
+{
+  "title": "Develop with Solar Network 2026",
+  "slug": "develop-with-sn-2026",
+  "description": "Build innovative projects using Solar Network's capabilities. Any programming language, any form — showcase your creativity alongside the Solar Network platform.",
+  "shortDescription": "A summer 2026 special event. Build with Solar Network, show your skills.",
+  "coverImage": "/images/contests/mws-2026-cover.jpg",
+  "status": "upcoming",
+  "rules": [
+    "Any programming language is allowed",
+    "Any project form (hardware, software, website, etc.) is accepted",
+    "No limit on team members (only one prize set will be provided)",
+    "Must use at least one capability of Solar Network",
+    "Building a third-party Solar Network client is discouraged (low creativity score)"
+  ],
+  "prizes": [
+    { "place": "Grand Prize (0–1)", "reward": "TBD" },
+    { "place": "1st Place", "reward": "TBD" },
+    { "place": "2nd Place (×3)", "reward": "TBD" },
+    { "place": "3rd Place (×10)", "reward": "TBD" }
+  ],
+  "tags": ["Contest", "Development", "Solar Network", "2026"]
+}

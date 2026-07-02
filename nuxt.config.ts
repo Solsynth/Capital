@@ -8,6 +8,8 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
+  pages: true,
+
   experimental: {
     viewTransition: true,
   },

@@ -9,6 +9,7 @@ import {
   Shield,
   GitPullRequest,
   FileCheck,
+  Trophy,
 } from '@lucide/vue'
 
 const { locale } = useI18n()
@@ -59,6 +60,14 @@ const navSections: NavSection[] = [
     items: [
       { icon: GitPullRequest, labelEn: 'Contributions', labelZh: '贡献管理', to: '/admin/contributions' },
       { icon: FileCheck, labelEn: 'CLA Signatures', labelZh: 'CLA 签署', to: '/admin/contributions/cla' },
+    ],
+  },
+  {
+    titleEn: 'Contests',
+    titleZh: '竞赛',
+    items: [
+      { icon: Trophy, labelEn: 'Contests', labelZh: '竞赛管理', to: '/admin/contests' },
+      { icon: FileText, labelEn: 'All Submissions', labelZh: '所有提交', to: '/admin/contests/submissions' },
     ],
   },
 ]

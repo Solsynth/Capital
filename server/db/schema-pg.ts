@@ -1,5 +1,5 @@
 import { relations } from "drizzle-orm";
-import { pgTable, text, timestamp, boolean, integer, index } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, boolean, integer, jsonb, index, unique } from "drizzle-orm/pg-core";
 
 // ==================== Auth Tables ====================
 
@@ -166,6 +166,93 @@ export const icpSubmission = pgTable("icp_submission", {
   index("icp_submission_status_idx").on(table.status),
 ]);
 
+// ==================== Contest Tables ====================
+
+export const contestSubmission = pgTable("contest_submissions", {
+  id: text("id").primaryKey(),
+  contestId: text("contest_id").notNull(),
+  status: text("status").notNull().default("pending"),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  referralCode: text("referral_code").notNull().unique(),
+  data: jsonb("data").notNull(),
+  reviewNote: text("review_note"),
+  reviewedBy: text("reviewed_by").references(() => user.id),
+  reviewedAt: timestamp("reviewed_at"),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+}, (table) => [
+  index("contest_submission_contest_id_idx").on(table.contestId),
+  index("contest_submission_user_id_idx").on(table.userId),
+  index("contest_submission_status_idx").on(table.status),
+]);
+
+export const contestState = pgTable("contest_state", {
+  contestId: text("contest_id").primaryKey(),
+  status: text("status").notNull().default("upcoming"),
+  phase: text("phase").notNull().default("dev"),
+  submissionEnabled: boolean("submission_enabled").notNull().default(true),
+  votingEnabled: boolean("voting_enabled").notNull().default(false),
+  startDate: timestamp("start_date"),
+  endDate: timestamp("end_date"),
+  devEndsAt: timestamp("dev_ends_at"),
+  votingEndsAt: timestamp("voting_ends_at"),
+  resultPublishedAt: timestamp("result_published_at"),
+  updatedAt: timestamp("updated_at")
+    .defaultNow()
+    .$onUpdate(() => new Date())
+    .notNull(),
+});
+
+export const contestVote = pgTable("contest_votes", {
+  id: text("id").primaryKey(),
+  submissionId: text("submission_id")
+    .notNull()
+    .references(() => contestSubmission.id, { onDelete: "cascade" }),
+  userId: text("user_id")
+    .notNull()
+    .references(() => user.id, { onDelete: "cascade" }),
+  creativity: integer("creativity").notNull(),
+  functionality: integer("functionality").notNull(),
+  integration: integer("integration").notNull(),
+  isPositive: boolean("is_positive").notNull(),
+  createdAt: timestamp("created_at").defaultNow().notNull(),
+}, (table) => [
+  index("contest_vote_submission_id_idx").on(table.submissionId),
+  index("contest_vote_user_id_idx").on(table.userId),
+  unique("contest_vote_submission_user_unique").on(table.submissionId, table.userId),
+]);
+
+// ==================== Contest Relations ====================
+
+export const contestSubmissionRelations = relations(contestSubmission, ({ one, many }) => ({
+  user: one(user, {
+    fields: [contestSubmission.userId],
+    references: [user.id],
+  }),
+  reviewer: one(user, {
+    fields: [contestSubmission.reviewedBy],
+    references: [user.id],
+    relationName: "contestSubmissionReviewer",
+  }),
+  votes: many(contestVote),
+}));
+
+export const contestVoteRelations = relations(contestVote, ({ one }) => ({
+  submission: one(contestSubmission, {
+    fields: [contestVote.submissionId],
+    references: [contestSubmission.id],
+  }),
+  user: one(user, {
+    fields: [contestVote.userId],
+    references: [user.id],
+  }),
+}));
+
 // ==================== Relations ====================
 
 export const userRelations = relations(user, ({ many }) => ({
@@ -174,6 +261,8 @@ export const userRelations = relations(user, ({ many }) => ({
   files: many(file),
   icpIdentities: many(icpIdentity),
   icpSubmissions: many(icpSubmission),
+  contestSubmissions: many(contestSubmission),
+  contestVotes: many(contestVote),
 }));
 
 export const sessionRelations = relations(session, ({ one }) => ({

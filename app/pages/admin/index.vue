@@ -7,12 +7,10 @@ import {
   CheckCircle,
   XCircle,
   Download,
+  Trophy,
 } from '@lucide/vue'
 
-const { locale } = useI18n()
-const localePath = useLocalePath()
-const lang = computed(() => locale.value)
-const isZh = computed(() => lang.value === 'zh')
+const { t } = useI18n()
 
 definePageMeta({
   layout: 'admin',
@@ -20,18 +18,22 @@ definePageMeta({
 })
 
 useHead({
-  title: computed(() => isZh.value ? '管理后台' : 'Admin Dashboard'),
+  title: 'Admin Dashboard',
 })
 
 const { data: stats } = await useAsyncData('admin-stats', async () => {
-  const [submissions, sites] = await Promise.all([
+  const [submissions, sites, contests] = await Promise.all([
     $fetch<{ submissions: any[] }>('/api/admin/icp/submissions').catch(() => ({ submissions: [] })),
     $fetch<{ sites: any[] }>('/api/icp/sites').catch(() => ({ sites: [] })),
+    $fetch<{ states: Record<string, any> }>('/api/contests').catch(() => ({ states: {} })),
   ])
 
   const pending = submissions.submissions.filter(s => s.status === 'pending').length
   const approved = submissions.submissions.filter(s => s.status === 'approved').length
   const rejected = submissions.submissions.filter(s => s.status === 'rejected').length
+
+  const contestStates = contests.states || {}
+  const activeContests = Object.values(contestStates).filter((s: any) => s.status === 'ongoing').length
 
   return {
     totalSubmissions: submissions.submissions.length,
@@ -39,6 +41,7 @@ const { data: stats } = await useAsyncData('admin-stats', async () => {
     approved,
     rejected,
     totalSites: sites.sites.length,
+    activeContests,
   }
 })
 
@@ -62,7 +65,7 @@ async function importFromPb() {
 
 const statCards = computed(() => [
   {
-    label: isZh.value ? '待审核' : 'Pending',
+    label: 'Pending',
     value: stats.value?.pending ?? 0,
     icon: Clock,
     color: 'text-warning',
@@ -70,7 +73,7 @@ const statCards = computed(() => [
     to: '/admin/submissions?status=pending',
   },
   {
-    label: isZh.value ? '已通过' : 'Approved',
+    label: 'Approved',
     value: stats.value?.approved ?? 0,
     icon: CheckCircle,
     color: 'text-success',
@@ -78,7 +81,7 @@ const statCards = computed(() => [
     to: '/admin/submissions?status=approved',
   },
   {
-    label: isZh.value ? '已拒绝' : 'Rejected',
+    label: 'Rejected',
     value: stats.value?.rejected ?? 0,
     icon: XCircle,
     color: 'text-error',
@@ -86,12 +89,20 @@ const statCards = computed(() => [
     to: '/admin/submissions?status=rejected',
   },
   {
-    label: isZh.value ? '认证站点' : 'Certified Sites',
+    label: 'Certified Sites',
     value: stats.value?.totalSites ?? 0,
     icon: Globe,
     color: 'text-primary',
     bg: 'bg-primary/10',
     to: '/admin/sites',
+  },
+  {
+    label: t('admin.contests.activeContests'),
+    value: stats.value?.activeContests ?? 0,
+    icon: Trophy,
+    color: 'text-secondary',
+    bg: 'bg-secondary/10',
+    to: '/admin/contests',
   },
 ])
 </script>
@@ -99,14 +110,14 @@ const statCards = computed(() => [
 <template>
   <div>
     <h2 class="text-2xl font-bold mb-6">
-      {{ isZh ? '仪表盘' : 'Dashboard' }}
+      Dashboard
     </h2>
 
     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
       <NuxtLink
         v-for="card in statCards"
         :key="card.label"
-        :to="localePath(card.to)"
+        :to="card.to"
         class="card bg-base-200 hover:bg-base-300 transition-colors p-4"
       >
         <div class="flex items-center gap-4">
@@ -123,33 +134,37 @@ const statCards = computed(() => [
 
     <div class="card bg-base-200 p-6">
       <h3 class="font-bold mb-4">
-        {{ isZh ? '快捷操作' : 'Quick Actions' }}
+        Quick Actions
       </h3>
       <div class="flex flex-wrap gap-3">
-        <NuxtLink :to="localePath('/admin/submissions?status=pending')" class="btn btn-outline btn-sm">
+        <NuxtLink to="/admin/submissions?status=pending" class="btn btn-outline btn-sm">
           <FileText class="w-4 h-4 mr-1" />
-          {{ isZh ? '审核提交' : 'Review Submissions' }}
+          Review Submissions
         </NuxtLink>
-        <NuxtLink :to="localePath('/admin/users')" class="btn btn-outline btn-sm">
+        <NuxtLink to="/admin/users" class="btn btn-outline btn-sm">
           <Users class="w-4 h-4 mr-1" />
-          {{ isZh ? '管理用户' : 'Manage Users' }}
+          Manage Users
         </NuxtLink>
-        <NuxtLink :to="localePath('/admin/sites')" class="btn btn-outline btn-sm">
+        <NuxtLink to="/admin/sites" class="btn btn-outline btn-sm">
           <Globe class="w-4 h-4 mr-1" />
-          {{ isZh ? '查看站点' : 'View Sites' }}
+          View Sites
+        </NuxtLink>
+        <NuxtLink to="/admin/contests" class="btn btn-outline btn-sm">
+          <Trophy class="w-4 h-4 mr-1" />
+          {{ t('admin.contests.manageContests') }}
         </NuxtLink>
         <button class="btn btn-outline btn-sm" @click="importFromPb">
           <span v-if="importing" class="loading loading-spinner loading-xs mr-1" />
           <Download v-else class="w-4 h-4 mr-1" />
-          {{ isZh ? '从 PocketBase 导入' : 'Import from PocketBase' }}
+          Import from PocketBase
         </button>
       </div>
       <div v-if="importResult" class="mt-3 text-sm">
         <span v-if="importResult.success" class="text-success">
-          {{ isZh ? `导入完成：${importResult.identities?.imported ?? 0} 个身份，${importResult.sites?.imported ?? 0} 个站点，${importResult.assetsUploaded ?? 0} 个资源已上传到 R2` : `Done: ${importResult.identities?.imported ?? 0} identities, ${importResult.sites?.imported ?? 0} sites, ${importResult.assetsUploaded ?? 0} assets uploaded to R2` }}
+          Done: {{ importResult.identities?.imported ?? 0 }} identities, {{ importResult.sites?.imported ?? 0 }} sites, {{ importResult.assetsUploaded ?? 0 }} assets uploaded to R2
         </span>
         <span v-else class="text-error">
-          {{ importResult.error || (isZh ? '导入失败' : 'Import failed') }}
+          {{ importResult.error || 'Import failed' }}
         </span>
       </div>
     </div>

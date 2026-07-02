@@ -1,22 +1,11 @@
 import { db } from '~~/server/utils/db'
 import { icpSubmission, icpSite, icpIdentity } from '~~/server/db'
-import { auth } from '~~/server/utils/auth'
+import { requireAdmin } from '~~/server/utils/admin'
 import { eq, like, desc } from 'drizzle-orm'
 import { randomUUID } from 'crypto'
 
 export default defineEventHandler(async (event) => {
-  const session = await auth.api.getSession({ headers: event.headers })
-  if (!session) {
-    throw createError({ statusCode: 401, statusMessage: 'Not authenticated' })
-  }
-
-  // Check if user is admin
-  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean)
-  const isAdmin = adminEmails.includes(session.user.email) || adminEmails.length === 0
-
-  if (!isAdmin) {
-    throw createError({ statusCode: 403, statusMessage: 'Forbidden: Admin access required' })
-  }
+  const { session } = await requireAdmin(event)
 
   const body = await readBody(event)
 

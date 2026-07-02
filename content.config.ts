@@ -43,5 +43,23 @@ export default defineContentConfig({
         tags: z.array(z.string()).default([]),
       }),
     }),
+    contests: defineCollection({
+      type: 'page',
+      source: 'contests/**',
+      schema: z.object({
+        title: z.string(),
+        slug: z.string(),
+        description: z.string(),
+        shortDescription: z.string().optional(),
+        coverImage: z.string().optional(),
+        status: z.enum(['upcoming', 'ongoing', 'past']),
+        rules: z.array(z.string()).default([]),
+        prizes: z.array(z.object({
+          place: z.string(),
+          reward: z.string(),
+        })).default([]),
+        tags: z.array(z.string()).default([]),
+      }),
+    }),
   },
 })

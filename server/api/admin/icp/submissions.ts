@@ -1,22 +1,10 @@
 import { db } from '~~/server/utils/db'
 import { icpSubmission, icpSite, user, file } from '~~/server/db'
-import { auth } from '~~/server/utils/auth'
+import { requireAdmin } from '~~/server/utils/admin'
 import { desc, eq, inArray } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
-  const session = await auth.api.getSession({ headers: event.headers })
-  if (!session) {
-    throw createError({ statusCode: 401, statusMessage: 'Not authenticated' })
-  }
-
-  // Check if user is admin (you may need to adjust this based on your admin logic)
-  // For now, we'll check if the user has a specific role or is the first user
-  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map(e => e.trim()).filter(Boolean)
-  const isAdmin = adminEmails.includes(session.user.email) || adminEmails.length === 0
-
-  if (!isAdmin) {
-    throw createError({ statusCode: 403, statusMessage: 'Forbidden: Admin access required' })
-  }
+  const { session } = await requireAdmin(event)
 
   const query = getQuery(event)
   const status = query.status as string || undefined
