@@ -88,6 +88,27 @@ if (!contest.value) {
             <p class="opacity-70 line-clamp-2 text-sm">
               {{ sub.data?.description }}
             </p>
+            <div v-if="sub.author" class="flex items-center gap-2 mt-2">
+              <img
+                v-if="sub.author.avatar"
+                :src="sub.author.avatar"
+                :alt="sub.author.name"
+                class="w-5 h-5 rounded-full object-cover"
+              />
+              <span class="text-xs opacity-50">
+                <a
+                  v-if="sub.author.solarAccountId"
+                  :href="`https://id.solian.app/@${sub.author.name}`"
+                  target="_blank"
+                  class="hover:underline"
+                >
+                  @{{ sub.author.name }}
+                </a>
+                <template v-else>
+                  {{ sub.author.name }}
+                </template>
+              </span>
+            </div>
             <div v-if="sub.referralCode" class="text-xs opacity-50 mt-2">
               {{ t("contests.referral") }}: {{ sub.referralCode }}
             </div>

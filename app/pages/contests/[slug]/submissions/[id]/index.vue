@@ -87,6 +87,30 @@ async function handleVote(vote: {
             </h1>
             <p class="opacity-80 mb-4">{{ submission.data?.description }}</p>
 
+            <!-- Author -->
+            <div v-if="submission.author" class="flex items-center gap-2 mb-4">
+              <img
+                v-if="submission.author.avatar"
+                :src="submission.author.avatar"
+                :alt="submission.author.name"
+                class="w-6 h-6 rounded-full object-cover"
+              />
+              <span class="text-sm opacity-60">
+                <template v-if="submission.author.solarAccountId">
+                  <a
+                    :href="`https://id.solian.app/@${submission.author.name}`"
+                    target="_blank"
+                    class="hover:underline text-base-content/70"
+                  >
+                    @{{ submission.author.name }}
+                  </a>
+                </template>
+                <template v-else>
+                  {{ submission.author.name }}
+                </template>
+              </span>
+            </div>
+
             <div
               v-if="submission.data?.note"
               class="prose prose-sm max-w-none opacity-70 mb-4"

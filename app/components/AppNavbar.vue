@@ -209,18 +209,18 @@ onMounted(() => {
             role="button"
             class="flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
           >
-            <img
-              v-if="solarAvatar"
-              :src="solarAvatar"
-              :alt="session.user.name"
-              class="w-7 h-7 rounded-full object-cover"
-            />
-            <img
-              v-else-if="session.user.image"
-              :src="session.user.image"
-              :alt="session.user.name"
-              class="w-5 h-5 rounded-full object-cover"
-            />
+             <img
+               v-if="solarAvatar"
+               :src="solarAvatar"
+               :alt="solarProfile?.nick || solarProfile?.name || session.user.name"
+               class="w-7 h-7 rounded-full object-cover"
+             />
+             <img
+               v-else-if="session.user.image"
+               :src="session.user.image"
+               :alt="session.user.name"
+               class="w-5 h-5 rounded-full object-cover"
+             />
             <CircleUser v-else class="w-5 h-5" />
           </div>
           <ul
@@ -236,6 +236,17 @@ onMounted(() => {
                 <UserRound class="w-4 h-4" />
                 {{ t("nav.profile", "Profile") }}
               </NuxtLink>
+            </li>
+            <li class="px-3 py-1.5">
+              <span class="text-sm truncate">
+                {{ solarProfile?.nick || solarProfile?.name || session?.user?.name }}
+              </span>
+              <span
+                v-if="solarProfile?.name"
+                class="text-xs opacity-40 block"
+              >
+                @{{ solarProfile.name }}
+              </span>
             </li>
             <li>
               <button

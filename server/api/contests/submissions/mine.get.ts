@@ -1,7 +1,7 @@
 import { db } from '~~/server/utils/db'
-import { contestSubmission } from '~~/server/db'
+import { contestSubmission, user as userTable } from '~~/server/db'
 import { auth } from '~~/server/utils/auth'
-import { eq, and } from 'drizzle-orm'
+import { eq, and, sql } from 'drizzle-orm'
 import { getQuery } from 'h3'
 
 export default defineEventHandler(async (event) => {
@@ -20,10 +20,50 @@ export default defineEventHandler(async (event) => {
       )
     : eq(contestSubmission.userId, session.user.id)
 
-  const submissions = await db
-    .select()
+  const rows = await db
+    .select({
+      id: contestSubmission.id,
+      contestId: contestSubmission.contestId,
+      status: contestSubmission.status,
+      userId: contestSubmission.userId,
+      referralCode: contestSubmission.referralCode,
+      data: contestSubmission.data,
+      reviewNote: contestSubmission.reviewNote,
+      reviewedBy: contestSubmission.reviewedBy,
+      reviewedAt: contestSubmission.reviewedAt,
+      createdAt: contestSubmission.createdAt,
+      updatedAt: contestSubmission.updatedAt,
+      userName: userTable.name,
+      userNick: sql<string>`${userTable.solarProfile}->>'nick'`,
+      userSolarName: sql<string>`${userTable.solarProfile}->>'name'`,
+      userPicture: sql<string>`${userTable.solarProfile}->'profile'->>'picture'`,
+      userSolarAccountId: userTable.solarAccountId,
+    })
     .from(contestSubmission)
+    .leftJoin(userTable, eq(userTable.id, contestSubmission.userId))
     .where(where)
 
-  return { submissions }
+  const mySubmissions = rows.map(row => ({
+    id: row.id,
+    contestId: row.contestId,
+    status: row.status,
+    userId: row.userId,
+    referralCode: row.referralCode,
+    data: row.data,
+    reviewNote: row.reviewNote,
+    reviewedBy: row.reviewedBy,
+    reviewedAt: row.reviewedAt,
+    createdAt: row.createdAt,
+    updatedAt: row.updatedAt,
+    author: {
+      id: row.userId,
+      name: row.userNick || row.userSolarName || row.userName,
+      avatar: row.userPicture
+        ? `https://api.solian.app/drive/files/${row.userPicture}`
+        : null,
+      solarAccountId: row.userSolarAccountId,
+    },
+  }))
+
+  return { submissions: mySubmissions }
 })

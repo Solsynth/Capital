@@ -120,6 +120,25 @@ function statusColor(status: string) {
                 <span v-if="sub.data?.repo_url">
                   <a :href="sub.data.repo_url" target="_blank" class="link link-hover">Repository</a>
                 </span>
+                <span v-if="sub.author" class="flex items-center gap-1">
+                  <img
+                    v-if="sub.author.avatar"
+                    :src="sub.author.avatar"
+                    :alt="sub.author.name"
+                    class="w-3.5 h-3.5 rounded-full object-cover"
+                  />
+                  <a
+                    v-if="sub.author.solarAccountId"
+                    :href="`https://id.solian.app/@${sub.author.name}`"
+                    target="_blank"
+                    class="link link-hover"
+                  >
+                    @{{ sub.author.name }}
+                  </a>
+                  <template v-else>
+                    {{ sub.author.name }}
+                  </template>
+                </span>
                 <span>{{ sub.contestId }}</span>
               </div>
               <div v-if="sub.reviewNote" class="mt-2 text-sm opacity-60 italic">
