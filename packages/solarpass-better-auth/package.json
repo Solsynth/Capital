@@ -1,0 +1,52 @@
+{
+  "name": "@solar-network/better-auth",
+  "version": "0.1.0",
+  "description": "Better Auth plugin for Solarpass (Solar Network) OIDC authentication",
+  "type": "module",
+  "main": "./dist/index.mjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.mts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "types": "./dist/index.d.mts"
+    },
+    "./client": {
+      "import": "./dist/client.mjs",
+      "types": "./dist/client.d.mts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "better-auth": ">=1.0.0",
+    "drizzle-orm": ">=0.30.0"
+  },
+  "peerDependenciesMeta": {
+    "drizzle-orm": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "better-auth": "^1.6.0",
+    "drizzle-orm": "^0.45.0",
+    "tsup": "^8.0.0",
+    "typescript": "^5.0.0"
+  },
+  "keywords": [
+    "better-auth",
+    "solarpass",
+    "solar-network",
+    "oidc",
+    "oauth",
+    "authentication",
+    "solian"
+  ],
+  "license": "MIT"
+}
