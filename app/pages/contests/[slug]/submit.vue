@@ -13,6 +13,10 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 
+definePageMeta({
+  middleware: 'auth',
+})
+
 const slug = computed(() => route.params.slug as string)
 
 const { data: content } = await useAsyncData(`contest-content-${locale.value}-${slug.value}`, async () => {

@@ -28,7 +28,7 @@ export default defineSitemapEventHandler(async (event) => {
   try {
     const products = await queryCollection(event, 'products')
       .where('hasPage', '=', true)
-      .select(['path', 'title'])
+      .select('path', 'title')
       .all()
 
     for (const product of products) {
@@ -49,7 +49,7 @@ export default defineSitemapEventHandler(async (event) => {
   // Add dynamic legal pages
   try {
     const legalPages = await queryCollection(event, 'legal')
-      .select(['path', 'updatedDate'])
+      .select('path', 'updatedDate')
       .all()
 
     for (const legal of legalPages) {
@@ -71,7 +71,7 @@ export default defineSitemapEventHandler(async (event) => {
   // Add dynamic event pages
   try {
     const events = await queryCollection(event, 'events')
-      .select(['path', 'startDate', 'endDate', 'status'])
+      .select('path', 'startDate', 'endDate', 'status')
       .all()
 
     for (const event of events) {

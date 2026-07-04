@@ -13,6 +13,10 @@ const { t, locale } = useI18n();
 const localePath = useLocalePath();
 const route = useRoute();
 
+definePageMeta({
+  middleware: "auth",
+});
+
 const slug = computed(() => route.params?.slug as string);
 const submissionId = computed(() => route.params?.id as string);
 
