@@ -21,7 +21,7 @@ export default defineEventHandler(async (event) => {
       userName: userTable.name,
       userNick: sql<string>`${userTable.solarProfile}->>'nick'`,
       userSolarName: sql<string>`${userTable.solarProfile}->>'name'`,
-      userPicture: sql<string>`${userTable.solarProfile}->'profile'->>'picture'`,
+      userPicture: sql<string>`coalesce(${userTable.solarProfile}->'profile'->'picture'->>'id', ${userTable.solarProfile}->'profile'->>'picture')`,
       userSolarAccountId: userTable.solarAccountId,
     })
     .from(contestSubmission)

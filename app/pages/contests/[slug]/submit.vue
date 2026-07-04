@@ -46,26 +46,79 @@ const agreedToTerms = ref(false)
 const submitting = ref(false)
 const submitError = ref('')
 const submitSuccess = ref(false)
+const fileInput = ref<HTMLInputElement | null>(null)
+const isUploadDragOver = ref(false)
+const draggedScreenshotIndex = ref<number | null>(null)
 
-const { upload } = useFileUpload()
+const { upload, isUploading, progress, error: uploadError } = useFileUpload()
 
 async function handleFileSelect(event: Event) {
   const target = event.target as HTMLInputElement
   const files = target.files
   if (!files) return
 
+  await uploadFiles(files)
+  target.value = ''
+}
+
+async function uploadFiles(files: Iterable<File>) {
   for (const file of Array.from(files)) {
     if (screenshots.value.length >= 10) break
+
     const result = await upload(file)
     if (result?.url) {
       screenshots.value.push(result.url)
     }
   }
-  target.value = ''
+}
+
+function handleUploadDragOver(event: DragEvent) {
+  event.preventDefault()
+  isUploadDragOver.value = true
+}
+
+function handleUploadDragLeave() {
+  isUploadDragOver.value = false
+}
+
+async function handleUploadDrop(event: DragEvent) {
+  event.preventDefault()
+  isUploadDragOver.value = false
+  const files = event.dataTransfer?.files
+  if (!files?.length) return
+  await uploadFiles(files)
+}
+
+function openFilePicker() {
+  fileInput.value?.click()
 }
 
 function removeScreenshot(idx: number) {
   screenshots.value.splice(idx, 1)
+}
+
+function handleScreenshotDragStart(index: number) {
+  draggedScreenshotIndex.value = index
+}
+
+function handleScreenshotDragOver(event: DragEvent) {
+  event.preventDefault()
+}
+
+function handleScreenshotDrop(index: number) {
+  const fromIndex = draggedScreenshotIndex.value
+  if (fromIndex === null || fromIndex === index) {
+    draggedScreenshotIndex.value = null
+    return
+  }
+
+  const [moved] = screenshots.value.splice(fromIndex, 1)
+  screenshots.value.splice(index, 0, moved)
+  draggedScreenshotIndex.value = null
+}
+
+function handleScreenshotDragEnd() {
+  draggedScreenshotIndex.value = null
 }
 
 
@@ -183,7 +236,13 @@ async function handleSubmit() {
             <div
               v-for="(url, idx) in screenshots"
               :key="idx"
-              class="relative group rounded-lg overflow-hidden"
+              draggable="true"
+              class="relative group rounded-lg overflow-hidden cursor-move"
+              :class="draggedScreenshotIndex === idx ? 'ring-2 ring-primary ring-offset-2 ring-offset-base-100' : ''"
+              @dragstart="handleScreenshotDragStart(idx)"
+              @dragover="handleScreenshotDragOver"
+              @drop="handleScreenshotDrop(idx)"
+              @dragend="handleScreenshotDragEnd"
             >
               <img :src="url" class="w-full h-32 object-cover">
               <button
@@ -198,11 +257,24 @@ async function handleSubmit() {
 
           <label
             v-if="screenshots.length < 10"
-            class="border-2 border-dashed border-base-300 rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer hover:border-primary transition-colors"
+            class="border-2 border-dashed rounded-lg p-6 flex flex-col items-center justify-center cursor-pointer transition-colors"
+            :class="isUploadDragOver ? 'border-primary bg-primary/5' : 'border-base-300 hover:border-primary'"
+            @dragover="handleUploadDragOver"
+            @dragleave="handleUploadDragLeave"
+            @drop="handleUploadDrop"
+            @click="openFilePicker"
           >
-            <Upload class="w-8 h-8 opacity-50 mb-2" />
-            <span class="text-sm opacity-70">{{ t('contests.screenshotsUpload') }}</span>
+            <Upload v-if="!isUploading" class="w-8 h-8 opacity-50 mb-2" />
+            <span class="text-sm opacity-70 text-center">{{ t('contests.screenshotsUpload') }}</span>
+            <span class="text-xs opacity-50 mt-1 text-center">
+              Drag and drop to upload, then drag screenshots to reorder.
+            </span>
+            <div v-if="isUploading" class="w-full max-w-xs mt-4">
+              <progress class="progress progress-primary w-full" :value="progress" max="100" />
+              <p class="text-xs opacity-60 mt-2 text-center">{{ progress }}%</p>
+            </div>
             <input
+              ref="fileInput"
               type="file"
               accept="image/*"
               multiple
@@ -210,6 +282,7 @@ async function handleSubmit() {
               @change="handleFileSelect"
             >
           </label>
+          <p v-if="uploadError" class="text-error text-xs mt-2">{{ uploadError }}</p>
         </fieldset>
 
         <!-- Tags -->
@@ -269,7 +342,7 @@ async function handleSubmit() {
           <button
             type="submit"
             class="btn btn-primary btn-lg w-full"
-            :disabled="submitting || !title || !description || !repoUrl || !agreedToTerms"
+            :disabled="submitting || isUploading || !title || !description || !repoUrl || !agreedToTerms"
           >
             <span v-if="submitting" class="loading loading-spinner loading-sm" />
             <span v-else>{{ t('contests.submitProject') }}</span>

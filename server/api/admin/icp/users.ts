@@ -1,7 +1,7 @@
 import { db } from '~~/server/utils/db'
 import { user, icpSite, icpSubmission } from '~~/server/db'
 import { requireAdmin } from '~~/server/utils/admin'
-import { desc, eq, count } from 'drizzle-orm'
+import { desc, eq, count, sql } from 'drizzle-orm'
 
 export default defineEventHandler(async (event) => {
   const { session } = await requireAdmin(event)
@@ -14,6 +14,7 @@ export default defineEventHandler(async (event) => {
         email: user.email,
         emailVerified: user.emailVerified,
         image: user.image,
+        solarPictureId: sql<string>`coalesce(${user.solarProfile}->'profile'->'picture'->>'id', ${user.solarProfile}->'profile'->>'picture')`,
         createdAt: user.createdAt,
       })
       .from(user)
@@ -37,7 +38,9 @@ export default defineEventHandler(async (event) => {
           name: u.name,
           email: u.email,
           emailVerified: u.emailVerified,
-          image: u.image,
+          image: u.solarPictureId
+            ? `https://api.solian.app/drive/files/${u.solarPictureId}`
+            : u.image,
           created: u.createdAt.toISOString(),
           submissionCount: submissionCount?.count ?? 0,
           siteCount: siteCount?.count ?? 0,
