@@ -614,5 +614,57 @@
   "contests.termsLink": "DwS 2026 竞赛条款",
   "contests.agreeToTermsAnd": "以及",
   "contests.devTermsLink": "Solar Network 开发者条款",
-  "contests.termsPageTitle": "竞赛条款"
+  "contests.termsPageTitle": "竞赛条款",
+  "releases": {
+    "title": "发布版本",
+    "latest": "最新版本",
+    "all": "所有版本",
+    "version": "版本",
+    "releasedOn": "发布于",
+    "changelog": "更新日志",
+    "download": "下载",
+    "noReleases": "暂无发布版本",
+    "viewOnGitHub": "在 GitHub 上查看",
+    "prerelease": "预发布",
+    "synced": "已同步",
+    "syncPending": "同步待处理",
+    "syncFailed": "同步失败",
+    "retrySync": "重试同步"
+  },
+  "reviews": {
+    "title": "评价",
+    "writeReview": "撰写评价",
+    "editReview": "编辑你的评价",
+    "yourRating": "你的评分",
+    "title_label": "标题（可选）",
+    "content_label": "你的评价（可选）",
+    "submit": "提交评价",
+    "update": "更新评价",
+    "delete": "删除评价",
+    "deleteConfirm": "确定要删除这条评价吗？",
+    "helpful": "有帮助",
+    "helpfulCount": "{count} 人觉得有帮助",
+    "noReviews": "暂无评价，快来成为第一个评价的人吧！",
+    "summary": {
+      "average": "{avg} / 5",
+      "count": "{count} 条评价",
+      "distribution": "{count} 条 {star} 星评价"
+    },
+    "sortBy": "排序方式",
+    "sortNewest": "最新",
+    "sortHelpful": "最有帮助",
+    "loginRequired": "登录后才能撰写评价"
+  },
+  "admin": {
+    "nav": {
+      "products": "产品"
+    },
+    "products": {
+      "title": "产品",
+      "releases": "版本管理",
+      "addRelease": "添加版本",
+      "reviews": "评价管理",
+      "syncToGithub": "同步到 GitHub"
+    }
+  }
 }

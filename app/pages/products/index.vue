@@ -48,18 +48,30 @@ const { data: allProducts } = await useAsyncData(`products-list-${lang.value}`, 
     .where('path', 'LIKE', `/products/${lang.value}/%`)
     .all()
 
-  return products.map(p => ({
-    id: p.path.replace(`/products/${lang.value}/`, ''),
-    title: p.title || '',
-    description: p.description || '',
-    icon: p.icon || '',
-    background: p.background || '',
-    url: p.url,
-    repo: p.repo,
-    hasPage: p.hasPage ?? false,
-    tags: p.tags || [],
-    series: p.series,
-  }))
+  const summaries = await Promise.all(
+    products.map(p =>
+      $fetch(`/api/products/${p.path.replace(`/products/${lang.value}/`, '')}/reviews/summary`)
+        .catch(() => ({ summary: null }))
+    )
+  )
+
+  return products.map((p, i) => {
+    const summary = summaries[i]?.summary
+    return {
+      slug: p.path.replace(`/products/${lang.value}/`, ''),
+      title: p.title || '',
+      description: p.description || '',
+      icon: p.icon || '',
+      background: p.background || '',
+      url: p.url,
+      repo: p.repo,
+      hasPage: p.hasPage ?? false,
+      tags: p.tags || [],
+      series: p.series,
+      averageRating: summary?.average ?? 0,
+      reviewCount: summary?.count ?? 0,
+    }
+  })
 })
 
 const seriesMap = computed(() => {
@@ -158,7 +170,7 @@ const filteredProducts = computed(() => {
     <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
       <ProductCard
         v-for="product in filteredProducts"
-        :key="product.id"
+        :key="product.slug"
         :name="product.title"
         :description="product.description"
         :icon="product.icon"
@@ -166,10 +178,11 @@ const filteredProducts = computed(() => {
         :url="product.url"
         :repo="product.repo"
         :has-page="product.hasPage"
-        :slug="product.id"
+        :slug="product.slug"
         :tags="product.tags"
         :series="product.series"
-        :lang="lang"
+        :average-rating="product.averageRating"
+        :review-count="product.reviewCount"
       />
     </div>
   </div>

@@ -10,6 +10,7 @@ import {
   GitPullRequest,
   FileCheck,
   Trophy,
+  Package,
 } from "@lucide/vue";
 
 const { t } = useI18n();
@@ -76,6 +77,16 @@ const navSections = computed<NavSection[]>(() => [
         icon: FileText,
         label: t("admin.nav.allSubmissions"),
         to: "/admin/contests/submissions",
+      },
+    ],
+  },
+  {
+    title: t("admin.nav.products"),
+    items: [
+      {
+        icon: Package,
+        label: t("admin.products.title"),
+        to: "/admin/products",
       },
     ],
   },

@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { CodeXml, ExternalLink, Info } from "@lucide/vue";
+import StarRating from "./StarRating.vue";
 
 interface Props {
   name: string;
@@ -12,13 +13,17 @@ interface Props {
   slug?: string;
   tags?: string[];
   series?: string;
+  averageRating?: number;
+  reviewCount?: number;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   tags: () => [],
+  averageRating: 0,
+  reviewCount: 0,
 });
 
-const localePath = useLocalePath();
+const routes = useLocalePath();
 </script>
 
 <template>
@@ -26,7 +31,7 @@ const localePath = useLocalePath();
     class="card bg-base-100 border border-base-200 overflow-hidden transition-colors duration-150 hover:border-base-300"
   >
     <div class="relative aspect-video overflow-hidden">
-      <NuxtLink :to="localePath(`/products/${slug}`)">
+      <NuxtLink :to="routes(`/products/${slug}`)">
         <img :src="background" class="w-full h-full object-cover" :alt="name" />
       </NuxtLink>
       <div
@@ -51,15 +56,27 @@ const localePath = useLocalePath();
           <ExternalLink class="w-3.5 h-3.5" />
         </a>
         <NuxtLink
-          :to="localePath(`/products/${slug}`)"
+          :to="routes(`/products/${slug}`)"
           class="btn btn-circle btn-xs bg-white/80 hover:bg-white text-black border-none"
         >
           <Info class="w-3.5 h-3.5" />
         </NuxtLink>
       </div>
 
+      <div class="absolute top-3 left-3">
+        <div
+          v-if="averageRating > 0"
+          class="flex items-center gap-1 bg-black/60 backdrop-blur-sm rounded px-2 py-1"
+        >
+          <span class="text-warning text-xs font-bold">{{ averageRating.toFixed(1) }}</span>
+          <svg class="w-3 h-3 text-warning fill-warning" viewBox="0 0 20 20">
+            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+          </svg>
+        </div>
+      </div>
+
       <NuxtLink
-        :to="localePath(`/products/${slug}`)"
+        :to="routes(`/products/${slug}`)"
         class="absolute bottom-0 left-0 right-0 p-5"
       >
         <div class="flex items-center gap-3 mb-2">
@@ -81,7 +98,7 @@ const localePath = useLocalePath();
       <div class="flex flex-wrap gap-1">
         <NuxtLink
           v-if="series"
-          :to="`${localePath('/products')}?series=${encodeURIComponent(series)}`"
+          :to="`${routes('/products')}?series=${encodeURIComponent(series)}`"
           class="badge badge-sm badge-primary hover:badge-secondary transition-colors"
         >
           {{ series }}
@@ -89,7 +106,7 @@ const localePath = useLocalePath();
         <NuxtLink
           v-for="tag in tags.slice(0, 4)"
           :key="tag"
-          :to="`${localePath('/products')}?tag=${encodeURIComponent(tag)}`"
+          :to="`${routes('/products')}?tag=${encodeURIComponent(tag)}`"
           class="badge badge-sm badge-outline hover:badge-primary transition-colors"
         >
           {{ tag }}

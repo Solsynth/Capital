@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { ref, onMounted } from "vue"
 import {
   CodeXml,
   ExternalLink,
@@ -6,7 +7,20 @@ import {
   ArrowLeft,
   Tag,
   Folder,
+  History,
+  MessageSquare,
+  ChevronDown,
+  ChevronUp,
 } from "@lucide/vue";
+import StarRating from "~/components/StarRating.vue";
+import ReleaseCard from "~/components/ReleaseCard.vue";
+import ReleaseTimeline from "~/components/ReleaseTimeline.vue";
+import ReviewSummary from "~/components/ReviewSummary.vue";
+import ReviewForm from "~/components/ReviewForm.vue";
+import ReviewList from "~/components/ReviewList.vue";
+import { useProductReleases } from "~/composables/useProductReleases";
+import { useProductReviews } from "~/composables/useProductReviews";
+import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
 
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
@@ -34,6 +48,62 @@ const hasContent = computed(() => {
 
 if (!product.value) {
   navigateTo(localePath("/products"));
+}
+
+// ==================== Releases ====================
+const { releases, latest, loading: releasesLoading, fetchReleases, fetchLatest } = useProductReleases(slug.value)
+const showAllReleases = ref(false)
+onMounted(async () => {
+  await fetchLatest()
+})
+
+// ==================== Reviews ====================
+const { reviews, summary, loading: reviewsLoading, sort, setSort, page, totalPages, nextPage, prevPage, refresh: refreshReviews } = useProductReviews(slug.value)
+const { myReview, loading: myReviewLoading, submitting, fetchMyReview, submit, update, remove } = useProductReviewSubmission(slug.value)
+const reviewFormOpen = ref(false)
+const reviewForm = ref({ rating: 0, title: "", content: "", isRecommended: null as boolean | null })
+
+onMounted(async () => {
+  await Promise.all([fetchMyReview(), refreshReviews()])
+})
+
+async function handleSubmitReview() {
+  if (reviewForm.value.rating === 0) return
+  try {
+    if (myReview.value) {
+      await update(reviewForm.value)
+    } else {
+      await submit(reviewForm.value)
+    }
+    reviewFormOpen.value = false
+    await refreshReviews()
+  } catch {
+    // error surfaced via composable
+  }
+}
+
+async function handleDeleteReview() {
+  try {
+    await remove()
+    reviewFormOpen.value = false
+    await refreshReviews()
+  } catch {
+    // error surfaced via composable
+  }
+}
+
+function openReviewForm() {
+  if (myReview.value) {
+    reviewForm.value = {
+      rating: myReview.value.rating,
+      title: myReview.value.title || "",
+      content: myReview.value.content || "",
+      isRecommended: myReview.value.isRecommended,
+    }
+  } else {
+    reviewForm.value = { rating: 0, title: "", content: "", isRecommended: null }
+  }
+  reviewFormOpen.value = true
 }
 
 const title = computed(() => product.value?.title || "");
@@ -529,5 +599,121 @@ useSchemaOrg([
         </div>
       </div>
     </template>
+
+    <!-- ==================== Releases Section ==================== -->
+    <section v-if="latest || !releasesLoading" class="container mx-auto px-4 py-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold flex items-center gap-2">
+          <History class="w-5 h-5 text-primary" />
+          {{ t("releases.title") }}
+        </h2>
+        <button
+          v-if="releases.length > 1"
+          class="btn btn-sm btn-ghost gap-1"
+          @click="showAllReleases = !showAllReleases"
+        >
+          {{ showAllReleases ? "Collapse" : t("releases.all") }}
+          <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
+          <ChevronDown v-else class="w-4 h-4" />
+        </button>
+      </div>
+
+      <!-- Latest release card -->
+      <ReleaseCard
+        v-if="latest && !showAllReleases"
+        :version="latest.version"
+        :title="latest.title"
+        :released-at="latest.releasedAt"
+        :changelog="latest.changelog"
+        :download-url="latest.downloadUrl"
+        :github-release-url="latest.githubReleaseUrl"
+        :is-prerelease="latest.isPrerelease"
+      />
+
+      <!-- All releases timeline -->
+      <ReleaseTimeline
+        v-else-if="showAllReleases && releases.length > 0"
+        :releases="releases"
+      />
+
+      <!-- Fetch all releases when expanded -->
+      <div v-if="showAllReleases && releases.length <= 1 && !releasesLoading" class="text-center py-4">
+        <p class="opacity-60">{{ t("releases.noReleases") }}</p>
+      </div>
+
+      <!-- Empty state -->
+      <div v-if="!latest && !releasesLoading" class="text-center py-4">
+        <p class="opacity-60">{{ t("releases.noReleases") }}</p>
+      </div>
+    </section>
+
+    <!-- ==================== Reviews Section ==================== -->
+    <section class="container mx-auto px-4 py-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold flex items-center gap-2">
+          <MessageSquare class="w-5 h-5 text-primary" />
+          {{ t("reviews.title") }}
+        </h2>
+      </div>
+
+      <!-- Review Summary -->
+      <ReviewSummary
+        v-if="summary"
+        :average="summary.average"
+        :count="summary.count"
+        :distribution="{
+          fiveStar: summary.fiveStar,
+          fourStar: summary.fourStar,
+          threeStar: summary.threeStar,
+          twoStar: summary.twoStar,
+          oneStar: summary.oneStar,
+        }"
+        class="mb-6"
+      />
+
+      <!-- Write Review Form (authenticated users) -->
+      <div v-if="reviewFormOpen" class="mb-6">
+        <ReviewForm
+          v-model="reviewForm"
+          :submitting="submitting"
+          :existing-review="!!myReview"
+          @submit="handleSubmitReview"
+          @delete="handleDeleteReview"
+          @cancel="reviewFormOpen = false"
+        />
+      </div>
+
+      <div v-else-if="!myReviewLoading" class="mb-6">
+        <button
+          v-if="!myReview"
+          class="btn btn-primary btn-sm gap-2"
+          @click="openReviewForm"
+        >
+          <MessageSquare class="w-4 h-4" />
+          {{ t("reviews.writeReview") }}
+        </button>
+        <button
+          v-else
+          class="btn btn-outline btn-sm gap-2"
+          @click="openReviewForm"
+        >
+          <MessageSquare class="w-4 h-4" />
+          {{ t("reviews.editReview") }}
+        </button>
+      </div>
+
+      <!-- Reviews List -->
+      <ReviewList
+        :reviews="reviews"
+        :sort="sort"
+        :loading="reviewsLoading"
+        :page="page"
+        :total-pages="totalPages"
+        @update:sort="setSort"
+        @helpful="$fetch(`/api/products/${slug}/reviews/${$event}/helpful`, { method: 'POST' }); refreshReviews()"
+        @next-page="nextPage"
+        @prev-page="prevPage"
+      />
+    </section>
   </div>
 </template>
