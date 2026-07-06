@@ -4,13 +4,13 @@ import { nanoid } from "nanoid"
 const GITHUB_API = "https://api.github.com"
 
 async function getGithubToken(): Promise<string | null> {
-  // Prefer PAT for simple releases, fall back to App token if available
-  if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN
-
+  // Primary: GitHub App (reuses existing app infrastructure)
   try {
     const { getGithubAppToken } = await import("#server/utils/github")
     return await getGithubAppToken()
   } catch {
+    // Fallback: Personal Access Token
+    if (process.env.GITHUB_TOKEN) return process.env.GITHUB_TOKEN
     return null
   }
 }
