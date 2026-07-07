@@ -215,10 +215,10 @@ defineOgImage("UniOgImage", {
             alt="Solar Network"
           />
           <div class="flex-1">
-            <h1 class="text-4xl md:text-5xl font-bold hero-glow mb-2">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2">
               Solar Network
             </h1>
-            <p class="text-xl opacity-90 mb-4 hero-glow">
+            <p class="text-xl opacity-90 mb-4">
               {{ t("solarNetwork.tagline") }}
             </p>
           </div>
@@ -226,14 +226,14 @@ defineOgImage("UniOgImage", {
             <a
               href="https://web.solian.app"
               target="_blank"
-              class="btn btn-primary btn-lg rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
+              class="btn btn-primary btn-lg rounded-full transition-all"
             >
               <Sparkles class="w-5 h-5" />
               {{ t("solarNetwork.getStarted") }}
             </a>
             <a
               href="#download"
-              class="btn btn-accent btn-lg rounded-full hover:scale-105 transition-transform"
+              class="btn btn-accent btn-lg rounded-full"
             >
               <ExternalLink class="w-5 h-5" />
               {{ t("solarNetwork.download.btn") }}
@@ -241,7 +241,7 @@ defineOgImage("UniOgImage", {
             <a
               href="https://github.com/Solsynth/Solian"
               target="_blank"
-              class="btn btn-outline btn-lg rounded-full shadow-[0_0_15px_rgba(255,255,255,0.2)] hover:shadow-[0_0_25px_rgba(255,255,255,0.3)] hover:scale-105 transition-all"
+              class="btn btn-outline btn-lg rounded-full transition-all"
             >
               <CodeXml class="w-5 h-5" />
               GitHub
@@ -259,7 +259,7 @@ defineOgImage("UniOgImage", {
         <span class="badge badge-primary badge-outline mb-4">{{
           t("solarNetwork.about.badge")
         }}</span>
-        <h2 class="text-4xl font-bold mb-4 hero-glow">
+        <h2 class="text-4xl font-bold mb-4">
           {{ t("solarNetwork.about.title") }}
         </h2>
         <p class="text-lg opacity-70 max-w-3xl mx-auto">
@@ -269,7 +269,7 @@ defineOgImage("UniOgImage", {
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl"
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 p-8 border border-base-content/5"
         >
           <div
             class="w-16 h-16 rounded-2xl bg-primary/20 flex items-center justify-center mb-4"
@@ -284,7 +284,7 @@ defineOgImage("UniOgImage", {
           </p>
         </div>
         <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl"
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 p-8 border border-base-content/5"
         >
           <div
             class="w-16 h-16 rounded-2xl bg-secondary/20 flex items-center justify-center mb-4"
@@ -299,7 +299,7 @@ defineOgImage("UniOgImage", {
           </p>
         </div>
         <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-8 shadow-lg hover:shadow-xl"
+          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 p-8 border border-base-content/5"
         >
           <div
             class="w-16 h-16 rounded-2xl bg-accent/20 flex items-center justify-center mb-4"
@@ -322,7 +322,7 @@ defineOgImage("UniOgImage", {
         <span class="badge badge-secondary badge-outline mb-4">{{
           t("solarNetwork.features.badge")
         }}</span>
-        <h2 class="text-4xl font-bold mb-4 hero-glow">
+        <h2 class="text-4xl font-bold mb-4">
           {{ t("solarNetwork.features.title") }}
         </h2>
         <p class="text-lg opacity-70 max-w-2xl mx-auto">
@@ -351,7 +351,7 @@ defineOgImage("UniOgImage", {
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/explore.webp"
-              class="rounded-xl shadow-lg w-full max-w-md"
+              class="rounded-xl shadow-md w-full max-w-md"
               alt="Timeline"
             />
           </div>
@@ -366,7 +366,7 @@ defineOgImage("UniOgImage", {
           >
             <NuxtImg
               src="/images/solar-network/screenshots/chat.webp"
-              class="rounded-xl shadow-lg w-full max-w-md"
+              class="rounded-xl shadow-md w-full max-w-md"
               alt="Chat"
             />
           </div>
@@ -411,518 +411,428 @@ defineOgImage("UniOgImage", {
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/realms.webp"
-              class="rounded-xl shadow-lg w-full max-w-md"
+              class="rounded-xl shadow-md w-full max-w-md"
               alt="Realms"
             />
           </div>
         </div>
       </div>
 
-      <!-- Grid: Posts + Collections -->
-      <div class="grid md:grid-cols-2 gap-8 mb-8">
-        <div class="card bg-base-200 overflow-hidden">
-          <div class="bg-base-300 flex items-center justify-center p-4">
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Reactions -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/post-reactions.webp"
-              class="rounded-xl shadow-lg w-full"
-              alt="Posts"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
+              alt="Reactions"
             />
           </div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-3">
-              <div
-                class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <SmilePlus class="w-5 h-5 text-primary" />
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <SmilePlus class="w-3.5 h-3.5 text-primary" />
               </div>
-              <h3 class="text-lg font-bold text-primary">
+              <h3 class="text-sm font-semibold">
                 {{ t("solarNetwork.features.reactions.title") }}
               </h3>
             </div>
-            <p class="opacity-80 text-sm">
+            <p class="text-xs opacity-60 leading-relaxed">
               {{ t("solarNetwork.features.reactions.desc") }}
             </p>
           </div>
         </div>
-        <div class="card bg-base-200 overflow-hidden">
-          <div class="bg-base-300 flex items-center justify-center p-4">
+
+        <!-- Collections -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/post-collections.webp"
-              class="rounded-xl shadow-lg w-full"
-              alt="Post Collections"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
+              alt="Collections"
             />
           </div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-3">
-              <div
-                class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <Folder class="w-5 h-5 text-primary" />
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Folder class="w-3.5 h-3.5 text-primary" />
               </div>
-              <h3 class="text-lg font-bold text-primary">
+              <h3 class="text-sm font-semibold">
                 {{ t("solarNetwork.features.collections.title") }}
               </h3>
             </div>
-            <p class="opacity-80 text-sm">
+            <p class="text-xs opacity-60 leading-relaxed">
               {{ t("solarNetwork.features.collections.desc") }}
             </p>
           </div>
         </div>
-      </div>
 
-      <!-- Grid: Wallet + Stickers + Drive -->
-      <div class="grid md:grid-cols-3 gap-8 mb-8">
-        <div class="card bg-base-200 overflow-hidden">
-          <div class="bg-base-300 flex items-center justify-center p-4">
+        <!-- Wallet -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/wallet.webp"
-              class="rounded-xl shadow-lg w-full"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
               alt="Wallet"
             />
           </div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-3">
-              <div
-                class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <Wallet class="w-5 h-5 text-primary" />
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Wallet class="w-3.5 h-3.5 text-primary" />
               </div>
-              <h3 class="text-lg font-bold text-primary">
+              <h3 class="text-sm font-semibold">
                 {{ t("solarNetwork.features.wallet.title") }}
               </h3>
             </div>
-            <p class="opacity-80 text-sm">
+            <p class="text-xs opacity-60 leading-relaxed">
               {{ t("solarNetwork.features.wallet.desc") }}
             </p>
           </div>
         </div>
-        <div class="card bg-base-200 overflow-hidden">
-          <div class="bg-base-300 flex items-center justify-center p-4">
+
+        <!-- Stickers -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/stickers.webp"
-              class="rounded-xl shadow-lg w-full"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
               alt="Stickers"
             />
           </div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-3">
-              <div
-                class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <Sticker class="w-5 h-5 text-primary" />
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Sticker class="w-3.5 h-3.5 text-primary" />
               </div>
-              <h3 class="text-lg font-bold text-primary">
+              <h3 class="text-sm font-semibold">
                 {{ t("solarNetwork.features.stickers.title") }}
               </h3>
             </div>
-            <p class="opacity-80 text-sm">
+            <p class="text-xs opacity-60 leading-relaxed">
               {{ t("solarNetwork.features.stickers.desc") }}
             </p>
           </div>
         </div>
-        <div class="card bg-base-200 overflow-hidden">
-          <div class="bg-base-300 flex items-center justify-center p-4">
+
+        <!-- Drive -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/drive.webp"
-              class="rounded-xl shadow-lg w-full"
-              alt="Files"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
+              alt="Drive"
             />
           </div>
-          <div class="p-6">
-            <div class="flex items-center gap-3 mb-3">
-              <div
-                class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <Image class="w-5 h-5 text-primary" />
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Image class="w-3.5 h-3.5 text-primary" />
               </div>
-              <h3 class="text-lg font-bold text-primary">
+              <h3 class="text-sm font-semibold">
                 {{ t("solarNetwork.features.files.title") }}
               </h3>
             </div>
-            <p class="opacity-80 text-sm">
+            <p class="text-xs opacity-60 leading-relaxed">
               {{ t("solarNetwork.features.files.desc") }}
             </p>
           </div>
         </div>
-      </div>
 
-      <!-- Featured: Badges / Achievements -->
-      <div class="card bg-base-200 overflow-hidden mb-8">
-        <div class="grid md:grid-cols-2 gap-0">
-          <div
-            class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
-          >
+        <!-- Achievements -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/badges.webp"
-              class="rounded-xl shadow-lg w-full max-w-md"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
               alt="Achievements"
             />
           </div>
-          <div
-            class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <CheckCircle class="w-6 h-6 text-primary" />
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <CheckCircle class="w-3.5 h-3.5 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">
+              <h3 class="text-sm font-semibold">
                 {{ t("solarNetwork.features.achievements.title") }}
               </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">
+            <p class="text-xs opacity-60 leading-relaxed">
               {{ t("solarNetwork.features.achievements.desc") }}
             </p>
           </div>
         </div>
-      </div>
 
-      <!-- Featured: Polls -->
-      <div class="card bg-base-200 overflow-hidden mb-8">
-        <div class="grid md:grid-cols-2 gap-0">
-          <div class="p-8 md:p-10 flex flex-col justify-center">
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <Calendar class="w-6 h-6 text-primary" />
-              </div>
-              <h3 class="text-2xl font-bold text-primary">
-                {{ t("solarNetwork.features.polls.title") }}
-              </h3>
-            </div>
-            <p class="opacity-80 leading-relaxed">
-              {{ t("solarNetwork.features.polls.desc") }}
-            </p>
-          </div>
-          <div class="bg-base-300 flex items-center justify-center p-4">
+        <!-- Polls -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/surveys.webp"
-              class="rounded-xl shadow-lg w-full max-w-md"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
               alt="Polls"
             />
           </div>
-        </div>
-      </div>
-
-      <!-- Featured: Dashboard -->
-      <div class="card bg-base-200 overflow-hidden mb-8">
-        <div class="grid md:grid-cols-2 gap-0">
-          <div class="p-8 md:p-10 flex flex-col justify-center">
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <Monitor class="w-6 h-6 text-primary" />
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Calendar class="w-3.5 h-3.5 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">
-                {{ t("solarNetwork.features.dashboard.title") }}
+              <h3 class="text-sm font-semibold">
+                {{ t("solarNetwork.features.polls.title") }}
               </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">
-              {{ t("solarNetwork.features.dashboard.desc") }}
+            <p class="text-xs opacity-60 leading-relaxed">
+              {{ t("solarNetwork.features.polls.desc") }}
             </p>
           </div>
-          <div class="bg-base-300 flex items-center justify-center p-4">
+        </div>
+
+        <!-- Dashboard -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/dashboard.webp"
-              class="rounded-xl shadow-lg w-full max-w-md"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
               alt="Dashboard"
             />
           </div>
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Monitor class="w-3.5 h-3.5 text-primary" />
+              </div>
+              <h3 class="text-sm font-semibold">
+                {{ t("solarNetwork.features.dashboard.title") }}
+              </h3>
+            </div>
+            <p class="text-xs opacity-60 leading-relaxed">
+              {{ t("solarNetwork.features.dashboard.desc") }}
+            </p>
+          </div>
         </div>
-      </div>
 
-      <!-- Featured: Events -->
-      <div class="card bg-base-200 overflow-hidden mb-8">
-        <div class="grid md:grid-cols-2 gap-0">
-          <div
-            class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
-          >
+        <!-- Events -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/events.webp"
-              class="rounded-xl shadow-lg w-full max-w-md"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
               alt="Events"
             />
           </div>
-          <div
-            class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <Calendar class="w-6 h-6 text-primary" />
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Calendar class="w-3.5 h-3.5 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">
+              <h3 class="text-sm font-semibold">
                 {{ t("solarNetwork.features.events.title") }}
               </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">
+            <p class="text-xs opacity-60 leading-relaxed">
               {{ t("solarNetwork.features.events.desc") }}
             </p>
           </div>
         </div>
-      </div>
 
-      <!-- Featured: Event Calendar -->
-      <div class="card bg-base-200 overflow-hidden mb-8">
-        <div class="grid md:grid-cols-2 gap-0">
-          <div class="p-8 md:p-10 flex flex-col justify-center">
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <Calendar class="w-6 h-6 text-primary" />
-              </div>
-              <h3 class="text-2xl font-bold text-primary">
-                {{ t("solarNetwork.features.eventCalendar.title") }}
-              </h3>
-            </div>
-            <p class="opacity-80 leading-relaxed">
-              {{ t("solarNetwork.features.eventCalendar.desc") }}
-            </p>
-          </div>
-          <div class="bg-base-300 flex items-center justify-center p-4">
+        <!-- Event Calendar -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/event-calendar.webp"
-              class="rounded-xl shadow-lg w-full max-w-md"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
               alt="Event Calendar"
             />
           </div>
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Calendar class="w-3.5 h-3.5 text-primary" />
+              </div>
+              <h3 class="text-sm font-semibold">
+                {{ t("solarNetwork.features.eventCalendar.title") }}
+              </h3>
+            </div>
+            <p class="text-xs opacity-60 leading-relaxed">
+              {{ t("solarNetwork.features.eventCalendar.desc") }}
+            </p>
+          </div>
         </div>
-      </div>
 
-      <!-- Featured: Profile Presences -->
-      <div class="card bg-base-200 overflow-hidden mb-8">
-        <div class="grid md:grid-cols-2 gap-0">
-          <div
-            class="bg-base-300 flex items-center justify-center p-4 md:order-1 order-2"
-          >
+        <!-- Presences -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/profile-presences.webp"
-              class="rounded-xl shadow-lg w-full max-w-md"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
               alt="Profile Presences"
             />
           </div>
-          <div
-            class="p-8 md:p-10 flex flex-col justify-center md:order-2 order-1"
-          >
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <Sparkles class="w-6 h-6 text-primary" />
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Sparkles class="w-3.5 h-3.5 text-primary" />
               </div>
-              <h3 class="text-2xl font-bold text-primary">
+              <h3 class="text-sm font-semibold">
                 {{ t("solarNetwork.features.presences.title") }}
               </h3>
             </div>
-            <p class="opacity-80 leading-relaxed">
+            <p class="text-xs opacity-60 leading-relaxed">
               {{ t("solarNetwork.features.presences.desc") }}
             </p>
           </div>
         </div>
-      </div>
 
-      <!-- Featured: Developer Hub -->
-      <div class="card bg-base-200 overflow-hidden mb-8">
-        <div class="grid md:grid-cols-2 gap-0">
-          <div class="p-8 md:p-10 flex flex-col justify-center">
-            <div class="flex items-center gap-3 mb-4">
-              <div
-                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
-              >
-                <Code class="w-6 h-6 text-primary" />
-              </div>
-              <h3 class="text-2xl font-bold text-primary">
-                {{ t("solarNetwork.features.developerHub.title") }}
-              </h3>
-            </div>
-            <p class="opacity-80 leading-relaxed">
-              {{ t("solarNetwork.features.developerHub.desc") }}
-            </p>
-          </div>
-          <div class="bg-base-300 flex items-center justify-center p-4">
+        <!-- Developer Hub -->
+        <div class="card bg-base-200 overflow-hidden rounded-2xl border border-base-content/5">
+          <div class="bg-base-300 p-4">
             <NuxtImg
               src="/images/solar-network/screenshots/developer-hub.webp"
-              class="rounded-xl shadow-lg w-full max-w-md"
+              class="rounded-lg w-full aspect-[4/3] object-cover"
               alt="Developer Hub"
             />
           </div>
-        </div>
-      </div>
-
-      <!-- Compact grid: remaining features -->
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <Users class="w-5 h-5 text-primary" />
+          <div class="p-5">
+            <div class="flex items-center gap-2.5 mb-2">
+              <div class="w-7 h-7 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                <Code class="w-3.5 h-3.5 text-primary" />
+              </div>
+              <h3 class="text-sm font-semibold">
+                {{ t("solarNetwork.features.developerHub.title") }}
+              </h3>
             </div>
-            <h3 class="text-base font-bold text-primary">
-              {{ t("solarNetwork.features.social.title") }}
-            </h3>
+            <p class="text-xs opacity-60 leading-relaxed">
+              {{ t("solarNetwork.features.developerHub.desc") }}
+            </p>
           </div>
-          <p class="opacity-80 text-sm">
+        </div>
+
+        <!-- Social -->
+        <div class="card bg-base-200 rounded-2xl border border-base-content/5 p-5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+            <Users class="w-[18px] h-[18px] text-primary" />
+          </div>
+          <h3 class="text-sm font-semibold mb-1">
+            {{ t("solarNetwork.features.social.title") }}
+          </h3>
+          <p class="text-xs opacity-60 leading-relaxed">
             {{ t("solarNetwork.features.social.desc") }}
           </p>
         </div>
-        <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <Calendar class="w-5 h-5 text-primary" />
-            </div>
-            <h3 class="text-base font-bold text-primary">
-              {{ t("solarNetwork.features.countdown.title") }}
-            </h3>
+
+        <!-- Countdown -->
+        <div class="card bg-base-200 rounded-2xl border border-base-content/5 p-5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+            <Calendar class="w-[18px] h-[18px] text-primary" />
           </div>
-          <p class="opacity-80 text-sm">
+          <h3 class="text-sm font-semibold mb-1">
+            {{ t("solarNetwork.features.countdown.title") }}
+          </h3>
+          <p class="text-xs opacity-60 leading-relaxed">
             {{ t("solarNetwork.features.countdown.desc") }}
           </p>
         </div>
-        <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <Shield class="w-5 h-5 text-primary" />
-            </div>
-            <h3 class="text-base font-bold text-primary">
-              {{ t("solarNetwork.features.oauth.title") }}
-            </h3>
+
+        <!-- OAuth -->
+        <div class="card bg-base-200 rounded-2xl border border-base-content/5 p-5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+            <Shield class="w-[18px] h-[18px] text-primary" />
           </div>
-          <p class="opacity-80 text-sm">
+          <h3 class="text-sm font-semibold mb-1">
+            {{ t("solarNetwork.features.oauth.title") }}
+          </h3>
+          <p class="text-xs opacity-60 leading-relaxed">
             {{ t("solarNetwork.features.oauth.desc") }}
           </p>
         </div>
-        <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <Bell class="w-5 h-5 text-primary" />
-            </div>
-            <h3 class="text-base font-bold text-primary">
-              {{ t("solarNetwork.features.checkin.title") }}
-            </h3>
+
+        <!-- Check-in -->
+        <div class="card bg-base-200 rounded-2xl border border-base-content/5 p-5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+            <Bell class="w-[18px] h-[18px] text-primary" />
           </div>
-          <p class="opacity-80 text-sm">
+          <h3 class="text-sm font-semibold mb-1">
+            {{ t("solarNetwork.features.checkin.title") }}
+          </h3>
+          <p class="text-xs opacity-60 leading-relaxed">
             {{ t("solarNetwork.features.checkin.desc") }}
           </p>
         </div>
-        <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <Rss class="w-5 h-5 text-primary" />
-            </div>
-            <h3 class="text-base font-bold text-primary">
-              {{ t("solarNetwork.features.rss.title") }}
-            </h3>
+
+        <!-- RSS -->
+        <div class="card bg-base-200 rounded-2xl border border-base-content/5 p-5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+            <Rss class="w-[18px] h-[18px] text-primary" />
           </div>
-          <p class="opacity-80 text-sm">
+          <h3 class="text-sm font-semibold mb-1">
+            {{ t("solarNetwork.features.rss.title") }}
+          </h3>
+          <p class="text-xs opacity-60 leading-relaxed">
             {{ t("solarNetwork.features.rss.desc") }}
           </p>
         </div>
-        <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <FileText class="w-5 h-5 text-primary" />
-            </div>
-            <h3 class="text-base font-bold text-primary">
-              {{ t("solarNetwork.features.editor.title") }}
-            </h3>
+
+        <!-- Editor -->
+        <div class="card bg-base-200 rounded-2xl border border-base-content/5 p-5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+            <FileText class="w-[18px] h-[18px] text-primary" />
           </div>
-          <p class="opacity-80 text-sm">
+          <h3 class="text-sm font-semibold mb-1">
+            {{ t("solarNetwork.features.editor.title") }}
+          </h3>
+          <p class="text-xs opacity-60 leading-relaxed">
             {{ t("solarNetwork.features.editor.desc") }}
           </p>
         </div>
-        <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <Globe class="w-5 h-5 text-primary" />
-            </div>
-            <h3 class="text-base font-bold text-primary">
-              {{ t("solarNetwork.features.fediverse.title") }}
-            </h3>
+
+        <!-- Fediverse -->
+        <div class="card bg-base-200 rounded-2xl border border-base-content/5 p-5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+            <Globe class="w-[18px] h-[18px] text-primary" />
           </div>
-          <p class="opacity-80 text-sm">
+          <h3 class="text-sm font-semibold mb-1">
+            {{ t("solarNetwork.features.fediverse.title") }}
+          </h3>
+          <p class="text-xs opacity-60 leading-relaxed">
             {{ t("solarNetwork.features.fediverse.desc") }}
           </p>
         </div>
-        <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <Image class="w-5 h-5 text-primary" />
-            </div>
-            <h3 class="text-base font-bold text-primary">
-              {{ t("solarNetwork.features.gallery.title") }}
-            </h3>
+
+        <!-- Gallery -->
+        <div class="card bg-base-200 rounded-2xl border border-base-content/5 p-5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+            <Image class="w-[18px] h-[18px] text-primary" />
           </div>
-          <p class="opacity-80 text-sm">
+          <h3 class="text-sm font-semibold mb-1">
+            {{ t("solarNetwork.features.gallery.title") }}
+          </h3>
+          <p class="text-xs opacity-60 leading-relaxed">
             {{ t("solarNetwork.features.gallery.desc") }}
           </p>
         </div>
-        <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <CreditCard class="w-5 h-5 text-primary" />
-            </div>
-            <h3 class="text-base font-bold text-primary">
-              {{ t("solarNetwork.features.subscription.title") }}
-            </h3>
+
+        <!-- Subscription -->
+        <div class="card bg-base-200 rounded-2xl border border-base-content/5 p-5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+            <CreditCard class="w-[18px] h-[18px] text-primary" />
           </div>
-          <p class="opacity-80 text-sm">
+          <h3 class="text-sm font-semibold mb-1">
+            {{ t("solarNetwork.features.subscription.title") }}
+          </h3>
+          <p class="text-xs opacity-60 leading-relaxed">
             {{ t("solarNetwork.features.subscription.desc") }}
           </p>
         </div>
-        <div
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 hover:-translate-y-2 p-6 group"
-        >
-          <div class="flex items-center gap-3 mb-3">
-            <div
-              class="w-10 h-10 rounded-xl bg-primary/20 flex items-center justify-center group-hover:scale-110 transition-transform"
-            >
-              <Sparkles class="w-5 h-5 text-primary" />
-            </div>
-            <h3 class="text-base font-bold text-primary">
-              {{ t("solarNetwork.features.more.title") }}
-            </h3>
+
+        <!-- More -->
+        <div class="card bg-base-200 rounded-2xl border border-base-content/5 p-5">
+          <div class="w-9 h-9 rounded-xl bg-primary/10 flex items-center justify-center mb-3">
+            <Sparkles class="w-[18px] h-[18px] text-primary" />
           </div>
-          <p class="opacity-80 text-sm">
+          <h3 class="text-sm font-semibold mb-1">
+            {{ t("solarNetwork.features.more.title") }}
+          </h3>
+          <p class="text-xs opacity-60 leading-relaxed">
             {{ t("solarNetwork.features.more.desc") }}
           </p>
         </div>
@@ -1107,7 +1017,7 @@ defineOgImage("UniOgImage", {
               <a
                 href="https://web.solian.app"
                 target="_blank"
-                class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
+                class="btn btn-primary rounded-full transition-all"
               >
                 <ExternalLink class="w-5 h-5" />
                 {{ t("solarNetwork.journey.openBrowser") }}
@@ -1128,7 +1038,7 @@ defineOgImage("UniOgImage", {
               <a
                 href="https://testflight.apple.com/join/YJ0lmN6O"
                 target="_blank"
-                class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
+                class="btn btn-primary rounded-full transition-all"
               >
                 <IconsIconIos class="w-5 h-5 fill-current" />
                 {{ t("solarNetwork.download.ios.testflight") }}
@@ -1150,7 +1060,7 @@ defineOgImage("UniOgImage", {
                 <a
                   href="https://fs.solsynth.dev/d/public/r2/solian/app-arm64-v8a-release.apk"
                   target="_blank"
-                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
+                  class="btn btn-primary rounded-full transition-all"
                 >
                   <IconsIconAndroid class="w-5 h-5 fill-current" />
                   ARM64 (arm64-v8a)
@@ -1214,7 +1124,7 @@ defineOgImage("UniOgImage", {
                 <a
                   href="https://fs.solsynth.dev/d/public/r2/solian/solian-macos.tar.gz"
                   target="_blank"
-                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
+                  class="btn btn-primary rounded-full transition-all"
                 >
                   <ExternalLink class="w-5 h-5" />
                   {{ t("solarNetwork.download.direct") }}
@@ -1237,7 +1147,7 @@ defineOgImage("UniOgImage", {
                 <a
                   href="https://fs.solsynth.dev/d/public/r2/solian/build-output-windows-installer.zip"
                   target="_blank"
-                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
+                  class="btn btn-primary rounded-full transition-all"
                 >
                   <ExternalLink class="w-5 h-5" />
                   {{ t("solarNetwork.download.direct") }}
@@ -1268,7 +1178,7 @@ defineOgImage("UniOgImage", {
                 <a
                   href="https://fs.solsynth.dev/d/public/r2/solian/build-output-linux-appimage.zip"
                   target="_blank"
-                  class="btn btn-primary rounded-full shadow-[0_0_20px_rgba(150,158,207,0.5)] hover:shadow-[0_0_30px_rgba(150,158,207,0.7)] hover:scale-105 transition-all"
+                  class="btn btn-primary rounded-full transition-all"
                 >
                   <ExternalLink class="w-5 h-5" />
                   {{ t("solarNetwork.download.direct") }}
@@ -1383,7 +1293,7 @@ defineOgImage("UniOgImage", {
             <a
               href="https://github.com/Solsynth/Solian/issues"
               target="_blank"
-              class="btn btn-outline btn-lg hover:scale-105 transition-transform"
+              class="btn btn-outline btn-lg"
             >
               <Bug class="w-5 h-5" />
               {{ t("solarNetwork.help.reportIssue") }}
@@ -1391,7 +1301,7 @@ defineOgImage("UniOgImage", {
             <a
               href="https://github.com/Solsynth/Solian/discussions"
               target="_blank"
-              class="btn btn-ghost btn-lg hover:scale-105 transition-transform"
+              class="btn btn-ghost btn-lg"
             >
               <MessageSquare class="w-5 h-5" />
               {{ t("solarNetwork.help.suggestion") }}
@@ -1412,17 +1322,5 @@ defineOgImage("UniOgImage", {
 :deep(.dark) .solar-network-page {
   --color-primary: oklch(55% 0.08 275deg);
   --color-primary-content: oklch(95% 0.02 275deg);
-}
-
-.hero-glow {
-  color: var(--color-base-content);
-  text-shadow:
-    0 0 10px rgba(255, 255, 255, 0.8),
-    0 0 30px rgba(255, 255, 255, 0.4),
-    0 0 60px rgba(150, 158, 207, 0.3);
-}
-
-:deep(.dark) .hero-glow {
-  color: white;
 }
 </style>
