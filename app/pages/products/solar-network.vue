@@ -25,10 +25,24 @@ import {
   Copy,
   Check,
   SmilePlus,
+  History,
+  ChevronDown,
+  ChevronUp,
+  Star,
 } from "@lucide/vue";
+import { ref, onMounted } from "vue";
+import ReleaseCard from "~/components/ReleaseCard.vue";
+import ReleaseTimeline from "~/components/ReleaseTimeline.vue";
+import ReviewSummary from "~/components/ReviewSummary.vue";
+import ReviewForm from "~/components/ReviewForm.vue";
+import ReviewList from "~/components/ReviewList.vue";
+import { useProductReleases } from "~/composables/useProductReleases";
+import { useProductReviews } from "~/composables/useProductReviews";
+import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
 
 const { t, locale } = useI18n();
 
+const PRODUCT_SLUG = "solar-network";
 const activePlatform = ref("web");
 const copied = ref(false);
 
@@ -56,6 +70,105 @@ function copyCommand() {
   navigator.clipboard.writeText("brew install --cask solsynth/solian/solian");
   copied.value = true;
   setTimeout(() => (copied.value = false), 2000);
+}
+
+// ==================== Releases ====================
+const {
+  releases,
+  latest,
+  loading: releasesLoading,
+  fetchReleases,
+  fetchLatest,
+} = useProductReleases(PRODUCT_SLUG);
+const showAllReleases = ref(false);
+onMounted(async () => {
+  await Promise.all([fetchLatest(), fetchReleases()]);
+});
+
+// ==================== Reviews ====================
+const {
+  reviews,
+  summary,
+  loading: reviewsLoading,
+  sort,
+  setSort,
+  page,
+  totalPages,
+  nextPage,
+  prevPage,
+  refresh: refreshReviews,
+} = useProductReviews(PRODUCT_SLUG);
+const {
+  myReview,
+  loading: myReviewLoading,
+  submitting,
+  fetchMyReview,
+  submit,
+  update,
+  remove,
+} = useProductReviewSubmission(PRODUCT_SLUG);
+const reviewFormOpen = ref(false);
+const reviewForm = ref({
+  rating: 0,
+  title: "",
+  content: "",
+  isRecommended: null as boolean | null,
+});
+
+onMounted(async () => {
+  await fetchMyReview();
+  await refreshReviews();
+});
+
+function openReviewForm() {
+  if (myReview.value) {
+    reviewForm.value = {
+      rating: myReview.value.rating,
+      title: myReview.value.title || "",
+      content: myReview.value.content || "",
+      isRecommended: myReview.value.isRecommended,
+    };
+  } else {
+    reviewForm.value = {
+      rating: 0,
+      title: "",
+      content: "",
+      isRecommended: null,
+    };
+  }
+  reviewFormOpen.value = true;
+}
+
+async function handleSubmitReview() {
+  if (reviewForm.value.rating === 0) return;
+  try {
+    if (myReview.value) {
+      await update(reviewForm.value);
+    } else {
+      await submit(reviewForm.value);
+    }
+    reviewFormOpen.value = false;
+    await refreshReviews();
+  } catch {
+    // error handled by composable
+  }
+}
+
+async function handleDeleteReview() {
+  try {
+    await remove();
+    reviewFormOpen.value = false;
+    await refreshReviews();
+  } catch {
+    // error handled by composable
+  }
+}
+
+async function handleHelpful(id: string) {
+  await $fetch(`/api/products/${PRODUCT_SLUG}/reviews/${id}/helpful`, {
+    method: "POST",
+  });
+  await refreshReviews();
 }
 
 definePageMeta({
@@ -485,7 +598,7 @@ defineOgImage("UniOgImage", {
           </div>
           <div class="bg-base-300 flex items-center justify-center p-4">
             <NuxtImg
-              src="/images/solar-network/screenshots/polls.webp"
+              src="/images/solar-network/screenshots/surveys.webp"
               class="rounded-xl shadow-lg w-full max-w-md"
               alt="Polls"
             />
@@ -609,6 +722,34 @@ defineOgImage("UniOgImage", {
             <p class="opacity-80 leading-relaxed">
               {{ t("solarNetwork.features.presences.desc") }}
             </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Featured: Developer Hub -->
+      <div class="card bg-base-200 overflow-hidden mb-8">
+        <div class="grid md:grid-cols-2 gap-0">
+          <div class="p-8 md:p-10 flex flex-col justify-center">
+            <div class="flex items-center gap-3 mb-4">
+              <div
+                class="w-12 h-12 rounded-xl bg-primary/20 flex items-center justify-center"
+              >
+                <Code class="w-6 h-6 text-primary" />
+              </div>
+              <h3 class="text-2xl font-bold text-primary">
+                {{ t("solarNetwork.features.developerHub.title") }}
+              </h3>
+            </div>
+            <p class="opacity-80 leading-relaxed">
+              {{ t("solarNetwork.features.developerHub.desc") }}
+            </p>
+          </div>
+          <div class="bg-base-300 flex items-center justify-center p-4">
+            <NuxtImg
+              src="/images/solar-network/screenshots/developer-hub.webp"
+              class="rounded-xl shadow-lg w-full max-w-md"
+              alt="Developer Hub"
+            />
           </div>
         </div>
       </div>
@@ -789,6 +930,45 @@ defineOgImage("UniOgImage", {
     </section>
 
     <div class="divider"></div>
+
+    <!-- Releases Section -->
+    <section v-if="releases.length > 0" class="container mx-auto px-4 py-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold flex items-center gap-2">
+          <History class="w-5 h-5 text-primary" />
+          {{ t("releases.title") }}
+        </h2>
+        <button
+          v-if="releases.length > 1"
+          class="btn btn-sm btn-ghost gap-1"
+          @click="showAllReleases = !showAllReleases"
+        >
+          {{ showAllReleases ? "Collapse" : t("releases.all") }}
+          <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
+          <ChevronDown v-else class="w-4 h-4" />
+        </button>
+      </div>
+
+      <ReleaseCard
+        v-if="latest && !showAllReleases"
+        :version="latest.version"
+        :title="latest.title"
+        :released-at="latest.releasedAt"
+        :changelog="latest.changelog"
+        :download-url="latest.downloadUrl"
+        :github-release-url="latest.githubReleaseUrl"
+        :is-prerelease="latest.isPrerelease"
+      />
+
+      <ReleaseTimeline
+        v-else-if="showAllReleases && releases.length > 0"
+        :releases="releases"
+      />
+
+      <div v-if="!latest && !releasesLoading" class="text-center py-4">
+        <p class="opacity-60">{{ t("releases.noReleases") }}</p>
+      </div>
+    </section>
 
     <!-- Download -->
     <section id="download" class="container mx-auto px-4 py-16">
@@ -1120,6 +1300,72 @@ defineOgImage("UniOgImage", {
     </section>
 
     <div class="divider"></div>
+
+    <!-- Reviews Section -->
+    <section class="container mx-auto px-4 py-8">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-2xl font-bold flex items-center gap-2">
+          <MessageSquare class="w-5 h-5 text-primary" />
+          {{ t("reviews.title") }}
+        </h2>
+      </div>
+
+      <ReviewSummary
+        v-if="summary"
+        :average="summary.average"
+        :count="summary.count"
+        :distribution="{
+          fiveStar: summary.fiveStar,
+          fourStar: summary.fourStar,
+          threeStar: summary.threeStar,
+          twoStar: summary.twoStar,
+          oneStar: summary.oneStar,
+        }"
+        class="mb-6"
+      />
+
+      <div v-if="!myReviewLoading" class="mb-6">
+        <ReviewForm
+          v-model="reviewForm"
+          v-model:open="reviewFormOpen"
+          :submitting="submitting"
+          :existing-review="!!myReview"
+          @submit="handleSubmitReview"
+          @delete="handleDeleteReview"
+        >
+          <template #trigger>
+            <span
+              v-if="!myReview"
+              class="btn btn-primary btn-sm gap-2"
+              @click="openReviewForm"
+            >
+              <Star class="w-4 h-4" />
+              {{ t("reviews.writeReview") }}
+            </span>
+            <span
+              v-else
+              class="btn btn-outline btn-sm gap-2"
+              @click="openReviewForm"
+            >
+              <Star class="w-4 h-4" />
+              {{ t("reviews.editReview") }}
+            </span>
+          </template>
+        </ReviewForm>
+      </div>
+
+      <ReviewList
+        :reviews="reviews"
+        :sort="sort"
+        :loading="reviewsLoading"
+        :page="page"
+        :total-pages="totalPages"
+        @update:sort="setSort"
+        @helpful="handleHelpful"
+        @next-page="nextPage"
+        @prev-page="prevPage"
+      />
+    </section>
 
     <!-- Help -->
     <section class="container mx-auto px-4 py-16">

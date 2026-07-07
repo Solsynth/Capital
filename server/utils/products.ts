@@ -1,5 +1,5 @@
 import { db } from "#server/utils/db"
-import { productRelease, productReview } from "#server/db"
+import { productRelease, productReview, user } from "#server/db"
 import { and, desc, eq, sql } from "drizzle-orm"
 
 // ==================== Product Releases ====================
@@ -255,4 +255,57 @@ export async function markHelpful(reviewId: string) {
     .returning()
 
   return review
+}
+
+export interface AdminReviewFilters {
+  status?: string
+  slug?: string
+  limit?: number
+  offset?: number
+}
+
+export async function getAllReviews(opts?: AdminReviewFilters) {
+  const limit = opts?.limit ?? 25
+  const offset = opts?.offset ?? 0
+
+  const conditions = []
+  if (opts?.status && opts.status !== "all") {
+    conditions.push(eq(productReview.status, opts.status))
+  }
+  if (opts?.slug) {
+    conditions.push(eq(productReview.slug, opts.slug))
+  }
+
+  const whereClause = conditions.length > 0 ? and(...conditions) : undefined
+
+  const rows = await db
+    .select({
+      id: productReview.id,
+      slug: productReview.slug,
+      userId: productReview.userId,
+      rating: productReview.rating,
+      title: productReview.title,
+      content: productReview.content,
+      isRecommended: productReview.isRecommended,
+      helpfulCount: productReview.helpfulCount,
+      status: productReview.status,
+      createdAt: productReview.createdAt,
+      updatedAt: productReview.updatedAt,
+      userName: user.name,
+      userEmail: user.email,
+      userImage: user.image,
+    })
+    .from(productReview)
+    .leftJoin(user, eq(productReview.userId, user.id))
+    .where(whereClause)
+    .orderBy(desc(productReview.createdAt))
+    .limit(limit)
+    .offset(offset)
+
+  const [countResult] = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(productReview)
+    .where(whereClause)
+
+  return { reviews: rows, total: countResult?.count ?? 0 }
 }

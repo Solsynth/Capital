@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Send } from "@lucide/vue"
+import { ArrowLeft, Send, Plus, Trash2 } from "@lucide/vue"
 import { ref } from "vue"
 
 definePageMeta({
@@ -19,11 +19,34 @@ const { data: product } = await useAsyncData(`admin-product-new-${slug.value}`, 
   return p
 })
 
+interface Artifact {
+  id: string
+  name: string
+  platform: string
+  url: string
+  fileSize: string
+}
+
+const artifacts = ref<Artifact[]>([])
+
+function addArtifact() {
+  artifacts.value.push({
+    id: crypto.randomUUID(),
+    name: "",
+    platform: "",
+    url: "",
+    fileSize: "",
+  })
+}
+
+function removeArtifact(id: string) {
+  artifacts.value = artifacts.value.filter((a) => a.id !== id)
+}
+
 const form = ref({
   version: "",
   title: "",
   changelog: "",
-  downloadUrl: "",
   isPrerelease: false,
   syncToGithub: true,
   releasedAt: new Date().toISOString().split("T")[0],
@@ -38,21 +61,28 @@ async function handleSubmit() {
     return
   }
 
+  const validArtifacts = artifacts.value.filter((a) => a.platform && a.url)
+
   submitting.value = true
   error.value = null
 
   try {
-    const body = await $fetch(`/api/products/${slug.value}/releases`, {
+    await $fetch(`/api/products/${slug.value}/releases`, {
       method: "POST",
       body: {
         version: form.value.version,
         title: form.value.title || undefined,
         changelog: form.value.changelog,
-        downloadUrl: form.value.downloadUrl || undefined,
         isPrerelease: form.value.isPrerelease,
         syncToGithub: form.value.syncToGithub,
         releasedAt: new Date(form.value.releasedAt).toISOString(),
         githubRepo: product.value?.githubRepo || product.value?.repo,
+        artifacts: validArtifacts.map((a) => ({
+          name: a.name || undefined,
+          platform: a.platform,
+          url: a.url,
+          fileSize: a.fileSize || undefined,
+        })),
       },
     })
 
@@ -66,7 +96,7 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div class="max-w-2xl">
+  <div class="max-w-5xl">
     <div class="mb-6">
       <button
         class="btn btn-ghost btn-sm gap-1 mb-4"
@@ -84,11 +114,8 @@ async function handleSubmit() {
     </div>
 
     <form class="space-y-4" @submit.prevent="handleSubmit">
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text font-medium">Version <span class="text-error">*</span></span>
-          <span class="label-text-alt">e.g. 1.2.0</span>
-        </label>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Version <span class="text-error">*</span></legend>
         <input
           v-model="form.version"
           type="text"
@@ -96,77 +123,144 @@ async function handleSubmit() {
           class="input input-bordered"
           required
         />
-      </div>
+        <p class="label">e.g. 1.2.0</p>
+      </fieldset>
 
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text font-medium">Title</span>
-        </label>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Title</legend>
         <input
           v-model="form.title"
           type="text"
           placeholder="Release title (optional)"
           class="input input-bordered"
         />
-      </div>
+      </fieldset>
 
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text font-medium">Release Date <span class="text-error">*</span></span>
-        </label>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Release Date <span class="text-error">*</span></legend>
         <input
           v-model="form.releasedAt"
           type="date"
           class="input input-bordered"
           required
         />
-      </div>
+      </fieldset>
 
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text font-medium">Changelog</span>
-        </label>
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Changelog</legend>
         <textarea
           v-model="form.changelog"
           placeholder="## What's Changed&#10;&#10;- Feature A&#10;- Bug fix B&#10;&#10;**Full Changelog**: v1.1.0...v1.2.0"
           class="textarea textarea-bordered h-40"
         />
-      </div>
+      </fieldset>
 
-      <div class="form-control">
-        <label class="label">
-          <span class="label-text font-medium">Download URL</span>
-        </label>
-        <input
-          v-model="form.downloadUrl"
-          type="url"
-          placeholder="https://..."
-          class="input input-bordered"
-        />
-      </div>
-
-      <div class="flex items-center gap-6">
-        <label class="label cursor-pointer gap-2">
-          <input
-            v-model="form.isPrerelease"
-            type="checkbox"
-            class="checkbox checkbox-sm checkbox-warning"
-          />
-          <span class="label-text">Pre-release</span>
-        </label>
-
-        <label
-          v-if="product?.githubRepo || product?.repo"
-          class="label cursor-pointer gap-2"
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Artifacts</legend>
+        <button
+          type="button"
+          class="btn btn-ghost btn-xs gap-1 mb-2 self-start"
+          @click="addArtifact"
         >
-          <input
-            v-model="form.syncToGithub"
-            type="checkbox"
-            class="checkbox checkbox-sm checkbox-primary"
-          />
-          <span class="label-text">{{ t("admin.products.syncToGithub") }}</span>
-        </label>
-      </div>
+          <Plus class="w-3 h-3" />
+          Add Artifact
+        </button>
+
+        <div v-if="artifacts.length > 0" class="overflow-x-auto">
+          <table class="table table-sm table-zebra">
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Platform</th>
+                <th>Download URL</th>
+                <th>File Size</th>
+                <th class="w-10"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="artifact in artifacts" :key="artifact.id">
+                <td>
+                  <input
+                    v-model="artifact.name"
+                    type="text"
+                    placeholder="e.g. Installer, DMG"
+                    class="input input-bordered input-sm w-full min-w-32"
+                  />
+                </td>
+                <td>
+                  <input
+                    v-model="artifact.platform"
+                    type="text"
+                    placeholder="e.g. macOS, Windows"
+                    class="input input-bordered input-sm w-full min-w-28"
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    v-model="artifact.url"
+                    type="url"
+                    placeholder="https://..."
+                    class="input input-bordered input-sm w-full min-w-48"
+                    required
+                  />
+                </td>
+                <td>
+                  <input
+                    v-model="artifact.fileSize"
+                    type="text"
+                    placeholder="e.g. 12.5 MB"
+                    class="input input-bordered input-sm w-24"
+                  />
+                </td>
+                <td>
+                  <button
+                    type="button"
+                    class="btn btn-ghost btn-xs text-error"
+                    @click="removeArtifact(artifact.id)"
+                  >
+                    <Trash2 class="w-3.5 h-3.5" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <p v-else class="label">
+          No artifacts defined. Click "Add Artifact" to add platform-specific download links.
+        </p>
+
+        <p class="label">
+          Platform values are dynamic — use any identifier (e.g. macOS, Windows, Linux, iOS, Android).
+        </p>
+      </fieldset>
+
+      <fieldset class="fieldset">
+        <legend class="fieldset-legend">Options</legend>
+        <div class="flex items-center gap-6">
+          <label class="label cursor-pointer gap-2">
+            <input
+              v-model="form.isPrerelease"
+              type="checkbox"
+              class="checkbox checkbox-sm checkbox-warning"
+            />
+            <span class="label-text">Pre-release</span>
+          </label>
+
+          <label
+            v-if="product?.githubRepo || product?.repo"
+            class="label cursor-pointer gap-2"
+          >
+            <input
+              v-model="form.syncToGithub"
+              type="checkbox"
+              class="checkbox checkbox-sm checkbox-primary"
+            />
+            <span class="label-text">{{ t("admin.products.syncToGithub") }}</span>
+          </label>
+        </div>
+      </fieldset>
 
       <div class="flex gap-2 pt-4">
         <button

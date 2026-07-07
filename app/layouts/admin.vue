@@ -11,6 +11,7 @@ import {
   FileCheck,
   Trophy,
   Package,
+  MessageSquare,
 } from "@lucide/vue";
 
 const { t } = useI18n();
@@ -87,6 +88,11 @@ const navSections = computed<NavSection[]>(() => [
         icon: Package,
         label: t("admin.products.title"),
         to: "/admin/products",
+      },
+      {
+        icon: MessageSquare,
+        label: "Reviews",
+        to: "/admin/reviews",
       },
     ],
   },

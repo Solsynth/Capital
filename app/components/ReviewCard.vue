@@ -82,7 +82,7 @@ const formattedDate = computed(() => {
       </div>
     </div>
 
-    <div class="flex items-center gap-3 pt-2 border-t border-base-100">
+    <div class="flex items-center gap-3 pt-2 border-t border-base-200">
       <button
         class="btn btn-ghost btn-xs gap-1.5 opacity-60 hover:opacity-100"
         @click="emit('helpful', id)"

@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import { Star } from "@lucide/vue"
 import StarRating from "./StarRating.vue"
 
 interface Props {
@@ -42,42 +41,32 @@ const distributionBars = computed(() => {
 </script>
 
 <template>
-  <div class="card bg-base-100 border border-base-200">
-    <div class="card-body p-6">
-      <h3 class="card-title text-lg mb-4">{{ t("reviews.title") }}</h3>
-
-      <div v-if="count === 0" class="text-center py-4">
-        <p class="opacity-60">{{ t("reviews.noReviews") }}</p>
+  <div class="max-w-md bg-base-200/50 rounded-xl p-5">
+    <div class="flex items-start gap-5">
+      <div class="flex flex-col items-center shrink-0">
+        <span class="text-4xl font-bold leading-none tabular-nums">
+          {{ Number(average ?? 0).toFixed(1) }}
+        </span>
+        <StarRating :model-value="average" size="sm" readonly class="my-1.5" />
+        <span class="text-xs opacity-50">
+          {{ count }} {{ count === 1 ? "review" : "reviews" }}
+        </span>
       </div>
 
-      <div v-else class="flex flex-col md:flex-row gap-6">
-        <!-- Big average number -->
-        <div class="flex flex-col items-center justify-center min-w-[120px]">
-          <span class="text-5xl font-bold text-primary mb-1">
-            {{ average.toFixed(1) }}
-          </span>
-          <StarRating :model-value="average" size="sm" readonly class="mb-1" />
-          <span class="text-sm opacity-60">
-            {{ t("reviews.summary.count", { count }) }}
-          </span>
-        </div>
-
-        <!-- Distribution bars -->
-        <div class="flex-1 space-y-1.5">
-          <div
-            v-for="bar in distributionBars"
-            :key="bar.star"
-            class="flex items-center gap-2"
-          >
-            <span class="text-xs opacity-60 w-8 text-right">{{ bar.star }}★</span>
-            <div class="flex-1 h-2 bg-base-200 rounded-full overflow-hidden">
-              <div
-                class="h-full bg-warning rounded-full transition-all duration-300"
-                :style="{ width: `${bar.pct}%` }"
-              />
-            </div>
-            <span class="text-xs opacity-50 w-6 text-right">{{ bar.count }}</span>
+      <div class="flex-1 space-y-1 min-w-0">
+        <div
+          v-for="bar in distributionBars"
+          :key="bar.star"
+          class="flex items-center gap-1.5"
+        >
+          <span class="text-xs opacity-50 w-3 text-right tabular-nums">{{ bar.star }}</span>
+          <div class="flex-1 h-2 bg-base-300 rounded-full overflow-hidden">
+            <div
+              class="h-full bg-warning rounded-full transition-all duration-500"
+              :style="{ width: `${bar.pct}%` }"
+            />
           </div>
+          <span class="text-xs opacity-40 w-5 text-right tabular-nums">{{ bar.count }}</span>
         </div>
       </div>
     </div>

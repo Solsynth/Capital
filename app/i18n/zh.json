@@ -3,6 +3,8 @@
   "banner.tagline": "值得信赖的更新和产品公告",
   "banner.howToKnow": "如何辨别？",
   "banner.hide": "收起",
+  "yes": "是",
+  "no": "否",
   "banner.officialUpdates": "官方 Solsynth 更新",
   "banner.officialUpdatesDesc": "这些更新来自 solsynth.dev 的 Solsynth 团队。",
   "banner.secureConnection": "安全的 Solsynth 页面使用 HTTPS",
@@ -276,6 +278,8 @@
   "solarNetwork.features.eventCalendar.desc": "在精美的日历视图中查看所有即将到来的活动。提前规划，用可视化概览掌控未来日程。",
   "solarNetwork.features.presences.title": "在线状态",
   "solarNetwork.features.presences.desc": "分享你此刻的状态。展示你正在听的音乐、玩的游戏或在做的事情——记录你日常生活的生动瞬间。",
+  "solarNetwork.features.developerHub.title": "开发者中心",
+  "solarNetwork.features.developerHub.desc": "为开发者打造的专属空间，助你在 Solar Network 上进行构建。访问完整的 API 文档，探索 SDK 和库，注册 OAuth 应用，管理你的集成。通过详细的分析数据监控 API 使用情况，并接收平台更新通知。",
   "solarNetwork.aboutCard.peaceful.title": "宁静和谐",
   "solarNetwork.aboutCard.peaceful.desc": "一个远离喧嚣的社交空间，让你能够专注于真正重要的东西——与志同道合的人建立联系。在这里，你可以安静地分享自己的生活，无需担心噪音和信息过载。",
   "solarNetwork.aboutCard.developer.title": "开发者友好",
@@ -653,7 +657,11 @@
     "sortBy": "排序方式",
     "sortNewest": "最新",
     "sortHelpful": "最有帮助",
-    "loginRequired": "登录后才能撰写评价"
+    "loginRequired": "登录后才能撰写评价",
+    "shareExperience": "分享你使用这款产品的体验。",
+    "recommend": "推荐这个产品吗？",
+    "title_placeholder": "给评价一个简短的标题",
+    "content_placeholder": "分享你的详细体验"
   },
   "admin": {
     "nav": {

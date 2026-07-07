@@ -45,24 +45,22 @@ const { t } = useI18n()
 <template>
   <div>
     <!-- Sort controls -->
-    <div v-if="reviews.length > 0" class="flex items-center justify-between mb-4">
-      <span class="text-sm opacity-60">{{ t("reviews.sortBy") }}</span>
-      <div class="btn-group">
-        <button
-          class="btn btn-xs"
-          :class="sort === 'newest' ? 'btn-active' : 'btn-ghost'"
-          @click="emit('update:sort', 'newest')"
-        >
-          {{ t("reviews.sortNewest") }}
-        </button>
-        <button
-          class="btn btn-xs"
-          :class="sort === 'helpful' ? 'btn-active' : 'btn-ghost'"
-          @click="emit('update:sort', 'helpful')"
-        >
-          {{ t("reviews.sortHelpful") }}
-        </button>
-      </div>
+    <div v-if="reviews.length > 0" class="flex items-center gap-2 mb-4">
+      <span class="text-xs opacity-50 mr-1">{{ t("reviews.sortBy") }}</span>
+      <button
+        class="text-xs px-2.5 py-1 rounded-md transition-colors font-medium"
+        :class="sort === 'newest' ? 'bg-primary/15 text-primary' : 'opacity-50 hover:opacity-80'"
+        @click="emit('update:sort', 'newest')"
+      >
+        {{ t("reviews.sortNewest") }}
+      </button>
+      <button
+        class="text-xs px-2.5 py-1 rounded-md transition-colors font-medium"
+        :class="sort === 'helpful' ? 'bg-primary/15 text-primary' : 'opacity-50 hover:opacity-80'"
+        @click="emit('update:sort', 'helpful')"
+      >
+        {{ t("reviews.sortHelpful") }}
+      </button>
     </div>
 
     <!-- Loading state -->

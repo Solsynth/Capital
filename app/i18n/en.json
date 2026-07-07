@@ -3,6 +3,8 @@
   "banner.tagline": "Trusted updates and product announcements",
   "banner.howToKnow": "How do you know?",
   "banner.hide": "Hide",
+  "yes": "Yes",
+  "no": "No",
   "banner.officialUpdates": "Official Solsynth updates",
   "banner.officialUpdatesDesc": "These updates come from the Solsynth team at solsynth.dev.",
   "banner.secureConnection": "Secure Solsynth pages use HTTPS",
@@ -276,6 +278,8 @@
   "solarNetwork.features.eventCalendar.desc": "Visualize your schedule in a beautiful calendar interface. See all upcoming events, set reminders, and plan ahead with day, week, and month views. Sync with external calendars and share availability with friends for easy event planning.",
   "solarNetwork.features.presences.title": "Profile Presences",
   "solarNetwork.features.presences.desc": "Show the world what you're up to right now. Display the music you're listening to, the game you're playing, your current mood, or what you're working on. Rich presence integrations with Spotify, Steam, and other services make your profile come alive.",
+  "solarNetwork.features.developerHub.title": "Developer Hub",
+  "solarNetwork.features.developerHub.desc": "A dedicated space for developers to build on Solar Network. Access comprehensive API documentation, explore SDKs and libraries, register OAuth applications, and manage your integrations. Monitor API usage with detailed analytics and get notified of platform updates.",
   "solarNetwork.aboutCard.peaceful.title": "Peaceful & Harmonious",
   "solarNetwork.aboutCard.peaceful.desc": "A social space away from the noise, letting you focus on what truly matters—connecting with like-minded people. Here you can quietly share your life without worrying about noise and information overload.",
   "solarNetwork.aboutCard.developer.title": "Developer Friendly",
@@ -653,7 +657,11 @@
     "sortBy": "Sort by",
     "sortNewest": "Newest",
     "sortHelpful": "Most Helpful",
-    "loginRequired": "Log in to write a review"
+    "loginRequired": "Log in to write a review",
+    "shareExperience": "Share your experience with this product.",
+    "recommend": "Recommend this product?",
+    "title_placeholder": "A brief headline for your review",
+    "content_placeholder": "Share your detailed experience"
   },
   "admin": {
     "nav": {

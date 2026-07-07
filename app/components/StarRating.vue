@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from "vue"
+import { computed, ref } from "vue"
 import { Star, StarHalf } from "@lucide/vue"
 
 interface Props {
@@ -20,19 +20,26 @@ const emit = defineEmits<{
   "update:modelValue": [value: number]
 }>()
 
+const hoverRating = ref(0)
+
 const starSize = computed(() => {
   switch (props.size) {
     case "xs": return "w-3 h-3"
     case "sm": return "w-4 h-4"
     case "md": return "w-5 h-5"
-    case "lg": return "w-7 h-7"
+    case "lg": return "w-6 h-6"
     default: return "w-4 h-4"
   }
 })
 
+const displayRating = computed(() =>
+  hoverRating.value > 0 ? hoverRating.value : props.modelValue
+)
+
 const stars = computed(() => {
-  const full = Math.floor(props.modelValue)
-  const half = props.modelValue - full >= 0.5 ? 1 : 0
+  const val = displayRating.value
+  const full = Math.floor(val)
+  const half = val - full >= 0.5 ? 1 : 0
   const empty = 5 - full - half
   return { full, half, empty }
 })
@@ -45,52 +52,38 @@ function setRating(value: number) {
 </script>
 
 <template>
-  <div class="flex items-center gap-0.5">
-    <!-- Full stars -->
+  <div class="flex items-center gap-1">
     <button
-      v-for="i in stars.full"
-      :key="`full-${i}`"
+      v-for="i in 5"
+      :key="i"
       type="button"
       :class="[
         starSize,
-        interactive ? 'cursor-pointer hover:scale-110 transition-transform' : 'cursor-default',
-        'text-warning',
+        'p-0 flex items-center justify-center',
+        interactive ? 'cursor-pointer transition-transform hover:scale-110' : 'cursor-default',
+        i <= stars.full ? 'text-warning' : 'text-base-300',
       ]"
       :disabled="!interactive"
+      :style="interactive ? 'outline: none' : ''"
       @click="setRating(i)"
+      @mouseenter="interactive && (hoverRating = i)"
+      @mouseleave="interactive && (hoverRating = 0)"
     >
-      <Star class="fill-warning" />
-    </button>
-
-    <!-- Half star -->
-    <button
-      v-if="stars.half"
-      key="half"
-      type="button"
-      :class="[
-        starSize,
-        interactive ? 'cursor-pointer hover:scale-110 transition-transform' : 'cursor-default',
-      ]"
-      :disabled="!interactive"
-      @click="setRating(stars.full + 1)"
-    >
-      <StarHalf class="text-warning fill-warning/50" />
-    </button>
-
-    <!-- Empty stars -->
-    <button
-      v-for="i in stars.empty"
-      :key="`empty-${i}`"
-      type="button"
-      :class="[
-        starSize,
-        interactive ? 'cursor-pointer hover:scale-110 transition-transform' : 'cursor-default',
-        'text-base-300',
-      ]"
-      :disabled="!interactive"
-      @click="setRating(stars.full + stars.half + i)"
-    >
-      <Star />
+      <Star
+        v-if="i <= stars.full"
+        class="fill-warning transition-colors"
+        :class="starSize"
+      />
+      <StarHalf
+        v-else-if="i === stars.full + 1 && stars.half"
+        class="text-warning fill-warning/50"
+        :class="starSize"
+      />
+      <Star
+        v-else
+        class="transition-colors"
+        :class="[starSize, interactive && i <= hoverRating ? 'text-warning' : '']"
+      />
     </button>
   </div>
 </template>

@@ -92,6 +92,11 @@ async function handleDeleteReview() {
   }
 }
 
+async function handleHelpful(id: string) {
+  await $fetch(`/api/products/${slug}/reviews/${id}/helpful`, { method: "POST" })
+  await refreshReviews()
+}
+
 function openReviewForm() {
   if (myReview.value) {
     reviewForm.value = {
@@ -671,35 +676,35 @@ useSchemaOrg([
         class="mb-6"
       />
 
-      <!-- Write Review Form (authenticated users) -->
-      <div v-if="reviewFormOpen" class="mb-6">
+      <!-- Write Review Form -->
+      <div v-if="!myReviewLoading" class="mb-6">
         <ReviewForm
           v-model="reviewForm"
+          v-model:open="reviewFormOpen"
           :submitting="submitting"
           :existing-review="!!myReview"
           @submit="handleSubmitReview"
           @delete="handleDeleteReview"
-          @cancel="reviewFormOpen = false"
-        />
-      </div>
-
-      <div v-else-if="!myReviewLoading" class="mb-6">
-        <button
-          v-if="!myReview"
-          class="btn btn-primary btn-sm gap-2"
-          @click="openReviewForm"
         >
-          <MessageSquare class="w-4 h-4" />
-          {{ t("reviews.writeReview") }}
-        </button>
-        <button
-          v-else
-          class="btn btn-outline btn-sm gap-2"
-          @click="openReviewForm"
-        >
-          <MessageSquare class="w-4 h-4" />
-          {{ t("reviews.editReview") }}
-        </button>
+          <template #trigger>
+            <span
+              v-if="!myReview"
+              class="btn btn-primary btn-sm gap-2"
+              @click="openReviewForm"
+            >
+              <MessageSquare class="w-4 h-4" />
+              {{ t("reviews.writeReview") }}
+            </span>
+            <span
+              v-else
+              class="btn btn-outline btn-sm gap-2"
+              @click="openReviewForm"
+            >
+              <MessageSquare class="w-4 h-4" />
+              {{ t("reviews.editReview") }}
+            </span>
+          </template>
+        </ReviewForm>
       </div>
 
       <!-- Reviews List -->
@@ -710,7 +715,7 @@ useSchemaOrg([
         :page="page"
         :total-pages="totalPages"
         @update:sort="setSort"
-        @helpful="$fetch(`/api/products/${slug}/reviews/${$event}/helpful`, { method: 'POST' }); refreshReviews()"
+        @helpful="handleHelpful"
         @next-page="nextPage"
         @prev-page="prevPage"
       />
