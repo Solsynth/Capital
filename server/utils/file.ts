@@ -13,8 +13,8 @@ export async function markFilesUsed(fileIds: (string | null | undefined)[]): Pro
 
   await db.update(file)
     .set({
-      usedAt: sql`(cast(unixepoch('subsecond') * 1000 as integer))`,
-      updatedAt: sql`(cast(unixepoch('subsecond') * 1000 as integer))`,
+      usedAt: sql`(cast(extract(epoch from clock_timestamp()) * 1000 as bigint))`,
+      updatedAt: sql`(cast(extract(epoch from clock_timestamp()) * 1000 as bigint))`,
     })
     .where(inArray(file.id, ids))
 }

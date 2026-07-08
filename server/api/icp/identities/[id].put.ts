@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
         description: body.description || null,
         icon: body.icon || null,
         iconFileId: body.iconFileId || null,
-        updatedAt: sql`(cast(unixepoch('subsecond') * 1000 as integer))`,
+        updatedAt: sql`(cast(extract(epoch from clock_timestamp()) * 1000 as bigint))`,
       })
       .where(eq(icpIdentity.id, id))
 
