@@ -673,6 +673,35 @@
       "addRelease": "添加版本",
       "reviews": "评价管理",
       "syncToGithub": "同步到 GitHub"
+    },
+    "submissions": {
+      "title": "提交管理",
+      "all": "全部",
+      "noSubmissions": "暂无提交",
+      "selectHint": "选择一个提交查看详情",
+      "actionFailed": "操作失败",
+      "deleteFailed": "删除失败",
+      "siteIcon": "站点图标",
+      "identityId": "备案主体 ID",
+      "includesNewIcon": "包含新图标",
+      "submittedBy": "提交者",
+      "reviewNotePlaceholder": "可选：添加审核备注...",
+      "approve": "通过",
+      "reject": "拒绝",
+      "siteManagement": "站点管理",
+      "fillingNo": "备案号",
+      "associatedIdentity": "关联主体",
+      "selectIdentity": "-- 选择主体 --",
+      "none": "未关联",
+      "unknown": "未知",
+      "confirmDeleteSite": "确认删除站点",
+      "deleteSiteWarning": "确定要删除此站点吗？相关提交的站点关联将被清除。此操作不可撤销。",
+      "confirmDeleteIdentity": "确认删除身份",
+      "deleteIdentityWarning": "确定要删除此身份吗？如果该身份仍有关联站点，删除将失败。此操作不可撤销。",
+      "org": "组织",
+      "ind": "个人",
+      "createType": "新建",
+      "updateType": "更新"
     }
   }
 }

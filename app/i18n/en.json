@@ -673,6 +673,35 @@
       "addRelease": "Add Release",
       "reviews": "Reviews",
       "syncToGithub": "Sync to GitHub"
+    },
+    "submissions": {
+      "title": "Submissions",
+      "all": "All",
+      "noSubmissions": "No submissions",
+      "selectHint": "Select a submission to view details",
+      "actionFailed": "Action failed",
+      "deleteFailed": "Delete failed",
+      "siteIcon": "Site Icon",
+      "identityId": "Identity ID",
+      "includesNewIcon": "Includes new icon",
+      "submittedBy": "Submitted by",
+      "reviewNotePlaceholder": "Optional: Add a review note...",
+      "approve": "Approve",
+      "reject": "Reject",
+      "siteManagement": "Site Management",
+      "fillingNo": "Filling No",
+      "associatedIdentity": "Associated Identity",
+      "selectIdentity": "-- Select Identity --",
+      "none": "None",
+      "unknown": "Unknown",
+      "confirmDeleteSite": "Confirm Delete Site",
+      "deleteSiteWarning": "Are you sure you want to delete this site? Submission associations will be cleared. This cannot be undone.",
+      "confirmDeleteIdentity": "Confirm Delete Identity",
+      "deleteIdentityWarning": "Are you sure you want to delete this identity? Deletion will fail if sites are still associated. This cannot be undone.",
+      "org": "Org",
+      "ind": "Ind",
+      "createType": "Create",
+      "updateType": "Update"
     }
   }
 }
