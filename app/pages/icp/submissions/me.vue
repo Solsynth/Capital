@@ -8,7 +8,7 @@ import {
   Plus,
 } from '@lucide/vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
 
 definePageMeta({
@@ -154,7 +154,7 @@ function getTypeLabel(type: string) {
         </div>
 
         <div class="text-sm opacity-60 mb-4">
-          <p>{{ t('royIcp.mySubmissions.submitted') }}: {{ new Date(sub.created).toLocaleDateString() }}</p>
+          <p>{{ t('royIcp.mySubmissions.submitted') }}: {{ new Date(sub.created).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US') }}</p>
         </div>
 
         <div v-if="sub.data.description" class="mb-4">

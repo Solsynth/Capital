@@ -6,8 +6,7 @@ import {
   Globe,
   CircleQuestionMark,
   Plus,
-  Shield,
-  User,
+  FileText,
 } from '@lucide/vue'
 
 const { t, locale } = useI18n()
@@ -118,6 +117,23 @@ async function fetchSearch(raw: string) {
         </NuxtLink>
       </div>
 
+      <div class="flex items-center justify-center gap-3 mb-6">
+        <NuxtLink
+          :to="localePath('/icp/submissions/me')"
+          class="btn btn-outline btn-sm"
+        >
+          <FileText class="w-4 h-4 mr-1" />
+          {{ t('royIcp.mySubmissions.title') }}
+        </NuxtLink>
+        <NuxtLink
+          :to="localePath('/icp/submit')"
+          class="btn btn-primary btn-sm"
+        >
+          <Plus class="w-4 h-4 mr-1" />
+          {{ t('royIcp.mySubmissions.submitNew') }}
+        </NuxtLink>
+      </div>
+
       <div class="relative max-w-md mx-auto mb-6">
         <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 opacity-50" />
         <input
@@ -141,7 +157,7 @@ async function fetchSearch(raw: string) {
       <div v-if="allSites.length === 0 && !searchQuery.trim()" class="card bg-base-200 p-12 text-center">
         <Globe class="w-16 h-16 mx-auto mb-4 opacity-30" />
         <p class="text-lg opacity-60">
-          {{ emptyText }}
+          {{ t('royIcp.directory.empty') }}
         </p>
       </div>
 
@@ -184,7 +200,7 @@ async function fetchSearch(raw: string) {
           <div v-else class="card bg-base-200 p-12 text-center">
             <Globe class="w-16 h-16 mx-auto mb-4 opacity-30" />
             <p class="text-lg opacity-60">
-              {{ emptyText }}
+              {{ t('royIcp.directory.empty') }}
             </p>
           </div>
         </div>
