@@ -8,6 +8,7 @@ import {
   Link,
   ExternalLink,
   ArrowLeftRight,
+  MoreHorizontal,
 } from '@lucide/vue'
 
 const { t, locale } = useI18n()
@@ -303,6 +304,27 @@ function getTypeLabel(type: string) {
             <p>{{ sub.user.name || sub.user.email }}</p>
             <p>{{ new Date(sub.created).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US') }}</p>
           </div>
+          <!-- Quick actions on list cards -->
+          <div v-if="sub.site_id || sub.data.identity_id" class="flex gap-1 mt-2 pt-2 border-t border-base-content/10" @click.stop>
+            <button
+              v-if="sub.site_id"
+              class="btn btn-ghost btn-xs text-error"
+              :title="t('admin.submissions.deleteSiteWarning')"
+              @click="selectSubmission(sub); deletingSiteId = sub.site_id"
+            >
+              <Trash2 class="w-3 h-3 mr-1" />
+              {{ t('reviews.delete') }} {{ t('admin.nav.sites') }}
+            </button>
+            <button
+              v-if="sub.data.identity_id"
+              class="btn btn-ghost btn-xs text-error"
+              :title="t('admin.submissions.deleteIdentityWarning')"
+              @click="selectSubmission(sub); deletingIdentityId = sub.data.identity_id"
+            >
+              <Trash2 class="w-3 h-3 mr-1" />
+              {{ t('reviews.delete') }} {{ t('royIcp.site.identity') }}
+            </button>
+          </div>
         </div>
 
         <div v-if="submissions.length === 0" class="card bg-base-200 p-8 text-center">
@@ -325,6 +347,91 @@ function getTypeLabel(type: string) {
               </span>
             </div>
           </div>
+
+          <!-- Site Management (for approved submissions with linked site) — shown near top -->
+          <template v-if="selectedSubmission.site_id">
+            <div class="p-4 bg-primary/5 rounded-xl mb-6 border border-primary/20">
+              <h3 class="text-sm font-bold mb-3 flex items-center gap-2">
+                <ExternalLink class="w-4 h-4" />
+                {{ t('admin.submissions.siteManagement') }}
+              </h3>
+              <div class="flex items-center justify-between gap-2">
+                <div class="min-w-0">
+                  <p class="text-sm font-bold truncate">{{ selectedSubmission.site_name || selectedSubmission.data.name }}</p>
+                  <p class="text-xs opacity-60">
+                    {{ t('admin.submissions.fillingNo') }}: {{ selectedSubmission.site_filling_no || '-' }}
+                  </p>
+                </div>
+                <div class="flex gap-1 shrink-0">
+                  <NuxtLink
+                    v-if="selectedSubmission.site_filling_no"
+                    :to="localePath(`/icp/${selectedSubmission.site_filling_no}`)"
+                    class="btn btn-ghost btn-xs"
+                  >
+                    <ExternalLink class="w-3 h-3" />
+                  </NuxtLink>
+                  <button
+                    class="btn btn-ghost btn-xs text-error"
+                    @click="deletingSiteId = selectedSubmission.site_id"
+                  >
+                    <Trash2 class="w-3.5 h-3.5 mr-1" />
+                    {{ t('reviews.delete') }}
+                  </button>
+                </div>
+              </div>
+
+              <!-- Reassign Identity inline -->
+              <div class="mt-3 pt-3 border-t border-base-content/10">
+                <div class="flex items-center gap-2 mb-2">
+                  <Link class="w-3.5 h-3.5 opacity-60" />
+                  <span class="text-xs opacity-60">{{ t('admin.submissions.associatedIdentity') }}</span>
+                </div>
+                <div v-if="reassigningSiteId === selectedSubmission.site_id" class="space-y-2">
+                  <select v-model="reassignIdentityId" class="select select-bordered select-sm w-full">
+                    <option value="">
+                      {{ t('admin.submissions.selectIdentity') }}
+                    </option>
+                    <option
+                      v-for="ident in identities"
+                      :key="ident.id"
+                      :value="ident.id"
+                    >
+                      {{ ident.name }} ({{ getIdentityTypeLabel(ident) }}) — {{ ident.user?.email || t('admin.submissions.unknown') }}
+                    </option>
+                  </select>
+                  <div class="flex gap-2">
+                    <button class="btn btn-xs" @click="resetSiteActions">
+                      {{ t('royIcp.identities.cancel') }}
+                    </button>
+                    <button
+                      class="btn btn-primary btn-xs"
+                      :disabled="isReassigning"
+                      @click="handleReassign"
+                    >
+                      <span v-if="isReassigning" class="loading loading-spinner loading-xs" />
+                      {{ t('admin.contests.save') }}
+                    </button>
+                  </div>
+                </div>
+                <div v-else class="flex items-center justify-between">
+                  <span class="text-sm">
+                    <template v-if="selectedSubmission.data.identity_id && getIdentityById(selectedSubmission.data.identity_id)">
+                      {{ getIdentityById(selectedSubmission.data.identity_id)?.name }}
+                      <span class="opacity-50 text-xs">({{ selectedSubmission.data.identity_id.slice(0, 8) }}...)</span>
+                    </template>
+                    <span v-else class="opacity-50">{{ t('admin.submissions.none') }}</span>
+                  </span>
+                  <button
+                    class="btn btn-ghost btn-xs"
+                    @click="startReassign(selectedSubmission.site_id!)"
+                  >
+                    <ArrowLeftRight class="w-3 h-3 mr-1" />
+                    {{ t('admin.submissions.selectIdentity') }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </template>
 
           <div class="space-y-4 mb-6">
             <div v-if="selectedSubmission.data.icon_url" class="flex items-center gap-4 mb-4">
@@ -362,33 +469,39 @@ function getTypeLabel(type: string) {
                 </span>
               </div>
             </div>
-            <div v-if="selectedSubmission.data.identity_id" class="flex items-center justify-between">
-              <div>
-                <label class="text-sm opacity-60">{{ t('royIcp.site.identity') }}</label>
-                <div class="flex items-center gap-2">
-                  <p class="font-mono text-sm">{{ selectedSubmission.data.identity_id }}</p>
-                  <span v-if="getIdentityById(selectedSubmission.data.identity_id)" class="text-sm opacity-60">
-                    ({{ getIdentityById(selectedSubmission.data.identity_id)?.name }})
-                  </span>
-                </div>
+          </div>
+
+          <div class="divider" />
+
+          <!-- Identity Section -->
+          <div v-if="selectedSubmission.data.identity_id" class="mb-6">
+            <label class="text-sm opacity-60">{{ t('royIcp.site.identity') }}</label>
+            <div class="flex items-center justify-between mt-1">
+              <div class="flex items-center gap-2">
+                <p class="font-mono text-sm">{{ selectedSubmission.data.identity_id }}</p>
+                <span v-if="getIdentityById(selectedSubmission.data.identity_id)" class="text-sm opacity-60">
+                  ({{ getIdentityById(selectedSubmission.data.identity_id)?.name }})
+                </span>
               </div>
               <button
                 class="btn btn-ghost btn-xs text-error"
-                @click="deletingIdentityId = selectedSubmission?.data.identity_id"
+                @click="deletingIdentityId = selectedSubmission.data.identity_id"
               >
-                <Trash2 class="w-3 h-3" />
+                <Trash2 class="w-3 h-3 mr-1" />
+                {{ t('reviews.delete') }} {{ t('royIcp.site.identity') }}
               </button>
             </div>
-            <div v-if="selectedSubmission.data.identity_name || selectedSubmission.data.identity_description || selectedSubmission.data.identity_icon_file_id" class="p-3 bg-primary/10 rounded-lg">
-              <p class="text-sm font-bold mb-2">{{ t('royIcp.mySubmissions.identityUpdates') }}</p>
-              <div v-if="selectedSubmission.data.identity_name" class="text-sm">
-                <span class="opacity-60">{{ t('royIcp.identities.name') }}:</span> {{ selectedSubmission.data.identity_name }}
-              </div>
-              <div v-if="selectedSubmission.data.identity_description" class="text-sm">
-                <span class="opacity-60">{{ t('royIcp.identities.description') }}:</span> {{ selectedSubmission.data.identity_description }}
-              </div>
-              <p v-if="selectedSubmission.data.identity_icon_file_id" class="text-sm">{{ t('admin.submissions.includesNewIcon') }}</p>
+          </div>
+
+          <div v-if="selectedSubmission.data.identity_name || selectedSubmission.data.identity_description || selectedSubmission.data.identity_icon_file_id" class="p-3 bg-primary/10 rounded-lg mb-6">
+            <p class="text-sm font-bold mb-2">{{ t('royIcp.mySubmissions.identityUpdates') }}</p>
+            <div v-if="selectedSubmission.data.identity_name" class="text-sm">
+              <span class="opacity-60">{{ t('royIcp.identities.name') }}:</span> {{ selectedSubmission.data.identity_name }}
             </div>
+            <div v-if="selectedSubmission.data.identity_description" class="text-sm">
+              <span class="opacity-60">{{ t('royIcp.identities.description') }}:</span> {{ selectedSubmission.data.identity_description }}
+            </div>
+            <p v-if="selectedSubmission.data.identity_icon_file_id" class="text-sm">{{ t('admin.submissions.includesNewIcon') }}</p>
           </div>
 
           <div class="divider" />
@@ -437,87 +550,6 @@ function getTypeLabel(type: string) {
             <label class="text-sm opacity-60">{{ t('royIcp.mySubmissions.reviewNote') }}</label>
             <p class="bg-base-300 p-3 rounded-lg mt-1">{{ selectedSubmission.review_note }}</p>
           </div>
-
-          <!-- Site Management (for approved submissions with linked site) -->
-          <template v-if="selectedSubmission.site_id">
-            <div class="divider" />
-            <div class="mt-4">
-              <h3 class="text-sm font-bold opacity-60 mb-3">{{ t('admin.submissions.siteManagement') }}</h3>
-              <div class="flex items-center justify-between gap-2 p-3 bg-base-300 rounded-lg">
-                <div class="min-w-0">
-                  <p class="text-sm font-bold truncate">{{ selectedSubmission.site_name || selectedSubmission.data.name }}</p>
-                  <p class="text-xs opacity-60">
-                    {{ t('admin.submissions.fillingNo') }}: {{ selectedSubmission.site_filling_no || '-' }}
-                  </p>
-                </div>
-                <div class="flex gap-1 shrink-0">
-                  <NuxtLink
-                    v-if="selectedSubmission.site_filling_no"
-                    :to="localePath(`/icp/${selectedSubmission.site_filling_no}`)"
-                    class="btn btn-ghost btn-xs"
-                  >
-                    <ExternalLink class="w-3 h-3" />
-                  </NuxtLink>
-                  <button
-                    class="btn btn-ghost btn-xs"
-                    @click="deletingSiteId = selectedSubmission.site_id"
-                  >
-                    <Trash2 class="w-3 h-3 text-error" />
-                  </button>
-                </div>
-              </div>
-
-              <!-- Reassign Identity -->
-              <div class="mt-3 p-3 bg-base-300 rounded-lg">
-                <div class="flex items-center gap-2 mb-2">
-                  <Link class="w-3.5 h-3.5 opacity-60" />
-                  <label class="text-sm opacity-60">{{ t('admin.submissions.associatedIdentity') }}</label>
-                </div>
-                <div v-if="reassigningSiteId === selectedSubmission.site_id" class="space-y-2">
-                  <select v-model="reassignIdentityId" class="select select-bordered select-sm w-full">
-                    <option value="">
-                      {{ t('admin.submissions.selectIdentity') }}
-                    </option>
-                    <option
-                      v-for="ident in identities"
-                      :key="ident.id"
-                      :value="ident.id"
-                    >
-                      {{ ident.name }} ({{ getIdentityTypeLabel(ident) }}) — {{ ident.user?.email || t('admin.submissions.unknown') }}
-                    </option>
-                  </select>
-                  <div class="flex gap-2">
-                    <button class="btn btn-xs" @click="resetSiteActions">
-                      {{ t('royIcp.identities.cancel') }}
-                    </button>
-                    <button
-                      class="btn btn-primary btn-xs"
-                      :disabled="isReassigning"
-                      @click="handleReassign"
-                    >
-                      <span v-if="isReassigning" class="loading loading-spinner loading-xs" />
-                      {{ t('admin.contests.save') }}
-                    </button>
-                  </div>
-                </div>
-                <div v-else class="flex items-center justify-between">
-                  <span class="text-sm">
-                    <template v-if="selectedSubmission.data.identity_id && getIdentityById(selectedSubmission.data.identity_id)">
-                      {{ getIdentityById(selectedSubmission.data.identity_id)?.name }}
-                      <span class="opacity-50 text-xs">({{ selectedSubmission.data.identity_id.slice(0, 8) }}...)</span>
-                    </template>
-                    <span v-else class="opacity-50">{{ t('admin.submissions.none') }}</span>
-                  </span>
-                  <button
-                    class="btn btn-ghost btn-xs"
-                    @click="startReassign(selectedSubmission.site_id!)"
-                  >
-                    <ArrowLeftRight class="w-3 h-3" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </template>
         </div>
 
         <div v-else class="card bg-base-200 p-12 text-center sticky top-20">
