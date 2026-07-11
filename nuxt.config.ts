@@ -181,6 +181,11 @@ export default defineNuxtConfig({
           innerHTML: `(function(){try{var t=localStorage.getItem('theme')||'auto';var d=t==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light':t;document.documentElement.setAttribute('data-theme',d)}catch(e){}})()`,
           tagPosition: "head",
         },
+        {
+          src: "https://cloud.umami.is/script.js",
+          defer: true,
+          "data-website-id": "eef151fb-07e2-461b-8b7f-2547aab735d4",
+        },
       ],
       link: [
         {
