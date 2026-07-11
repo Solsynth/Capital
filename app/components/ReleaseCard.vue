@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { Calendar, Download, ExternalLink, AlertCircle } from "@lucide/vue"
+import { Calendar, Download, ExternalLink } from "@lucide/vue"
+import { renderMarkdown } from "~/utils/marked"
 
 interface Props {
   version: string
@@ -16,16 +17,20 @@ const props = withDefaults(defineProps<Props>(), {
   isPrerelease: false,
 })
 
-const { t, d } = useI18n()
+const { t, locale } = useI18n()
 
 const formattedDate = computed(() => {
   const date = new Date(props.releasedAt)
-  return date.toLocaleDateString(undefined, {
+  return date.toLocaleDateString(locale.value === "zh" ? "zh-CN" : "en-US", {
     year: "numeric",
     month: "short",
     day: "numeric",
   })
 })
+
+const changelogHtml = computed(() =>
+  props.changelog ? renderMarkdown(props.changelog) : "",
+)
 </script>
 
 <template>
@@ -49,9 +54,11 @@ const formattedDate = computed(() => {
       </div>
     </div>
 
-    <div v-if="changelog" class="prose prose-sm max-w-none mb-4">
-      <div class="text-sm opacity-80 whitespace-pre-wrap">{{ changelog }}</div>
-    </div>
+    <div
+      v-if="changelogHtml"
+      class="prose prose-sm max-w-none mb-4 max-h-48 overflow-y-auto"
+      v-html="changelogHtml"
+    />
 
     <div v-if="downloadUrl || githubReleaseUrl" class="flex gap-2">
       <a

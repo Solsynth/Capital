@@ -165,7 +165,7 @@ export async function getReviewsForProduct(slug: string, opts?: { limit?: number
 export async function getReviewSummary(slug: string) {
   const [result] = await db
     .select({
-      average: sql<number>`round(avg(${productReview.rating})::numeric, 1)`,
+      average: sql<string | number>`round(avg(${productReview.rating})::numeric, 1)`,
       count: sql<number>`count(*)::int`,
       fiveStar: sql<number>`count(*) filter (where ${productReview.rating} = 5)::int`,
       fourStar: sql<number>`count(*) filter (where ${productReview.rating} = 4)::int`,
@@ -181,7 +181,18 @@ export async function getReviewSummary(slug: string) {
       ),
     )
 
-  return result
+  if (!result) return null
+
+  // Postgres numeric/avg often serializes as a string
+  return {
+    average: Number(result.average ?? 0),
+    count: Number(result.count ?? 0),
+    fiveStar: Number(result.fiveStar ?? 0),
+    fourStar: Number(result.fourStar ?? 0),
+    threeStar: Number(result.threeStar ?? 0),
+    twoStar: Number(result.twoStar ?? 0),
+    oneStar: Number(result.oneStar ?? 0),
+  }
 }
 
 export async function getReviewById(id: string) {

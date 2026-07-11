@@ -40,42 +40,63 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n()
+
+const sortOptions = [
+  { value: "newest" as const, labelKey: "reviews.sortNewest" },
+  { value: "helpful" as const, labelKey: "reviews.sortHelpful" },
+]
 </script>
 
 <template>
   <div>
-    <!-- Sort controls -->
-    <div v-if="reviews.length > 0" class="flex items-center gap-2 mb-4">
-      <span class="text-xs opacity-50 mr-1">{{ t("reviews.sortBy") }}</span>
-      <button
-        class="text-xs px-2.5 py-1 rounded-md transition-colors font-medium"
-        :class="sort === 'newest' ? 'bg-primary/15 text-primary' : 'opacity-50 hover:opacity-80'"
-        @click="emit('update:sort', 'newest')"
-      >
-        {{ t("reviews.sortNewest") }}
-      </button>
-      <button
-        class="text-xs px-2.5 py-1 rounded-md transition-colors font-medium"
-        :class="sort === 'helpful' ? 'bg-primary/15 text-primary' : 'opacity-50 hover:opacity-80'"
-        @click="emit('update:sort', 'helpful')"
-      >
-        {{ t("reviews.sortHelpful") }}
-      </button>
-    </div>
-
-    <!-- Loading state -->
-    <div v-if="loading" class="space-y-3">
-      <div v-for="i in 3" :key="i" class="animate-pulse">
-        <div class="h-24 bg-base-200 rounded-lg" />
+    <div
+      v-if="reviews.length > 0 || loading"
+      class="flex items-center justify-between gap-3 mb-4"
+    >
+      <span class="text-sm opacity-50">{{ t("reviews.sortBy") }}</span>
+      <div class="flex items-center gap-1 p-0.5 rounded-lg bg-base-200 border border-base-content/5">
+        <button
+          v-for="option in sortOptions"
+          :key="option.value"
+          type="button"
+          class="text-xs px-3 py-1.5 rounded-md transition-colors font-medium"
+          :class="
+            sort === option.value
+              ? 'bg-base-100 text-base-content shadow-sm'
+              : 'opacity-50 hover:opacity-80'
+          "
+          @click="emit('update:sort', option.value)"
+        >
+          {{ t(option.labelKey) }}
+        </button>
       </div>
     </div>
 
-    <!-- Empty state -->
-    <div v-else-if="reviews.length === 0" class="text-center py-8">
-      <p class="opacity-60">{{ t("reviews.noReviews") }}</p>
+    <div v-if="loading" class="space-y-3">
+      <div
+        v-for="i in 3"
+        :key="i"
+        class="animate-pulse rounded-xl border border-base-content/5 bg-base-200 p-5"
+      >
+        <div class="flex gap-3 mb-3">
+          <div class="w-9 h-9 rounded-full bg-base-300" />
+          <div class="flex-1 space-y-2">
+            <div class="h-3 w-28 bg-base-300 rounded" />
+            <div class="h-3 w-20 bg-base-300 rounded" />
+          </div>
+        </div>
+        <div class="h-3 w-full bg-base-300 rounded mb-2" />
+        <div class="h-3 w-4/5 bg-base-300 rounded" />
+      </div>
     </div>
 
-    <!-- Reviews list -->
+    <div
+      v-else-if="reviews.length === 0"
+      class="rounded-xl border border-dashed border-base-content/15 bg-base-200/40 px-6 py-12 text-center"
+    >
+      <p class="text-sm opacity-60">{{ t("reviews.noReviews") }}</p>
+    </div>
+
     <div v-else class="space-y-3">
       <ReviewCard
         v-for="review in reviews"
@@ -93,25 +114,29 @@ const { t } = useI18n()
       />
     </div>
 
-    <!-- Pagination -->
-    <div v-if="totalPages > 1" class="flex justify-center mt-6">
-      <div class="btn-group">
-        <button
-          class="btn btn-sm"
-          :disabled="page <= 1"
-          @click="emit('prevPage')"
-        >
-          «
-        </button>
-        <button class="btn btn-sm btn-ghost">{{ page }} / {{ totalPages }}</button>
-        <button
-          class="btn btn-sm"
-          :disabled="page >= totalPages"
-          @click="emit('nextPage')"
-        >
-          »
-        </button>
-      </div>
+    <div
+      v-if="totalPages > 1 && !loading"
+      class="flex items-center justify-center gap-2 mt-6"
+    >
+      <button
+        type="button"
+        class="btn btn-sm btn-ghost"
+        :disabled="page <= 1"
+        @click="emit('prevPage')"
+      >
+        «
+      </button>
+      <span class="text-sm opacity-60 tabular-nums px-2">
+        {{ page }} / {{ totalPages }}
+      </span>
+      <button
+        type="button"
+        class="btn btn-sm btn-ghost"
+        :disabled="page >= totalPages"
+        @click="emit('nextPage')"
+      >
+        »
+      </button>
     </div>
   </div>
 </template>

@@ -68,8 +68,8 @@ const { data: allProducts } = await useAsyncData(`products-list-${lang.value}`, 
       hasPage: p.hasPage ?? false,
       tags: p.tags || [],
       series: p.series,
-      averageRating: summary?.average ?? 0,
-      reviewCount: summary?.count ?? 0,
+      averageRating: Number(summary?.average ?? 0) || 0,
+      reviewCount: Number(summary?.count ?? 0) || 0,
     }
   })
 })

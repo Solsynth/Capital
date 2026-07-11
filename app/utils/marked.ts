@@ -1,6 +1,9 @@
 import { Marked } from 'marked'
 
-const marked = new Marked()
+const marked = new Marked({
+  gfm: true,
+  breaks: true,
+})
 
 export function renderMarkdown(content: string): string {
   if (!content) return ''
