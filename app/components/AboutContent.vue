@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { Heart, Code, Users, Sparkles, Github, ArrowLeft, AlertTriangle } from '@lucide/vue'
+import {
+  Heart,
+  Code,
+  Users,
+  Sparkles,
+  CodeXml,
+  ArrowLeft,
+  AlertTriangle,
+  ExternalLink,
+} from '@lucide/vue'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
@@ -28,64 +37,101 @@ const stats = computed(() => [
   { value: 1, suffix: 'K+', label: t('about.stats.users') },
   { value: 100, suffix: '%', label: t('about.stats.passion') },
 ])
+
+const counterRefs = ref<HTMLElement[]>([])
+
+onMounted(() => {
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    counterRefs.value.forEach((el) => {
+      el.textContent = el.getAttribute('data-target') || '0'
+    })
+    return
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target as HTMLElement)
+          observer.unobserve(entry.target)
+        }
+      })
+    },
+    { threshold: 0.4 },
+  )
+
+  counterRefs.value.forEach(el => observer.observe(el))
+})
+
+function animateCounter(el: HTMLElement) {
+  const target = Number.parseInt(el.getAttribute('data-target') || '0', 10)
+  const duration = 1200
+  const start = performance.now()
+
+  const update = (now: number) => {
+    const progress = Math.min((now - start) / duration, 1)
+    const eased = 1 - (1 - progress) ** 3
+    el.textContent = Math.floor(eased * target).toString()
+    if (progress < 1)
+      requestAnimationFrame(update)
+    else
+      el.textContent = target.toString()
+  }
+
+  requestAnimationFrame(update)
+}
 </script>
 
 <template>
   <div>
-    <!-- Hero Section -->
-    <section class="min-h-[50vh] flex flex-col items-center justify-center text-center relative px-4 overflow-hidden">
-      <div class="absolute top-1/4 left-1/4 w-64 h-64 bg-primary/30 rounded-full blur-[40px] will-change-transform" />
-      <div class="absolute bottom-1/4 right-1/4 w-48 h-48 bg-secondary/30 rounded-full blur-[40px] will-change-transform" />
+    <!-- Header -->
+    <section class="border-b border-base-200 px-4 py-16 md:py-20">
+      <div class="container mx-auto max-w-3xl">
+        <NuxtLink
+          :to="localePath('/')"
+          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
+        >
+          <ArrowLeft class="h-4 w-4" />
+          {{ t('about.backToHome') }}
+        </NuxtLink>
 
-      <div class="animate-fade-in-up relative z-10">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">
+        <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
           {{ t('about.title') }}
         </h1>
-        <p class="text-lg md:text-xl opacity-70 max-w-xl">
+        <p class="max-w-xl text-lg text-base-content/65 md:text-xl">
           {{ t('about.subtitle') }}
         </p>
       </div>
-
-      <NuxtLink :to="localePath('/')" class="btn btn-ghost btn-sm mt-8 animate-fade-in-up delay-200 relative z-10">
-        <ArrowLeft class="w-4 h-4" />
-        {{ t('about.backToHome') }}
-      </NuxtLink>
     </section>
 
-    <!-- Mission Section -->
-    <section class="py-16 px-4">
+    <!-- Mission -->
+    <section class="px-4 py-14">
       <div class="container mx-auto max-w-3xl">
-        <div class="card bg-base-200/50 p-8 md:p-12 animate-fade-in-up delay-100">
-          <h2 class="text-2xl font-bold mb-6 text-center">
-            {{ t('about.mission.title') }}
-          </h2>
-          <div class="space-y-4">
-            <p class="opacity-90">
-              {{ t('about.mission.p1') }}
-            </p>
-            <p class="opacity-90">
-              {{ t('about.mission.p2') }}
-            </p>
-          </div>
+        <h2 class="mb-4 text-2xl font-bold tracking-tight">
+          {{ t('about.mission.title') }}
+        </h2>
+        <div class="space-y-4 text-base leading-relaxed text-base-content/80 md:text-lg">
+          <p>{{ t('about.mission.p1') }}</p>
+          <p>{{ t('about.mission.p2') }}</p>
         </div>
       </div>
     </section>
 
-    <!-- Did You Know Section -->
-    <section class="py-12 px-4">
+    <!-- Did you know -->
+    <section class="px-4 pb-14">
       <div class="container mx-auto max-w-3xl">
-        <div class="card bg-base-200/50 p-5 animate-fade-in-up delay-200">
-          <h2 class="text-base font-semibold mb-3 flex items-center gap-2">
-            <Sparkles class="w-4 h-4 text-base-content/60" />
+        <div class="rounded-lg border border-base-200 bg-base-200/40 p-5 md:p-6">
+          <h2 class="mb-3 flex items-center gap-2 text-base font-semibold">
+            <Sparkles class="h-4 w-4 text-base-content/50" />
             {{ t('about.didYouKnow.title') }}
           </h2>
-          <ul class="text-sm space-y-2 opacity-80">
+          <ul class="space-y-2 text-sm text-base-content/70">
             <li class="flex items-start gap-2">
-              <span class="text-base-content/60 mt-0.5">•</span>
+              <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-base-content/40" />
               <span>{{ t('about.didYouKnow.solsynth') }}</span>
             </li>
             <li class="flex items-start gap-2">
-              <span class="text-base-content/60 mt-0.5">•</span>
+              <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-base-content/40" />
               <span>{{ t('about.didYouKnow.chinese') }}</span>
             </li>
           </ul>
@@ -93,27 +139,26 @@ const stats = computed(() => [
       </div>
     </section>
 
-    <!-- Values Section -->
-    <section class="py-16 px-4 bg-base-200/30">
-      <div class="container mx-auto">
-        <h2 class="text-2xl font-bold mb-10 text-center animate-fade-in-up">
+    <!-- Values -->
+    <section class="border-y border-base-200 bg-base-200/30 px-4 py-14">
+      <div class="container mx-auto max-w-5xl">
+        <h2 class="mb-8 text-center text-2xl font-bold tracking-tight">
           {{ t('about.values.title') }}
         </h2>
 
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-5xl mx-auto">
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div
-            v-for="(value, i) in values"
+            v-for="value in values"
             :key="value.key"
-            class="card bg-base-100 p-6 text-center hover:-translate-y-1 hover:shadow-lg transition-all duration-200 animate-fade-in-up"
-            :style="{ animationDelay: `${(i + 1) * 80}ms` }"
+            class="rounded-lg border border-base-200 bg-base-100 p-5"
           >
-            <div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4">
-              <component :is="value.icon" class="w-6 h-6 text-primary" />
+            <div class="mb-3 flex h-9 w-9 items-center justify-center rounded-md border border-base-200 bg-base-200/60">
+              <component :is="value.icon" class="h-4 w-4 text-base-content/70" />
             </div>
-            <h3 class="text-base font-semibold mb-2">
+            <h3 class="mb-1.5 text-base font-semibold">
               {{ t(`about.values.${value.key}.title`) }}
             </h3>
-            <p class="text-sm opacity-60">
+            <p class="text-sm leading-relaxed text-base-content/55">
               {{ t(`about.values.${value.key}.desc`) }}
             </p>
           </div>
@@ -121,20 +166,24 @@ const stats = computed(() => [
       </div>
     </section>
 
-    <!-- Stats Section -->
-    <section class="py-16 px-4">
-      <div class="container mx-auto">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-3xl mx-auto">
+    <!-- Stats -->
+    <section class="border-b border-base-200 px-4 py-10">
+      <div class="container mx-auto max-w-3xl">
+        <div class="grid grid-cols-2 divide-base-300 md:grid-cols-4 md:divide-x">
           <div
-            v-for="(stat, i) in stats"
+            v-for="(stat, index) in stats"
             :key="stat.label"
-            class="text-center animate-fade-in-up"
-            :style="{ animationDelay: `${(i + 1) * 80}ms` }"
+            class="px-4 py-4 text-center md:py-2"
+            :class="index % 2 === 1 ? 'max-md:border-l max-md:border-base-300' : ''"
           >
-            <div class="text-3xl md:text-4xl font-bold text-primary mb-1">
-              <span class="counter" :data-target="stat.value">0</span>{{ stat.suffix }}
+            <div class="text-3xl font-extrabold tracking-tight tabular-nums md:text-4xl">
+              <span
+                ref="counterRefs"
+                class="counter"
+                :data-target="stat.value"
+              >0</span>{{ stat.suffix }}
             </div>
-            <div class="text-sm opacity-60">
+            <div class="mt-1 text-sm text-base-content/55">
               {{ stat.label }}
             </div>
           </div>
@@ -142,19 +191,19 @@ const stats = computed(() => [
       </div>
     </section>
 
-    <!-- LLC Disclaimer Section -->
-    <section class="py-12 px-4">
+    <!-- LLC note -->
+    <section class="px-4 py-12">
       <div class="container mx-auto max-w-3xl">
-        <div class="alert bg-warning/10 border-warning/30 animate-fade-in-up delay-100">
-          <AlertTriangle class="stroke-warning shrink-0 h-6 w-6" />
-          <div>
-            <h3 class="font-bold text-md">
+        <div class="flex gap-3 rounded-lg border border-warning/25 bg-warning/5 p-4 md:p-5">
+          <AlertTriangle class="mt-0.5 h-5 w-5 shrink-0 text-warning" />
+          <div class="min-w-0">
+            <h3 class="mb-1.5 font-semibold">
               {{ t('about.llc.title') }}
             </h3>
-            <div class="text-sm space-y-1 mt-1 opacity-90">
+            <div class="space-y-1.5 text-sm leading-relaxed text-base-content/75">
               <p>{{ t('about.llc.p1') }}</p>
               <p>{{ t('about.llc.p2') }}</p>
-              <p class="font-semibold">
+              <p class="font-medium text-base-content/90">
                 {{ t('about.llc.p3') }}
               </p>
             </div>
@@ -163,136 +212,93 @@ const stats = computed(() => [
       </div>
     </section>
 
-    <!-- Team Section -->
-    <section class="py-16 px-4 bg-base-200/30">
-      <div class="container mx-auto">
-        <h2 class="text-2xl font-bold mb-10 text-center animate-fade-in-up">
+    <!-- Team -->
+    <section class="border-t border-base-200 bg-base-200/30 px-4 py-14">
+      <div class="container mx-auto max-w-5xl">
+        <h2 class="mb-8 text-center text-2xl font-bold tracking-tight">
           {{ t('about.team.title') }}
         </h2>
 
-        <div class="flex flex-wrap justify-center gap-8">
+        <div class="mx-auto flex max-w-3xl flex-col gap-5 sm:flex-row sm:flex-wrap sm:justify-center">
           <div
             v-for="member in team"
             :key="member.name"
-            class="card bg-base-100 max-w-sm w-full hover:shadow-xl transition-shadow duration-200 animate-fade-in-up"
+            class="flex w-full max-w-sm flex-col rounded-lg border border-base-200 bg-base-100 p-6 sm:w-[calc(50%-0.625rem)]"
           >
-            <div class="flex flex-col items-center text-center p-6">
+            <div class="mb-4 flex items-center gap-3">
               <img
                 :src="member.avatar"
                 :alt="member.name"
-                class="w-24 h-24 rounded-full mb-4 shadow-lg object-cover"
+                class="h-14 w-14 rounded-full object-cover"
+                loading="lazy"
               >
-              <h3 class="text-lg font-bold">
-                {{ member.name }}
-              </h3>
-              <div class="flex items-center gap-2 mt-2 mb-4">
-                <span class="badge badge-primary badge-sm">{{ member.role }}</span>
-                <a
-                  v-if="member.profileUrl"
-                  :href="member.profileUrl"
-                  target="_blank"
-                  class="btn btn-ghost btn-xs"
-                >
-                  {{ t('about.team.profile') }}
-                </a>
+              <div class="min-w-0">
+                <h3 class="truncate text-lg font-bold">
+                  {{ member.name }}
+                </h3>
+                <span class="badge badge-sm badge-ghost mt-0.5">{{ member.role }}</span>
               </div>
-              <p class="text-sm opacity-70 mb-4 leading-relaxed">
-                {{ member.bio }}
-              </p>
+            </div>
+
+            <p class="mb-5 flex-1 text-sm leading-relaxed text-base-content/65">
+              {{ member.bio }}
+            </p>
+
+            <div class="flex flex-wrap gap-2">
+              <a
+                v-if="member.profileUrl"
+                :href="member.profileUrl"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn btn-ghost btn-sm gap-1.5 border border-base-300"
+              >
+                <ExternalLink class="h-3.5 w-3.5" />
+                {{ t('about.team.profile') }}
+              </a>
               <a
                 v-if="member.github"
                 :href="member.github"
                 target="_blank"
-                class="btn btn-outline btn-sm"
+                rel="noopener noreferrer"
+                class="btn btn-ghost btn-sm gap-1.5 border border-base-300"
               >
-                <CodeXml class="w-4 h-4" />
+                <CodeXml class="h-3.5 w-3.5" />
                 GitHub
               </a>
             </div>
           </div>
 
-          <!-- Hiring Card -->
-          <div class="card bg-base-100 max-w-sm w-full border-dashed border-2 border-base-content/20 hover:shadow-xl transition-shadow duration-200 animate-fade-in-up">
-            <div class="flex flex-col items-center text-center p-6">
-              <div class="w-24 h-24 rounded-full mb-4 bg-primary/10 flex items-center justify-center">
-                <span class="text-4xl">?</span>
+          <!-- Hiring -->
+          <div class="flex w-full max-w-sm flex-col rounded-lg border border-dashed border-base-300 bg-base-100/60 p-6 sm:w-[calc(50%-0.625rem)]">
+            <div class="mb-4 flex items-center gap-3">
+              <div class="flex h-14 w-14 items-center justify-center rounded-full border border-base-200 bg-base-200/60 text-xl font-semibold text-base-content/40">
+                ?
               </div>
-              <h3 class="text-lg font-bold">
-                {{ t('about.hiring.title') }}
-              </h3>
-              <p class="text-sm opacity-70 mb-3">
-                {{ t('about.hiring.subtitle') }}
-              </p>
-              <p class="text-sm opacity-60 mb-2">
-                {{ t('about.hiring.roles') }}
-              </p>
-              <p class="text-sm opacity-60 mb-2">
-                {{ t('about.hiring.note') }}
-              </p>
-              <p class="text-sm opacity-80 mb-4">
-                {{ t('about.hiring.cta') }}
-              </p>
-              <a href="mailto:lily@solsynth.dev" class="btn btn-primary btn-sm">
-                {{ t('about.hiring.email') }}
-              </a>
+              <div>
+                <h3 class="text-lg font-bold">
+                  {{ t('about.hiring.title') }}
+                </h3>
+                <p class="text-sm text-base-content/55">
+                  {{ t('about.hiring.subtitle') }}
+                </p>
+              </div>
             </div>
+
+            <div class="mb-5 flex-1 space-y-2 text-sm leading-relaxed text-base-content/65">
+              <p>{{ t('about.hiring.roles') }}</p>
+              <p>{{ t('about.hiring.note') }}</p>
+              <p>{{ t('about.hiring.cta') }}</p>
+            </div>
+
+            <a
+              href="mailto:lily@solsynth.dev"
+              class="btn btn-primary btn-sm self-start"
+            >
+              {{ t('about.hiring.email') }}
+            </a>
           </div>
         </div>
       </div>
     </section>
   </div>
 </template>
-
-<style scoped>
-.animate-fade-in-up {
-  animation: fadeInUp 0.5s ease-out forwards;
-  opacity: 0;
-  transform: translateY(16px);
-}
-
-.delay-100 { animation-delay: 0.1s; }
-.delay-200 { animation-delay: 0.2s; }
-.delay-300 { animation-delay: 0.3s; }
-
-@keyframes fadeInUp {
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-</style>
-
-<script lang="ts">
-if (import.meta.client) {
-  const animateCounter = (el: Element) => {
-    const target = parseInt(el.getAttribute('data-target') || '0')
-    const duration = 1500
-    const step = target / (duration / 16)
-    let current = 0
-
-    const update = () => {
-      current += step
-      if (current < target) {
-        el.textContent = Math.floor(current).toString()
-        requestAnimationFrame(update)
-      }
-      else {
-        el.textContent = target.toString()
-      }
-    }
-
-    update()
-  }
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        animateCounter(entry.target)
-        observer.unobserve(entry.target)
-      }
-    })
-  }, { threshold: 0.3 })
-
-  document.querySelectorAll('.counter').forEach(counter => observer.observe(counter))
-}
-</script>

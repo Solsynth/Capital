@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FileText, Scale, Shield, Code } from '@lucide/vue'
+import { FileText, Scale, Shield, Code, ChevronRight, Calendar } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
@@ -21,7 +21,6 @@ defineOgImage('UniOgImage', {
   description: t('seo.legal.description'),
 })
 
-// Schema.org Structured Data for Legal Pages Collection
 useSchemaOrg([
   defineWebPage({
     name: () => t('seo.legal.title'),
@@ -60,42 +59,73 @@ function getSlug(path: string): string {
 }
 
 function getIcon(slug: string) {
-  if (slug.includes('privacy')) return Shield
-  if (slug.includes('user')) return Scale
-  if (slug.includes('refund')) return FileText
+  if (slug.includes('privacy'))
+    return Shield
+  if (slug.includes('user'))
+    return Scale
+  if (slug.includes('refund'))
+    return FileText
   return Code
 }
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-16 max-w-4xl">
-    <div class="text-center mb-16">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ t('legal.title') }}</h1>
-      <p class="text-xl opacity-70">
-        {{ t('legal.subtitle') }}
-      </p>
-    </div>
+  <div>
+    <section class="border-b border-base-200 px-4 py-16 md:py-20">
+      <div class="container mx-auto max-w-3xl">
+        <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
+          {{ t('legal.title') }}
+        </h1>
+        <p class="max-w-xl text-lg text-base-content/65 md:text-xl">
+          {{ t('legal.subtitle') }}
+        </p>
+      </div>
+    </section>
 
-    <div class="space-y-4">
-      <NuxtLink
-        v-for="page in currentLangPages"
-        :key="page.path"
-        :to="localePath(`/legal/${getSlug(page.path)}`)"
-        class="card bg-base-200 p-6 hover:shadow-lg transition-all duration-300 block group"
-      >
-        <div class="flex items-start gap-4">
-          <div class="p-3 bg-primary/10 rounded-lg group-hover:bg-primary/20 transition-colors">
-            <component :is="getIcon(getSlug(page.path))" class="w-6 h-6 text-primary" />
-          </div>
-          <div class="flex-1">
-            <h3 class="text-xl font-bold group-hover:text-primary transition-colors">{{ page.title }}</h3>
-            <p class="text-sm opacity-70 mt-1">{{ page.description }}</p>
-            <p v-if="page.updatedDate" class="text-xs opacity-50 mt-2">
-              {{ lang === 'zh' ? t('legal.lastUpdatedZh') : t('legal.lastUpdated') }} {{ page.updatedDate }}
-            </p>
-          </div>
+    <section class="px-4 py-12">
+      <div class="container mx-auto max-w-3xl">
+        <div
+          v-if="!currentLangPages?.length"
+          class="rounded-lg border border-dashed border-base-300 px-6 py-12 text-center text-base-content/50"
+        >
+          {{ t('legal.subtitle') }}
         </div>
-      </NuxtLink>
-    </div>
+
+        <div v-else class="divide-y divide-base-200 rounded-lg border border-base-200">
+          <NuxtLink
+            v-for="page in currentLangPages"
+            :key="page.path"
+            :to="localePath(`/legal/${getSlug(page.path)}`)"
+            class="group flex items-start gap-4 px-5 py-5 transition-colors duration-150 hover:bg-base-200/40"
+          >
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-base-200 bg-base-200/50">
+              <component
+                :is="getIcon(getSlug(page.path))"
+                class="h-4 w-4 text-base-content/65"
+              />
+            </div>
+
+            <div class="min-w-0 flex-1">
+              <h2 class="text-base font-semibold transition-colors group-hover:text-primary md:text-lg">
+                {{ page.title }}
+              </h2>
+              <p v-if="page.description" class="mt-1 text-sm text-base-content/60">
+                {{ page.description }}
+              </p>
+              <p
+                v-if="page.updatedDate"
+                class="mt-2 flex items-center gap-1.5 text-xs text-base-content/45"
+              >
+                <Calendar class="h-3 w-3" />
+                {{ lang === 'zh' ? t('legal.lastUpdatedZh') : t('legal.lastUpdated') }}
+                {{ page.updatedDate }}
+              </p>
+            </div>
+
+            <ChevronRight class="mt-1 h-4 w-4 shrink-0 text-base-content/30 transition-colors group-hover:text-base-content/55" />
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
   </div>
 </template>

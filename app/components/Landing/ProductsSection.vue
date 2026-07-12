@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { ArrowRight } from '@lucide/vue'
+
 interface Props {
   products: Array<{
     id: string
@@ -14,24 +16,37 @@ interface Props {
   }>
 }
 
-const props = defineProps<Props>()
+defineProps<Props>()
 
 const { t } = useI18n()
+const localePath = useLocalePath()
 </script>
 
 <template>
-  <section id="products" class="scroll-mt-24 py-12 px-4">
+  <section id="products" class="scroll-mt-24 px-4 py-16">
     <div class="container mx-auto">
-      <div class="text-center mb-10">
-        <h2 class="text-2xl md:text-3xl font-bold mb-3">
-          {{ t('home.products.title') }}
-        </h2>
-        <p class="text-base md:text-lg opacity-60 max-w-2xl mx-auto">
-          {{ t('home.products.subtitle') }}
-        </p>
+      <div class="mb-10 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+        <div class="max-w-2xl">
+          <h2 class="mb-2 text-2xl font-bold tracking-tight md:text-3xl">
+            {{ t('home.products.title') }}
+          </h2>
+          <p class="text-base text-base-content/60 md:text-lg">
+            {{ t('home.products.subtitle') }}
+          </p>
+        </div>
+        <NuxtLink
+          :to="localePath('/products')"
+          class="btn btn-ghost btn-sm gap-1.5 self-start text-base-content/70 sm:self-auto"
+        >
+          {{ t('nav.products') }}
+          <ArrowRight class="h-4 w-4" />
+        </NuxtLink>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 md:gap-6">
+      <div
+        v-if="products.length > 0"
+        class="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
+      >
         <ProductCard
           v-for="product in products"
           :key="product.id"
@@ -47,6 +62,12 @@ const { t } = useI18n()
           :series="product.series"
         />
       </div>
+      <p
+        v-else
+        class="rounded-lg border border-dashed border-base-300 px-6 py-12 text-center text-base-content/50"
+      >
+        {{ t('products.noProducts') }}
+      </p>
     </div>
   </section>
 </template>

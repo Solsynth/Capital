@@ -11,52 +11,66 @@ const stats = computed(() => [
 const counterRefs = ref<HTMLElement[]>([])
 
 onMounted(() => {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        animateCounter(entry.target as HTMLElement)
-        observer.unobserve(entry.target)
-      }
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    counterRefs.value.forEach((el) => {
+      el.textContent = el.getAttribute('data-target') || '0'
     })
-  }, { threshold: 0.5 })
+    return
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target as HTMLElement)
+          observer.unobserve(entry.target)
+        }
+      })
+    },
+    { threshold: 0.4 },
+  )
 
   counterRefs.value.forEach(el => observer.observe(el))
 })
 
 function animateCounter(el: HTMLElement) {
-  const target = parseInt(el.getAttribute('data-target') || '0')
-  const duration = 2000
-  const step = target / (duration / 16)
-  let current = 0
+  const target = Number.parseInt(el.getAttribute('data-target') || '0', 10)
+  const duration = 1200
+  const start = performance.now()
 
-  const update = () => {
-    current += step
-    if (current < target) {
-      el.textContent = Math.floor(current).toString()
+  const update = (now: number) => {
+    const progress = Math.min((now - start) / duration, 1)
+    // ease-out cubic
+    const eased = 1 - (1 - progress) ** 3
+    el.textContent = Math.floor(eased * target).toString()
+    if (progress < 1)
       requestAnimationFrame(update)
-    }
-    else {
+    else
       el.textContent = target.toString()
-    }
   }
 
-  update()
+  requestAnimationFrame(update)
 }
 </script>
 
 <template>
-  <section class="py-12 px-4 border-y border-base-200">
+  <section class="border-y border-base-200 bg-base-200/40 px-4 py-10">
     <div class="container mx-auto">
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div class="grid grid-cols-2 divide-base-300 md:grid-cols-4 md:divide-x">
         <div
-          v-for="stat in stats"
+          v-for="(stat, index) in stats"
           :key="stat.label"
-          class="text-center"
+          class="px-4 py-4 text-center md:py-2"
+          :class="index % 2 === 1 ? 'max-md:border-l max-md:border-base-300' : ''"
         >
-          <div class="text-3xl md:text-4xl font-extrabold text-primary mb-1">
-            <span ref="counterRefs" class="counter" :data-target="stat.value">0</span>{{ stat.suffix }}
+          <div class="text-3xl font-extrabold tracking-tight tabular-nums text-base-content md:text-4xl">
+            <span
+              ref="counterRefs"
+              class="counter"
+              :data-target="stat.value"
+            >0</span>{{ stat.suffix }}
           </div>
-          <div class="text-sm opacity-60">
+          <div class="mt-1 text-sm text-base-content/55">
             {{ stat.label }}
           </div>
         </div>

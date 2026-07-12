@@ -108,82 +108,103 @@ const filteredProducts = computed(() => {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-16">
-    <div class="text-center mb-16">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">
-        {{ t('products.title') }}
-      </h1>
-      <p class="text-xl opacity-70 max-w-2xl mx-auto">
-        {{ t('products.subtitle') }}
-      </p>
-    </div>
-
-    <div v-if="seriesMap.size > 0" class="mb-12">
-      <h2 class="text-lg font-semibold mb-4">
-        {{ t('products.series') }}
-      </h2>
-      <div class="flex flex-wrap gap-2">
-        <NuxtLink
-          v-for="series in seriesMap.keys()"
-          :key="series"
-          :to="`${localePath('/products')}?series=${encodeURIComponent(series)}`"
-          class="btn btn-sm"
-          :class="urlSeries === series ? 'btn-primary' : 'btn-outline'"
-        >
-          {{ series }}
-        </NuxtLink>
+  <div>
+    <section class="border-b border-base-200 px-4 py-16 md:py-20">
+      <div class="container mx-auto max-w-5xl">
+        <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
+          {{ t('products.title') }}
+        </h1>
+        <p class="max-w-2xl text-lg text-base-content/65 md:text-xl">
+          {{ t('products.subtitle') }}
+        </p>
       </div>
-    </div>
+    </section>
 
-    <div v-if="allTags.length > 0" class="mb-12">
-      <h2 class="text-lg font-semibold mb-4">
-        {{ t('products.tags') }}
-      </h2>
-      <div class="flex flex-wrap gap-2">
-        <NuxtLink
-          :to="localePath('/products')"
-          class="btn btn-sm"
-          :class="!urlTag ? 'btn-primary' : 'btn-ghost'"
+    <section class="px-4 py-10">
+      <div class="container mx-auto max-w-5xl">
+        <div
+          v-if="seriesMap.size > 0"
+          class="mb-8"
         >
-          {{ t('products.all') }}
-        </NuxtLink>
-        <NuxtLink
-          v-for="tag in allTags"
-          :key="tag"
-          :to="`${localePath('/products')}?tag=${encodeURIComponent(tag)}`"
-          class="btn btn-sm"
-          :class="urlTag === tag ? 'btn-primary' : 'btn-outline'"
+          <h2 class="mb-3 text-sm font-semibold text-base-content/60">
+            {{ t('products.series') }}
+          </h2>
+          <div class="flex flex-wrap gap-2">
+            <NuxtLink
+              v-for="series in seriesMap.keys()"
+              :key="series"
+              :to="`${localePath('/products')}?series=${encodeURIComponent(series)}`"
+              class="btn btn-sm"
+              :class="urlSeries === series ? 'btn-primary' : 'btn-ghost border border-base-300'"
+            >
+              {{ series }}
+            </NuxtLink>
+          </div>
+        </div>
+
+        <div
+          v-if="allTags.length > 0"
+          class="mb-10"
         >
-          {{ tag }}
-        </NuxtLink>
+          <h2 class="mb-3 text-sm font-semibold text-base-content/60">
+            {{ t('products.tags') }}
+          </h2>
+          <div class="flex flex-wrap gap-2">
+            <NuxtLink
+              :to="localePath('/products')"
+              class="btn btn-sm"
+              :class="!urlTag && !urlSeries ? 'btn-primary' : 'btn-ghost border border-base-300'"
+            >
+              {{ t('products.all') }}
+            </NuxtLink>
+            <NuxtLink
+              v-for="tag in allTags"
+              :key="tag"
+              :to="`${localePath('/products')}?tag=${encodeURIComponent(tag)}`"
+              class="btn btn-sm"
+              :class="urlTag === tag ? 'btn-primary' : 'btn-ghost border border-base-300'"
+            >
+              {{ tag }}
+            </NuxtLink>
+          </div>
+        </div>
+
+        <div
+          v-if="filteredProducts.length === 0"
+          class="rounded-lg border border-dashed border-base-300 px-6 py-16 text-center"
+        >
+          <p class="mb-4 text-base text-base-content/55">
+            {{ t('products.noProducts') }}
+          </p>
+          <NuxtLink
+            :to="localePath('/')"
+            class="btn btn-primary btn-sm"
+          >
+            {{ lang === 'zh' ? '返回首页' : 'Back to Home' }}
+          </NuxtLink>
+        </div>
+        <div
+          v-else
+          class="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
+        >
+          <ProductCard
+            v-for="product in filteredProducts"
+            :key="product.slug"
+            :name="product.title"
+            :description="product.description"
+            :icon="product.icon"
+            :background="product.background"
+            :url="product.url"
+            :repo="product.repo"
+            :has-page="product.hasPage"
+            :slug="product.slug"
+            :tags="product.tags"
+            :series="product.series"
+            :average-rating="product.averageRating"
+            :review-count="product.reviewCount"
+          />
+        </div>
       </div>
-    </div>
-
-    <div v-if="filteredProducts.length === 0" class="text-center py-16">
-      <p class="text-lg opacity-70">
-        {{ t('products.noProducts') }}
-      </p>
-      <NuxtLink :to="localePath('/')" class="btn btn-primary mt-4">
-        {{ lang === 'zh' ? '返回首页' : 'Back to Home' }}
-      </NuxtLink>
-    </div>
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      <ProductCard
-        v-for="product in filteredProducts"
-        :key="product.slug"
-        :name="product.title"
-        :description="product.description"
-        :icon="product.icon"
-        :background="product.background"
-        :url="product.url"
-        :repo="product.repo"
-        :has-page="product.hasPage"
-        :slug="product.slug"
-        :tags="product.tags"
-        :series="product.series"
-        :average-rating="product.averageRating"
-        :review-count="product.reviewCount"
-      />
-    </div>
+    </section>
   </div>
 </template>

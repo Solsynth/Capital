@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Upload, X } from "@lucide/vue";
+import { ArrowLeft, Upload, X, CheckCircle } from "@lucide/vue";
 import {
   TagsInputClear,
   TagsInputInput,
@@ -154,46 +154,60 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div
-    v-if="content && sub && !saveSuccess"
-    class="container mx-auto px-4 py-12"
-  >
-    <div class="max-w-2xl mx-auto">
-      <NuxtLink
-        :to="localePath(`/contests/${slug}/mine`)"
-        class="btn btn-ghost btn-sm mb-6 inline-flex"
-      >
-        <ArrowLeft class="w-4 h-4 mr-2" />
-        {{ t("contests.mySubmissions") }}
-      </NuxtLink>
+  <div v-if="content && sub && !saveSuccess">
+    <section class="border-b border-base-200 px-4 py-12 md:py-16">
+      <div class="container mx-auto max-w-2xl">
+        <NuxtLink
+          :to="localePath(`/contests/${slug}/mine`)"
+          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
+        >
+          <ArrowLeft class="h-4 w-4" />
+          {{ t("contests.mySubmissions") }}
+        </NuxtLink>
 
-      <!-- Status Notice -->
-      <div
-        v-if="sub.status === 'pending'"
-        class="alert alert-info alert-sm mb-6"
-      >
-        {{ t("contests.pendingReview") }}
+        <h1 class="text-3xl font-extrabold tracking-tight md:text-4xl">
+          {{ t("contests.edit") }}
+        </h1>
+        <p class="mt-1 text-base text-base-content/60">
+          {{ content.title }}
+        </p>
       </div>
-      <div
-        v-else-if="sub.status === 'rejected'"
-        class="alert alert-error alert-sm mb-6"
-      >
-        <div>
-          <div class="font-medium">{{ t("contests.rejectedNotice") }}</div>
-          <div v-if="sub.reviewNote" class="text-sm mt-1">
+    </section>
+
+    <section class="px-4 py-10">
+      <div class="container mx-auto max-w-2xl">
+        <div
+          v-if="sub.status === 'pending'"
+          class="mb-6 rounded-lg border border-info/25 bg-info/5 px-4 py-3 text-sm text-base-content/75"
+        >
+          {{ t("contests.pendingReview") }}
+        </div>
+        <div
+          v-else-if="sub.status === 'rejected'"
+          class="mb-6 rounded-lg border border-error/25 bg-error/5 px-4 py-3 text-sm"
+        >
+          <div class="font-medium text-error">
+            {{ t("contests.rejectedNotice") }}
+          </div>
+          <div
+            v-if="sub.reviewNote"
+            class="mt-1 text-base-content/70"
+          >
             {{ sub.reviewNote }}
           </div>
         </div>
-      </div>
 
-      <div v-if="saveError" class="alert alert-error mb-6">
-        {{ saveError }}
-      </div>
+        <div
+          v-if="saveError"
+          class="mb-6 rounded-lg border border-error/25 bg-error/5 px-4 py-3 text-sm text-error"
+        >
+          {{ saveError }}
+        </div>
 
-      <form
-        @submit.prevent="handleSubmit"
-        class="card bg-base-200 p-6 space-y-4"
-      >
+        <form
+          class="space-y-5 rounded-lg border border-base-200 bg-base-100 p-5 md:p-6"
+          @submit.prevent="handleSubmit"
+        >
         <!-- Project Title -->
         <fieldset class="fieldset">
           <legend class="fieldset-legend">
@@ -362,11 +376,10 @@ async function handleSubmit() {
           </TagsInputRoot>
         </fieldset>
 
-        <!-- Submit -->
-        <div class="pt-4">
+        <div class="pt-2">
           <button
             type="submit"
-            class="btn btn-primary btn-lg w-full"
+            class="btn btn-primary w-full"
             :disabled="saving || isUploading || !title || !description || !repoUrl"
           >
             <span v-if="saving" class="loading loading-spinner loading-sm" />
@@ -375,20 +388,27 @@ async function handleSubmit() {
             }}</span>
             <span v-else>{{ t("contests.saveChanges") }}</span>
           </button>
-          <p class="text-xs opacity-50 text-center mt-3">
+          <p class="mt-3 text-center text-xs text-base-content/45">
             {{ t("contests.editNote") }}
           </p>
         </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </section>
   </div>
 
-  <!-- Success -->
-  <div v-else-if="saveSuccess" class="container mx-auto px-4 py-20 text-center">
-    <div class="max-w-md mx-auto">
-      <CheckCircle class="w-16 h-16 text-success mx-auto mb-4" />
-      <h2 class="text-3xl font-bold mb-4">{{ t("contests.updated") }}</h2>
-      <p class="opacity-70 mb-8">{{ t("contests.updatedMessage") }}</p>
+  <div
+    v-else-if="saveSuccess"
+    class="px-4 py-20 text-center"
+  >
+    <div class="container mx-auto max-w-md">
+      <CheckCircle class="mx-auto mb-4 h-12 w-12 text-success" />
+      <h2 class="mb-3 text-3xl font-extrabold tracking-tight">
+        {{ t("contests.updated") }}
+      </h2>
+      <p class="mb-8 text-base-content/60">
+        {{ t("contests.updatedMessage") }}
+      </p>
       <NuxtLink
         :to="localePath(`/contests/${slug}/mine`)"
         class="btn btn-primary"

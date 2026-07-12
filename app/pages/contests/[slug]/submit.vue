@@ -152,32 +152,49 @@ async function handleSubmit() {
 </script>
 
 <template>
-  <div v-if="content && !submitSuccess" class="container mx-auto px-4 py-12">
-    <div class="max-w-2xl mx-auto">
-      <NuxtLink
-        :to="localePath(`/contests/${slug}`)"
-        class="btn btn-ghost btn-sm mb-6 inline-flex"
-      >
-        <ArrowLeft class="w-4 h-4 mr-2" />
-        {{ t('contests.backToContest') }}
-      </NuxtLink>
+  <div v-if="content && !submitSuccess">
+    <section class="border-b border-base-200 px-4 py-12 md:py-16">
+      <div class="container mx-auto max-w-2xl">
+        <NuxtLink
+          :to="localePath(`/contests/${slug}`)"
+          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
+        >
+          <ArrowLeft class="h-4 w-4" />
+          {{ t('contests.backToContest') }}
+        </NuxtLink>
 
-      <!-- Contest Info -->
-      <div class="card bg-base-200 mb-8">
-        <div class="card-body">
-          <h1 class="card-title text-2xl mb-2">{{ content.title }}</h1>
-          <p class="opacity-70 text-sm">{{ content.description }}</p>
-          <div v-if="content.tags?.length" class="flex flex-wrap gap-1 mt-3">
-            <span v-for="tag in content.tags" :key="tag" class="badge badge-outline badge-xs">{{ tag }}</span>
-          </div>
+        <h1 class="mb-2 text-3xl font-extrabold tracking-tight md:text-4xl">
+          {{ content.title }}
+        </h1>
+        <p class="text-sm text-base-content/65 md:text-base">
+          {{ content.description }}
+        </p>
+        <div
+          v-if="content.tags?.length"
+          class="mt-3 flex flex-wrap gap-1"
+        >
+          <span
+            v-for="tag in content.tags"
+            :key="tag"
+            class="badge badge-outline badge-xs"
+          >{{ tag }}</span>
         </div>
       </div>
+    </section>
 
-      <div v-if="submitError" class="alert alert-error mb-6">
-        <span>{{ submitError }}</span>
-      </div>
+    <section class="px-4 py-10">
+      <div class="container mx-auto max-w-2xl">
+        <div
+          v-if="submitError"
+          class="mb-6 rounded-lg border border-error/25 bg-error/5 px-4 py-3 text-sm text-error"
+        >
+          {{ submitError }}
+        </div>
 
-      <form @submit.prevent="handleSubmit" class="card bg-base-200 p-6 space-y-4">
+        <form
+          class="space-y-5 rounded-lg border border-base-200 bg-base-100 p-5 md:p-6"
+          @submit.prevent="handleSubmit"
+        >
         <!-- Project Title -->
         <fieldset class="fieldset">
           <legend class="fieldset-legend">{{ t('contests.projectTitle') }} *</legend>
@@ -337,32 +354,39 @@ async function handleSubmit() {
           </div>
         </fieldset>
 
-        <!-- Submit -->
-        <div class="pt-4">
+        <div class="pt-2">
           <button
             type="submit"
-            class="btn btn-primary btn-lg w-full"
+            class="btn btn-primary w-full"
             :disabled="submitting || isUploading || !title || !description || !repoUrl || !agreedToTerms"
           >
             <span v-if="submitting" class="loading loading-spinner loading-sm" />
             <span v-else>{{ t('contests.submitProject') }}</span>
           </button>
-          <p class="text-xs opacity-50 text-center mt-3">
+          <p class="mt-3 text-center text-xs text-base-content/45">
             {{ t('contests.submitReviewNote') }}
           </p>
         </div>
-      </form>
-    </div>
+        </form>
+      </div>
+    </section>
   </div>
 
-  <!-- Success -->
-  <div v-else-if="content && submitSuccess" class="container mx-auto px-4 py-20 text-center">
-    <div class="max-w-md mx-auto">
-      <h2 class="text-3xl font-bold mb-4">{{ t('contests.submitted') }}</h2>
-      <p class="opacity-70 mb-8">
+  <div
+    v-else-if="content && submitSuccess"
+    class="px-4 py-20 text-center"
+  >
+    <div class="container mx-auto max-w-md">
+      <h2 class="mb-3 text-3xl font-extrabold tracking-tight">
+        {{ t('contests.submitted') }}
+      </h2>
+      <p class="mb-8 text-base-content/60">
         {{ t('contests.submittedMessage') }}
       </p>
-      <NuxtLink :to="localePath(`/contests/${slug}`)" class="btn btn-primary">
+      <NuxtLink
+        :to="localePath(`/contests/${slug}`)"
+        class="btn btn-primary"
+      >
         {{ t('contests.backToContest') }}
       </NuxtLink>
     </div>

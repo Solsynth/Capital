@@ -1,5 +1,12 @@
 <script setup lang="ts">
-import { ChevronLeft, ChevronRight, Calendar, Paperclip, ArrowRight, Hash } from '@lucide/vue'
+import {
+  ChevronLeft,
+  ChevronRight,
+  Calendar,
+  Paperclip,
+  ArrowRight,
+  Hash,
+} from '@lucide/vue'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
@@ -14,8 +21,29 @@ const communityCarouselRef = ref<HTMLElement | null>(null)
 const officialScroll = reactive({ left: false, right: true })
 const communityScroll = reactive({ left: false, right: true })
 
+const sections = computed(() => [
+  {
+    key: 'official' as const,
+    title: t('home.updates.officialTitle'),
+    subtitle: t('home.updates.officialSubtitle'),
+    posts: officialPosts.value ?? [],
+    avatarClass: 'bg-primary text-primary-content',
+    carouselRef: officialCarouselRef,
+    scroll: officialScroll,
+  },
+  {
+    key: 'community' as const,
+    title: t('home.updates.communityTitle'),
+    subtitle: t('home.updates.communitySubtitle'),
+    posts: communityPosts.value ?? [],
+    avatarClass: 'bg-secondary text-secondary-content',
+    carouselRef: communityCarouselRef,
+    scroll: communityScroll,
+  },
+])
+
 function getDisplayTitle(post: { title: string, content: string }): string | null {
-  if (post.title && post.title.trim())
+  if (post.title?.trim())
     return post.title
   return null
 }
@@ -33,7 +61,8 @@ function isAudioAttachment(attachment: { mime_type: string }): boolean {
 }
 
 function getInitials(name: string): string {
-  if (!name || name === 'Unknown') return '?'
+  if (!name || name === 'Unknown')
+    return '?'
   return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 }
 
@@ -41,295 +70,198 @@ function getTagName(tag: { slug: string, name: string | null }): string {
   return tag.name || tag.slug
 }
 
-function updateScrollButtons(el: HTMLElement | null, state: { left: boolean, right: boolean }) {
-  if (!el) return
+function updateScrollButtons(
+  el: HTMLElement | null,
+  state: { left: boolean, right: boolean },
+) {
+  if (!el)
+    return
   state.left = el.scrollLeft > 10
   state.right = el.scrollLeft < el.scrollWidth - el.clientWidth - 10
 }
 
 function scrollCarousel(el: HTMLElement | null, direction: 'left' | 'right') {
-  if (!el) return
+  if (!el)
+    return
   el.scrollBy({ left: direction === 'left' ? -340 : 340, behavior: 'smooth' })
 }
 
 onMounted(() => {
-  if (officialCarouselRef.value) {
-    officialCarouselRef.value.addEventListener('scroll', () => updateScrollButtons(officialCarouselRef.value, officialScroll), { passive: true })
-    updateScrollButtons(officialCarouselRef.value, officialScroll)
-  }
-  if (communityCarouselRef.value) {
-    communityCarouselRef.value.addEventListener('scroll', () => updateScrollButtons(communityCarouselRef.value, communityScroll), { passive: true })
-    updateScrollButtons(communityCarouselRef.value, communityScroll)
+  const pairs: Array<[HTMLElement | null, { left: boolean, right: boolean }]> = [
+    [officialCarouselRef.value, officialScroll],
+    [communityCarouselRef.value, communityScroll],
+  ]
+  for (const [el, state] of pairs) {
+    if (!el)
+      continue
+    el.addEventListener('scroll', () => updateScrollButtons(el, state), { passive: true })
+    updateScrollButtons(el, state)
   }
 })
 </script>
 
 <template>
-  <section class="py-16 px-4">
+  <section class="px-4 py-16">
     <div class="container mx-auto space-y-14">
-      <!-- Official Announcements -->
-      <div v-if="officialPosts && officialPosts.length > 0">
-        <div class="flex items-end justify-between mb-8">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold mb-2">
-              {{ t('home.updates.officialTitle') }}
-            </h2>
-            <p class="text-base opacity-60">
-              {{ t('home.updates.officialSubtitle') }}
-            </p>
-          </div>
-          <div class="hidden sm:flex items-center gap-2">
-            <button
-              class="btn btn-circle btn-sm btn-ghost"
-              :class="{ 'opacity-30 cursor-default': !officialScroll.left }"
-              :disabled="!officialScroll.left"
-              @click="scrollCarousel(officialCarouselRef, 'left')"
-            >
-              <ChevronLeft class="w-4 h-4" />
-            </button>
-            <button
-              class="btn btn-circle btn-sm btn-ghost"
-              :class="{ 'opacity-30 cursor-default': !officialScroll.right }"
-              :disabled="!officialScroll.right"
-              @click="scrollCarousel(officialCarouselRef, 'right')"
-            >
-              <ChevronRight class="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        <div
-          ref="officialCarouselRef"
-          class="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 -mx-4 px-4 scrollbar-hide"
-        >
-          <NuxtLink
-            v-for="post in officialPosts"
-            :key="post.id"
-            :to="localePath(`/updates/${post.id}`)"
-            class="card bg-base-100 border border-base-200/60 shadow-sm hover:shadow-md transition-all duration-200 snap-start shrink-0 w-[320px] group"
-          >
-            <figure v-if="post.attachments.length > 0 && isImageAttachment(post.attachments[0])" class="overflow-hidden rounded-t-xl max-h-48">
-              <img
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                :alt="post.attachments[0].name"
-                class="w-full object-cover group-hover:scale-105 transition-transform duration-300"
-              >
-            </figure>
-            <div v-else-if="post.attachments.length > 0 && isVideoAttachment(post.attachments[0])" class="rounded-t-xl overflow-hidden">
-              <video
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                class="w-full max-h-48 object-cover"
-                controls
-                preload="metadata"
-              />
-            </div>
-            <div v-else-if="post.attachments.length > 0 && isAudioAttachment(post.attachments[0])" class="p-3 bg-base-200/40">
-              <audio
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                class="w-full"
-                controls
-                preload="metadata"
-              />
-            </div>
-            <div class="card-body p-4 gap-2">
-              <div class="flex items-center gap-2">
-                <div v-if="post.publisher?.picture" class="avatar">
-                  <div class="h-6 w-6 rounded-full">
-                    <img
-                      :src="getAttachmentUrl(post.publisher.picture.id)"
-                      :alt="post.publisher.nick"
-                      class="h-full w-full rounded-full object-cover"
-                    >
-                  </div>
-                </div>
-                <div v-else class="avatar avatar-placeholder">
-                  <div class="h-6 w-6 rounded-full bg-primary text-primary-content">
-                    <span class="text-[10px] font-medium">
-                      {{ getInitials(post.publisher?.nick || 'Unknown') }}
-                    </span>
-                  </div>
-                </div>
-                <span class="text-xs font-medium truncate">
-                  {{ post.publisher?.nick || 'Unknown' }}
-                </span>
-                <span class="text-xs text-base-content/40 flex items-center gap-1 ml-auto">
-                  <Calendar class="w-3 h-3" />
-                  {{ formatDate(post.published_at) }}
-                </span>
-              </div>
-
-              <h3 v-if="getDisplayTitle(post)" class="font-bold text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-                {{ getDisplayTitle(post) }}
-              </h3>
-
-              <p class="text-xs text-base-content/60 line-clamp-2">
-                {{ truncateContent(post.content, 100) }}
+      <template v-for="section in sections" :key="section.key">
+        <div v-if="section.posts.length > 0">
+          <div class="mb-6 flex items-end justify-between gap-4">
+            <div class="min-w-0">
+              <h2 class="mb-1 text-2xl font-bold tracking-tight md:text-3xl">
+                {{ section.title }}
+              </h2>
+              <p class="text-base text-base-content/60">
+                {{ section.subtitle }}
               </p>
-
-              <div v-if="post.tags.length > 0" class="flex flex-wrap gap-1.5 mt-1">
-                <span
-                  v-for="tag in post.tags.slice(0, 3)"
-                  :key="tag.id"
-                  class="badge badge-ghost badge-xs gap-0.5"
-                >
-                  <Hash class="w-2.5 h-2.5" />
-                  {{ getTagName(tag) }}
-                </span>
-                <span v-if="post.tags.length > 3" class="badge badge-ghost badge-xs opacity-50">
-                  +{{ post.tags.length - 3 }}
-                </span>
-              </div>
-
-              <div v-if="post.attachments.length > 1" class="flex items-center gap-1 text-xs text-base-content/40 mt-auto">
-                <Paperclip class="w-3 h-3" />
-                <span>{{ post.attachments.length }} attachments</span>
-              </div>
             </div>
-          </NuxtLink>
-
-          <NuxtLink
-            :to="localePath('/updates')"
-            class="card bg-base-200/40 border border-base-200/60 border-dashed hover:bg-base-200/60 transition-all duration-200 snap-start shrink-0 w-[320px] flex items-center justify-center min-h-[200px]"
-          >
-            <div class="flex flex-col items-center gap-2 text-base-content/50">
-              <ArrowRight class="w-6 h-6" />
-              <span class="text-sm font-medium">{{ t('home.updates.viewAll') }}</span>
-            </div>
-          </NuxtLink>
-        </div>
-      </div>
-
-      <!-- Community & Developers Updates -->
-      <div v-if="communityPosts && communityPosts.length > 0">
-        <div class="flex items-end justify-between mb-8">
-          <div>
-            <h2 class="text-2xl md:text-3xl font-bold mb-2">
-              {{ t('home.updates.communityTitle') }}
-            </h2>
-            <p class="text-base opacity-60">
-              {{ t('home.updates.communitySubtitle') }}
-            </p>
-          </div>
-          <div class="hidden sm:flex items-center gap-2">
-            <button
-              class="btn btn-circle btn-sm btn-ghost"
-              :class="{ 'opacity-30 cursor-default': !communityScroll.left }"
-              :disabled="!communityScroll.left"
-              @click="scrollCarousel(communityCarouselRef, 'left')"
-            >
-              <ChevronLeft class="w-4 h-4" />
-            </button>
-            <button
-              class="btn btn-circle btn-sm btn-ghost"
-              :class="{ 'opacity-30 cursor-default': !communityScroll.right }"
-              :disabled="!communityScroll.right"
-              @click="scrollCarousel(communityCarouselRef, 'right')"
-            >
-              <ChevronRight class="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        <div
-          ref="communityCarouselRef"
-          class="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth pb-4 -mx-4 px-4 scrollbar-hide"
-        >
-          <NuxtLink
-            v-for="post in communityPosts"
-            :key="post.id"
-            :to="localePath(`/updates/${post.id}`)"
-            class="card bg-base-100 border border-base-200/60 shadow-sm hover:shadow-md transition-all duration-200 snap-start shrink-0 w-[320px] group"
-          >
-            <figure v-if="post.attachments.length > 0 && isImageAttachment(post.attachments[0])" class="overflow-hidden rounded-t-xl max-h-48">
-              <img
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                :alt="post.attachments[0].name"
-                class="w-full object-cover group-hover:scale-105 transition-transform duration-300"
+            <div class="hidden shrink-0 items-center gap-1 sm:flex">
+              <button
+                type="button"
+                class="btn btn-square btn-sm btn-ghost"
+                :class="{ 'opacity-30': !section.scroll.left }"
+                :disabled="!section.scroll.left"
+                :aria-label="t('home.updates.scrollLeft')"
+                @click="scrollCarousel(section.carouselRef.value, 'left')"
               >
-            </figure>
-            <div v-else-if="post.attachments.length > 0 && isVideoAttachment(post.attachments[0])" class="rounded-t-xl overflow-hidden">
-              <video
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                class="w-full max-h-48 object-cover"
-                controls
-                preload="metadata"
-              />
+                <ChevronLeft class="h-4 w-4" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-square btn-sm btn-ghost"
+                :class="{ 'opacity-30': !section.scroll.right }"
+                :disabled="!section.scroll.right"
+                :aria-label="t('home.updates.scrollRight')"
+                @click="scrollCarousel(section.carouselRef.value, 'right')"
+              >
+                <ChevronRight class="h-4 w-4" />
+              </button>
             </div>
-            <div v-else-if="post.attachments.length > 0 && isAudioAttachment(post.attachments[0])" class="p-3 bg-base-200/40">
-              <audio
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                class="w-full"
-                controls
-                preload="metadata"
-              />
-            </div>
-            <div class="card-body p-4 gap-2">
-              <div class="flex items-center gap-2">
-                <div v-if="post.publisher?.picture" class="avatar">
-                  <div class="h-6 w-6 rounded-full">
-                    <img
-                      :src="getAttachmentUrl(post.publisher.picture.id)"
-                      :alt="post.publisher.nick"
-                      class="h-full w-full rounded-full object-cover"
-                    >
-                  </div>
-                </div>
-                <div v-else class="avatar avatar-placeholder">
-                  <div class="h-6 w-6 rounded-full bg-secondary text-secondary-content">
-                    <span class="text-[10px] font-medium">
-                      {{ getInitials(post.publisher?.nick || 'Unknown') }}
-                    </span>
-                  </div>
-                </div>
-                <span class="text-xs font-medium truncate">
-                  {{ post.publisher?.nick || 'Unknown' }}
-                </span>
-                <span class="text-xs text-base-content/40 flex items-center gap-1 ml-auto">
-                  <Calendar class="w-3 h-3" />
-                  {{ formatDate(post.published_at) }}
-                </span>
-              </div>
+          </div>
 
-              <h3 v-if="getDisplayTitle(post)" class="font-bold text-sm leading-snug line-clamp-2 group-hover:text-primary transition-colors">
-                {{ getDisplayTitle(post) }}
-              </h3>
-
-              <p class="text-xs text-base-content/60 line-clamp-2">
-                {{ truncateContent(post.content, 100) }}
-              </p>
-
-              <div v-if="post.tags.length > 0" class="flex flex-wrap gap-1.5 mt-1">
-                <span
-                  v-for="tag in post.tags.slice(0, 3)"
-                  :key="tag.id"
-                  class="badge badge-ghost badge-xs gap-0.5"
-                >
-                  <Hash class="w-2.5 h-2.5" />
-                  {{ getTagName(tag) }}
-                </span>
-                <span v-if="post.tags.length > 3" class="badge badge-ghost badge-xs opacity-50">
-                  +{{ post.tags.length - 3 }}
-                </span>
-              </div>
-
-              <div v-if="post.attachments.length > 1" class="flex items-center gap-1 text-xs text-base-content/40 mt-auto">
-                <Paperclip class="w-3 h-3" />
-                <span>{{ post.attachments.length }} attachments</span>
-              </div>
-            </div>
-          </NuxtLink>
-
-          <NuxtLink
-            :to="localePath('/updates')"
-            class="card bg-base-200/40 border border-base-200/60 border-dashed hover:bg-base-200/60 transition-all duration-200 snap-start shrink-0 w-[320px] flex items-center justify-center min-h-[200px]"
+          <div
+            :ref="section.carouselRef"
+            class="scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-2"
           >
-            <div class="flex flex-col items-center gap-2 text-base-content/50">
-              <ArrowRight class="w-6 h-6" />
+            <NuxtLink
+              v-for="post in section.posts"
+              :key="post.id"
+              :to="localePath(`/updates/${post.id}`)"
+              class="group card w-[300px] shrink-0 snap-start border border-base-200 bg-base-100 transition-colors duration-150 hover:border-base-300 sm:w-[320px]"
+            >
+              <figure
+                v-if="post.attachments.length > 0 && isImageAttachment(post.attachments[0])"
+                class="max-h-44 overflow-hidden rounded-t-box border-b border-base-200"
+              >
+                <img
+                  :src="getAttachmentUrl(post.attachments[0].id)"
+                  :alt="post.attachments[0].name"
+                  class="h-full w-full object-cover"
+                  loading="lazy"
+                >
+              </figure>
+              <div
+                v-else-if="post.attachments.length > 0 && isVideoAttachment(post.attachments[0])"
+                class="overflow-hidden rounded-t-box border-b border-base-200"
+              >
+                <video
+                  :src="getAttachmentUrl(post.attachments[0].id)"
+                  class="max-h-44 w-full object-cover"
+                  controls
+                  preload="metadata"
+                  @click.stop
+                />
+              </div>
+              <div
+                v-else-if="post.attachments.length > 0 && isAudioAttachment(post.attachments[0])"
+                class="border-b border-base-200 bg-base-200/40 p-3"
+              >
+                <audio
+                  :src="getAttachmentUrl(post.attachments[0].id)"
+                  class="w-full"
+                  controls
+                  preload="metadata"
+                  @click.stop
+                />
+              </div>
+
+              <div class="card-body gap-2 p-4">
+                <div class="flex items-center gap-2">
+                  <div v-if="post.publisher?.picture" class="avatar">
+                    <div class="h-6 w-6 rounded-full">
+                      <img
+                        :src="getAttachmentUrl(post.publisher.picture.id)"
+                        :alt="post.publisher.nick"
+                        class="h-full w-full rounded-full object-cover"
+                      >
+                    </div>
+                  </div>
+                  <div v-else class="avatar avatar-placeholder">
+                    <div
+                      class="h-6 w-6 rounded-full"
+                      :class="section.avatarClass"
+                    >
+                      <span class="text-[10px] font-medium">
+                        {{ getInitials(post.publisher?.nick || 'Unknown') }}
+                      </span>
+                    </div>
+                  </div>
+                  <span class="truncate text-xs font-medium">
+                    {{ post.publisher?.nick || 'Unknown' }}
+                  </span>
+                  <span class="ml-auto flex items-center gap-1 text-xs text-base-content/40">
+                    <Calendar class="h-3 w-3" />
+                    {{ formatDate(post.published_at) }}
+                  </span>
+                </div>
+
+                <h3
+                  v-if="getDisplayTitle(post)"
+                  class="line-clamp-2 text-sm font-bold leading-snug transition-colors group-hover:text-primary"
+                >
+                  {{ getDisplayTitle(post) }}
+                </h3>
+
+                <p class="line-clamp-2 text-xs text-base-content/60">
+                  {{ truncateContent(post.content, 100) }}
+                </p>
+
+                <div v-if="post.tags.length > 0" class="mt-0.5 flex flex-wrap gap-1">
+                  <span
+                    v-for="tag in post.tags.slice(0, 3)"
+                    :key="tag.id"
+                    class="badge badge-ghost badge-xs gap-0.5"
+                  >
+                    <Hash class="h-2.5 w-2.5" />
+                    {{ getTagName(tag) }}
+                  </span>
+                  <span
+                    v-if="post.tags.length > 3"
+                    class="badge badge-ghost badge-xs opacity-50"
+                  >
+                    +{{ post.tags.length - 3 }}
+                  </span>
+                </div>
+
+                <div
+                  v-if="post.attachments.length > 1"
+                  class="mt-auto flex items-center gap-1 text-xs text-base-content/40"
+                >
+                  <Paperclip class="h-3 w-3" />
+                  <span>{{ t('home.updates.attachments', { count: post.attachments.length }) }}</span>
+                </div>
+              </div>
+            </NuxtLink>
+
+            <NuxtLink
+              :to="localePath('/updates')"
+              class="flex min-h-[200px] w-[300px] shrink-0 snap-start flex-col items-center justify-center gap-2 rounded-box border border-dashed border-base-300 bg-base-200/30 text-base-content/50 transition-colors duration-150 hover:border-base-content/20 hover:bg-base-200/50 hover:text-base-content/70 sm:w-[320px]"
+            >
+              <ArrowRight class="h-5 w-5" />
               <span class="text-sm font-medium">{{ t('home.updates.viewAll') }}</span>
-            </div>
-          </NuxtLink>
+            </NuxtLink>
+          </div>
         </div>
-      </div>
+      </template>
     </div>
   </section>
 </template>

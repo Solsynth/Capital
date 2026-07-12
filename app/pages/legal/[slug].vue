@@ -30,7 +30,11 @@ useSeoMeta({
   ogDescription: () => page.value?.description || t('seo.legal.description'),
 })
 
-// Schema.org Structured Data for Legal Document
+defineOgImage('UniOgImage', {
+  title: page.value?.title || t('legal.title'),
+  description: page.value?.description || t('seo.legal.description'),
+})
+
 useSchemaOrg([
   defineArticle({
     headline: () => page.value?.title || '',
@@ -67,29 +71,47 @@ useSchemaOrg([
 </script>
 
 <template>
-  <div v-if="page" class="container mx-auto px-8 py-16 max-w-4xl">
-    <div class="mb-8 -mx-4">
-      <NuxtLink :to="localePath('/legal')" class="btn btn-ghost btn-sm gap-1">
-        <ArrowLeft class="w-4 h-4" />
-        {{ t('legal.backToLegal') }}
-      </NuxtLink>
-    </div>
+  <div v-if="page">
+    <section class="border-b border-base-200 px-4 py-12 md:py-16">
+      <div class="container mx-auto max-w-3xl">
+        <NuxtLink
+          :to="localePath('/legal')"
+          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
+        >
+          <ArrowLeft class="h-4 w-4" />
+          {{ t('legal.backToLegal') }}
+        </NuxtLink>
 
-    <article>
-      <header class="mb-8">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ page.title }}</h1>
-        <div v-if="page.updatedDate" class="flex items-center gap-2 text-sm opacity-70">
-          <Calendar class="w-4 h-4" />
-          <span>{{ lang === 'zh' ? t('legal.lastUpdatedZh') : t('legal.lastUpdated') }} {{ page.updatedDate }}</span>
+        <h1 class="mb-3 text-3xl font-extrabold tracking-tight md:text-4xl lg:text-5xl">
+          {{ page.title }}
+        </h1>
+
+        <p
+          v-if="page.description"
+          class="mb-4 max-w-2xl text-base text-base-content/65 md:text-lg"
+        >
+          {{ page.description }}
+        </p>
+
+        <div
+          v-if="page.updatedDate"
+          class="flex items-center gap-1.5 text-sm text-base-content/50"
+        >
+          <Calendar class="h-4 w-4" />
+          <span>
+            {{ lang === 'zh' ? t('legal.lastUpdatedZh') : t('legal.lastUpdated') }}
+            {{ page.updatedDate }}
+          </span>
         </div>
-        <p v-if="page.description" class="text-lg opacity-70 mt-4">{{ page.description }}</p>
-      </header>
-
-      <div class="divider"></div>
-
-      <div class="prose prose-lg max-w-none">
-        <ContentRenderer :value="page" />
       </div>
-    </article>
+    </section>
+
+    <section class="px-4 py-12">
+      <article class="container mx-auto max-w-3xl">
+        <div class="prose prose-base max-w-none md:prose-lg prose-headings:tracking-tight prose-a:text-primary">
+          <ContentRenderer :value="page" />
+        </div>
+      </article>
+    </section>
   </div>
 </template>

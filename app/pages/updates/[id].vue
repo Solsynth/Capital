@@ -1,5 +1,13 @@
 <script setup lang="ts">
-import { ArrowLeft, Eye, MessageCircle, Heart, ArrowRight, Calendar, Paperclip } from '@lucide/vue'
+import {
+  ArrowLeft,
+  Eye,
+  MessageCircle,
+  Heart,
+  ArrowRight,
+  Calendar,
+  Paperclip,
+} from '@lucide/vue'
 import { renderMarkdown } from '~/utils/marked'
 
 const { t, locale } = useI18n()
@@ -22,8 +30,9 @@ if (!post.value) {
   navigateTo(localePath('/updates'))
 }
 
-function getDisplayTitle(post: { title: string, content: string }): string | null {
-  if (post.title && post.title.trim()) return post.title
+function getDisplayTitle(item: { title: string, content: string }): string | null {
+  if (item.title?.trim())
+    return item.title
   return null
 }
 
@@ -40,7 +49,8 @@ function isAudioAttachment(attachment: { mime_type: string }): boolean {
 }
 
 function getInitials(name: string): string {
-  if (!name || name === 'Unknown') return '?'
+  if (!name || name === 'Unknown')
+    return '?'
   return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
 }
 
@@ -67,20 +77,32 @@ useSeoMeta({
     ? `https://api.solian.app/drive/files/${post.value.attachments[0].id}`
     : undefined,
 })
+
+defineOgImage('UniOgImage', {
+  title: displayTitle.value || t('updates.title'),
+  description: t('seo.updates.description'),
+})
 </script>
 
 <template>
-  <div v-if="post" class="container mx-auto px-4 py-16 max-w-4xl">
-    <div class="mb-8">
-      <NuxtLink :to="localePath('/updates')" class="btn btn-ghost btn-sm gap-1 -ml-2">
-        <ArrowLeft class="w-4 h-4" />
-        {{ t('updates.backToUpdates') }}
-      </NuxtLink>
-    </div>
+  <div v-if="post">
+    <section class="border-b border-base-200 px-4 py-12 md:py-16">
+      <div class="container mx-auto max-w-3xl">
+        <NuxtLink
+          :to="localePath('/updates')"
+          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
+        >
+          <ArrowLeft class="h-4 w-4" />
+          {{ t('updates.backToUpdates') }}
+        </NuxtLink>
 
-    <article>
-      <header class="mb-8">
-        <h1 v-if="displayTitle" class="text-3xl md:text-4xl lg:text-5xl font-bold mb-6 leading-tight">{{ displayTitle }}</h1>
+        <h1
+          v-if="displayTitle"
+          class="mb-6 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl lg:text-5xl"
+        >
+          {{ displayTitle }}
+        </h1>
+
         <div class="flex items-center gap-3">
           <div v-if="post.publisher?.picture" class="avatar">
             <div class="h-10 w-10 rounded-full">
@@ -99,122 +121,156 @@ useSeoMeta({
             </div>
           </div>
           <div>
-            <span class="font-semibold block">
+            <span class="block font-semibold">
               {{ post.publisher?.nick || 'Unknown' }}
             </span>
-            <span class="text-sm text-base-content/50 flex items-center gap-1">
-              <Calendar class="w-3.5 h-3.5" />
+            <span class="flex items-center gap-1 text-sm text-base-content/50">
+              <Calendar class="h-3.5 w-3.5" />
               {{ formatDate(post.published_at) }}
-              <span v-if="post.edited_at" class="italic ml-1">
+              <span
+                v-if="post.edited_at"
+                class="ml-1 italic"
+              >
                 ({{ isZh ? '已编辑' : 'edited' }})
               </span>
             </span>
           </div>
         </div>
-      </header>
+      </div>
+    </section>
 
-      <div v-if="post.attachments.length > 0" class="mb-8">
-        <!-- Single attachment -->
-        <div v-if="post.attachments.length === 1">
-          <div v-if="isImageAttachment(post.attachments[0])" class="rounded-xl overflow-hidden border border-base-200/60">
-            <img
-              :src="getAttachmentUrl(post.attachments[0].id)"
-              :alt="post.attachments[0].name"
-              class="w-full max-h-[500px] object-contain bg-base-200"
+    <section class="px-4 py-10">
+      <article class="container mx-auto max-w-3xl">
+        <div v-if="post.attachments.length > 0" class="mb-8">
+          <div v-if="post.attachments.length === 1">
+            <div
+              v-if="isImageAttachment(post.attachments[0])"
+              class="overflow-hidden rounded-lg border border-base-200"
             >
-          </div>
-          <div v-else-if="isVideoAttachment(post.attachments[0])" class="rounded-xl overflow-hidden border border-base-200/60">
-            <video
-              :src="getAttachmentUrl(post.attachments[0].id)"
-              class="w-full max-h-[500px]"
-              controls
-              preload="metadata"
-            />
-          </div>
-          <div v-else-if="isAudioAttachment(post.attachments[0])" class="rounded-xl border border-base-200/60 p-4 bg-base-200/40">
-            <audio
-              :src="getAttachmentUrl(post.attachments[0].id)"
-              class="w-full"
-              controls
-              preload="metadata"
-            />
-          </div>
-          <div v-else class="rounded-xl border border-base-200/60 p-4 bg-base-200/40">
-            <div class="flex items-center gap-3">
-              <Paperclip class="w-5 h-5 text-base-content/50" />
-              <span class="text-sm">{{ post.attachments[0].name }}</span>
+              <img
+                :src="getAttachmentUrl(post.attachments[0].id)"
+                :alt="post.attachments[0].name"
+                class="max-h-[500px] w-full bg-base-200 object-contain"
+              >
             </div>
-          </div>
-        </div>
-        <!-- Multiple attachments -->
-        <div v-else class="grid grid-cols-2 md:grid-cols-3 gap-3">
-          <div
-            v-for="attachment in post.attachments"
-            :key="attachment.id"
-            class="rounded-xl overflow-hidden bg-base-200 border border-base-200/60"
-          >
-            <img
-              v-if="isImageAttachment(attachment)"
-              :src="getAttachmentUrl(attachment.id)"
-              :alt="attachment.name"
-              class="w-full aspect-video object-cover"
+            <div
+              v-else-if="isVideoAttachment(post.attachments[0])"
+              class="overflow-hidden rounded-lg border border-base-200"
             >
-            <video
-              v-else-if="isVideoAttachment(attachment)"
-              :src="getAttachmentUrl(attachment.id)"
-              class="w-full aspect-video object-cover"
-              controls
-              preload="metadata"
-            />
-            <div v-else-if="isAudioAttachment(attachment)" class="p-3">
+              <video
+                :src="getAttachmentUrl(post.attachments[0].id)"
+                class="max-h-[500px] w-full"
+                controls
+                preload="metadata"
+              />
+            </div>
+            <div
+              v-else-if="isAudioAttachment(post.attachments[0])"
+              class="rounded-lg border border-base-200 bg-base-200/40 p-4"
+            >
               <audio
-                :src="getAttachmentUrl(attachment.id)"
+                :src="getAttachmentUrl(post.attachments[0].id)"
                 class="w-full"
                 controls
                 preload="metadata"
               />
             </div>
-            <div v-else class="p-3 flex items-center gap-2">
-              <Paperclip class="w-4 h-4 text-base-content/50" />
-              <span class="text-xs truncate">{{ attachment.name }}</span>
+            <div
+              v-else
+              class="rounded-lg border border-base-200 bg-base-200/40 p-4"
+            >
+              <div class="flex items-center gap-3">
+                <Paperclip class="h-5 w-5 text-base-content/50" />
+                <span class="text-sm">{{ post.attachments[0].name }}</span>
+              </div>
+            </div>
+          </div>
+
+          <div v-else class="grid grid-cols-2 gap-3 md:grid-cols-3">
+            <div
+              v-for="attachment in post.attachments"
+              :key="attachment.id"
+              class="overflow-hidden rounded-lg border border-base-200 bg-base-200"
+            >
+              <img
+                v-if="isImageAttachment(attachment)"
+                :src="getAttachmentUrl(attachment.id)"
+                :alt="attachment.name"
+                class="aspect-video w-full object-cover"
+              >
+              <video
+                v-else-if="isVideoAttachment(attachment)"
+                :src="getAttachmentUrl(attachment.id)"
+                class="aspect-video w-full object-cover"
+                controls
+                preload="metadata"
+              />
+              <div
+                v-else-if="isAudioAttachment(attachment)"
+                class="p-3"
+              >
+                <audio
+                  :src="getAttachmentUrl(attachment.id)"
+                  class="w-full"
+                  controls
+                  preload="metadata"
+                />
+              </div>
+              <div
+                v-else
+                class="flex items-center gap-2 p-3"
+              >
+                <Paperclip class="h-4 w-4 text-base-content/50" />
+                <span class="truncate text-xs">{{ attachment.name }}</span>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <div class="prose prose-lg max-w-none mb-12" v-html="contentHtml" />
+        <div
+          class="prose prose-base mb-10 max-w-none md:prose-lg prose-headings:tracking-tight prose-a:text-primary"
+          v-html="contentHtml"
+        />
 
-      <footer class="border-t border-base-200 pt-6">
-        <div class="flex flex-wrap items-center gap-6 text-sm text-base-content/50">
-          <div class="flex items-center gap-2">
-            <Eye class="w-4 h-4" />
-            <span>{{ post.views_unique }} {{ t('updates.uniqueViews') }}</span>
+        <footer class="border-t border-base-200 pt-6">
+          <div class="flex flex-wrap items-center gap-5 text-sm text-base-content/50">
+            <div class="flex items-center gap-2">
+              <Eye class="h-4 w-4" />
+              <span>{{ post.views_unique }} {{ t('updates.uniqueViews') }}</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <MessageCircle class="h-4 w-4" />
+              <span>{{ post.replies_count }} {{ t('updates.replies') }}</span>
+            </div>
+            <div
+              v-if="Object.keys(post.reactions_count).length > 0"
+              class="flex items-center gap-2"
+            >
+              <Heart class="h-4 w-4" />
+              <span>{{ Object.values(post.reactions_count).reduce((a, b) => a + b, 0) }}</span>
+            </div>
+            <div
+              v-if="post.attachments.length > 0"
+              class="flex items-center gap-2"
+            >
+              <Paperclip class="h-4 w-4" />
+              <span>{{ t('home.updates.attachments', { count: post.attachments.length }) }}</span>
+            </div>
           </div>
-          <div class="flex items-center gap-2">
-            <MessageCircle class="w-4 h-4" />
-            <span>{{ post.replies_count }} {{ t('updates.replies') }}</span>
-          </div>
-          <div v-if="Object.keys(post.reactions_count).length > 0" class="flex items-center gap-2">
-            <Heart class="w-4 h-4" />
-            <span>{{ Object.values(post.reactions_count).reduce((a, b) => a + b, 0) }}</span>
-          </div>
-          <div v-if="post.attachments.length > 0" class="flex items-center gap-2">
-            <Paperclip class="w-4 h-4" />
-            <span>{{ post.attachments.length }} attachment{{ post.attachments.length > 1 ? 's' : '' }}</span>
-          </div>
+        </footer>
+
+        <div class="mt-8">
+          <a
+            :href="`https://solian.app/posts/${post.id}`"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-ghost btn-sm gap-2 border border-base-300"
+          >
+            {{ t('updates.discussion') }}
+            <ArrowRight class="h-4 w-4" />
+          </a>
         </div>
-      </footer>
-    </article>
-
-    <div class="mt-8">
-      <a
-        :href="`https://solian.app/posts/${post.id}`"
-        target="_blank"
-        class="btn btn-outline btn-sm gap-2"
-      >
-        {{ t('updates.discussion') }}
-        <ArrowRight class="w-4 h-4" />
-      </a>
-    </div>
+      </article>
+    </section>
   </div>
 </template>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, MapPin, Tag, ArrowRight } from '@lucide/vue'
+import { Calendar, MapPin, Tag, ArrowRight, X } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
@@ -22,7 +22,6 @@ defineOgImage('UniOgImage', {
   description: t('seo.events.description'),
 })
 
-// Schema.org Structured Data for Events Collection Page
 useSchemaOrg([
   defineWebPage({
     name: () => t('seo.events.title'),
@@ -57,19 +56,19 @@ const { data: events } = await useAsyncData(`events-${lang.value}`, async () => 
 })
 
 const allTags = computed(() => {
-  if (!events.value) return []
+  if (!events.value)
+    return []
   return [...new Set(events.value.flatMap(e => e.tags || []))].sort()
 })
 
 const filteredEvents = computed(() => {
-  if (!events.value) return []
+  if (!events.value)
+    return []
   let filtered = events.value
-  if (urlStatus.value) {
+  if (urlStatus.value)
     filtered = filtered.filter(e => e.status === urlStatus.value)
-  }
-  if (urlTag.value) {
+  if (urlTag.value)
     filtered = filtered.filter(e => e.tags?.includes(urlTag.value))
-  }
   return filtered.sort((a, b) => {
     const dateA = new Date(a.startDate)
     const dateB = new Date(b.startDate)
@@ -90,155 +89,203 @@ function formatDate(dateStr: string) {
   })
 }
 
-function formatTime(dateStr: string) {
-  const date = new Date(dateStr)
-  return date.toLocaleTimeString(lang.value === 'zh' ? 'zh-CN' : 'en-US', {
-    hour: '2-digit',
-    minute: '2-digit',
-  })
+function statusQuery(status: string) {
+  const base = localePath('/events')
+  if (!status)
+    return base
+  return `${base}?status=${status}`
+}
+
+function tagQuery(tag: string) {
+  const params = new URLSearchParams()
+  if (urlStatus.value)
+    params.set('status', urlStatus.value)
+  if (tag)
+    params.set('tag', tag)
+  const q = params.toString()
+  return q ? `${localePath('/events')}?${q}` : localePath('/events')
 }
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-16">
-    <div class="text-center mb-12">
-      <h1 class="text-4xl md:text-5xl font-bold mb-4">{{ t('events.title') }}</h1>
-      <p class="text-xl opacity-70 max-w-2xl mx-auto">
-        {{ t('events.subtitle') }}
-      </p>
-    </div>
-
-    <div class="flex flex-wrap justify-center gap-2 mb-8">
-      <NuxtLink
-        :to="localePath('/events')"
-        class="btn btn-sm"
-        :class="!urlStatus ? 'btn-primary' : 'btn-outline'"
-      >
-        {{ t('events.all') }}
-      </NuxtLink>
-      <NuxtLink
-        :to="`${localePath('/events')}?status=upcoming`"
-        class="btn btn-sm"
-        :class="urlStatus === 'upcoming' ? 'btn-primary' : 'btn-outline'"
-      >
-        {{ t('events.upcoming') }}
-        <span v-if="upcomingCount > 0" class="badge badge-sm ml-2">{{ upcomingCount }}</span>
-      </NuxtLink>
-      <NuxtLink
-        :to="`${localePath('/events')}?status=ongoing`"
-        class="btn btn-sm"
-        :class="urlStatus === 'ongoing' ? 'btn-primary' : 'btn-outline'"
-      >
-        {{ t('events.ongoing') }}
-        <span v-if="ongoingCount > 0" class="badge badge-sm ml-2">{{ ongoingCount }}</span>
-      </NuxtLink>
-      <NuxtLink
-        :to="`${localePath('/events')}?status=past`"
-        class="btn btn-sm"
-        :class="urlStatus === 'past' ? 'btn-primary' : 'btn-outline'"
-      >
-        {{ t('events.past') }}
-        <span v-if="pastCount > 0" class="badge badge-sm ml-2">{{ pastCount }}</span>
-      </NuxtLink>
-    </div>
-
-    <div v-if="allTags.length > 0" class="mb-12">
-      <div class="flex flex-wrap justify-center gap-2">
-        <NuxtLink
-          v-for="tag in allTags"
-          :key="tag"
-          :to="`${localePath('/events')}${urlStatus ? `?status=${urlStatus}&` : '?'}tag=${encodeURIComponent(tag)}`"
-          class="btn btn-xs"
-          :class="urlTag === tag ? 'btn-secondary' : 'btn-ghost'"
-        >
-          <Tag class="w-3 h-3 mr-1" />
-          {{ tag }}
-        </NuxtLink>
-        <NuxtLink
-          v-if="urlTag"
-          :to="`${localePath('/events')}${urlStatus ? `?status=${urlStatus}` : ''}`"
-          class="btn btn-xs btn-ghost text-error"
-        >
-          ✕ {{ isZh ? '清除筛选' : 'Clear' }}
-        </NuxtLink>
+  <div>
+    <section class="border-b border-base-200 px-4 py-16 md:py-20">
+      <div class="container mx-auto max-w-5xl">
+        <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
+          {{ t('events.title') }}
+        </h1>
+        <p class="max-w-2xl text-lg text-base-content/65 md:text-xl">
+          {{ t('events.subtitle') }}
+        </p>
       </div>
-    </div>
+    </section>
 
-    <div v-if="filteredEvents.length === 0" class="text-center py-16">
-      <p class="text-lg opacity-70">{{ t('events.noEvents') }}</p>
-      <NuxtLink :to="localePath('/events')" class="btn btn-primary mt-4">
-        {{ t('events.all') }}
-      </NuxtLink>
-    </div>
-    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <NuxtLink
-        v-for="event in filteredEvents"
-        :key="event.slug"
-        :to="localePath(`/events/${event.slug}`)"
-        class="card bg-base-200 hover:bg-base-300 transition-colors group"
-      >
-        <figure v-if="event.coverImage" class="h-48 overflow-hidden">
-          <img
-            :src="event.coverImage"
-            :alt="event.name"
-            class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+    <section class="px-4 py-10">
+      <div class="container mx-auto max-w-5xl">
+        <div class="mb-6 flex flex-wrap gap-2">
+          <NuxtLink
+            :to="statusQuery('')"
+            class="btn btn-sm"
+            :class="!urlStatus ? 'btn-primary' : 'btn-ghost border border-base-300'"
           >
-        </figure>
-        <figure v-else class="h-48 bg-gradient-to-br from-primary/20 to-secondary/20 flex items-center justify-center">
-          <Calendar class="w-16 h-16 opacity-30" />
-        </figure>
-
-        <div class="card-body">
-          <div class="flex items-center gap-2 mb-2">
+            {{ t('events.all') }}
+          </NuxtLink>
+          <NuxtLink
+            :to="statusQuery('upcoming')"
+            class="btn btn-sm gap-1.5"
+            :class="urlStatus === 'upcoming' ? 'btn-primary' : 'btn-ghost border border-base-300'"
+          >
+            {{ t('events.upcoming') }}
             <span
-              class="badge badge-sm"
-              :class="{
-                'badge-primary': event.status === 'upcoming',
-                'badge-secondary': event.status === 'ongoing',
-                'badge-ghost': event.status === 'past',
-              }"
-            >
-              {{ t(`events.${event.status}`) }}
-            </span>
-          </div>
-
-          <h2 class="card-title text-xl">{{ event.name }}</h2>
-
-          <p class="opacity-70 line-clamp-2">{{ event.description }}</p>
-
-          <div class="mt-4 space-y-2 text-sm opacity-80">
-            <div class="flex items-center gap-2">
-              <Calendar class="w-4 h-4" />
-              <span>
-                {{ formatDate(event.startDate) }}
-                <template v-if="event.startDate !== event.endDate">
-                  - {{ formatDate(event.endDate) }}
-                </template>
-              </span>
-            </div>
-            <div v-if="event.location" class="flex items-center gap-2">
-              <MapPin class="w-4 h-4" />
-              <span>{{ event.location }}</span>
-            </div>
-          </div>
-
-          <div v-if="event.tags && event.tags.length > 0" class="flex flex-wrap gap-1 mt-3">
-            <span v-for="tag in event.tags.slice(0, 3)" :key="tag" class="badge badge-outline badge-xs">
-              {{ tag }}
-            </span>
-            <span v-if="event.tags.length > 3" class="badge badge-ghost badge-xs">
-              +{{ event.tags.length - 3 }}
-            </span>
-          </div>
-
-          <div class="card-actions justify-end mt-4">
-            <span class="btn btn-primary btn-sm">
-              {{ isZh ? '查看详情' : 'View Details' }}
-              <ArrowRight class="w-4 h-4" />
-            </span>
-          </div>
+              v-if="upcomingCount > 0"
+              class="text-xs opacity-70"
+            >{{ upcomingCount }}</span>
+          </NuxtLink>
+          <NuxtLink
+            :to="statusQuery('ongoing')"
+            class="btn btn-sm gap-1.5"
+            :class="urlStatus === 'ongoing' ? 'btn-primary' : 'btn-ghost border border-base-300'"
+          >
+            {{ t('events.ongoing') }}
+            <span
+              v-if="ongoingCount > 0"
+              class="text-xs opacity-70"
+            >{{ ongoingCount }}</span>
+          </NuxtLink>
+          <NuxtLink
+            :to="statusQuery('past')"
+            class="btn btn-sm gap-1.5"
+            :class="urlStatus === 'past' ? 'btn-primary' : 'btn-ghost border border-base-300'"
+          >
+            {{ t('events.past') }}
+            <span
+              v-if="pastCount > 0"
+              class="text-xs opacity-70"
+            >{{ pastCount }}</span>
+          </NuxtLink>
         </div>
-      </NuxtLink>
-    </div>
+
+        <div v-if="allTags.length > 0" class="mb-10 flex flex-wrap items-center gap-2">
+          <NuxtLink
+            v-for="tag in allTags"
+            :key="tag"
+            :to="tagQuery(tag)"
+            class="btn btn-xs gap-1"
+            :class="urlTag === tag ? 'btn-secondary' : 'btn-ghost border border-base-300'"
+          >
+            <Tag class="h-3 w-3" />
+            {{ tag }}
+          </NuxtLink>
+          <NuxtLink
+            v-if="urlTag"
+            :to="tagQuery('')"
+            class="btn btn-xs btn-ghost gap-1 text-error"
+          >
+            <X class="h-3 w-3" />
+            {{ isZh ? '清除筛选' : 'Clear' }}
+          </NuxtLink>
+        </div>
+
+        <div
+          v-if="filteredEvents.length === 0"
+          class="rounded-lg border border-dashed border-base-300 px-6 py-16 text-center"
+        >
+          <p class="mb-4 text-base text-base-content/55">
+            {{ t('events.noEvents') }}
+          </p>
+          <NuxtLink :to="localePath('/events')" class="btn btn-primary btn-sm">
+            {{ t('events.all') }}
+          </NuxtLink>
+        </div>
+
+        <div v-else class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
+          <NuxtLink
+            v-for="event in filteredEvents"
+            :key="event.slug"
+            :to="localePath(`/events/${event.slug}`)"
+            class="group flex flex-col overflow-hidden rounded-lg border border-base-200 bg-base-100 transition-colors duration-150 hover:border-base-300"
+          >
+            <div class="relative aspect-video overflow-hidden border-b border-base-200 bg-base-200/50">
+              <img
+                v-if="event.coverImage"
+                :src="event.coverImage"
+                :alt="event.name"
+                class="h-full w-full object-cover"
+                loading="lazy"
+              >
+              <div
+                v-else
+                class="flex h-full w-full items-center justify-center"
+              >
+                <Calendar class="h-10 w-10 text-base-content/20" />
+              </div>
+            </div>
+
+            <div class="flex flex-1 flex-col p-5">
+              <div class="mb-2">
+                <span
+                  class="badge badge-sm"
+                  :class="{
+                    'badge-primary': event.status === 'upcoming',
+                    'badge-secondary': event.status === 'ongoing',
+                    'badge-ghost': event.status === 'past',
+                  }"
+                >
+                  {{ t(`events.${event.status}`) }}
+                </span>
+              </div>
+
+              <h2 class="mb-2 text-lg font-bold leading-snug transition-colors group-hover:text-primary">
+                {{ event.name }}
+              </h2>
+
+              <p class="mb-4 line-clamp-2 flex-1 text-sm text-base-content/60">
+                {{ event.description }}
+              </p>
+
+              <div class="space-y-1.5 text-sm text-base-content/55">
+                <div class="flex items-center gap-2">
+                  <Calendar class="h-3.5 w-3.5 shrink-0" />
+                  <span>
+                    {{ formatDate(event.startDate) }}
+                    <template v-if="event.startDate !== event.endDate">
+                      – {{ formatDate(event.endDate) }}
+                    </template>
+                  </span>
+                </div>
+                <div v-if="event.location" class="flex items-center gap-2">
+                  <MapPin class="h-3.5 w-3.5 shrink-0" />
+                  <span class="truncate">{{ event.location }}</span>
+                </div>
+              </div>
+
+              <div
+                v-if="event.tags?.length"
+                class="mt-3 flex flex-wrap gap-1"
+              >
+                <span
+                  v-for="tag in event.tags.slice(0, 3)"
+                  :key="tag"
+                  class="badge badge-outline badge-xs"
+                >
+                  {{ tag }}
+                </span>
+                <span
+                  v-if="event.tags.length > 3"
+                  class="badge badge-ghost badge-xs"
+                >
+                  +{{ event.tags.length - 3 }}
+                </span>
+              </div>
+
+              <div class="mt-4 flex items-center gap-1 text-sm font-medium text-base-content/50 transition-colors group-hover:text-primary">
+                {{ isZh ? '查看详情' : 'View details' }}
+                <ArrowRight class="h-3.5 w-3.5" />
+              </div>
+            </div>
+          </NuxtLink>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
