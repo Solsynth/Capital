@@ -720,5 +720,77 @@
       "createType": "新建",
       "updateType": "更新"
     }
+  },
+  "cloudySky": {
+    "tagline": "Solar Network 官方 Android 推送通知配套应用。",
+    "openSource": "开源",
+    "downloadApk": "下载 APK",
+    "about": {
+      "badge": "关于",
+      "title": "无需 Firebase 的推送通知",
+      "desc": "在许多地区，Firebase Cloud Messaging（FCM）无法使用，导致 Solar Network 用户无法获得实时推送通知。CloudySky 填补了这一空白。它通过 SSE 流式传输或智能轮询与 Solar Network 通知服务保持持久连接，在不依赖 Google Play 服务的条件下，为 Android 提供实时推送。"
+    },
+    "aboutCard": {
+      "notifications": {
+        "title": "无需 Firebase",
+        "desc": "CloudySky 独立于 Firebase Cloud Messaging 运行，在 FCM 不可靠或无法使用的地区也能提供实时推送通知。"
+      },
+      "secure": {
+        "title": "安全认证",
+        "desc": "使用 OAuth 2.0 和 PKCE 安全登录，令牌通过 Android Security-Crypto 库加密存储。"
+      },
+      "realtime": {
+        "title": "智能连接",
+        "desc": "支持 SSE 流式、轮询和动态三种模式，根据网络和电量状态自动切换，优化性能。"
+      }
+    },
+    "features": {
+      "badge": "功能",
+      "title": "轻松保持联系",
+      "desc": "帮你随时掌握 Solar Network 动态的一切所需。",
+      "oidc": {
+        "title": "OIDC 登录",
+        "desc": "使用 AppAuth 的 PKCE 流程进行安全认证，无需客户端密钥，完全符合 OAuth 2.0 规范。"
+      },
+      "sse": {
+        "title": "SSE 监听器",
+        "desc": "通过 Server-Sent Events 实时发送通知，支持在 SSE 不可用时自动回退到轮询。"
+      },
+      "grouping": {
+        "title": "智能分组",
+        "desc": "通知按房间、作者、话题或类型分组，方便浏览和管理。"
+      },
+      "media": {
+        "title": "富媒体支持",
+        "desc": "直接在通知栏中查看横幅图片、头像和拼图式多图预览。"
+      },
+      "reply": {
+        "title": "快捷回复",
+        "desc": "通过内联回复操作直接从通知中回复对话。"
+      },
+      "settings": {
+        "title": "灵活设置",
+        "desc": "连接模式、轮询间隔、流式超时、静音模式 — 一切皆可自定义。"
+      }
+    },
+    "requirements": {
+      "title": "系统要求",
+      "android": {
+        "title": "Android 9.0+ (API 28)",
+        "desc": "需要 Android Pie 或更高版本，推荐但不强制要求 Google Play 服务。"
+      },
+      "account": {
+        "title": "Solarpass 账户",
+        "desc": "需要 Solar Network（Solarpass）账户才能登录并接收通知。"
+      },
+      "battery": {
+        "title": "电池优化",
+        "desc": "为获得最佳体验，建议将 CloudySky 从电池优化中排除，以确保推送稳定送达。"
+      }
+    },
+    "help": {
+      "title": "需要帮助？",
+      "desc": "发现问题或需要协助？请在 GitHub 上提交 Issue，我们会帮你解决。"
+    }
   }
 }

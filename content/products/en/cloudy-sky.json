@@ -1,0 +1,10 @@
+{
+  "title": "CloudySky",
+  "description": "Solar Network push notifications for regions without Firebase Cloud Messaging.",
+  "icon": "/images/cloudy-sky/icon.png",
+  "background": "/images/cloudy-sky/main-visual.svg",
+  "repo": "https://github.com/Solsynth/CloudySky",
+  "hasPage": false,
+  "tags": ["Android", "Notifications", "Companion"],
+  "series": "Solar Network"
+}

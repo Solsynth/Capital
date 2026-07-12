@@ -720,5 +720,77 @@
       "createType": "Create",
       "updateType": "Update"
     }
+  },
+  "cloudySky": {
+    "tagline": "Solar Network push notifications for regions without Firebase Cloud Messaging.",
+    "openSource": "Open Source",
+    "downloadApk": "Download APK",
+    "about": {
+      "badge": "About",
+      "title": "Push Notifications Without Firebase",
+      "desc": "In many regions, Firebase Cloud Messaging (FCM) is unavailable — leaving Solar Network users without real-time push notifications. CloudySky bridges that gap. It maintains a persistent connection to Solar Network's notification service via SSE streaming or intelligent polling, delivering real-time push notifications on Android without relying on Google Play Services."
+    },
+    "aboutCard": {
+      "notifications": {
+        "title": "No Firebase Required",
+        "desc": "CloudySky works independently of Firebase Cloud Messaging, providing real-time push notifications even in regions where FCM is unavailable or unreliable."
+      },
+      "secure": {
+        "title": "Secure Authentication",
+        "desc": "Sign in securely with OAuth 2.0 and PKCE. Your tokens are encrypted and stored safely using Android's Security-Crypto library."
+      },
+      "realtime": {
+        "title": "Smart Connection",
+        "desc": "Choose between Stream (SSE), Polling, or Dynamic mode. CloudySky adapts to your network and battery state for optimal performance."
+      }
+    },
+    "features": {
+      "badge": "Features",
+      "title": "Stay Connected, Effortlessly",
+      "desc": "Everything you need to stay on top of your Solar Network activity.",
+      "oidc": {
+        "title": "OIDC Sign-in",
+        "desc": "Secure authentication using AppAuth with PKCE flow — no client secret needed, fully OAuth 2.0 compliant."
+      },
+      "sse": {
+        "title": "SSE Listener",
+        "desc": "Real-time Server-Sent Events deliver notifications instantly. Supports fallback to polling when SSE is unavailable."
+      },
+      "grouping": {
+        "title": "Smart Grouping",
+        "desc": "Notifications are grouped by room, author, topic, or type — making it easy to scan and manage your feed."
+      },
+      "media": {
+        "title": "Rich Media Support",
+        "desc": "View banner images, avatars, and multi-image collages directly in your notification shade."
+      },
+      "reply": {
+        "title": "Quick Reply",
+        "desc": "Reply to conversations directly from notifications with inline reply actions."
+      },
+      "settings": {
+        "title": "Flexible Settings",
+        "desc": "Connection mode, polling interval, stream timeout, silent mode — customize everything to your preferences."
+      }
+    },
+    "requirements": {
+      "title": "Requirements",
+      "android": {
+        "title": "Android 9.0+ (API 28)",
+        "desc": "Requires Android Pie or later with Google Play Services recommended but not required."
+      },
+      "account": {
+        "title": "Solarpass Account",
+        "desc": "A Solar Network (Solarpass) account is required to sign in and receive notifications."
+      },
+      "battery": {
+        "title": "Battery Optimization",
+        "desc": "For best results, exempt CloudySky from battery optimization to ensure reliable push delivery."
+      }
+    },
+    "help": {
+      "title": "Need Help?",
+      "desc": "Found a bug or need assistance? Report an issue on GitHub and we'll make it right."
+    }
   }
 }

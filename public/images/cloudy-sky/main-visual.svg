@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#D0E4FF"/>
+      <stop offset="50%" stop-color="#F8F9FF"/>
+      <stop offset="100%" stop-color="#9ECAFF"/>
+    </linearGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+
+  <!-- Decorative clouds -->
+  <g opacity="0.4">
+    <ellipse cx="300" cy="250" rx="200" ry="80" fill="white"/>
+    <ellipse cx="180" cy="210" rx="120" ry="65" fill="white"/>
+    <ellipse cx="420" cy="220" rx="110" ry="60" fill="white"/>
+  </g>
+  <g opacity="0.25">
+    <ellipse cx="1500" cy="180" rx="250" ry="90" fill="white"/>
+    <ellipse cx="1380" cy="140" rx="140" ry="70" fill="white"/>
+    <ellipse cx="1630" cy="155" rx="130" ry="65" fill="white"/>
+  </g>
+
+  <!-- Notification card illustrations -->
+  <g transform="translate(700, 320)" opacity="0.15">
+    <rect x="0" y="0" width="520" height="120" rx="16" fill="#2E5A88"/>
+    <rect x="16" y="20" width="40" height="40" rx="10" fill="#9ECAFF"/>
+    <rect x="72" y="22" width="200" height="16" rx="4" fill="white"/>
+    <rect x="72" y="48" width="320" height="12" rx="4" fill="white" opacity="0.6"/>
+    <rect x="72" y="70" width="280" height="12" rx="4" fill="white" opacity="0.4"/>
+  </g>
+
+  <g transform="translate(740, 470)" opacity="0.12">
+    <rect x="0" y="0" width="480" height="100" rx="14" fill="#2E5A88"/>
+    <rect x="14" y="18" width="36" height="36" rx="9" fill="#9ECAFF"/>
+    <rect x="66" y="20" width="180" height="14" rx="4" fill="white"/>
+    <rect x="66" y="44" width="300" height="11" rx="4" fill="white" opacity="0.6"/>
+    <rect x="66" y="64" width="250" height="11" rx="4" fill="white" opacity="0.4"/>
+  </g>
+
+  <g transform="translate(680, 600)" opacity="0.1">
+    <rect x="0" y="0" width="540" height="110" rx="15" fill="#2E5A88"/>
+    <rect x="15" y="19" width="38" height="38" rx="9" fill="#9ECAFF"/>
+    <rect x="70" y="21" width="210" height="15" rx="4" fill="white"/>
+    <rect x="70" y="46" width="340" height="12" rx="4" fill="white" opacity="0.6"/>
+    <rect x="70" y="68" width="300" height="12" rx="4" fill="white" opacity="0.4"/>
+  </g>
+</svg>

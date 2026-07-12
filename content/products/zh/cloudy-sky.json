@@ -1,0 +1,10 @@
+{
+  "title": "CloudySky",
+  "description": "为无法使用 Firebase Cloud Messaging 的地区提供 Solar Network 推送通知。",
+  "icon": "/images/cloudy-sky/icon.png",
+  "background": "/images/cloudy-sky/main-visual.svg",
+  "repo": "https://github.com/Solsynth/CloudySky",
+  "hasPage": false,
+  "tags": ["Android", "Notifications", "Companion"],
+  "series": "Solar Network"
+}
