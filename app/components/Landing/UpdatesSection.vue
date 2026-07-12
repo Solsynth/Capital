@@ -7,6 +7,7 @@ import {
   ArrowRight,
   Hash,
 } from '@lucide/vue'
+import type { ComponentPublicInstance } from 'vue'
 
 const { t } = useI18n()
 const localePath = useLocalePath()
@@ -28,7 +29,6 @@ const sections = computed(() => [
     subtitle: t('home.updates.officialSubtitle'),
     posts: officialPosts.value ?? [],
     avatarClass: 'bg-primary text-primary-content',
-    carouselRef: officialCarouselRef,
     scroll: officialScroll,
   },
   {
@@ -37,10 +37,33 @@ const sections = computed(() => [
     subtitle: t('home.updates.communitySubtitle'),
     posts: communityPosts.value ?? [],
     avatarClass: 'bg-secondary text-secondary-content',
-    carouselRef: communityCarouselRef,
     scroll: communityScroll,
   },
 ])
+
+function getCarouselEl(key: 'official' | 'community'): HTMLElement | null {
+  return key === 'official' ? officialCarouselRef.value : communityCarouselRef.value
+}
+
+function getScrollState(key: 'official' | 'community') {
+  return key === 'official' ? officialScroll : communityScroll
+}
+
+function bindOfficialCarousel(el: Element | ComponentPublicInstance | null) {
+  const node = el instanceof HTMLElement ? el : null
+  officialCarouselRef.value = node
+  updateScrollButtons(node, officialScroll)
+}
+
+function bindCommunityCarousel(el: Element | ComponentPublicInstance | null) {
+  const node = el instanceof HTMLElement ? el : null
+  communityCarouselRef.value = node
+  updateScrollButtons(node, communityScroll)
+}
+
+function carouselRefFor(key: 'official' | 'community') {
+  return key === 'official' ? bindOfficialCarousel : bindCommunityCarousel
+}
 
 function getDisplayTitle(post: { title: string, content: string }): string | null {
   if (post.title?.trim())
@@ -80,24 +103,16 @@ function updateScrollButtons(
   state.right = el.scrollLeft < el.scrollWidth - el.clientWidth - 10
 }
 
-function scrollCarousel(el: HTMLElement | null, direction: 'left' | 'right') {
+function onCarouselScroll(key: 'official' | 'community') {
+  updateScrollButtons(getCarouselEl(key), getScrollState(key))
+}
+
+function scrollCarousel(key: 'official' | 'community', direction: 'left' | 'right') {
+  const el = getCarouselEl(key)
   if (!el)
     return
   el.scrollBy({ left: direction === 'left' ? -340 : 340, behavior: 'smooth' })
 }
-
-onMounted(() => {
-  const pairs: Array<[HTMLElement | null, { left: boolean, right: boolean }]> = [
-    [officialCarouselRef.value, officialScroll],
-    [communityCarouselRef.value, communityScroll],
-  ]
-  for (const [el, state] of pairs) {
-    if (!el)
-      continue
-    el.addEventListener('scroll', () => updateScrollButtons(el, state), { passive: true })
-    updateScrollButtons(el, state)
-  }
-})
 </script>
 
 <template>
@@ -121,7 +136,7 @@ onMounted(() => {
                 :class="{ 'opacity-30': !section.scroll.left }"
                 :disabled="!section.scroll.left"
                 :aria-label="t('home.updates.scrollLeft')"
-                @click="scrollCarousel(section.carouselRef.value, 'left')"
+                @click="scrollCarousel(section.key, 'left')"
               >
                 <ChevronLeft class="h-4 w-4" />
               </button>
@@ -131,7 +146,7 @@ onMounted(() => {
                 :class="{ 'opacity-30': !section.scroll.right }"
                 :disabled="!section.scroll.right"
                 :aria-label="t('home.updates.scrollRight')"
-                @click="scrollCarousel(section.carouselRef.value, 'right')"
+                @click="scrollCarousel(section.key, 'right')"
               >
                 <ChevronRight class="h-4 w-4" />
               </button>
@@ -139,8 +154,9 @@ onMounted(() => {
           </div>
 
           <div
-            :ref="section.carouselRef"
+            :ref="carouselRefFor(section.key)"
             class="scrollbar-hide -mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth px-4 pb-2"
+            @scroll.passive="onCarouselScroll(section.key)"
           >
             <NuxtLink
               v-for="post in section.posts"
@@ -225,7 +241,10 @@ onMounted(() => {
                   {{ truncateContent(post.content, 100) }}
                 </p>
 
-                <div v-if="post.tags.length > 0" class="mt-0.5 flex flex-wrap gap-1">
+                <div
+                  v-if="post.tags.length > 0"
+                  class="mt-0.5 flex flex-wrap gap-1"
+                >
                   <span
                     v-for="tag in post.tags.slice(0, 3)"
                     :key="tag.id"

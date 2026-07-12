@@ -9,18 +9,18 @@ const auth = useAuth()
 const isLoading = ref(false)
 const error = ref('')
 
+useSeoMeta({
+  title: () => t('login.title'),
+  description: () => t('login.subtitle'),
+})
+
 async function handleSolianSignIn() {
   error.value = ''
   isLoading.value = true
-  console.log('[Login] Attempting Solian sign in')
   const { error: signInError } = await auth.signIn.social({
     provider: 'solian',
     callbackURL: localePath('/auth/profile'),
   })
-  console.log('[Login] Solian sign in result:', signInError ? 'error' : 'success')
-  if (signInError) {
-    console.log('[Login] Solian sign in error:', signInError)
-  }
   isLoading.value = false
   if (signInError) {
     error.value = signInError.message || 'Sign in failed'
@@ -29,32 +29,49 @@ async function handleSolianSignIn() {
 </script>
 
 <template>
-  <div class="flex min-h-[calc(100dvh-200px)] items-center justify-center px-4">
+  <div class="flex min-h-[calc(100dvh-12rem)] items-center justify-center px-4 py-16">
     <div class="w-full max-w-sm">
       <div class="mb-8 text-center">
-        <CircleUser class="mx-auto mb-3 w-12 h-12 text-base-content/30" />
-        <h1 class="text-2xl font-bold">
-          {{ t('login.title', 'Sign in') }}
+        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-lg border border-base-200 bg-base-200/50">
+          <CircleUser class="h-7 w-7 text-base-content/40" />
+        </div>
+        <h1 class="text-2xl font-extrabold tracking-tight md:text-3xl">
+          {{ t('login.title') }}
         </h1>
-        <p class="mt-1 text-sm text-base-content/60">
-          {{ t('login.subtitle', 'Welcome back') }}
+        <p class="mt-2 text-sm text-base-content/60">
+          {{ t('login.subtitle') }}
         </p>
       </div>
 
-      <button
-        class="btn btn-primary w-full gap-2 rounded-xl"
-        :disabled="isLoading"
-        @click="handleSolianSignIn"
-      >
-        <img src="/favicon.png" alt="Solian" class="w-5 h-5 rounded-full">
-        <span v-if="isLoading" class="loading loading-spinner loading-sm" />
-        <template v-else>
-          {{ t('login.solian', 'Continue with Solarpass') }}
-          <ArrowRight class="w-4 h-4" />
-        </template>
-      </button>
+      <div class="rounded-lg border border-base-200 bg-base-100 p-5">
+        <button
+          type="button"
+          class="btn btn-primary w-full gap-2"
+          :disabled="isLoading"
+          @click="handleSolianSignIn"
+        >
+          <img
+            src="/favicon.png"
+            alt=""
+            class="h-5 w-5 rounded"
+          >
+          <span
+            v-if="isLoading"
+            class="loading loading-spinner loading-sm"
+          />
+          <template v-else>
+            {{ t('login.solian') }}
+            <ArrowRight class="h-4 w-4" />
+          </template>
+        </button>
 
-      <p v-if="error" class="mt-4 text-sm text-error text-center">{{ error }}</p>
+        <p
+          v-if="error"
+          class="mt-4 text-center text-sm text-error"
+        >
+          {{ error }}
+        </p>
+      </div>
     </div>
   </div>
 </template>

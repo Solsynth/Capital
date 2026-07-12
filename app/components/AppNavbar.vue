@@ -179,14 +179,14 @@ onMounted(() => {
           <div
             tabindex="0"
             role="button"
-            class="flex items-center gap-1 rounded-full px-3 py-2 text-sm font-medium text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
+            class="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
           >
-            <Languages class="w-5 h-5" />
+            <Languages class="h-5 w-5" />
             <span class="hidden sm:inline">{{ languageNames[lang] }}</span>
           </div>
           <ul
             tabindex="0"
-            class="dropdown-content menu z-100 w-40 rounded-2xl border border-base-content/10 bg-base-100/80 p-2 shadow-xl shadow-black/10 backdrop-blur-2xl dark:border-base-content/5 dark:bg-base-100/60"
+            class="dropdown-content menu z-100 mt-2 w-40 rounded-lg border border-base-200 bg-base-100 p-1.5 shadow-md"
           >
             <li v-for="l in locales" :key="typeof l === 'string' ? l : l.code">
               <NuxtLink
@@ -194,7 +194,7 @@ onMounted(() => {
                 :class="{
                   active: (typeof l === 'string' ? l : l.code) === lang,
                 }"
-                class="rounded-xl"
+                class="rounded-md"
               >
                 {{ typeof l === "string" ? languageNames[l] || l : l.name }}
               </NuxtLink>
@@ -207,70 +207,106 @@ onMounted(() => {
           <div
             tabindex="0"
             role="button"
-            class="flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
+            class="flex h-9 w-9 items-center justify-center rounded-lg text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
+            :aria-label="t('nav.profile')"
           >
-             <img
-               v-if="solarAvatar"
-               :src="solarAvatar"
-               :alt="solarProfile?.nick || solarProfile?.name || session.user.name"
-               class="w-7 h-7 rounded-full object-cover"
-             />
-             <img
-               v-else-if="session.user.image"
-               :src="session.user.image"
-               :alt="session.user.name"
-               class="w-5 h-5 rounded-full object-cover"
-             />
-            <CircleUser v-else class="w-5 h-5" />
+            <img
+              v-if="solarAvatar"
+              :src="solarAvatar"
+              :alt="solarProfile?.nick || solarProfile?.name || session.user.name"
+              class="h-7 w-7 rounded-full object-cover"
+            >
+            <img
+              v-else-if="session.user.image"
+              :src="session.user.image"
+              :alt="session.user.name"
+              class="h-7 w-7 rounded-full object-cover"
+            >
+            <CircleUser v-else class="h-5 w-5" />
           </div>
-          <ul
+          <div
             tabindex="0"
-            class="dropdown-content menu z-100 w-48 rounded-2xl border border-base-content/10 bg-base-100/80 p-2 shadow-xl shadow-black/10 backdrop-blur-2xl dark:border-base-content/5 dark:bg-base-100/60"
+            class="dropdown-content z-100 mt-2 w-56 overflow-hidden rounded-lg border border-base-200 bg-base-100 shadow-md"
           >
-            <li>
-              <NuxtLink
-                :to="localePath('/auth/profile')"
-                class="rounded-xl gap-2"
-                @click.stop
-              >
-                <UserRound class="w-4 h-4" />
-                {{ t("nav.profile", "Profile") }}
-              </NuxtLink>
-            </li>
-            <li class="px-3 py-1.5">
-              <span class="text-sm truncate">
-                {{ solarProfile?.nick || solarProfile?.name || session?.user?.name }}
-              </span>
-              <span
-                v-if="solarProfile?.name"
-                class="text-xs opacity-40 block"
-              >
-                @{{ solarProfile.name }}
-              </span>
-            </li>
-            <li>
-              <button
-                class="rounded-xl gap-2"
-                @click.stop="useAuth().signOut()"
-              >
-                <LogOut class="w-4 h-4" />
-                {{ t("nav.signOut", "Sign out") }}
-              </button>
-            </li>
-          </ul>
+            <!-- Identity header -->
+            <div class="border-b border-base-200 px-3.5 py-3">
+              <div class="flex items-center gap-2.5">
+                <img
+                  v-if="solarAvatar"
+                  :src="solarAvatar"
+                  :alt="solarProfile?.nick || solarProfile?.name || session.user.name"
+                  class="h-9 w-9 shrink-0 rounded-full object-cover"
+                >
+                <img
+                  v-else-if="session.user.image"
+                  :src="session.user.image"
+                  :alt="session.user.name"
+                  class="h-9 w-9 shrink-0 rounded-full object-cover"
+                >
+                <div
+                  v-else
+                  class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-base-200"
+                >
+                  <CircleUser class="h-4 w-4 text-base-content/40" />
+                </div>
+                <div class="min-w-0">
+                  <p class="truncate text-sm font-semibold">
+                    {{ solarProfile?.nick || solarProfile?.name || session?.user?.name }}
+                  </p>
+                  <p
+                    v-if="solarProfile?.name"
+                    class="truncate text-xs text-base-content/45"
+                  >
+                    @{{ solarProfile.name }}
+                  </p>
+                  <p
+                    v-else-if="session?.user?.email"
+                    class="truncate text-xs text-base-content/45"
+                  >
+                    {{ session.user.email }}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            <ul class="menu p-1.5">
+              <li>
+                <NuxtLink
+                  :to="localePath('/auth/profile')"
+                  class="rounded-md gap-2"
+                  @click.stop
+                >
+                  <UserRound class="h-4 w-4" />
+                  {{ t("nav.profile") }}
+                </NuxtLink>
+              </li>
+              <li>
+                <button
+                  type="button"
+                  class="rounded-md gap-2 text-error"
+                  @click.stop="useAuth().signOut()"
+                >
+                  <LogOut class="h-4 w-4" />
+                  {{ t("nav.signOut") }}
+                </button>
+              </li>
+            </ul>
+          </div>
         </div>
 
         <!-- Logged out: login link -->
         <NuxtLink
           v-else
           :to="localePath('/auth/login')"
-          class="flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
+          class="flex h-9 w-9 items-center justify-center rounded-lg text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
+          :aria-label="t('login.title')"
         >
-          <CircleUser class="w-5 h-5" />
+          <CircleUser class="h-5 w-5" />
         </NuxtLink>
 
         <button
-          class="flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
+          type="button"
+          class="flex h-9 w-9 items-center justify-center rounded-lg text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
           :title="
             themeMode === 'auto'
               ? 'Auto (System)'
@@ -280,13 +316,14 @@ onMounted(() => {
           "
           @click="cycleTheme"
         >
-          <Monitor v-if="themeMode === 'auto'" class="w-5 h-5" />
-          <Sun v-else-if="themeMode === 'dark'" class="w-5 h-5" />
-          <Moon v-else class="w-5 h-5" />
+          <Monitor v-if="themeMode === 'auto'" class="h-5 w-5" />
+          <Sun v-else-if="themeMode === 'dark'" class="h-5 w-5" />
+          <Moon v-else class="h-5 w-5" />
         </button>
 
         <button
-          class="relative flex items-center justify-center rounded-full w-9 h-9 text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content md:hidden"
+          type="button"
+          class="relative flex h-9 w-9 items-center justify-center rounded-lg text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content md:hidden"
           @click="toggleMobileMenu"
         >
           <Menu
@@ -318,30 +355,53 @@ onMounted(() => {
       @click="closeMobileMenu"
     />
     <div
-      class="absolute left-5 right-5 rounded-2xl border border-base-content/10 bg-base-100/70 p-3 shadow-xl shadow-black/10 backdrop-blur-2xl transition-all duration-300 dark:border-base-content/5 dark:bg-base-100/50"
+      class="absolute left-4 right-4 rounded-lg border border-base-200 bg-base-100 p-2 shadow-md transition-all duration-200"
       :class="{
         'pointer-events-auto': isMobileMenuOpen,
         'pointer-events-none': !isMobileMenuOpen,
       }"
       :style="{
-        top: `calc(${bannerHeight} + 96px)`,
+        top: `calc(${bannerHeight} + 72px)`,
         opacity: isMobileMenuOpen ? 1 : 0,
         transform: isMobileMenuOpen
-          ? 'translateY(0) scale(1)'
-          : 'translateY(-0.5rem) scale(0.98)',
+          ? 'translateY(0)'
+          : 'translateY(-0.25rem)',
       }"
     >
       <nav>
-        <ul class="flex flex-col gap-1">
+        <ul class="flex flex-col gap-0.5">
           <li v-for="item in navItems" :key="item.to">
             <NuxtLink
               :to="item.to"
-              class="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-base-content/70 transition-all duration-200 hover:bg-base-content/5 hover:text-base-content"
+              class="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
               active-class="!bg-base-content/10 !text-base-content"
               @click="closeMobileMenu"
             >
-              <component :is="item.icon" class="w-5 h-5" />
+              <component :is="item.icon" class="h-4 w-4" />
               {{ item.label }}
+            </NuxtLink>
+          </li>
+          <li
+            v-if="session?.user"
+            class="mt-1 border-t border-base-200 pt-1"
+          >
+            <NuxtLink
+              :to="localePath('/auth/profile')"
+              class="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
+              @click="closeMobileMenu"
+            >
+              <UserRound class="h-4 w-4" />
+              {{ t("nav.profile") }}
+            </NuxtLink>
+          </li>
+          <li v-else class="mt-1 border-t border-base-200 pt-1">
+            <NuxtLink
+              :to="localePath('/auth/login')"
+              class="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
+              @click="closeMobileMenu"
+            >
+              <CircleUser class="h-4 w-4" />
+              {{ t("login.title") }}
             </NuxtLink>
           </li>
         </ul>

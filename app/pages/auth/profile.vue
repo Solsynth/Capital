@@ -1,5 +1,14 @@
 <script setup lang="ts">
-import { CircleUser, Mail, ShieldCheck, ExternalLink, Zap, GitBranch } from '@lucide/vue'
+import {
+  CircleUser,
+  Mail,
+  ShieldCheck,
+  ExternalLink,
+  Zap,
+  GitBranch,
+  RefreshCw,
+  ArrowLeft,
+} from '@lucide/vue'
 import { useSolarProfile, useSolarFileUrl } from '~/composables/useSolarProfile'
 
 definePageMeta({ middleware: 'auth' })
@@ -10,13 +19,13 @@ const localePath = useLocalePath()
 let session: any = null
 if (import.meta.server) {
   session = ref(await useServerSession())
-} else {
+}
+else {
   const { data } = await useAuth().useSession(useFetch)
   session = data
 }
 
 const { data: solarProfile, loading: solarLoading, fetch: fetchSolar } = useSolarProfile()
-onMounted(() => fetchSolar())
 
 const refreshing = ref(false)
 async function handleRefresh() {
@@ -24,184 +33,263 @@ async function handleRefresh() {
   try {
     await $fetch('/api/sn/refresh-profile', { method: 'POST' })
     await fetchSolar()
-  } catch { /* ignore */ } finally {
+  }
+  catch {
+    // refresh is best-effort
+  }
+  finally {
     refreshing.value = false
   }
 }
+
 const pictureUrl = computed(() => useSolarFileUrl(solarProfile.value?.profile?.picture))
 const backgroundUrl = computed(() => useSolarFileUrl(solarProfile.value?.profile?.background))
 
 const { status: claStatus, refresh: refreshCla } = useContribution()
-onMounted(() => refreshCla())
 
 const showEmail = ref(false)
+
+const user = computed(() => {
+  // session may be a Ref from useSession / useServerSession
+  const s = session && typeof session === 'object' && 'value' in session
+    ? session.value
+    : session
+  return s?.user ?? null
+})
+
+const displayName = computed(
+  () => solarProfile.value?.nick || user.value?.name || '—',
+)
+
+onMounted(() => {
+  void fetchSolar().catch(() => {})
+  void refreshCla().catch(() => {})
+})
+
+useSeoMeta({
+  title: () => t('nav.profile'),
+  description: () => t('profile.subtitle'),
+})
 </script>
 
 <template>
-  <div class="flex min-h-[calc(100dvh-200px)] items-start justify-center px-4 pt-24 pb-12">
-    <div class="w-full max-w-md">
-      <!-- Header -->
-      <div class="mb-8 text-center">
-        <div class="relative">
-          <div
-            v-if="backgroundUrl"
-            class="h-24 rounded-2xl bg-cover bg-center"
-            :style="{ backgroundImage: `url(${backgroundUrl})` }"
-          />
-          <div v-else class="h-24 rounded-2xl bg-gradient-to-r from-primary/20 to-secondary/20" />
-          <div class="relative mx-auto -mt-10 mb-4 w-20 h-20">
-            <img
-              v-if="pictureUrl"
-              :src="pictureUrl"
-              :alt="solarProfile?.nick || session?.user.name"
-              class="w-20 h-20 rounded-full object-cover ring-2 ring-base-content/10"
-            >
-            <img
-              v-else-if="session?.user.image"
-              :src="session.user.image"
-              :alt="session.user.name"
-              class="w-20 h-20 rounded-full object-cover ring-2 ring-base-content/10"
-            >
-            <div v-else class="w-20 h-20 rounded-full bg-base-content/5 flex items-center justify-center ring-2 ring-base-content/10">
-              <CircleUser class="w-10 h-10 text-base-content/30" />
-            </div>
+  <div>
+    <section class="border-b border-base-200 px-4 py-12 md:py-16">
+      <div class="container mx-auto max-w-lg">
+        <NuxtLink
+          :to="localePath('/')"
+          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
+        >
+          <ArrowLeft class="h-4 w-4" />
+          {{ t('about.backToHome') }}
+        </NuxtLink>
+
+        <!-- Cover; avatar overlaps bottom only. Name stays fully below the banner. -->
+        <div class="relative mb-12">
+          <div class="h-28 overflow-hidden rounded-lg border border-base-200">
             <div
-              v-if="session?.user.emailVerified"
-              class="absolute -bottom-1 -right-1 badge badge-sm badge-success gap-1 px-1.5"
-              :title="t('profile.verified', 'Email verified')"
+              v-if="backgroundUrl"
+              class="h-full w-full bg-cover bg-center"
+              :style="{ backgroundImage: `url(${backgroundUrl})` }"
+            />
+            <div
+              v-else
+              class="h-full w-full bg-base-200/60"
+            />
+          </div>
+
+          <div class="absolute bottom-0 left-1 translate-y-1/2">
+            <div class="relative">
+              <img
+                v-if="pictureUrl"
+                :src="pictureUrl"
+                :alt="displayName"
+                class="h-20 w-20 rounded-full border-2 border-base-100 bg-base-200 object-cover"
+              >
+              <img
+                v-else-if="user?.image"
+                :src="user.image"
+                :alt="displayName"
+                class="h-20 w-20 rounded-full border-2 border-base-100 bg-base-200 object-cover"
+              >
+              <div
+                v-else
+                class="flex h-20 w-20 items-center justify-center rounded-full border-2 border-base-100 bg-base-200"
+              >
+                <CircleUser class="h-10 w-10 text-base-content/30" />
+              </div>
+              <div
+                v-if="user?.emailVerified"
+                class="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 border-base-100 bg-success text-success-content"
+                :title="t('profile.verified')"
+              >
+                <ShieldCheck class="h-3.5 w-3.5" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="min-w-0">
+          <div
+            v-if="solarLoading"
+            class="flex items-center gap-2 py-1"
+          >
+            <span class="loading loading-spinner loading-xs" />
+          </div>
+          <template v-else>
+            <div class="flex items-center gap-2">
+              <h1 class="truncate text-2xl font-extrabold tracking-tight">
+                {{ displayName }}
+              </h1>
+              <button
+                type="button"
+                class="btn btn-ghost btn-xs btn-square shrink-0 text-base-content/50"
+                :disabled="refreshing"
+                :title="t('profile.refresh')"
+                @click="handleRefresh"
+              >
+                <span
+                  v-if="refreshing"
+                  class="loading loading-spinner loading-xs"
+                />
+                <RefreshCw
+                  v-else
+                  class="h-3.5 w-3.5"
+                />
+              </button>
+            </div>
+            <p
+              v-if="solarProfile?.name"
+              class="mt-0.5 text-sm text-base-content/50"
             >
-              <ShieldCheck class="w-3 h-3" />
-            </div>
-          </div>
+              @{{ solarProfile.name }}
+            </p>
+          </template>
         </div>
 
-         <div v-if="solarLoading" class="flex justify-center">
-           <span class="loading loading-spinner loading-xs" />
-         </div>
-         <div v-else>
-           <div class="flex items-center justify-center gap-2">
-             <h1 class="text-2xl font-bold">
-               {{ solarProfile?.nick || session?.user.name }}
-             </h1>
-             <button
-               class="btn btn-ghost btn-xs"
-               :disabled="refreshing"
-               title="Refresh profile from Solarpass"
-               @click="handleRefresh"
-             >
-               <span v-if="refreshing" class="loading loading-spinner loading-xs" />
-               <svg v-else xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/><path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"/><path d="M16 16h5v5"/></svg>
-             </button>
-           </div>
-           <div
-             v-if="solarProfile?.perk_subscription?.is_active"
-             class="badge badge-warning badge-outline badge-sm gap-1 mt-2"
-           >
-             <Zap class="w-3 h-3" />
-             {{ solarProfile.perk_subscription.display_name }} · Lv{{ solarProfile.perk_subscription.perk_level }}
-           </div>
-         </div>
+        <div
+          v-if="solarProfile?.perk_subscription?.is_active"
+          class="mt-3"
+        >
+          <span class="badge badge-sm badge-outline gap-1 border-warning/40 text-warning">
+            <Zap class="h-3 w-3" />
+            {{ solarProfile.perk_subscription.display_name }}
+            · Lv{{ solarProfile.perk_subscription.perk_level }}
+          </span>
+        </div>
       </div>
+    </section>
 
-      <!-- Info cards -->
-      <div class="flex flex-col gap-3">
-        <!-- Email -->
-        <div class="card bg-base-100/50 border border-base-content/5">
-          <div class="card-body p-4 gap-3">
-            <div class="flex items-center gap-3">
-              <Mail class="w-4 h-4 text-base-content/40 shrink-0" />
-              <div class="min-w-0">
-                <p class="text-xs text-base-content/40">
-                  {{ t('profile.email', 'Email') }}
-                </p>
-                <p
-                  class="text-sm truncate cursor-pointer transition-all duration-200"
-                  :class="showEmail ? '' : 'blur-sm select-none'"
-                  @click="showEmail = true"
-                >
-                  {{ session?.user.email }}
-                </p>
-              </div>
-              <div v-if="session?.user.emailVerified" class="badge badge-success badge-xs ml-auto shrink-0">
-                {{ t('profile.verified', 'Verified') }}
-              </div>
-              <div v-else class="badge badge-warning badge-xs ml-auto shrink-0">
-                {{ t('profile.unverified', 'Unverified') }}
-              </div>
+    <section class="px-4 py-10">
+      <div class="container mx-auto max-w-lg">
+        <div class="divide-y divide-base-200 rounded-lg border border-base-200">
+          <!-- Email -->
+          <div class="flex items-center gap-3 px-4 py-4">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-base-200 bg-base-200/50">
+              <Mail class="h-4 w-4 text-base-content/55" />
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs text-base-content/45">
+                {{ t('profile.email') }}
+              </p>
+              <p
+                class="cursor-pointer truncate text-sm transition-all"
+                :class="showEmail ? '' : 'select-none blur-sm'"
+                @click="showEmail = true"
+              >
+                {{ user?.email }}
+              </p>
+            </div>
+            <span
+              v-if="user?.emailVerified"
+              class="badge badge-success badge-xs shrink-0"
+            >
+              {{ t('profile.verifiedShort') }}
+            </span>
+            <span
+              v-else
+              class="badge badge-warning badge-xs shrink-0"
+            >
+              {{ t('profile.unverified') }}
+            </span>
+          </div>
+
+          <!-- Capital User ID -->
+          <div class="flex items-center gap-3 px-4 py-4">
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-base-200 bg-base-200/50">
+              <ShieldCheck class="h-4 w-4 text-base-content/55" />
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs text-base-content/45">
+                {{ t('profile.id') }}
+              </p>
+              <p class="truncate font-mono text-xs text-base-content/60">
+                {{ user?.id }}
+              </p>
             </div>
           </div>
-        </div>
 
-        <!-- Capital User ID -->
-        <div class="card bg-base-100/50 border border-base-content/5">
-          <div class="card-body p-4">
-            <div class="flex items-center gap-3">
-              <ShieldCheck class="w-4 h-4 text-base-content/40 shrink-0" />
-              <div class="min-w-0">
-                <p class="text-xs text-base-content/40">
-                  {{ t('profile.id', 'Capital User ID') }}
-                </p>
-                <p class="text-xs font-mono text-base-content/60 truncate">
-                  {{ session?.user.id }}
-                </p>
-              </div>
+          <!-- Solar Network -->
+          <div
+            v-if="solarProfile"
+            class="flex items-center gap-3 px-4 py-4"
+          >
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-base-200 bg-base-200/50">
+              <ExternalLink class="h-4 w-4 text-base-content/55" />
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs text-base-content/45">
+                {{ t('profile.solarNetwork') }}
+              </p>
+              <a
+                :href="`https://id.solian.app/@${solarProfile.name}`"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="text-sm text-primary hover:underline"
+              >
+                @{{ solarProfile.name }}
+              </a>
             </div>
           </div>
-        </div>
 
-        <!-- Solar Network -->
-        <div v-if="solarProfile" class="card bg-base-100/50 border border-base-content/5">
-          <div class="card-body p-4">
-            <div class="flex items-center gap-3">
-              <ExternalLink class="w-4 h-4 text-base-content/40 shrink-0" />
-              <div class="min-w-0">
-                <p class="text-xs text-base-content/40">
-                  Solar Network
-                </p>
+          <!-- GitHub -->
+          <div
+            v-if="claStatus?.githubConnected"
+            class="flex items-center gap-3 px-4 py-4"
+          >
+            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-base-200 bg-base-200/50">
+              <GitBranch class="h-4 w-4 text-base-content/55" />
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-xs text-base-content/45">
+                {{ t('profile.github') }}
+              </p>
+              <div class="flex flex-wrap items-center gap-2">
                 <a
-                  :href="`https://id.solian.app/@${solarProfile.name}`"
+                  :href="`https://github.com/${claStatus.githubUsername}`"
                   target="_blank"
-                  class="text-sm text-primary/70 hover:text-primary transition-colors"
+                  rel="noopener noreferrer"
+                  class="text-sm text-primary hover:underline"
                 >
-                  @{{ solarProfile.name }}
+                  @{{ claStatus.githubUsername }}
                 </a>
+                <NuxtLink
+                  :to="localePath('/contributions/me')"
+                  class="btn btn-ghost btn-xs border border-base-300"
+                >
+                  {{ t('profile.viewContribution') }}
+                </NuxtLink>
               </div>
             </div>
-          </div>
-        </div>
-
-        <!-- GitHub Connection -->
-        <div v-if="claStatus?.githubConnected" class="card bg-base-100/50 border border-base-content/5">
-          <div class="card-body p-4">
-            <div class="flex items-center gap-3">
-              <GitBranch class="w-4 h-4 text-base-content/40 shrink-0" />
-              <div class="min-w-0">
-                <p class="text-xs text-base-content/40">
-                  GitHub
-                </p>
-                <div class="flex gap-2 items-center">
-                  <a
-                    :href="`https://github.com/${claStatus.githubUsername}`"
-                    target="_blank"
-                    class="text-sm text-primary/70 hover:text-primary transition-colors"
-                  >
-                    @{{ claStatus.githubUsername }}
-                  </a>
-                  <NuxtLink
-                    :to="localePath('/contributions/me')"
-                    class="btn btn-ghost btn-xs"
-                  >
-                    {{ t('profile.viewContribution') }}
-                  </NuxtLink>
-                </div>
-              </div>
-              <div v-if="claStatus.signed" class="badge badge-success badge-xs ml-auto shrink-0">
-                CLA
-              </div>
-            </div>
+            <span
+              v-if="claStatus.signed"
+              class="badge badge-success badge-xs shrink-0"
+            >
+              CLA
+            </span>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   </div>
 </template>
