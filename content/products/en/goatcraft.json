@@ -1,0 +1,9 @@
+{
+  "title": "GoatCraft",
+  "description": "Solsynth's official Minecraft server with Java & Bedrock cross-play. Join with Microsoft or Solarpass.",
+  "icon": "/images/goatcraft/icon.png",
+  "background": "/images/goatcraft/main-visual.png",
+  "hasPage": true,
+  "tags": ["Minecraft", "Game Server", "Community", "Cross-play"],
+  "series": "GoatCraft"
+}

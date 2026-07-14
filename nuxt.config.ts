@@ -168,6 +168,10 @@ export default defineNuxtConfig({
   },
 
   runtimeConfig: {
+    // GoatCraft Minecraft plugin HTTP API (set via NUXT_GOATCRAFT_*)
+    // Token is optional — omit for non-authorized / open API mode.
+    goatcraftApiUrl: "",
+    goatcraftApiToken: "",
     public: {
       pbUrl: "",
     },

@@ -792,5 +792,206 @@
       "title": "需要帮助？",
       "desc": "发现问题或需要协助？请在 GitHub 上提交 Issue，我们会帮你解决。"
     }
+  },
+  "goatCraft": {
+    "tagline": "Solsynth 官方 Minecraft 服务器 — 支持 Java 与基岩版跨端，可用 Microsoft 或 Solarpass 登录。",
+    "badge": "Minecraft 服务器",
+    "join": "加入服务器",
+    "copyAddress": "复制地址",
+    "copied": "已复制！",
+    "editionJava": "Java 版",
+    "editionBedrock": "基岩版",
+    "crossPlay": "跨端联机",
+    "solarpassLogin": "Solarpass 登录",
+    "currentPeriod": "第 {n} 周目",
+    "periodStatus": {
+      "current": "进行中",
+      "archived": "已结束"
+    },
+    "stats": {
+      "badge": "实时",
+      "title": "服务器状态",
+      "desc": "来自 GoatCraft 游戏服的实时概览。",
+      "viewDetails": "查看完整状态",
+      "online": "当前在线",
+      "onlineCount": "{count} 人在线",
+      "totalPlayers": "累计玩家",
+      "serverUptime": "服务器运行时间",
+      "apiUptime": "API 运行时间",
+      "websocket": "WebSocket",
+      "metrics": "指标",
+      "metricsOn": "已启用",
+      "metricsOff": "未启用",
+      "playersOnline": "在线玩家",
+      "noPlayers": "当前没有人在线。",
+      "unavailable": "实时状态暂时不可用。",
+      "notConfigured": "实时状态尚未配置。",
+      "refreshing": "更新中…",
+      "updatedAt": "更新于 {time}",
+      "offline": "离线"
+    },
+    "history": {
+      "badge": "历程",
+      "title": "周目与图库",
+      "desc": "GoatCraft 以「周目」为单位推进。在时间线上浏览每一周目的故事与截图。"
+    },
+    "periods": {
+      "period1": {
+        "title": "第一周目",
+        "subtitle": "Period 1",
+        "date": "2025",
+        "desc": "GoatCraft 的第一个世界 — 早期建筑、第一批基地，以及社区的起点。"
+      },
+      "period2": {
+        "title": "第二周目",
+        "subtitle": "Period 2",
+        "date": "进行中",
+        "desc": "当前周目。新世界已开启 — 加入进来，留下你的痕迹。"
+      }
+    },
+    "gallery": {
+      "badge": "图库",
+      "title": "社区图库",
+      "desc": "按周目整理的游戏截图。把图片放进对应 period 文件夹即可自动出现在这里。",
+      "all": "全部周目",
+      "empty": "这一周目还没有截图。",
+      "count": "{count} 张",
+      "slide": "{current} / {total}",
+      "prev": "上一张",
+      "next": "下一张",
+      "close": "关闭"
+    },
+    "about": {
+      "badge": "关于",
+      "title": "欢迎来到 GoatCraft",
+      "desc": "GoatCraft 是 Solsynth 的社区 Minecraft 服务器 — 友好的生存世界，适合建造者、探索者和休闲玩家。支持 Java 与基岩版同服。已有 Microsoft Minecraft 账号可直接进入；也可使用 Solarpass 登录。"
+    },
+    "aboutCard": {
+      "community": {
+        "title": "友好社区",
+        "desc": "规模适中、氛围友好的服务器，大家彼此认识。没有氪金商店 — 只有玩家、建筑与好伙伴。"
+      },
+      "survival": {
+        "title": "经典生存",
+        "desc": "偏原版的生存体验，配合精选生活质量插件。保留 Minecraft 手感，同时让多人游玩更顺畅。"
+      },
+      "auth": {
+        "title": "Microsoft 或 Solarpass",
+        "desc": "已有 Microsoft Minecraft 账号？无需额外步骤直接加入。想用 Solarpass？在 AuthMC 完成一次登录即可进服。"
+      }
+    },
+    "features": {
+      "badge": "功能",
+      "title": "等你探索",
+      "desc": "扎实的多人生存体验 — Java 与基岩版都适用。",
+      "auth": {
+        "title": "Solarpass 登录",
+        "desc": "可用 Solarpass 账号登录服务器。需要认证时打开 AuthMC 完成登录，再回到游戏即可。"
+      },
+      "microsoft": {
+        "title": "欢迎 Microsoft 账号",
+        "desc": "已有带 Minecraft 的 Microsoft 账号？填写服务器地址直接连接，无需任何额外设置。"
+      },
+      "survival": {
+        "title": "生存世界",
+        "desc": "探索共享生存地图 — 收集资源、建造基地，在世界上留下属于你的痕迹。"
+      },
+      "claims": {
+        "title": "城镇与国家",
+        "desc": "建立你自己的城市或国家，邀请伙伴定居、规划领土，并与其他势力交流、贸易或竞争。"
+      },
+      "economy": {
+        "title": "玩家经济",
+        "desc": "通过商店与轻量经济与其他玩家交易 — 无现金商店，无氪金优势。"
+      },
+      "events": {
+        "title": "社区活动",
+        "desc": "季节性建造、小游戏与社区聚会，让世界一直热闹。"
+      },
+      "chat": {
+        "title": "跨端聊天",
+        "desc": "Java 与基岩版玩家共享同一世界与聊天，跨版本也能一起交流。"
+      },
+      "backups": {
+        "title": "定期备份",
+        "desc": "世界数据定期备份，进度不会轻易丢失。"
+      }
+    },
+    "auth": {
+      "badge": "登录方式",
+      "title": "选择加入方式",
+      "desc": "三种上线方式。Solarpass 仅支持 Java；基岩版请使用 Microsoft / Xbox 账号。",
+      "tabs": {
+        "microsoft": "Microsoft（Java）",
+        "solarpass": "Solarpass（Java）",
+        "bedrock": "基岩版"
+      },
+      "microsoft": {
+        "title": "Microsoft 账号 · Java 版",
+        "badge": "Java",
+        "desc": "若已有带 Minecraft：Java 版的 Microsoft 账号，直接连接即可 — 无需额外网站或设置。",
+        "steps": {
+          "1": "启动 Minecraft：Java 版，并用 Microsoft 账号登录。",
+          "2": "多人游戏 → 添加服务器 → 地址 playmc.solsynth.dev。",
+          "3": "加入服务器，账号会自动完成认证。"
+        }
+      },
+      "solarpass": {
+        "title": "Solarpass · 仅 Java 版",
+        "badge": "仅 Java",
+        "desc": "在 Java 版使用 Solarpass 账号。服务器提示认证时，在 AuthMC 完成登录，再回到游戏。",
+        "cta": "打开 AuthMC",
+        "hint": "Solarpass 的 Minecraft 登录只需 AuthMC。基岩版不可用。",
+        "steps": {
+          "1": "启动 Minecraft：Java 版。",
+          "2": "多人游戏 → 添加服务器 → 地址 playmc.solsynth.dev 并加入。",
+          "3": "按提示打开 AuthMC，用 Solarpass 登录后返回游戏。"
+        }
+      },
+      "bedrock": {
+        "title": "基岩版",
+        "badge": "不支持 Solarpass",
+        "desc": "基岩版（Windows、手机、主机）使用 Microsoft / Xbox 账号加入。基岩版不支持 Solarpass 登录。",
+        "note": "基岩版无法使用 Solarpass。请使用已绑定 Minecraft 基岩版的 Microsoft / Xbox 账号。",
+        "steps": {
+          "1": "启动 Minecraft：基岩版，并用 Microsoft / Xbox 登录。",
+          "2": "服务器 → 添加服务器 → 地址 playmc.solsynth.dev（如需端口，用默认基岩版端口）。",
+          "3": "加入即可游玩 — 无需 AuthMC 步骤。"
+        }
+      }
+    },
+    "howToJoin": {
+      "badge": "如何加入",
+      "title": "加入与登录",
+      "desc": "复制服务器地址，在下方选择你的方式并加入。Java 与基岩版使用同一主机。",
+      "step1": {
+        "title": "复制地址",
+        "desc": "服务器地址为 playmc.solsynth.dev — 可在下方服务器信息中一键复制。"
+      },
+      "step2": {
+        "title": "选择方式",
+        "desc": "Java 的 Microsoft、Java 的 Solarpass，或基岩版的 Microsoft / Xbox — 点选下方标签页。"
+      },
+      "step3": {
+        "title": "连接并游玩",
+        "desc": "在游戏中添加服务器，并按所选标签页的步骤操作。Solarpass 用户在提示时于 AuthMC 完成登录。"
+      }
+    },
+    "serverInfo": {
+      "title": "服务器信息",
+      "address": "地址",
+      "edition": "版本类型",
+      "editionValue": "Java 与基岩版",
+      "gameMode": "游戏模式",
+      "gameModeValue": "生存",
+      "region": "地区",
+      "regionValue": "亚洲 / 全球友好",
+      "login": "登录方式",
+      "loginValue": "Microsoft、Solarpass（Java）、基岩版"
+    },
+    "help": {
+      "title": "需要帮助？",
+      "desc": "加入遇到问题，或在服务器上发现了故障？联系 Solsynth 团队，我们会帮你解决。"
+    }
   }
 }

@@ -1,0 +1,9 @@
+{
+  "title": "GoatCraft",
+  "description": "Solsynth 官方 Minecraft 服务器，支持 Java 与基岩版跨端，可用 Microsoft 或 Solarpass 登录。",
+  "icon": "/images/goatcraft/icon.png",
+  "background": "/images/goatcraft/main-visual.png",
+  "hasPage": true,
+  "tags": ["Minecraft", "游戏服务器", "社区", "跨端"],
+  "series": "GoatCraft"
+}

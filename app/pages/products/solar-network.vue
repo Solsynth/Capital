@@ -628,7 +628,7 @@ defineOgImage("UniOgImage", {
         <div
           v-for="card in aboutCards"
           :key="card.titleKey"
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 p-8 border border-base-content/5"
+          class="card rounded-xl bg-base-200 hover:bg-base-300 transition-all duration-300 p-8 border border-base-content/5"
         >
           <div
             class="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
@@ -642,7 +642,7 @@ defineOgImage("UniOgImage", {
       </div>
     </section>
 
-    <div class="divider" />
+    <div class="section-divider" aria-hidden="true" />
 
     <!-- Features -->
     <section class="container mx-auto px-4 py-16">
@@ -1177,6 +1177,14 @@ defineOgImage("UniOgImage", {
 .solar-network-page {
   --color-primary: oklch(70% 0.08 275deg);
   --color-primary-content: oklch(95% 0.02 275deg);
+}
+
+.section-divider {
+  height: 1px;
+  margin-inline: auto;
+  width: min(100% - 2rem, 1280px);
+  background-color: color-mix(in oklab, currentColor 12%, transparent);
+  opacity: 0.5;
 }
 
 :global([data-theme="dark"]) .solar-network-page {

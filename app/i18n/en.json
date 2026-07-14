@@ -792,5 +792,206 @@
       "title": "Need Help?",
       "desc": "Found a bug or need assistance? Report an issue on GitHub and we'll make it right."
     }
+  },
+  "goatCraft": {
+    "tagline": "Solsynth's official Minecraft server — Java & Bedrock cross-play. Sign in with Microsoft or Solarpass.",
+    "badge": "Minecraft Server",
+    "join": "Join Server",
+    "copyAddress": "Copy Address",
+    "copied": "Copied!",
+    "editionJava": "Java",
+    "editionBedrock": "Bedrock",
+    "crossPlay": "Cross-play",
+    "solarpassLogin": "Solarpass Login",
+    "currentPeriod": "Period {n}",
+    "periodStatus": {
+      "current": "Current",
+      "archived": "Ended"
+    },
+    "stats": {
+      "badge": "Live",
+      "title": "Server Status",
+      "desc": "Live overview from the GoatCraft game server.",
+      "viewDetails": "View full status",
+      "online": "Online now",
+      "onlineCount": "{count} online",
+      "totalPlayers": "Unique players",
+      "serverUptime": "Server uptime",
+      "apiUptime": "API uptime",
+      "websocket": "WebSocket",
+      "metrics": "Metrics",
+      "metricsOn": "Enabled",
+      "metricsOff": "Disabled",
+      "playersOnline": "Players online",
+      "noPlayers": "Nobody is online right now.",
+      "unavailable": "Live stats are temporarily unavailable.",
+      "notConfigured": "Live stats are not configured yet.",
+      "refreshing": "Updating…",
+      "updatedAt": "Updated {time}",
+      "offline": "Offline"
+    },
+    "history": {
+      "badge": "History",
+      "title": "Seasons & Gallery",
+      "desc": "GoatCraft runs in seasons (周目). Browse each chapter’s story and screenshots along the timeline."
+    },
+    "periods": {
+      "period1": {
+        "title": "Period 1",
+        "subtitle": "第一周目",
+        "date": "2025",
+        "desc": "The first world of GoatCraft — early builds, first bases, and the start of the community."
+      },
+      "period2": {
+        "title": "Period 2",
+        "subtitle": "第二周目",
+        "date": "Now",
+        "desc": "The current season. A new world is live — join and leave your mark."
+      }
+    },
+    "gallery": {
+      "badge": "Gallery",
+      "title": "Community Gallery",
+      "desc": "Screenshots from each season, grouped by 周目. Drop more images into the period folders and they show up automatically.",
+      "all": "All periods",
+      "empty": "No screenshots for this period yet.",
+      "count": "{count} photos",
+      "slide": "{current} / {total}",
+      "prev": "Previous photo",
+      "next": "Next photo",
+      "close": "Close"
+    },
+    "about": {
+      "badge": "About",
+      "title": "Welcome to GoatCraft",
+      "desc": "GoatCraft is Solsynth's community Minecraft server — a friendly survival world for builders, explorers, and casual players. Join from Java or Bedrock and play together in one shared world. Microsoft Minecraft accounts connect directly; Solarpass accounts can log in too."
+    },
+    "aboutCard": {
+      "community": {
+        "title": "Friendly Community",
+        "desc": "A smaller, welcoming server where people know each other. No pay-to-win shops — just players, builds, and good company."
+      },
+      "survival": {
+        "title": "Classic Survival",
+        "desc": "Vanilla-leaning survival with carefully chosen quality-of-life plugins. Keep the Minecraft feel while making multiplayer smoother."
+      },
+      "auth": {
+        "title": "Microsoft or Solarpass",
+        "desc": "Have a Microsoft Minecraft account? Join with nothing extra. Prefer Solarpass? Authenticate once on AuthMC, then hop in."
+      }
+    },
+    "features": {
+      "badge": "Features",
+      "title": "What Awaits You",
+      "desc": "Everything you need for a solid multiplayer survival experience — on Java or Bedrock.",
+      "auth": {
+        "title": "Solarpass Login",
+        "desc": "Log into the server with your Solarpass account. Open AuthMC when prompted, complete login, then return to Minecraft."
+      },
+      "microsoft": {
+        "title": "Microsoft Accounts Welcome",
+        "desc": "Already own Minecraft with a Microsoft account? Connect to the server address and play — no extra setup required."
+      },
+      "survival": {
+        "title": "Survival World",
+        "desc": "Explore a shared survival map — gather resources, build bases, and leave your mark on the world."
+      },
+      "claims": {
+        "title": "Towns & Nations",
+        "desc": "Build your own town or nation, invite allies to settle, define your territory, and trade, cooperate, or compete with others."
+      },
+      "economy": {
+        "title": "Player Economy",
+        "desc": "Trade with other players through shops and a light server economy — no cash shops, no pay-to-win."
+      },
+      "events": {
+        "title": "Community Events",
+        "desc": "Seasonal builds, mini-games, and community gatherings to keep the world feeling alive."
+      },
+      "chat": {
+        "title": "Cross-Platform Chat",
+        "desc": "Java and Bedrock players share the same world and chat — stay in touch across editions."
+      },
+      "backups": {
+        "title": "Regular Backups",
+        "desc": "World data is backed up regularly so progress is safe against the unexpected."
+      }
+    },
+    "auth": {
+      "badge": "Login",
+      "title": "Pick how you join",
+      "desc": "Three ways to get online. Solarpass is Java only — Bedrock players use Microsoft / Xbox.",
+      "tabs": {
+        "microsoft": "Microsoft (Java)",
+        "solarpass": "Solarpass (Java)",
+        "bedrock": "Bedrock"
+      },
+      "microsoft": {
+        "title": "Microsoft account · Java Edition",
+        "badge": "Java",
+        "desc": "If you already own Minecraft: Java Edition with a Microsoft account, connect and play — no extra website, no extra setup.",
+        "steps": {
+          "1": "Launch Minecraft: Java Edition and sign in with Microsoft.",
+          "2": "Multiplayer → Add Server → address playmc.solsynth.dev.",
+          "3": "Join. You’re authenticated automatically."
+        }
+      },
+      "solarpass": {
+        "title": "Solarpass · Java Edition only",
+        "badge": "Java only",
+        "desc": "Use your Solarpass account on Java Edition. When the server asks you to authenticate, finish login on AuthMC, then return to the game.",
+        "cta": "Open AuthMC",
+        "hint": "AuthMC is the only site needed for Solarpass Minecraft login. Not available on Bedrock.",
+        "steps": {
+          "1": "Launch Minecraft: Java Edition.",
+          "2": "Multiplayer → Add Server → address playmc.solsynth.dev and join.",
+          "3": "When prompted, open AuthMC, sign in with Solarpass, then return to Minecraft."
+        }
+      },
+      "bedrock": {
+        "title": "Bedrock Edition",
+        "badge": "No Solarpass",
+        "desc": "Bedrock (Windows, mobile, console) joins with your Microsoft / Xbox account. Solarpass login is not supported on Bedrock.",
+        "note": "Solarpass cannot be used on Bedrock. Use a Microsoft / Xbox account linked to Minecraft Bedrock.",
+        "steps": {
+          "1": "Launch Minecraft: Bedrock Edition and sign in with Microsoft / Xbox.",
+          "2": "Servers → Add Server → address playmc.solsynth.dev (default Bedrock port if asked).",
+          "3": "Join and play — no AuthMC step."
+        }
+      }
+    },
+    "howToJoin": {
+      "badge": "How to Join",
+      "title": "Join & Sign In",
+      "desc": "Copy the address, pick your path below, and hop in. Same host for Java and Bedrock.",
+      "step1": {
+        "title": "Copy the address",
+        "desc": "Server address is playmc.solsynth.dev — use the copy button in server info."
+      },
+      "step2": {
+        "title": "Choose your path",
+        "desc": "Microsoft on Java, Solarpass on Java, or Bedrock with Microsoft / Xbox — pick a tab below."
+      },
+      "step3": {
+        "title": "Connect & play",
+        "desc": "Add the server in-game and follow the steps for your tab. Solarpass players finish login on AuthMC when asked."
+      }
+    },
+    "serverInfo": {
+      "title": "Server Info",
+      "address": "Address",
+      "edition": "Edition",
+      "editionValue": "Java & Bedrock",
+      "gameMode": "Game Mode",
+      "gameModeValue": "Survival",
+      "region": "Region",
+      "regionValue": "Asia / Global-friendly",
+      "login": "Login",
+      "loginValue": "Microsoft, Solarpass (Java), Bedrock"
+    },
+    "help": {
+      "title": "Need Help?",
+      "desc": "Having trouble joining or found a problem on the server? Reach out to the Solsynth team and we'll sort it out."
+    }
   }
 }
