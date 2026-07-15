@@ -27,7 +27,10 @@ async function listImagesInDir(dir: string, periodId: string): Promise<string[]>
   return entries
     .filter((name) => IMAGE_EXT.test(name) && !name.startsWith("."))
     .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
-    .map((name) => `${PUBLIC_URL_PREFIX}/${periodId}/${name}`);
+    .map(
+      (name) =>
+        `${PUBLIC_URL_PREFIX}/${encodeURIComponent(periodId)}/${encodeURIComponent(name)}`,
+    );
 }
 
 export default defineEventHandler(async () => {

@@ -989,6 +989,22 @@
       "login": "Login",
       "loginValue": "Microsoft, Solarpass (Java), Bedrock"
     },
+    "solar": {
+      "title": "Connected with Solar Network",
+      "desc": "GoatCraft is more than a standalone server. It stays linked with the Solar Network community so chat, identity, and updates flow naturally in and out of the game.",
+      "chat": {
+        "title": "Synced chat",
+        "desc": "In-game chat mirrors Solar Network channels, so conversations continue whether you're in Minecraft or the community."
+      },
+      "community": {
+        "title": "Community updates",
+        "desc": "Server events, announcements, and player stories can be shared to the community so more people can join in."
+      },
+      "account": {
+        "title": "Linked accounts",
+        "desc": "Sign in with Solarpass to connect your community identity—less setup, more time to explore."
+      }
+    },
     "help": {
       "title": "Need Help?",
       "desc": "Having trouble joining or found a problem on the server? Reach out to the Solsynth team and we'll sort it out."

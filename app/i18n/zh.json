@@ -989,6 +989,22 @@
       "login": "登录方式",
       "loginValue": "Microsoft、Solarpass（Java）、基岩版"
     },
+    "solar": {
+      "title": "与 Solar Network 相连",
+      "desc": "GoatCraft 不只是一个独立的服务器。它与 Solar Network 社区保持连接，让游戏内外的交流、身份与动态自然衔接。",
+      "chat": {
+        "title": "同步聊天",
+        "desc": "游戏内聊天与 Solar Network 频道同步，无论在游戏里还是社区中，都能接上正在发生的对话。"
+      },
+      "community": {
+        "title": "社区动态",
+        "desc": "服务器活动、重要公告与玩家故事可以直接分享至社区，让更多同伴一起参与。"
+      },
+      "account": {
+        "title": "账号联动",
+        "desc": "使用 Solarpass 登录即可关联你的社区身份，减少重复设置，专心开始冒险。"
+      }
+    },
     "help": {
       "title": "需要帮助？",
       "desc": "加入遇到问题，或在服务器上发现了故障？联系 Solsynth 团队，我们会帮你解决。"

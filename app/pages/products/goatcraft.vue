@@ -74,7 +74,9 @@ const {
 });
 
 const stats = computed(() => statsPayload.value?.stats ?? null);
-const statsAvailable = computed(() => !!statsPayload.value?.available && !!stats.value);
+const statsAvailable = computed(
+  () => !!statsPayload.value?.available && !!stats.value,
+);
 
 function formatDuration(ms: number | null | undefined): string {
   if (ms == null || !Number.isFinite(ms) || ms < 0) return "—";
@@ -116,18 +118,29 @@ const authTab = ref<"microsoft" | "solarpass" | "bedrock">("microsoft");
 const activePeriodId = ref(CURRENT_PERIOD_ID);
 const carouselIndexByPeriod = reactive<Record<string, number>>({});
 const thumbStripEls = new Map<string, HTMLElement>();
+/** Track broken gallery srcs so we can fall back gracefully */
+const brokenImages = ref(new Set<string>());
 
 type GalleryPeriod = { id: string; images: string[] };
 
 const { data: galleryData } = await useFetch<{ periods: GalleryPeriod[] }>(
   "/api/products/goatcraft/galleries",
-  { default: () => ({ periods: [] }) },
+  {
+    key: "goatcraft-galleries",
+    default: () => ({ periods: [] }),
+  },
 );
 
+/**
+ * Gallery screenshots use multi-dot Minecraft filenames
+ * (e.g. 2025-10-06_02.58.02.png). Serving them through NuxtImg + IPX
+ * (especially format=webp) often fails, so the template uses native <img>
+ * against static public URLs returned by the galleries API.
+ */
 const imagesByPeriod = computed(() => {
   const map = new Map<string, string[]>();
   for (const p of galleryData.value?.periods ?? []) {
-    map.set(p.id, p.images);
+    map.set(p.id, (p.images ?? []).filter(Boolean));
   }
   return map;
 });
@@ -136,10 +149,7 @@ const timelinePeriods = computed(() => {
   const fromDisk = new Set(
     (galleryData.value?.periods ?? []).map((p) => p.id),
   );
-  const ids = new Set([
-    ...KNOWN_PERIODS.map((p) => p.id),
-    ...fromDisk,
-  ]);
+  const ids = new Set([...KNOWN_PERIODS.map((p) => p.id), ...fromDisk]);
 
   return [...ids]
     .sort((a, b) => {
@@ -151,8 +161,12 @@ const timelinePeriods = computed(() => {
       const known = KNOWN_PERIODS.find((p) => p.id === id);
       const status =
         known?.status ??
-        (id === CURRENT_PERIOD_ID ? ("current" as const) : ("archived" as const));
-      const images = imagesByPeriod.value.get(id) ?? [];
+        (id === CURRENT_PERIOD_ID
+          ? ("current" as const)
+          : ("archived" as const));
+      const images = (imagesByPeriod.value.get(id) ?? []).filter(
+        (src) => !brokenImages.value.has(src),
+      );
       return {
         id,
         status,
@@ -168,7 +182,17 @@ function slideIndex(periodId: string) {
 
 function slideSrc(periodId: string) {
   const images = imagesByPeriod.value.get(periodId) ?? [];
-  return images[slideIndex(periodId)] ?? null;
+  const filtered = images.filter((src) => !brokenImages.value.has(src));
+  if (!filtered.length) return null;
+  const idx = Math.min(slideIndex(periodId), filtered.length - 1);
+  return filtered[idx] ?? null;
+}
+
+function onGalleryImageError(src: string) {
+  if (!src || brokenImages.value.has(src)) return;
+  const next = new Set(brokenImages.value);
+  next.add(src);
+  brokenImages.value = next;
 }
 
 function bindThumbStrip(periodId: string, el: unknown) {
@@ -180,8 +204,14 @@ function selectPeriod(id: string) {
   activePeriodId.value = id;
 }
 
+function visibleImages(periodId: string) {
+  return (imagesByPeriod.value.get(periodId) ?? []).filter(
+    (src) => !brokenImages.value.has(src),
+  );
+}
+
 function goToSlide(periodId: string, index: number) {
-  const images = imagesByPeriod.value.get(periodId) ?? [];
+  const images = visibleImages(periodId);
   if (index < 0 || index >= images.length) return;
   carouselIndexByPeriod[periodId] = index;
   activePeriodId.value = periodId;
@@ -189,14 +219,14 @@ function goToSlide(periodId: string, index: number) {
 }
 
 function carouselPrev(periodId: string) {
-  const images = imagesByPeriod.value.get(periodId) ?? [];
+  const images = visibleImages(periodId);
   if (!images.length) return;
   const next = (slideIndex(periodId) - 1 + images.length) % images.length;
   goToSlide(periodId, next);
 }
 
 function carouselNext(periodId: string) {
-  const images = imagesByPeriod.value.get(periodId) ?? [];
+  const images = visibleImages(periodId);
   if (!images.length) return;
   const next = (slideIndex(periodId) + 1) % images.length;
   goToSlide(periodId, next);
@@ -220,39 +250,19 @@ function onCarouselKey(e: KeyboardEvent) {
   if (e.key === "ArrowRight") carouselNext(activePeriodId.value);
 }
 
-onMounted(() => {
-  window.addEventListener("keydown", onCarouselKey);
-  statsPollTimer = setInterval(() => {
-    void refreshStats();
-  }, STATS_POLL_MS);
-});
-onUnmounted(() => {
-  window.removeEventListener("keydown", onCarouselKey);
-  if (statsPollTimer) {
-    clearInterval(statsPollTimer);
-    statsPollTimer = null;
-  }
-});
-
 const aboutCards = [
   {
     icon: Users,
-    bg: "bg-primary/20",
-    iconClass: "text-primary",
     titleKey: "goatCraft.aboutCard.community.title",
     descKey: "goatCraft.aboutCard.community.desc",
   },
   {
     icon: Pickaxe,
-    bg: "bg-secondary/20",
-    iconClass: "text-secondary",
     titleKey: "goatCraft.aboutCard.survival.title",
     descKey: "goatCraft.aboutCard.survival.desc",
   },
   {
     icon: KeyRound,
-    bg: "bg-accent/20",
-    iconClass: "text-accent",
     titleKey: "goatCraft.aboutCard.auth.title",
     descKey: "goatCraft.aboutCard.auth.desc",
   },
@@ -306,6 +316,27 @@ const features = [
     icon: HardDrive,
     titleKey: "goatCraft.features.backups.title",
     descKey: "goatCraft.features.backups.desc",
+  },
+] as const;
+
+const solarLinks = [
+  {
+    key: "chat",
+    icon: MessageSquare,
+    titleKey: "goatCraft.solar.chat.title",
+    descKey: "goatCraft.solar.chat.desc",
+  },
+  {
+    key: "community",
+    icon: Users,
+    titleKey: "goatCraft.solar.community.title",
+    descKey: "goatCraft.solar.community.desc",
+  },
+  {
+    key: "account",
+    icon: BadgeCheck,
+    titleKey: "goatCraft.solar.account.title",
+    descKey: "goatCraft.solar.account.desc",
   },
 ] as const;
 
@@ -380,7 +411,19 @@ const reviewForm = ref({
 });
 
 onMounted(() => {
+  window.addEventListener("keydown", onCarouselKey);
+  statsPollTimer = setInterval(() => {
+    void refreshStats();
+  }, STATS_POLL_MS);
   void Promise.all([fetchMyReview(), refreshReviews()]);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("keydown", onCarouselKey);
+  if (statsPollTimer) {
+    clearInterval(statsPollTimer);
+    statsPollTimer = null;
+  }
 });
 
 async function copyAddress(address = SERVER_ADDRESS) {
@@ -446,6 +489,10 @@ async function handleHelpful(id: string) {
   await refreshReviews();
 }
 
+const activeServerAddress = computed(() =>
+  authTab.value === "bedrock" ? BEDROCK_SERVER_ADDRESS : SERVER_ADDRESS,
+);
+
 definePageMeta({
   title: "GoatCraft",
   description: "Solsynth's official Minecraft server.",
@@ -467,54 +514,46 @@ defineOgImage("UniOgImage", {
   <div class="goatcraft-page">
     <!-- Hero -->
     <section
-      class="relative h-[60vh] min-h-100 overflow-hidden -mt-(--site-page-offset,64px)"
+      class="relative h-[52vh] min-h-[22rem] max-h-[36rem] overflow-hidden -mt-(--site-page-offset,64px)"
     >
       <NuxtImg
         src="/images/goatcraft/main-visual.png"
-        class="absolute inset-0 w-full h-full object-cover object-center -z-10 opacity-70"
+        class="absolute inset-0 w-full h-full object-cover object-center -z-10 opacity-60"
         loading="eager"
         format="webp"
         alt=""
       />
       <div
-        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/30 to-transparent"
+        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/40 to-base-100/10"
       />
 
       <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
         <div
-          class="container mx-auto flex flex-col md:flex-row md:items-end gap-4 md:gap-6"
+          class="container mx-auto flex flex-col gap-5 md:flex-row md:items-end md:justify-between"
         >
-          <div class="flex items-center gap-4 min-w-0">
+          <div class="flex min-w-0 items-center gap-4">
             <NuxtImg
               src="/images/goatcraft/icon.png"
-              class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl shadow-2xl shrink-0"
+              class="h-16 w-16 shrink-0 rounded-xl border border-base-content/10 shadow-lg sm:h-20 sm:w-20"
               alt="GoatCraft"
-              width="96"
-              height="96"
+              width="80"
+              height="80"
               format="webp"
             />
             <div class="min-w-0">
-              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-1">
-                GoatCraft
-              </h1>
-              <p class="text-base sm:text-lg opacity-80 line-clamp-2">
-                {{ t("goatCraft.tagline") }}
-              </p>
-              <div class="flex flex-wrap items-center gap-2 mt-3">
+              <div class="mb-1 flex flex-wrap items-center gap-2">
+                <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">
+                  GoatCraft
+                </h1>
                 <span
                   v-if="statsAvailable"
-                  class="badge badge-sm gap-1"
-                  :class="
-                    (stats?.onlineCount ?? 0) > 0
-                      ? 'badge-success'
-                      : 'badge-ghost'
-                  "
+                  class="inline-flex items-center gap-1.5 rounded-md border border-base-content/10 bg-base-100/80 px-2 py-0.5 text-xs font-medium backdrop-blur-sm"
                 >
                   <span
-                    class="w-1.5 h-1.5 rounded-full"
+                    class="h-1.5 w-1.5 rounded-full"
                     :class="
                       (stats?.onlineCount ?? 0) > 0
-                        ? 'bg-success-content animate-pulse'
+                        ? 'bg-success animate-pulse'
                         : 'bg-base-content/40'
                     "
                   />
@@ -525,53 +564,55 @@ defineOgImage("UniOgImage", {
                   }}
                 </span>
               </div>
+              <p class="max-w-xl text-sm opacity-75 sm:text-base">
+                {{ t("goatCraft.tagline") }}
+              </p>
             </div>
           </div>
 
-          <div class="flex flex-wrap gap-2 md:ml-auto md:shrink-0">
-            <a
-              href="#join"
-              class="btn btn-primary btn-sm sm:btn-md md:btn-lg rounded-full gap-2"
-            >
-              <Play class="w-4 h-4" />
+          <div class="flex flex-wrap items-center gap-2">
+            <a href="#join" class="btn btn-primary gap-2">
+              <Play class="h-4 w-4" />
               {{ t("goatCraft.join") }}
+            </a>
+            <a href="#history" class="btn btn-ghost border border-base-content/10 gap-2">
+              <Images class="h-4 w-4" />
+              {{ t("goatCraft.history.title") }}
             </a>
           </div>
         </div>
       </div>
     </section>
 
-    <div class="divider mt-0 h-px" />
-
     <!-- Live server stats -->
-    <section id="status" class="container mx-auto px-4 pt-16 pb-8 scroll-mt-24">
-      <div class="text-center mb-8">
-        <span class="badge badge-success badge-outline mb-4 gap-1">
-          <Activity class="w-3.5 h-3.5" />
-          {{ t("goatCraft.stats.badge") }}
-        </span>
-        <h2 class="text-3xl sm:text-4xl font-bold mb-3">
-          {{ t("goatCraft.stats.title") }}
-        </h2>
-        <p class="text-base opacity-70 max-w-2xl mx-auto">
-          {{ t("goatCraft.stats.desc") }}
-        </p>
-        <NuxtLink to="/products/goatcraft/stats" class="btn btn-outline btn-sm mt-4 gap-2">
-          <Activity class="w-4 h-4" />
+    <section id="status" class="container mx-auto scroll-mt-24 px-4 py-12">
+      <div
+        class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
+      >
+        <div>
+          <h2 class="text-2xl font-bold sm:text-3xl">
+            {{ t("goatCraft.stats.title") }}
+          </h2>
+          <p class="mt-1 max-w-xl text-sm opacity-60">
+            {{ t("goatCraft.stats.desc") }}
+          </p>
+        </div>
+        <NuxtLink
+          to="/products/goatcraft/stats"
+          class="btn btn-sm btn-ghost border border-base-content/10 gap-2 self-start sm:self-auto"
+        >
+          <Activity class="h-4 w-4" />
           {{ t("goatCraft.stats.viewDetails") }}
         </NuxtLink>
       </div>
 
-      <div
-        v-if="statsAvailable && stats"
-        class="max-w-4xl mx-auto space-y-4"
-      >
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div v-if="statsAvailable && stats" class="space-y-4">
+        <div class="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <div
-            class="card bg-base-200 border border-base-content/5 p-4 sm:p-5"
+            class="rounded-lg border border-base-content/10 bg-base-200 p-4"
           >
-            <div class="flex items-center gap-2 text-xs opacity-50 mb-2">
-              <Users class="w-3.5 h-3.5" />
+            <div class="mb-2 flex items-center gap-1.5 text-xs opacity-50">
+              <Users class="h-3.5 w-3.5" />
               {{ t("goatCraft.stats.online") }}
             </div>
             <p class="text-3xl font-bold tabular-nums text-primary">
@@ -579,10 +620,10 @@ defineOgImage("UniOgImage", {
             </p>
           </div>
           <div
-            class="card bg-base-200 border border-base-content/5 p-4 sm:p-5"
+            class="rounded-lg border border-base-content/10 bg-base-200 p-4"
           >
-            <div class="flex items-center gap-2 text-xs opacity-50 mb-2">
-              <Gamepad2 class="w-3.5 h-3.5" />
+            <div class="mb-2 flex items-center gap-1.5 text-xs opacity-50">
+              <Gamepad2 class="h-3.5 w-3.5" />
               {{ t("goatCraft.stats.totalPlayers") }}
             </div>
             <p class="text-3xl font-bold tabular-nums">
@@ -590,35 +631,35 @@ defineOgImage("UniOgImage", {
             </p>
           </div>
           <div
-            class="card bg-base-200 border border-base-content/5 p-4 sm:p-5"
+            class="rounded-lg border border-base-content/10 bg-base-200 p-4"
           >
-            <div class="flex items-center gap-2 text-xs opacity-50 mb-2">
-              <Clock class="w-3.5 h-3.5" />
+            <div class="mb-2 flex items-center gap-1.5 text-xs opacity-50">
+              <Clock class="h-3.5 w-3.5" />
               {{ t("goatCraft.stats.serverUptime") }}
             </div>
-            <p class="text-2xl sm:text-3xl font-bold tabular-nums">
+            <p class="text-2xl font-bold tabular-nums sm:text-3xl">
               {{ formatDuration(stats.serverUptimeMs) }}
             </p>
           </div>
           <div
-            class="card bg-base-200 border border-base-content/5 p-4 sm:p-5"
+            class="rounded-lg border border-base-content/10 bg-base-200 p-4"
           >
-            <div class="flex items-center gap-2 text-xs opacity-50 mb-2">
-              <Wifi class="w-3.5 h-3.5" />
+            <div class="mb-2 flex items-center gap-1.5 text-xs opacity-50">
+              <Wifi class="h-3.5 w-3.5" />
               {{ t("goatCraft.stats.websocket") }}
             </div>
-            <p class="text-lg sm:text-xl font-semibold capitalize truncate">
+            <p class="truncate text-lg font-semibold capitalize sm:text-xl">
               {{ stats.websocketState || "—" }}
             </p>
           </div>
         </div>
 
-        <div
-          class="card bg-base-200 border border-base-content/5 p-4 sm:p-5"
-        >
-          <div class="flex flex-wrap items-center justify-between gap-2 mb-3">
-            <h3 class="font-semibold flex items-center gap-2">
-              <Users class="w-4 h-4 text-primary" />
+        <div class="rounded-lg border border-base-content/10 bg-base-200 p-4">
+          <div
+            class="mb-3 flex flex-wrap items-center justify-between gap-2"
+          >
+            <h3 class="flex items-center gap-2 text-sm font-semibold">
+              <Users class="h-4 w-4 text-primary" />
               {{ t("goatCraft.stats.playersOnline") }}
             </h3>
             <div class="flex flex-wrap items-center gap-2 text-xs opacity-50">
@@ -648,7 +689,7 @@ defineOgImage("UniOgImage", {
 
           <div
             v-if="stats.onlinePlayers.length === 0"
-            class="rounded-xl border border-dashed border-base-content/10 py-8 text-center text-sm opacity-60"
+            class="rounded-md border border-dashed border-base-content/15 py-8 text-center text-sm opacity-60"
           >
             {{ t("goatCraft.stats.noPlayers") }}
           </div>
@@ -656,9 +697,9 @@ defineOgImage("UniOgImage", {
             <span
               v-for="player in stats.onlinePlayers"
               :key="player.uuid || player.name"
-              class="badge badge-lg badge-outline gap-1.5 font-medium"
+              class="inline-flex items-center gap-1.5 rounded-md border border-base-content/10 bg-base-100 px-2.5 py-1 text-sm font-medium"
             >
-              <span class="w-1.5 h-1.5 rounded-full bg-success" />
+              <span class="h-1.5 w-1.5 rounded-full bg-success" />
               {{ player.name }}
             </span>
           </div>
@@ -667,10 +708,10 @@ defineOgImage("UniOgImage", {
 
       <div
         v-else
-        class="max-w-xl mx-auto card bg-base-200 border border-base-content/5 p-8 text-center"
+        class="mx-auto max-w-lg rounded-lg border border-base-content/10 bg-base-200 p-8 text-center"
       >
-        <Server class="w-10 h-10 mx-auto mb-3 opacity-30" />
-        <p class="opacity-60">
+        <Server class="mx-auto mb-3 h-9 w-9 opacity-30" />
+        <p class="text-sm opacity-60">
           {{
             statsPayload?.reason === "not_configured"
               ? t("goatCraft.stats.notConfigured")
@@ -680,426 +721,198 @@ defineOgImage("UniOgImage", {
       </div>
     </section>
 
-    <div class="divider" />
+    <div class="border-t border-base-content/10" />
 
     <!-- About -->
-    <section class="container mx-auto px-4 pt-8 pb-16">
-      <div class="text-center mb-12">
-        <span class="badge badge-primary badge-outline mb-4">{{
-          t("goatCraft.about.badge")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">
+    <section class="container mx-auto px-4 py-12">
+      <div class="mb-8 max-w-2xl">
+        <h2 class="text-2xl font-bold sm:text-3xl">
           {{ t("goatCraft.about.title") }}
         </h2>
-        <p class="text-lg opacity-70 max-w-3xl mx-auto">
+        <p class="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
           {{ t("goatCraft.about.desc") }}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
         <div
           v-for="card in aboutCards"
           :key="card.titleKey"
-          class="card rounded-xl bg-base-200 hover:bg-base-300 transition-all duration-300 p-8 border border-base-content/5"
+          class="rounded-lg border border-base-content/10 bg-base-200 p-5"
         >
-          <div
-            class="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
-            :class="card.bg"
-          >
-            <component :is="card.icon" class="w-8 h-8" :class="card.iconClass" />
-          </div>
-          <h3 class="text-xl font-bold mb-2">{{ t(card.titleKey) }}</h3>
-          <p class="opacity-80">{{ t(card.descKey) }}</p>
+          <component :is="card.icon" class="mb-3 h-5 w-5 text-primary" />
+          <h3 class="mb-1.5 font-semibold">{{ t(card.titleKey) }}</h3>
+          <p class="text-sm leading-relaxed opacity-70">{{ t(card.descKey) }}</p>
         </div>
       </div>
     </section>
 
-    <div class="divider" />
-
-    <!-- History timeline + gallery (merged by 周目) -->
-    <section
-      id="history"
-      class="container mx-auto px-4 py-16 scroll-mt-24"
-      v-if="false"
-    >
-      <div class="text-center mb-12">
-        <span class="badge badge-primary badge-outline mb-4">{{
-          t("goatCraft.history.badge")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">
-          {{ t("goatCraft.history.title") }}
-        </h2>
-        <p class="text-lg opacity-70 max-w-2xl mx-auto">
-          {{ t("goatCraft.history.desc") }}
-        </p>
-      </div>
-
-      <div class="max-w-4xl mx-auto relative">
-        <div
-          class="absolute left-[1.15rem] top-3 bottom-3 w-px bg-base-content/10"
-          aria-hidden="true"
-        />
-
-        <ol class="space-y-10">
-          <li
-            v-for="period in timelinePeriods"
-            :key="period.id"
-            :id="`period-${period.id}`"
-            class="relative grid grid-cols-[2.25rem_1fr] gap-x-4 items-start scroll-mt-24"
-            @pointerdown="selectPeriod(period.id)"
-          >
-            <div class="flex justify-center pt-6 relative z-10">
-              <span
-                class="w-4 h-4 rounded-full border-2 border-base-100 shadow"
-                :class="
-                  period.status === 'current'
-                    ? 'bg-primary ring-4 ring-primary/20'
-                    : activePeriodId === period.id
-                      ? 'bg-primary/70 ring-4 ring-primary/10'
-                      : 'bg-base-content/30'
-                "
-              />
-            </div>
-
-            <div
-              class="card bg-base-200 border border-base-content/5 overflow-hidden"
-              :class="
-                period.status === 'current'
-                  ? 'border-primary/30 ring-1 ring-primary/15'
-                  : activePeriodId === period.id
-                    ? 'border-primary/20'
-                    : ''
-              "
-            >
-              <div class="p-5 sm:p-6">
-                <div class="flex flex-wrap items-center gap-2 mb-2">
-                  <span
-                    class="badge badge-sm"
-                    :class="
-                      period.status === 'current'
-                        ? 'badge-primary'
-                        : 'badge-ghost'
-                    "
-                  >
-                    {{ t(`goatCraft.periodStatus.${period.status}`) }}
-                  </span>
-                  <span class="text-xs opacity-50">
-                    {{ t(`goatCraft.periods.${period.id}.date`) }}
-                  </span>
-                  <span
-                    v-if="period.imageCount > 0"
-                    class="text-xs opacity-50 flex items-center gap-1 ml-auto"
-                  >
-                    <Images class="w-3.5 h-3.5" />
-                    {{
-                      t("goatCraft.gallery.count", {
-                        count: period.imageCount,
-                      })
-                    }}
-                  </span>
-                </div>
-                <h3 class="text-lg sm:text-xl font-bold">
-                  {{ t(`goatCraft.periods.${period.id}.title`) }}
-                </h3>
-                <p class="text-xs opacity-50 mb-2">
-                  {{ t(`goatCraft.periods.${period.id}.subtitle`) }}
-                </p>
-                <p class="text-sm opacity-70 leading-relaxed">
-                  {{ t(`goatCraft.periods.${period.id}.desc`) }}
-                </p>
-              </div>
-
-              <!-- Per-period carousel -->
-              <div
-                v-if="period.images.length > 0"
-                class="border-t border-base-content/5 p-3 sm:p-4 space-y-3 bg-base-300/30"
-              >
-                <div
-                  class="relative overflow-hidden rounded-xl bg-base-300 aspect-[16/10] sm:aspect-video"
-                >
-                  <Transition name="carousel-fade" mode="out-in">
-                    <NuxtImg
-                      v-if="slideSrc(period.id)"
-                      :key="slideSrc(period.id)!"
-                      :src="slideSrc(period.id)!"
-                      class="absolute inset-0 w-full h-full object-cover"
-                      loading="lazy"
-                      format="webp"
-                      sizes="100vw md:90vw lg:896px"
-                      :alt="t(`goatCraft.periods.${period.id}.title`)"
-                    />
-                  </Transition>
-
-                  <div
-                    class="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/55 to-transparent px-3 py-2.5 sm:px-4"
-                  >
-                    <p class="text-white/85 text-xs sm:text-sm tabular-nums">
-                      {{
-                        t("goatCraft.gallery.slide", {
-                          current: slideIndex(period.id) + 1,
-                          total: period.images.length,
-                        })
-                      }}
-                    </p>
-                  </div>
-
-                  <button
-                    type="button"
-                    class="btn btn-circle btn-sm absolute left-2 top-1/2 -translate-y-1/2 bg-base-100/85 border-0 shadow-md hover:bg-base-100"
-                    :aria-label="t('goatCraft.gallery.prev')"
-                    @click.stop="carouselPrev(period.id)"
-                  >
-                    <ChevronLeft class="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-circle btn-sm absolute right-2 top-1/2 -translate-y-1/2 bg-base-100/85 border-0 shadow-md hover:bg-base-100"
-                    :aria-label="t('goatCraft.gallery.next')"
-                    @click.stop="carouselNext(period.id)"
-                  >
-                    <ChevronRight class="w-4 h-4" />
-                  </button>
-                </div>
-
-                <div
-                  v-if="period.images.length > 1"
-                  class="flex justify-center gap-1.5 flex-wrap px-1"
-                >
-                  <button
-                    v-for="(_, i) in period.images"
-                    :key="i"
-                    type="button"
-                    class="h-1.5 rounded-full transition-all"
-                    :class="
-                      i === slideIndex(period.id)
-                        ? 'w-5 bg-primary'
-                        : 'w-1.5 bg-base-content/20 hover:bg-base-content/40'
-                    "
-                    :aria-label="
-                      t('goatCraft.gallery.slide', {
-                        current: i + 1,
-                        total: period.images.length,
-                      })
-                    "
-                    @click.stop="goToSlide(period.id, i)"
-                  />
-                </div>
-
-                <div
-                  :ref="(el) => bindThumbStrip(period.id, el)"
-                  class="scrollbar-hide flex gap-2 overflow-x-auto scroll-smooth pb-0.5 snap-x snap-mandatory"
-                >
-                  <button
-                    v-for="(src, i) in period.images"
-                    :key="src"
-                    type="button"
-                    class="relative shrink-0 w-16 sm:w-20 aspect-[4/3] rounded-md overflow-hidden border-2 snap-start transition-all"
-                    :class="
-                      i === slideIndex(period.id)
-                        ? 'border-primary ring-2 ring-primary/20'
-                        : 'border-transparent opacity-70 hover:opacity-100'
-                    "
-                    @click.stop="goToSlide(period.id, i)"
-                  >
-                    <NuxtImg
-                      :src="src"
-                      class="w-full h-full object-cover"
-                      loading="lazy"
-                      format="webp"
-                      width="120"
-                      height="90"
-                      :alt="
-                        t('goatCraft.gallery.slide', {
-                          current: i + 1,
-                          total: period.images.length,
-                        })
-                      "
-                    />
-                  </button>
-                </div>
-              </div>
-
-              <div
-                v-else
-                class="border-t border-base-content/5 px-5 py-8 sm:px-6 text-center"
-              >
-                <Images class="w-8 h-8 mx-auto mb-2 opacity-30" />
-                <p class="text-sm opacity-50">
-                  {{ t("goatCraft.gallery.empty") }}
-                </p>
-              </div>
-            </div>
-          </li>
-        </ol>
-      </div>
-    </section>
+    <div class="border-t border-base-content/10" />
 
     <!-- Features -->
-    <section class="container mx-auto px-4 py-16">
-      <div class="text-center mb-16">
-        <span class="badge badge-secondary badge-outline mb-4">{{
-          t("goatCraft.features.badge")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">
+    <section class="container mx-auto px-4 py-12">
+      <div class="mb-8 max-w-2xl">
+        <h2 class="text-2xl font-bold sm:text-3xl">
           {{ t("goatCraft.features.title") }}
         </h2>
-        <p class="text-lg opacity-70 max-w-2xl mx-auto">
+        <p class="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
           {{ t("goatCraft.features.desc") }}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
         <div
           v-for="feature in features"
           :key="feature.key"
-          class="card bg-base-200 rounded-2xl border border-base-content/5 p-6 hover:shadow-lg transition-shadow"
+          class="rounded-lg border border-base-content/10 bg-base-200 p-4"
         >
-          <div
-            class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4"
-          >
-            <component :is="feature.icon" class="w-5 h-5 text-primary" />
-          </div>
-          <h3 class="text-base font-semibold mb-2">
+          <component :is="feature.icon" class="mb-3 h-4 w-4 text-primary" />
+          <h3 class="mb-1 text-sm font-semibold">
             {{ t(feature.titleKey) }}
           </h3>
-          <p class="text-sm opacity-60 leading-relaxed">
+          <p class="text-xs leading-relaxed opacity-60 sm:text-sm">
             {{ t(feature.descKey) }}
           </p>
         </div>
       </div>
 
-      <section class="mt-16 border-t border-base-content/10 pt-12">
-        <div class="mx-auto mb-8 max-w-2xl text-center">
-          <h3 class="text-2xl font-bold">Connected with Solar Network</h3>
-          <p class="mt-3 text-base leading-relaxed opacity-70">
-            GoatCraft 不只是一个独立的服务器。它与 Solar Network 社区保持连接，让游戏内外的交流、身份与动态自然衔接。
+      <div
+        class="mt-10 rounded-lg border border-base-content/10 bg-base-200 p-5 sm:p-6"
+      >
+        <div class="mb-5 max-w-2xl">
+          <h3 class="text-lg font-bold sm:text-xl">
+            {{ t("goatCraft.solar.title") }}
+          </h3>
+          <p class="mt-1.5 text-sm leading-relaxed opacity-70">
+            {{ t("goatCraft.solar.desc") }}
           </p>
         </div>
-
-        <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
-          <div class="border border-base-content/5 bg-base-200 p-6">
-            <MessageSquare class="mb-4 h-5 w-5 text-primary" />
-            <h4 class="mb-2 font-semibold">同步聊天</h4>
-            <p class="text-sm leading-relaxed opacity-70">
-              游戏内聊天与 Solar Network 频道同步，无论在游戏里还是社区中，都能接上正在发生的对话。
-            </p>
-          </div>
-          <div class="border border-base-content/5 bg-base-200 p-6">
-            <Users class="mb-4 h-5 w-5 text-primary" />
-            <h4 class="mb-2 font-semibold">社区动态</h4>
-            <p class="text-sm leading-relaxed opacity-70">
-              服务器活动、重要公告与玩家故事可以直接分享至社区，让更多同伴一起参与。
-            </p>
-          </div>
-          <div class="border border-base-content/5 bg-base-200 p-6">
-            <BadgeCheck class="mb-4 h-5 w-5 text-primary" />
-            <h4 class="mb-2 font-semibold">账号联动</h4>
-            <p class="text-sm leading-relaxed opacity-70">
-              使用 Solarpass 登录即可关联你的社区身份，减少重复设置，专心开始冒险。
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div
+            v-for="item in solarLinks"
+            :key="item.key"
+            class="border-t border-base-content/10 pt-4 md:border-t-0 md:border-l md:pt-0 md:pl-4 md:first:border-l-0 md:first:pl-0"
+          >
+            <component :is="item.icon" class="mb-2 h-4 w-4 text-primary" />
+            <h4 class="mb-1 text-sm font-semibold">
+              {{ t(item.titleKey) }}
+            </h4>
+            <p class="text-sm leading-relaxed opacity-65">
+              {{ t(item.descKey) }}
             </p>
           </div>
         </div>
-      </section>
+      </div>
     </section>
 
-    <div class="divider" />
+    <div class="border-t border-base-content/10" />
 
-    <!-- How to join + auth + server info -->
-    <section id="join" class="container mx-auto px-4 py-16 scroll-mt-24">
-      <div class="text-center mb-12">
-        <span class="badge badge-accent badge-outline mb-4">{{
-          t("goatCraft.howToJoin.badge")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">
+    <!-- How to join + auth -->
+    <section id="join" class="container mx-auto scroll-mt-24 px-4 py-12">
+      <div class="mb-8 max-w-2xl">
+        <h2 class="text-2xl font-bold sm:text-3xl">
           {{ t("goatCraft.howToJoin.title") }}
         </h2>
-        <p class="text-lg opacity-70 max-w-2xl mx-auto">
+        <p class="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
           {{ t("goatCraft.howToJoin.desc") }}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+      <div class="mb-8 grid grid-cols-1 gap-3 md:grid-cols-3">
         <div
           v-for="step in joinSteps"
           :key="step.step"
-          class="card bg-base-200 border border-base-content/5 p-6 text-center"
+          class="flex gap-3 rounded-lg border border-base-content/10 bg-base-200 p-4"
         >
-          <div
-            class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-4 relative"
+          <span
+            class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-content"
           >
-            <component :is="step.icon" class="w-5 h-5 text-primary" />
-            <span
-              class="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-primary text-primary-content text-xs font-bold flex items-center justify-center"
-            >
-              {{ step.step }}
-            </span>
+            {{ step.step }}
+          </span>
+          <div class="min-w-0">
+            <h3 class="text-sm font-semibold">{{ t(step.titleKey) }}</h3>
+            <p class="mt-1 text-sm opacity-60">{{ t(step.descKey) }}</p>
           </div>
-          <h3 class="font-semibold mb-2">{{ t(step.titleKey) }}</h3>
-          <p class="text-sm opacity-60">{{ t(step.descKey) }}</p>
         </div>
       </div>
 
-      <!-- Auth paths as tabs (3 ways) -->
-      <div id="auth" class="max-w-3xl mx-auto mb-12 scroll-mt-24">
-        <div class="text-center mb-6">
-          <h3 class="text-xl sm:text-2xl font-bold mb-2">
+      <div id="auth" class="mx-auto max-w-3xl scroll-mt-24">
+        <div class="mb-4">
+          <h3 class="text-lg font-bold sm:text-xl">
             {{ t("goatCraft.auth.title") }}
           </h3>
-          <p class="text-sm sm:text-base opacity-60 max-w-2xl mx-auto">
+          <p class="mt-1 text-sm opacity-60">
             {{ t("goatCraft.auth.desc") }}
           </p>
         </div>
 
         <div
           role="tablist"
-          class="flex flex-wrap justify-center gap-2 mb-5"
+          class="mb-0 flex border-b border-base-content/10"
         >
           <button
             v-for="tab in authTabs"
             :key="tab.id"
             type="button"
             role="tab"
-            class="btn btn-sm sm:btn-md rounded-full gap-1.5"
+            class="relative flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-colors sm:px-4"
             :class="
-              authTab === tab.id ? 'btn-primary' : 'btn-ghost bg-base-200'
+              authTab === tab.id
+                ? 'text-primary'
+                : 'opacity-55 hover:opacity-90'
             "
             :aria-selected="authTab === tab.id"
             @click="authTab = tab.id"
           >
-            <component :is="tab.icon" class="w-4 h-4" />
-            {{ t(tab.labelKey) }}
+            <component :is="tab.icon" class="h-4 w-4" />
+            <span class="hidden sm:inline">{{ t(tab.labelKey) }}</span>
+            <span class="sm:hidden">
+              {{
+                tab.id === "microsoft"
+                  ? "MS"
+                  : tab.id === "solarpass"
+                    ? "Solar"
+                    : "Bedrock"
+              }}
+            </span>
+            <span
+              v-if="authTab === tab.id"
+              class="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-primary"
+            />
           </button>
         </div>
 
         <div
-          class="card bg-base-200 border border-base-content/5 p-6 sm:p-8"
+          class="rounded-b-lg border border-t-0 border-base-content/10 bg-base-200 p-5 sm:p-6"
           role="tabpanel"
         >
           <!-- Microsoft (Java) -->
-          <div v-if="authTab === 'microsoft'" class="space-y-5">
+          <div v-if="authTab === 'microsoft'" class="space-y-4">
             <div class="flex flex-wrap items-center gap-2">
-              <span class="badge badge-success badge-sm">{{
-                t("goatCraft.auth.microsoft.badge")
-              }}</span>
-              <h4 class="text-lg font-bold">
+              <span
+                class="rounded bg-success/15 px-2 py-0.5 text-xs font-medium text-success"
+              >
+                {{ t("goatCraft.auth.microsoft.badge") }}
+              </span>
+              <h4 class="font-semibold">
                 {{ t("goatCraft.auth.microsoft.title") }}
               </h4>
             </div>
-            <p class="text-sm opacity-70 leading-relaxed">
+            <p class="text-sm leading-relaxed opacity-70">
               {{ t("goatCraft.auth.microsoft.desc") }}
             </p>
-            <ol class="space-y-3">
+            <ol class="space-y-2.5">
               <li
                 v-for="n in 3"
                 :key="n"
                 class="flex gap-3 text-sm"
               >
                 <span
-                  class="w-6 h-6 rounded-full bg-success/15 text-success text-xs font-bold flex items-center justify-center shrink-0"
+                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-base-100 text-xs font-bold"
                 >
                   {{ n }}
                 </span>
-                <span class="opacity-80 leading-relaxed pt-0.5">
+                <span class="pt-0.5 leading-relaxed opacity-80">
                   {{ t(`goatCraft.auth.microsoft.steps.${n}`) }}
                 </span>
               </li>
@@ -1107,42 +920,44 @@ defineOgImage("UniOgImage", {
           </div>
 
           <!-- Solarpass (Java only) -->
-          <div v-else-if="authTab === 'solarpass'" class="space-y-5">
+          <div v-else-if="authTab === 'solarpass'" class="space-y-4">
             <div class="flex flex-wrap items-center gap-2">
-              <span class="badge badge-primary badge-sm">{{
-                t("goatCraft.auth.solarpass.badge")
-              }}</span>
-              <h4 class="text-lg font-bold">
+              <span
+                class="rounded bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary"
+              >
+                {{ t("goatCraft.auth.solarpass.badge") }}
+              </span>
+              <h4 class="font-semibold">
                 {{ t("goatCraft.auth.solarpass.title") }}
               </h4>
             </div>
-            <p class="text-sm opacity-70 leading-relaxed">
+            <p class="text-sm leading-relaxed opacity-70">
               {{ t("goatCraft.auth.solarpass.desc") }}
             </p>
-            <ol class="space-y-3">
+            <ol class="space-y-2.5">
               <li
                 v-for="n in 3"
                 :key="n"
                 class="flex gap-3 text-sm"
               >
                 <span
-                  class="w-6 h-6 rounded-full bg-primary/15 text-primary text-xs font-bold flex items-center justify-center shrink-0"
+                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-base-100 text-xs font-bold"
                 >
                   {{ n }}
                 </span>
-                <span class="opacity-80 leading-relaxed pt-0.5">
+                <span class="pt-0.5 leading-relaxed opacity-80">
                   {{ t(`goatCraft.auth.solarpass.steps.${n}`) }}
                 </span>
               </li>
             </ol>
-            <div class="flex flex-col sm:flex-row sm:items-center gap-3 pt-1">
+            <div class="flex flex-col gap-2 pt-1 sm:flex-row sm:items-center">
               <a
                 :href="AUTH_MC_URL"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn btn-primary rounded-full gap-2"
+                class="btn btn-primary btn-sm gap-2"
               >
-                <ExternalLink class="w-4 h-4" />
+                <ExternalLink class="h-4 w-4" />
                 {{ t("goatCraft.auth.solarpass.cta") }}
               </a>
               <p class="text-xs opacity-50">
@@ -1151,36 +966,38 @@ defineOgImage("UniOgImage", {
             </div>
           </div>
 
-          <!-- Bedrock (no Solarpass) -->
-          <div v-else class="space-y-5">
+          <!-- Bedrock -->
+          <div v-else class="space-y-4">
             <div class="flex flex-wrap items-center gap-2">
-              <span class="badge badge-secondary badge-sm">{{
-                t("goatCraft.auth.bedrock.badge")
-              }}</span>
-              <h4 class="text-lg font-bold">
+              <span
+                class="rounded bg-secondary/15 px-2 py-0.5 text-xs font-medium text-secondary"
+              >
+                {{ t("goatCraft.auth.bedrock.badge") }}
+              </span>
+              <h4 class="font-semibold">
                 {{ t("goatCraft.auth.bedrock.title") }}
               </h4>
             </div>
-            <p class="text-sm opacity-70 leading-relaxed">
+            <p class="text-sm leading-relaxed opacity-70">
               {{ t("goatCraft.auth.bedrock.desc") }}
             </p>
             <div
-              class="rounded-xl border border-warning/30 bg-warning/10 px-4 py-3 text-sm"
+              class="rounded-md border border-warning/25 bg-warning/10 px-3 py-2.5 text-sm"
             >
               {{ t("goatCraft.auth.bedrock.note") }}
             </div>
-            <ol class="space-y-3">
+            <ol class="space-y-2.5">
               <li
                 v-for="n in 3"
                 :key="n"
                 class="flex gap-3 text-sm"
               >
                 <span
-                  class="w-6 h-6 rounded-full bg-secondary/15 text-secondary text-xs font-bold flex items-center justify-center shrink-0"
+                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-base-100 text-xs font-bold"
                 >
                   {{ n }}
                 </span>
-                <span class="opacity-80 leading-relaxed pt-0.5">
+                <span class="pt-0.5 leading-relaxed opacity-80">
                   {{ t(`goatCraft.auth.bedrock.steps.${n}`) }}
                 </span>
               </li>
@@ -1188,7 +1005,7 @@ defineOgImage("UniOgImage", {
           </div>
 
           <div
-            class="mt-6 flex flex-col gap-3 border-t border-base-content/10 pt-5 sm:flex-row sm:items-center sm:justify-between"
+            class="mt-5 flex flex-col gap-3 border-t border-base-content/10 pt-4 sm:flex-row sm:items-center sm:justify-between"
           >
             <div class="min-w-0">
               <p class="text-xs opacity-50">
@@ -1198,21 +1015,19 @@ defineOgImage("UniOgImage", {
                     : t("goatCraft.editionJava")
                 }}
               </p>
-              <p class="font-mono text-xl font-bold tracking-wide text-primary sm:text-2xl">
-                {{
-                  authTab === "bedrock"
-                    ? BEDROCK_SERVER_ADDRESS
-                    : SERVER_ADDRESS
-                }}
+              <p
+                class="font-mono text-xl font-bold tracking-wide text-primary sm:text-2xl"
+              >
+                {{ activeServerAddress }}
               </p>
             </div>
             <button
               type="button"
               class="btn btn-primary btn-sm shrink-0 gap-2"
-              @click="copyAddress(authTab === 'bedrock' ? BEDROCK_SERVER_ADDRESS : SERVER_ADDRESS)"
+              @click="copyAddress(activeServerAddress)"
             >
-              <Check v-if="copied" class="w-4 h-4" />
-              <Copy v-else class="w-4 h-4" />
+              <Check v-if="copied" class="h-4 w-4" />
+              <Copy v-else class="h-4 w-4" />
               {{ copied ? t("goatCraft.copied") : t("goatCraft.copyAddress") }}
             </button>
           </div>
@@ -1220,172 +1035,277 @@ defineOgImage("UniOgImage", {
       </div>
     </section>
 
-    <div class="divider" />
+    <div class="border-t border-base-content/10" />
 
-    <!-- History gallery -->
-    <section id="history" class="container mx-auto px-4 py-16 scroll-mt-24">
-      <div class="mb-10 text-center">
-        <h2 class="text-4xl font-bold">岁月史书</h2>
+    <!-- History timeline + gallery -->
+    <section id="history" class="container mx-auto scroll-mt-24 px-4 py-12">
+      <div class="mb-8 max-w-2xl">
+        <h2 class="text-2xl font-bold sm:text-3xl">
+          {{ t("goatCraft.history.title") }}
+        </h2>
+        <p class="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
+          {{ t("goatCraft.history.desc") }}
+        </p>
       </div>
 
-      <div class="relative overflow-x-auto pb-4">
+      <!-- Period jump chips (handy when the strip scrolls horizontally) -->
+      <div class="mb-6 flex flex-wrap gap-2 lg:mb-8">
+        <a
+          v-for="period in timelinePeriods"
+          :key="`nav-${period.id}`"
+          :href="`#period-${period.id}`"
+          class="inline-flex items-center gap-1.5 rounded-md border px-3 py-1.5 text-xs font-medium transition-colors"
+          :class="
+            period.status === 'current'
+              ? 'border-primary/40 bg-primary/10 text-primary'
+              : 'border-base-content/10 bg-base-200 opacity-80 hover:opacity-100'
+          "
+          @click="selectPeriod(period.id)"
+        >
+          {{ t(`goatCraft.periods.${period.id}.title`) }}
+          <span v-if="period.imageCount > 0" class="opacity-60">
+            · {{ period.imageCount }}
+          </span>
+        </a>
+      </div>
+
+      <!--
+        Timeline layout:
+        - < lg: vertical rail (stacked cards)
+        - lg+: horizontal scroll strip
+      -->
+      <div class="relative mx-auto max-w-3xl lg:max-w-none">
+        <!-- Vertical rail (mobile / tablet) -->
         <div
-          class="absolute left-0 right-0 top-3 h-px bg-base-content/10"
+          class="absolute bottom-3 left-[0.95rem] top-3 w-px bg-base-content/10 lg:hidden"
           aria-hidden="true"
         />
-        <ol class="relative flex w-max min-w-full gap-6 pt-8">
-          <li
-            v-for="period in timelinePeriods"
-            :key="period.id"
-            :id="`period-${period.id}`"
-            class="relative w-[min(82vw,32rem)] shrink-0 scroll-mt-24"
-            @pointerdown="selectPeriod(period.id)"
-          >
-            <span
-              class="absolute -top-7 left-5 z-10 w-4 h-4 rounded-full border-2 border-base-100"
-              :class="
-                period.status === 'current'
-                  ? 'bg-primary ring-4 ring-primary/20'
-                  : activePeriodId === period.id
-                    ? 'bg-primary/70 ring-4 ring-primary/10'
-                    : 'bg-base-content/30'
-              "
-            />
 
-            <article
-              class="overflow-hidden rounded-lg border border-base-content/5 bg-base-200"
-              :class="
-                period.status === 'current'
-                  ? 'border-primary/30 ring-1 ring-primary/15'
-                  : activePeriodId === period.id
-                    ? 'border-primary/20'
-                    : ''
-              "
+        <div class="relative lg:overflow-x-auto lg:pb-2">
+          <!-- Horizontal rail (large screens) -->
+          <div
+            class="pointer-events-none absolute left-0 right-0 top-3 hidden h-px bg-base-content/10 lg:block"
+            aria-hidden="true"
+          />
+
+          <ol
+            class="relative space-y-8 lg:flex lg:w-max lg:min-w-full lg:gap-6 lg:space-y-0 lg:pt-8"
+          >
+            <li
+              v-for="period in timelinePeriods"
+              :key="period.id"
+              :id="`period-${period.id}`"
+              class="relative grid scroll-mt-24 grid-cols-[2rem_1fr] items-start gap-x-4 lg:grid-cols-1 lg:w-[min(82vw,28rem)] lg:shrink-0 lg:gap-x-0"
+              @pointerdown="selectPeriod(period.id)"
             >
-              <div class="p-5 sm:p-6">
-                <div class="flex flex-wrap items-center gap-2 mb-2">
-                  <span
-                    class="badge badge-sm"
-                    :class="period.status === 'current' ? 'badge-primary' : 'badge-ghost'"
-                  >
-                    {{ t(`goatCraft.periodStatus.${period.status}`) }}
-                  </span>
-                  <span class="text-xs opacity-50">
-                    {{ t(`goatCraft.periods.${period.id}.date`) }}
-                  </span>
-                  <span
-                    v-if="period.imageCount > 0"
-                    class="ml-auto flex items-center gap-1 text-xs opacity-50"
-                  >
-                    <Images class="w-3.5 h-3.5" />
-                    {{ t("goatCraft.gallery.count", { count: period.imageCount }) }}
-                  </span>
-                </div>
-                <h3 class="text-lg font-bold sm:text-xl">
-                  {{ t(`goatCraft.periods.${period.id}.title`) }}
-                </h3>
-                <p class="mb-2 text-xs opacity-50">
-                  {{ t(`goatCraft.periods.${period.id}.subtitle`) }}
-                </p>
-                <p class="text-sm leading-relaxed opacity-70">
-                  {{ t(`goatCraft.periods.${period.id}.desc`) }}
-                </p>
+              <!-- Dot: left rail on small screens, on top of horizontal rail on lg -->
+              <div
+                class="relative z-10 flex justify-center pt-5 lg:absolute lg:-top-7 lg:left-5 lg:pt-0"
+              >
+                <span
+                  class="h-3.5 w-3.5 rounded-full border-2 border-base-100"
+                  :class="
+                    period.status === 'current'
+                      ? 'bg-primary ring-4 ring-primary/20'
+                      : activePeriodId === period.id
+                        ? 'bg-primary/70 ring-4 ring-primary/10'
+                        : 'bg-base-content/30'
+                  "
+                />
               </div>
 
-              <div
-                v-if="period.images.length > 0"
-                class="space-y-3 border-t border-base-content/5 bg-base-300/30 p-3 sm:p-4"
+              <article
+                class="overflow-hidden rounded-lg border border-base-content/10 bg-base-200"
+                :class="
+                  period.status === 'current'
+                    ? 'border-primary/30'
+                    : activePeriodId === period.id
+                      ? 'border-primary/20'
+                      : ''
+                "
               >
-                <div class="relative aspect-video overflow-hidden bg-base-300">
-                  <Transition name="carousel-fade" mode="out-in">
-                    <NuxtImg
+                <div class="p-4 sm:p-5">
+                  <div class="mb-2 flex flex-wrap items-center gap-2">
+                    <span
+                      class="rounded px-2 py-0.5 text-xs font-medium"
+                      :class="
+                        period.status === 'current'
+                          ? 'bg-primary/15 text-primary'
+                          : 'bg-base-100 opacity-70'
+                      "
+                    >
+                      {{ t(`goatCraft.periodStatus.${period.status}`) }}
+                    </span>
+                    <span class="text-xs opacity-50">
+                      {{ t(`goatCraft.periods.${period.id}.date`) }}
+                    </span>
+                    <span
+                      v-if="period.imageCount > 0"
+                      class="ml-auto flex items-center gap-1 text-xs opacity-50"
+                    >
+                      <Images class="h-3.5 w-3.5" />
+                      {{
+                        t("goatCraft.gallery.count", {
+                          count: period.imageCount,
+                        })
+                      }}
+                    </span>
+                  </div>
+                  <h3 class="text-lg font-bold">
+                    {{ t(`goatCraft.periods.${period.id}.title`) }}
+                  </h3>
+                  <p class="mb-1.5 text-xs opacity-50">
+                    {{ t(`goatCraft.periods.${period.id}.subtitle`) }}
+                  </p>
+                  <p class="text-sm leading-relaxed opacity-70">
+                    {{ t(`goatCraft.periods.${period.id}.desc`) }}
+                  </p>
+                </div>
+
+                <!-- Per-period carousel — native <img> (no IPX) for multi-dot filenames -->
+                <div
+                  v-if="period.images.length > 0"
+                  class="space-y-3 border-t border-base-content/10 bg-base-300/25 p-3 sm:p-4"
+                >
+                  <div
+                    class="relative aspect-video overflow-hidden rounded-md bg-base-300"
+                  >
+                    <img
                       v-if="slideSrc(period.id)"
                       :key="slideSrc(period.id)!"
                       :src="slideSrc(period.id)!"
                       class="absolute inset-0 h-full w-full object-cover"
                       loading="lazy"
-                      format="webp"
-                      width="1024"
-                      height="576"
-                      fit="cover"
-                      sizes="82vw md:32rem"
+                      decoding="async"
                       :alt="t(`goatCraft.periods.${period.id}.title`)"
+                      @error="onGalleryImageError(slideSrc(period.id)!)"
                     />
-                  </Transition>
-                  <button
-                    type="button"
-                    class="btn btn-circle btn-sm absolute left-2 top-1/2 -translate-y-1/2 bg-base-100/85 border-0"
-                    :aria-label="t('goatCraft.gallery.prev')"
-                    @click.stop="carouselPrev(period.id)"
-                  >
-                    <ChevronLeft class="w-4 h-4" />
-                  </button>
-                  <button
-                    type="button"
-                    class="btn btn-circle btn-sm absolute right-2 top-1/2 -translate-y-1/2 bg-base-100/85 border-0"
-                    :aria-label="t('goatCraft.gallery.next')"
-                    @click.stop="carouselNext(period.id)"
-                  >
-                    <ChevronRight class="w-4 h-4" />
-                  </button>
-                </div>
-                <div
-                  :ref="(el) => bindThumbStrip(period.id, el)"
-                  class="scrollbar-hide flex gap-2 overflow-x-auto scroll-smooth"
-                >
-                  <button
-                    v-for="(src, i) in period.images"
-                    :key="src"
-                    type="button"
-                    class="relative shrink-0 w-16 aspect-[4/3] overflow-hidden rounded-md border-2"
-                    :class="i === slideIndex(period.id) ? 'border-primary' : 'border-transparent opacity-70 hover:opacity-100'"
-                    @click.stop="goToSlide(period.id, i)"
-                  >
-                    <NuxtImg
-                      :src="src"
-                      class="h-full w-full object-cover"
-                      loading="lazy"
-                      format="webp"
-                      width="120"
-                      height="90"
-                      :alt="t('goatCraft.gallery.slide', { current: i + 1, total: period.images.length })"
-                    />
-                  </button>
-                </div>
-              </div>
 
-              <div
-                v-else
-                class="border-t border-base-content/5 px-5 py-8 text-center"
-              >
-                <Images class="w-8 h-8 mx-auto mb-2 opacity-30" />
-                <p class="text-sm opacity-50">{{ t("goatCraft.gallery.empty") }}</p>
-              </div>
-            </article>
-          </li>
-        </ol>
+                    <div
+                      class="pointer-events-none absolute inset-x-0 bottom-0 bg-linear-to-t from-black/60 to-transparent px-3 py-2"
+                    >
+                      <p class="text-xs tabular-nums text-white/90">
+                        {{
+                          t("goatCraft.gallery.slide", {
+                            current: slideIndex(period.id) + 1,
+                            total: period.images.length,
+                          })
+                        }}
+                      </p>
+                    </div>
+
+                    <template v-if="period.images.length > 1">
+                      <button
+                        type="button"
+                        class="btn btn-circle btn-sm absolute left-2 top-1/2 -translate-y-1/2 border-0 bg-base-100/90 shadow"
+                        :aria-label="t('goatCraft.gallery.prev')"
+                        @click.stop="carouselPrev(period.id)"
+                      >
+                        <ChevronLeft class="h-4 w-4" />
+                      </button>
+                      <button
+                        type="button"
+                        class="btn btn-circle btn-sm absolute right-2 top-1/2 -translate-y-1/2 border-0 bg-base-100/90 shadow"
+                        :aria-label="t('goatCraft.gallery.next')"
+                        @click.stop="carouselNext(period.id)"
+                      >
+                        <ChevronRight class="h-4 w-4" />
+                      </button>
+                    </template>
+                  </div>
+
+                  <div
+                    v-if="period.images.length > 1"
+                    class="flex flex-wrap justify-center gap-1.5 px-1"
+                  >
+                    <button
+                      v-for="(_, i) in period.images"
+                      :key="i"
+                      type="button"
+                      class="h-1.5 rounded-full transition-all"
+                      :class="
+                        i === slideIndex(period.id)
+                          ? 'w-5 bg-primary'
+                          : 'w-1.5 bg-base-content/20 hover:bg-base-content/40'
+                      "
+                      :aria-label="
+                        t('goatCraft.gallery.slide', {
+                          current: i + 1,
+                          total: period.images.length,
+                        })
+                      "
+                      @click.stop="goToSlide(period.id, i)"
+                    />
+                  </div>
+
+                  <div
+                    v-if="period.images.length > 1"
+                    :ref="(el) => bindThumbStrip(period.id, el)"
+                    class="scrollbar-hide flex gap-2 overflow-x-auto scroll-smooth pb-0.5"
+                  >
+                    <button
+                      v-for="(src, i) in period.images"
+                      :key="src"
+                      type="button"
+                      class="relative aspect-[4/3] w-16 shrink-0 overflow-hidden rounded border-2 transition-opacity sm:w-20"
+                      :class="
+                        i === slideIndex(period.id)
+                          ? 'border-primary opacity-100'
+                          : 'border-transparent opacity-65 hover:opacity-100'
+                      "
+                      @click.stop="goToSlide(period.id, i)"
+                    >
+                      <img
+                        :src="src"
+                        class="h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                        width="120"
+                        height="90"
+                        :alt="
+                          t('goatCraft.gallery.slide', {
+                            current: i + 1,
+                            total: period.images.length,
+                          })
+                        "
+                        @error="onGalleryImageError(src)"
+                      />
+                    </button>
+                  </div>
+                </div>
+
+                <div
+                  v-else
+                  class="border-t border-base-content/10 px-5 py-8 text-center"
+                >
+                  <Images class="mx-auto mb-2 h-8 w-8 opacity-30" />
+                  <p class="text-sm opacity-50">
+                    {{ t("goatCraft.gallery.empty") }}
+                  </p>
+                </div>
+              </article>
+            </li>
+          </ol>
+        </div>
       </div>
     </section>
 
-    <div class="divider" />
+    <div class="border-t border-base-content/10" />
 
     <!-- Reviews -->
-    <section class="container mx-auto px-4 py-16">
-      <div class="text-center mb-12">
-        <span class="badge badge-primary badge-outline mb-4">{{
-          t("reviews.title")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">{{ t("reviews.title") }}</h2>
-        <p class="text-lg opacity-70 max-w-2xl mx-auto">
+    <section class="container mx-auto px-4 py-12">
+      <div class="mb-8 max-w-2xl">
+        <h2 class="text-2xl font-bold sm:text-3xl">{{ t("reviews.title") }}</h2>
+        <p class="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
           {{ t("reviews.shareExperience") }}
         </p>
       </div>
 
       <div
-        class="grid lg:grid-cols-[minmax(260px,320px)_minmax(0,1fr)] gap-6 lg:gap-8 items-start"
+        class="grid items-start gap-6 lg:grid-cols-[minmax(240px,300px)_minmax(0,1fr)] lg:gap-8"
       >
         <aside
-          class="card bg-base-200 border border-base-content/5 p-6 lg:sticky lg:top-24"
+          class="rounded-lg border border-base-content/10 bg-base-200 p-5 lg:sticky lg:top-24"
         >
           <ReviewSummary
             v-if="summary"
@@ -1403,13 +1323,13 @@ defineOgImage("UniOgImage", {
             v-else-if="reviewsLoading || myReviewLoading"
             class="animate-pulse space-y-3 py-2"
           >
-            <div class="h-10 w-16 bg-base-300 rounded mx-auto" />
-            <div class="h-3 w-full bg-base-300 rounded" />
-            <div class="h-3 w-full bg-base-300 rounded" />
-            <div class="h-3 w-4/5 bg-base-300 rounded" />
+            <div class="mx-auto h-10 w-16 rounded bg-base-300" />
+            <div class="h-3 w-full rounded bg-base-300" />
+            <div class="h-3 w-full rounded bg-base-300" />
+            <div class="h-3 w-4/5 rounded bg-base-300" />
           </div>
-          <div v-else class="text-center py-2">
-            <p class="text-3xl font-bold tabular-nums mb-1">&mdash;</p>
+          <div v-else class="py-2 text-center">
+            <p class="mb-1 text-3xl font-bold tabular-nums">&mdash;</p>
             <p class="text-xs opacity-50">
               {{ t("reviews.summary.count", { count: 0 }) }}
             </p>
@@ -1418,9 +1338,9 @@ defineOgImage("UniOgImage", {
           <div class="divider my-4" />
 
           <div v-if="myReview && !myReviewLoading" class="mb-4">
-            <p class="text-xs opacity-50 mb-2">{{ t("reviews.editReview") }}</p>
+            <p class="mb-2 text-xs opacity-50">{{ t("reviews.editReview") }}</p>
             <div
-              class="flex items-center gap-2 rounded-lg bg-base-100 border border-base-content/5 px-3 py-2"
+              class="flex items-center gap-2 rounded-md border border-base-content/10 bg-base-100 px-3 py-2"
             >
               <StarRating :model-value="myReview.rating" size="xs" readonly />
               <span class="text-sm font-medium tabular-nums"
@@ -1445,7 +1365,7 @@ defineOgImage("UniOgImage", {
                   class="btn btn-primary w-full gap-2"
                   @click="openReviewForm"
                 >
-                  <Star class="w-4 h-4" />
+                  <Star class="h-4 w-4" />
                   {{ t("reviews.writeReview") }}
                 </button>
                 <button
@@ -1454,13 +1374,13 @@ defineOgImage("UniOgImage", {
                   class="btn btn-outline w-full gap-2"
                   @click="openReviewForm"
                 >
-                  <Star class="w-4 h-4" />
+                  <Star class="h-4 w-4" />
                   {{ t("reviews.editReview") }}
                 </button>
               </template>
             </ReviewForm>
           </div>
-          <div v-else class="h-10 bg-base-300 rounded-lg animate-pulse" />
+          <div v-else class="h-10 animate-pulse rounded-md bg-base-300" />
         </aside>
 
         <div class="min-w-0">
@@ -1479,30 +1399,28 @@ defineOgImage("UniOgImage", {
       </div>
     </section>
 
+    <div class="border-t border-base-content/10" />
+
     <!-- Help -->
-    <section class="container mx-auto px-4 py-16">
-      <div class="card bg-base-200 p-8">
-        <div
-          class="flex flex-col md:flex-row items-center justify-between gap-6"
-        >
-          <div>
-            <h2 class="text-3xl font-bold mb-2">
-              {{ t("goatCraft.help.title") }}
-            </h2>
-            <p class="text-lg opacity-80">
-              {{ t("goatCraft.help.desc") }}
-            </p>
-          </div>
-          <div class="flex flex-wrap gap-4 justify-center">
-            <a
-              href="mailto:lily@solsynth.dev"
-              class="btn btn-outline btn-lg gap-2"
-            >
-              <Bug class="w-5 h-5" />
-              lily@solsynth.dev
-            </a>
-          </div>
+    <section class="container mx-auto px-4 py-12">
+      <div
+        class="flex flex-col items-start justify-between gap-4 rounded-lg border border-base-content/10 bg-base-200 p-5 sm:flex-row sm:items-center sm:p-6"
+      >
+        <div>
+          <h2 class="text-xl font-bold sm:text-2xl">
+            {{ t("goatCraft.help.title") }}
+          </h2>
+          <p class="mt-1 text-sm opacity-70 sm:text-base">
+            {{ t("goatCraft.help.desc") }}
+          </p>
         </div>
+        <a
+          href="mailto:lily@solsynth.dev"
+          class="btn btn-outline gap-2 shrink-0"
+        >
+          <Bug class="h-4 w-4" />
+          lily@solsynth.dev
+        </a>
       </div>
     </section>
   </div>
@@ -1517,16 +1435,6 @@ defineOgImage("UniOgImage", {
 :global([data-theme="dark"]) .goatcraft-page {
   --color-primary: oklch(70% 0.12 130deg);
   --color-primary-content: oklch(20% 0.04 130deg);
-}
-
-.carousel-fade-enter-active,
-.carousel-fade-leave-active {
-  transition: opacity 0.25s ease;
-}
-
-.carousel-fade-enter-from,
-.carousel-fade-leave-to {
-  opacity: 0;
 }
 
 .scrollbar-hide {
