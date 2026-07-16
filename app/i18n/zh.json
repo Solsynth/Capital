@@ -877,7 +877,7 @@
       },
       "auth": {
         "title": "Microsoft 或 Solarpass",
-        "desc": "已有 Microsoft Minecraft 账号？无需额外步骤直接加入。想用 Solarpass？在 AuthMC 完成一次登录即可进服。"
+        "desc": "已有 Microsoft Minecraft 账号？直接加入即可。想用 Solarpass？在 AuthMC 登录后，用支持「外置登录」的启动器（认证服务器 authmc）进服。"
       }
     },
     "features": {
@@ -886,7 +886,7 @@
       "desc": "扎实的多人生存体验 — Java 与基岩版都适用。",
       "auth": {
         "title": "Solarpass 登录",
-        "desc": "可用 Solarpass 账号登录服务器。需要认证时打开 AuthMC 完成登录，再回到游戏即可。"
+        "desc": "访问 AuthMC 用 Solarpass 登录，再在支持「外置登录」的启动器中填写认证服务器 authmc，即可加入 GoatCraft。"
       },
       "microsoft": {
         "title": "欢迎 Microsoft 账号",
@@ -939,13 +939,13 @@
       "solarpass": {
         "title": "Solarpass · 仅 Java 版",
         "badge": "仅 Java",
-        "desc": "在 Java 版使用 Solarpass 账号。服务器提示认证时，在 AuthMC 完成登录，再回到游戏。",
+        "desc": "通过 AuthMC 使用 Solarpass，再在支持「外置登录」的启动器中配置认证服务器，最后加入游戏服。",
         "cta": "打开 AuthMC",
-        "hint": "Solarpass 的 Minecraft 登录只需 AuthMC。基岩版不可用。",
+        "hint": "外置登录的认证服务器填 authmc（authmc.solsynth.dev）；游戏服地址仍是 playmc.solsynth.dev。基岩版不可用。",
         "steps": {
-          "1": "启动 Minecraft：Java 版。",
-          "2": "多人游戏 → 添加服务器 → 地址 playmc.solsynth.dev 并加入。",
-          "3": "按提示打开 AuthMC，用 Solarpass 登录后返回游戏。"
+          "1": "访问 authmc.solsynth.dev，使用 Solarpass 登录。",
+          "2": "在支持「外置登录」的 Minecraft 启动器中登录；认证服务器填写 authmc。",
+          "3": "添加游戏服务器 playmc.solsynth.dev，进入服务器游玩。"
         }
       },
       "bedrock": {
@@ -963,18 +963,18 @@
     "howToJoin": {
       "badge": "如何加入",
       "title": "加入与登录",
-      "desc": "复制服务器地址，在下方选择你的方式并加入。Java 与基岩版使用同一主机。",
+      "desc": "按右侧方式完成登录配置，再加入对应服务器。Java 与基岩版路径不同，请选择匹配的标签页。",
       "step1": {
-        "title": "复制地址",
-        "desc": "服务器地址为 playmc.solsynth.dev — 可在下方服务器信息中一键复制。"
+        "title": "完成账号登录",
+        "desc": "Microsoft 账号可直接用官方启动器；Solarpass 请先访问 AuthMC 登录。"
       },
       "step2": {
-        "title": "选择方式",
-        "desc": "Java 的 Microsoft、Java 的 Solarpass，或基岩版的 Microsoft / Xbox — 点选下方标签页。"
+        "title": "配置启动器",
+        "desc": "Solarpass 需在支持「外置登录」的启动器中填写认证服务器 authmc；Microsoft / 基岩版用官方账号即可。"
       },
       "step3": {
-        "title": "连接并游玩",
-        "desc": "在游戏中添加服务器，并按所选标签页的步骤操作。Solarpass 用户在提示时于 AuthMC 完成登录。"
+        "title": "进入服务器",
+        "desc": "Java 游戏服 playmc.solsynth.dev；基岩版见对应标签。加入后即可游玩。"
       }
     },
     "serverInfo": {

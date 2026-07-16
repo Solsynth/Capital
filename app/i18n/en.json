@@ -877,7 +877,7 @@
       },
       "auth": {
         "title": "Microsoft or Solarpass",
-        "desc": "Have a Microsoft Minecraft account? Join with nothing extra. Prefer Solarpass? Authenticate once on AuthMC, then hop in."
+        "desc": "Have a Microsoft Minecraft account? Join directly. Prefer Solarpass? Sign in on AuthMC, then use a launcher with external login (auth server authmc)."
       }
     },
     "features": {
@@ -886,7 +886,7 @@
       "desc": "Everything you need for a solid multiplayer survival experience — on Java or Bedrock.",
       "auth": {
         "title": "Solarpass Login",
-        "desc": "Log into the server with your Solarpass account. Open AuthMC when prompted, complete login, then return to Minecraft."
+        "desc": "Sign in on AuthMC with Solarpass, then use a launcher with external login (auth server authmc) to join GoatCraft."
       },
       "microsoft": {
         "title": "Microsoft Accounts Welcome",
@@ -939,13 +939,13 @@
       "solarpass": {
         "title": "Solarpass · Java Edition only",
         "badge": "Java only",
-        "desc": "Use your Solarpass account on Java Edition. When the server asks you to authenticate, finish login on AuthMC, then return to the game.",
+        "desc": "Sign in on AuthMC with Solarpass, configure a launcher that supports external login (外置登录), then join the game server.",
         "cta": "Open AuthMC",
-        "hint": "AuthMC is the only site needed for Solarpass Minecraft login. Not available on Bedrock.",
+        "hint": "For external login, set the auth server to authmc (authmc.solsynth.dev). The game server is still playmc.solsynth.dev. Not available on Bedrock.",
         "steps": {
-          "1": "Launch Minecraft: Java Edition.",
-          "2": "Multiplayer → Add Server → address playmc.solsynth.dev and join.",
-          "3": "When prompted, open AuthMC, sign in with Solarpass, then return to Minecraft."
+          "1": "Open authmc.solsynth.dev and sign in with Solarpass.",
+          "2": "In a Minecraft launcher with external login (外置登录), sign in using auth server authmc.",
+          "3": "Add game server playmc.solsynth.dev, join, and play."
         }
       },
       "bedrock": {
@@ -963,18 +963,18 @@
     "howToJoin": {
       "badge": "How to Join",
       "title": "Join & Sign In",
-      "desc": "Copy the address, pick your path below, and hop in. Same host for Java and Bedrock.",
+      "desc": "Finish login setup for your path on the right, then join the matching server. Java and Bedrock use different flows.",
       "step1": {
-        "title": "Copy the address",
-        "desc": "Server address is playmc.solsynth.dev — use the copy button in server info."
+        "title": "Sign in",
+        "desc": "Microsoft accounts use the official launcher. Solarpass users sign in on AuthMC first."
       },
       "step2": {
-        "title": "Choose your path",
-        "desc": "Microsoft on Java, Solarpass on Java, or Bedrock with Microsoft / Xbox — pick a tab below."
+        "title": "Configure your launcher",
+        "desc": "Solarpass needs a launcher with external login (外置登录) and auth server authmc. Microsoft / Bedrock use the official account flow."
       },
       "step3": {
-        "title": "Connect & play",
-        "desc": "Add the server in-game and follow the steps for your tab. Solarpass players finish login on AuthMC when asked."
+        "title": "Join the server",
+        "desc": "Java game server is playmc.solsynth.dev; Bedrock is on its tab. Join and play."
       }
     },
     "serverInfo": {

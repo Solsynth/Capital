@@ -818,194 +818,201 @@ defineOgImage("UniOgImage", {
         </p>
       </div>
 
-      <div class="mb-8 grid grid-cols-1 gap-3 md:grid-cols-3">
-        <div
-          v-for="step in joinSteps"
-          :key="step.step"
-          class="flex gap-3 rounded-lg border border-base-content/10 bg-base-200 p-4"
-        >
-          <span
-            class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-content"
+      <!--
+        Mobile: stacked — steps on top, methods below
+        Desktop (lg+): two columns — steps left, methods right
+      -->
+      <div
+        class="grid grid-cols-1 items-start gap-3 lg:grid-cols-[minmax(0,16rem)_minmax(0,1fr)] lg:gap-4 xl:grid-cols-[minmax(0,18rem)_minmax(0,1fr)]"
+      >
+        <!-- Steps -->
+        <div class="flex min-w-0 flex-col gap-2 sm:grid sm:grid-cols-3 sm:gap-3 lg:flex lg:flex-col lg:gap-3">
+          <div
+            v-for="step in joinSteps"
+            :key="step.step"
+            class="flex gap-3 rounded-lg border border-base-content/10 bg-base-200 p-3 sm:p-4"
           >
-            {{ step.step }}
-          </span>
-          <div class="min-w-0">
-            <h3 class="text-sm font-semibold">{{ t(step.titleKey) }}</h3>
-            <p class="mt-1 text-sm opacity-60">{{ t(step.descKey) }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div id="auth" class="mx-auto max-w-3xl scroll-mt-24">
-        <div class="mb-4">
-          <h3 class="text-lg font-bold sm:text-xl">
-            {{ t("goatCraft.auth.title") }}
-          </h3>
-          <p class="mt-1 text-sm opacity-60">
-            {{ t("goatCraft.auth.desc") }}
-          </p>
-        </div>
-
-        <div
-          role="tablist"
-          class="mb-0 flex border-b border-base-content/10"
-        >
-          <button
-            v-for="tab in authTabs"
-            :key="tab.id"
-            type="button"
-            role="tab"
-            class="relative flex items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-colors sm:px-4"
-            :class="
-              authTab === tab.id
-                ? 'text-primary'
-                : 'opacity-55 hover:opacity-90'
-            "
-            :aria-selected="authTab === tab.id"
-            @click="authTab = tab.id"
-          >
-            <component :is="tab.icon" class="h-4 w-4" />
-            <span class="hidden sm:inline">{{ t(tab.labelKey) }}</span>
-            <span class="sm:hidden">
-              {{
-                tab.id === "microsoft"
-                  ? "MS"
-                  : tab.id === "solarpass"
-                    ? "Solar"
-                    : "Bedrock"
-              }}
-            </span>
             <span
-              v-if="authTab === tab.id"
-              class="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-primary"
-            />
-          </button>
-        </div>
-
-        <div
-          class="rounded-b-lg border border-t-0 border-base-content/10 bg-base-200 p-5 sm:p-6"
-          role="tabpanel"
-        >
-          <!-- Microsoft (Java) -->
-          <div v-if="authTab === 'microsoft'" class="space-y-4">
-            <div class="flex flex-wrap items-center gap-2">
-              <span
-                class="rounded bg-success/15 px-2 py-0.5 text-xs font-medium text-success"
-              >
-                {{ t("goatCraft.auth.microsoft.badge") }}
-              </span>
-              <h4 class="font-semibold">
-                {{ t("goatCraft.auth.microsoft.title") }}
-              </h4>
-            </div>
-            <p class="text-sm leading-relaxed opacity-70">
-              {{ t("goatCraft.auth.microsoft.desc") }}
-            </p>
-            <ol class="space-y-2.5">
-              <li
-                v-for="n in 3"
-                :key="n"
-                class="flex gap-3 text-sm"
-              >
-                <span
-                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-base-100 text-xs font-bold"
-                >
-                  {{ n }}
-                </span>
-                <span class="pt-0.5 leading-relaxed opacity-80">
-                  {{ t(`goatCraft.auth.microsoft.steps.${n}`) }}
-                </span>
-              </li>
-            </ol>
-          </div>
-
-          <!-- Solarpass (Java only) -->
-          <div v-else-if="authTab === 'solarpass'" class="space-y-4">
-            <div class="flex flex-wrap items-center gap-2">
-              <span
-                class="rounded bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary"
-              >
-                {{ t("goatCraft.auth.solarpass.badge") }}
-              </span>
-              <h4 class="font-semibold">
-                {{ t("goatCraft.auth.solarpass.title") }}
-              </h4>
-            </div>
-            <p class="text-sm leading-relaxed opacity-70">
-              {{ t("goatCraft.auth.solarpass.desc") }}
-            </p>
-            <ol class="space-y-2.5">
-              <li
-                v-for="n in 3"
-                :key="n"
-                class="flex gap-3 text-sm"
-              >
-                <span
-                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-base-100 text-xs font-bold"
-                >
-                  {{ n }}
-                </span>
-                <span class="pt-0.5 leading-relaxed opacity-80">
-                  {{ t(`goatCraft.auth.solarpass.steps.${n}`) }}
-                </span>
-              </li>
-            </ol>
-            <div class="flex flex-col gap-2 pt-1 sm:flex-row sm:items-center">
-              <a
-                :href="AUTH_MC_URL"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn btn-primary btn-sm gap-2"
-              >
-                <ExternalLink class="h-4 w-4" />
-                {{ t("goatCraft.auth.solarpass.cta") }}
-              </a>
-              <p class="text-xs opacity-50">
-                {{ t("goatCraft.auth.solarpass.hint") }}
+              class="flex h-7 w-7 shrink-0 items-center justify-center rounded-md bg-primary text-xs font-bold text-primary-content"
+            >
+              {{ step.step }}
+            </span>
+            <div class="min-w-0">
+              <h3 class="text-sm font-semibold">
+                {{ t(step.titleKey) }}
+              </h3>
+              <p class="mt-1 text-xs leading-relaxed opacity-60 sm:text-sm">
+                {{ t(step.descKey) }}
               </p>
             </div>
           </div>
+        </div>
 
-          <!-- Bedrock -->
-          <div v-else class="space-y-4">
-            <div class="flex flex-wrap items-center gap-2">
-              <span
-                class="rounded bg-secondary/15 px-2 py-0.5 text-xs font-medium text-secondary"
-              >
-                {{ t("goatCraft.auth.bedrock.badge") }}
-              </span>
-              <h4 class="font-semibold">
-                {{ t("goatCraft.auth.bedrock.title") }}
-              </h4>
-            </div>
-            <p class="text-sm leading-relaxed opacity-70">
-              {{ t("goatCraft.auth.bedrock.desc") }}
+        <!-- Methods -->
+        <div
+          id="auth"
+          class="min-w-0 scroll-mt-24 overflow-hidden rounded-lg border border-base-content/10 bg-base-200"
+        >
+          <div class="border-b border-base-content/10 px-4 py-4 sm:px-5 sm:py-5">
+            <h3 class="text-base font-bold sm:text-lg">
+              {{ t("goatCraft.auth.title") }}
+            </h3>
+            <p class="mt-1 text-sm opacity-60">
+              {{ t("goatCraft.auth.desc") }}
             </p>
-            <div
-              class="rounded-md border border-warning/25 bg-warning/10 px-3 py-2.5 text-sm"
-            >
-              {{ t("goatCraft.auth.bedrock.note") }}
-            </div>
-            <ol class="space-y-2.5">
-              <li
-                v-for="n in 3"
-                :key="n"
-                class="flex gap-3 text-sm"
-              >
-                <span
-                  class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-base-100 text-xs font-bold"
-                >
-                  {{ n }}
-                </span>
-                <span class="pt-0.5 leading-relaxed opacity-80">
-                  {{ t(`goatCraft.auth.bedrock.steps.${n}`) }}
-                </span>
-              </li>
-            </ol>
           </div>
 
           <div
-            class="mt-5 flex flex-col gap-3 border-t border-base-content/10 pt-4 sm:flex-row sm:items-center sm:justify-between"
+            role="tablist"
+            class="grid grid-cols-3 border-b border-base-content/10"
+          >
+            <button
+              v-for="tab in authTabs"
+              :key="tab.id"
+              type="button"
+              role="tab"
+              class="relative flex min-w-0 items-center justify-center gap-1.5 px-2 py-3 text-xs font-medium transition-colors sm:gap-2 sm:px-4 sm:text-sm"
+              :class="
+                authTab === tab.id
+                  ? 'bg-base-100 text-primary'
+                  : 'opacity-55 hover:bg-base-100/50 hover:opacity-90'
+              "
+              :aria-selected="authTab === tab.id"
+              @click="authTab = tab.id"
+            >
+              <component :is="tab.icon" class="h-4 w-4 shrink-0" />
+              <span class="truncate">{{ t(tab.labelKey) }}</span>
+              <span
+                v-if="authTab === tab.id"
+                class="absolute inset-x-0 bottom-0 h-0.5 bg-primary"
+              />
+            </button>
+          </div>
+
+          <div class="p-4 sm:p-5" role="tabpanel">
+            <!-- Microsoft (Java) -->
+            <div v-if="authTab === 'microsoft'" class="space-y-4">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="rounded bg-success/15 px-2 py-0.5 text-xs font-medium text-success"
+                >
+                  {{ t("goatCraft.auth.microsoft.badge") }}
+                </span>
+                <h4 class="font-semibold">
+                  {{ t("goatCraft.auth.microsoft.title") }}
+                </h4>
+              </div>
+              <p class="text-sm leading-relaxed opacity-70">
+                {{ t("goatCraft.auth.microsoft.desc") }}
+              </p>
+              <ol class="grid gap-2 sm:grid-cols-3 sm:gap-3">
+                <li
+                  v-for="n in 3"
+                  :key="n"
+                  class="flex gap-3 rounded-md border border-base-content/10 bg-base-100 p-3 text-sm"
+                >
+                  <span
+                    class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-base-200 text-xs font-bold"
+                  >
+                    {{ n }}
+                  </span>
+                  <span class="leading-relaxed opacity-80">
+                    {{ t(`goatCraft.auth.microsoft.steps.${n}`) }}
+                  </span>
+                </li>
+              </ol>
+            </div>
+
+            <!-- Solarpass (Java only) -->
+            <div v-else-if="authTab === 'solarpass'" class="space-y-4">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="rounded bg-primary/15 px-2 py-0.5 text-xs font-medium text-primary"
+                >
+                  {{ t("goatCraft.auth.solarpass.badge") }}
+                </span>
+                <h4 class="font-semibold">
+                  {{ t("goatCraft.auth.solarpass.title") }}
+                </h4>
+              </div>
+              <p class="text-sm leading-relaxed opacity-70">
+                {{ t("goatCraft.auth.solarpass.desc") }}
+              </p>
+              <ol class="grid gap-2 sm:grid-cols-3 sm:gap-3">
+                <li
+                  v-for="n in 3"
+                  :key="n"
+                  class="flex gap-3 rounded-md border border-base-content/10 bg-base-100 p-3 text-sm"
+                >
+                  <span
+                    class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-base-200 text-xs font-bold"
+                  >
+                    {{ n }}
+                  </span>
+                  <span class="leading-relaxed opacity-80">
+                    {{ t(`goatCraft.auth.solarpass.steps.${n}`) }}
+                  </span>
+                </li>
+              </ol>
+              <div
+                class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between"
+              >
+                <p class="text-xs opacity-50">
+                  {{ t("goatCraft.auth.solarpass.hint") }}
+                </p>
+                <a
+                  :href="AUTH_MC_URL"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="btn btn-primary btn-sm gap-2 shrink-0"
+                >
+                  <ExternalLink class="h-4 w-4" />
+                  {{ t("goatCraft.auth.solarpass.cta") }}
+                </a>
+              </div>
+            </div>
+
+            <!-- Bedrock -->
+            <div v-else class="space-y-4">
+              <div class="flex flex-wrap items-center gap-2">
+                <span
+                  class="rounded bg-secondary/15 px-2 py-0.5 text-xs font-medium text-secondary"
+                >
+                  {{ t("goatCraft.auth.bedrock.badge") }}
+                </span>
+                <h4 class="font-semibold">
+                  {{ t("goatCraft.auth.bedrock.title") }}
+                </h4>
+              </div>
+              <p class="text-sm leading-relaxed opacity-70">
+                {{ t("goatCraft.auth.bedrock.desc") }}
+              </p>
+              <div
+                class="rounded-md border border-warning/25 bg-warning/10 px-3 py-2.5 text-sm"
+              >
+                {{ t("goatCraft.auth.bedrock.note") }}
+              </div>
+              <ol class="grid gap-2 sm:grid-cols-3 sm:gap-3">
+                <li
+                  v-for="n in 3"
+                  :key="n"
+                  class="flex gap-3 rounded-md border border-base-content/10 bg-base-100 p-3 text-sm"
+                >
+                  <span
+                    class="flex h-6 w-6 shrink-0 items-center justify-center rounded bg-base-200 text-xs font-bold"
+                  >
+                    {{ n }}
+                  </span>
+                  <span class="leading-relaxed opacity-80">
+                    {{ t(`goatCraft.auth.bedrock.steps.${n}`) }}
+                  </span>
+                </li>
+              </ol>
+            </div>
+          </div>
+
+          <div
+            class="flex flex-col gap-3 border-t border-base-content/10 bg-base-100/60 px-4 py-4 sm:flex-row sm:items-center sm:justify-between sm:px-5"
           >
             <div class="min-w-0">
               <p class="text-xs opacity-50">
@@ -1016,14 +1023,14 @@ defineOgImage("UniOgImage", {
                 }}
               </p>
               <p
-                class="font-mono text-xl font-bold tracking-wide text-primary sm:text-2xl"
+                class="truncate font-mono text-xl font-bold tracking-wide text-primary sm:text-2xl"
               >
                 {{ activeServerAddress }}
               </p>
             </div>
             <button
               type="button"
-              class="btn btn-primary btn-sm shrink-0 gap-2"
+              class="btn btn-primary gap-2 shrink-0"
               @click="copyAddress(activeServerAddress)"
             >
               <Check v-if="copied" class="h-4 w-4" />
