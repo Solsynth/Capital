@@ -1,7 +1,7 @@
 import { DeleteObjectCommand } from '@aws-sdk/client-s3'
 import { db } from './db'
 import { file } from '~~/server/db'
-import { eq, and, inArray, lt, isNull, sql } from 'drizzle-orm'
+import { and, inArray, lt, isNull } from 'drizzle-orm'
 
 /**
  * Mark one or more files as "used" by updating their usedAt timestamp.
@@ -11,10 +11,11 @@ export async function markFilesUsed(fileIds: (string | null | undefined)[]): Pro
   const ids = fileIds.filter(Boolean) as string[]
   if (ids.length === 0) return
 
+  const now = new Date()
   await db.update(file)
     .set({
-      usedAt: sql`(cast(extract(epoch from clock_timestamp()) * 1000 as bigint))`,
-      updatedAt: sql`(cast(extract(epoch from clock_timestamp()) * 1000 as bigint))`,
+      usedAt: now,
+      updatedAt: now,
     })
     .where(inArray(file.id, ids))
 }

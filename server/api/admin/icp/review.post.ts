@@ -73,11 +73,6 @@ export default defineEventHandler(async (event) => {
           userId: submission.userId,
         })
 
-        // Mark uploaded file as used
-        if (data.icon_file_id) {
-          await markFilesUsed([data.icon_file_id])
-        }
-
         // Apply identity updates if included
         if (data.identity_name || data.identity_description || data.identity_icon_file_id) {
           const identityUpdate: any = {}
@@ -85,7 +80,6 @@ export default defineEventHandler(async (event) => {
           if (data.identity_description) identityUpdate.description = data.identity_description
           if (data.identity_icon_file_id) {
             identityUpdate.iconFileId = data.identity_icon_file_id
-            await markFilesUsed([data.identity_icon_file_id])
           }
           if (identityId && Object.keys(identityUpdate).length > 0) {
             await db.update(icpIdentity)
@@ -94,7 +88,8 @@ export default defineEventHandler(async (event) => {
           }
         }
 
-        // Update submission
+        // Update submission before non-critical file bookkeeping so a file
+        // timestamp failure cannot leave a created site with a pending submission.
         await db.update(icpSubmission)
           .set({
             status: 'approved',
@@ -104,6 +99,17 @@ export default defineEventHandler(async (event) => {
             reviewedBy: session.user.id,
           })
           .where(eq(icpSubmission.id, submission.id))
+
+        // Mark uploaded files as used (best-effort; site/submission already committed)
+        const fileIds = [data.icon_file_id, data.identity_icon_file_id].filter(Boolean)
+        if (fileIds.length > 0) {
+          try {
+            await markFilesUsed(fileIds)
+          }
+          catch (e) {
+            console.error('Failed to mark files as used after approving submission:', e)
+          }
+        }
 
         return { success: true, siteId, fillingNo }
       }
@@ -129,7 +135,6 @@ export default defineEventHandler(async (event) => {
           if (data.identity_description) identityUpdate.description = data.identity_description
           if (data.identity_icon_file_id) {
             identityUpdate.iconFileId = data.identity_icon_file_id
-            await markFilesUsed([data.identity_icon_file_id])
           }
           if (data.identity_id && Object.keys(identityUpdate).length > 0) {
             await db.update(icpIdentity)
@@ -148,9 +153,15 @@ export default defineEventHandler(async (event) => {
           })
           .where(eq(icpSubmission.id, submission.id))
 
-        // Mark uploaded file as used
-        if (data.icon_file_id) {
-          await markFilesUsed([data.icon_file_id])
+        // Mark uploaded files as used (best-effort)
+        const fileIds = [data.icon_file_id, data.identity_icon_file_id].filter(Boolean)
+        if (fileIds.length > 0) {
+          try {
+            await markFilesUsed(fileIds)
+          }
+          catch (e) {
+            console.error('Failed to mark files as used after approving submission:', e)
+          }
         }
 
         return { success: true }
