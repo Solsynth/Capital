@@ -388,21 +388,21 @@ const platforms: PlatformConfig[] = [
     descKey: "solarNetwork.download.android.desc",
     actions: [
       {
-        href: "https://fs.solsynth.dev/d/public/r2/solian/app-arm64-v8a-release.apk",
+        href: "https://fs.solsynth.dev/d/r2/solian/app-arm64-v8a-release.apk",
         label: "ARM64 (arm64-v8a)",
         variant: "primary",
         icon: IconsIconAndroid,
         iconClass: "fill-current",
       },
       {
-        href: "https://fs.solsynth.dev/d/public/r2/solian/app-armeabi-v7a-release.apk",
+        href: "https://fs.solsynth.dev/d/r2/solian/app-armeabi-v7a-release.apk",
         label: "ARMv7 (armeabi-v7a)",
         variant: "outline",
         icon: IconsIconAndroid,
         iconClass: "fill-current",
       },
       {
-        href: "https://fs.solsynth.dev/d/public/r2/solian/app-x86_64-release.apk",
+        href: "https://fs.solsynth.dev/d/r2/solian/app-x86_64-release.apk",
         label: "x86_64",
         variant: "outline",
         icon: IconsIconAndroid,
@@ -435,7 +435,7 @@ const platforms: PlatformConfig[] = [
         iconClass: "fill-current",
       },
       {
-        href: "https://fs.solsynth.dev/d/public/r2/solian/solian-macos.tar.gz",
+        href: "https://fs.solsynth.dev/d/r2/solian/solian-macos.tar.gz",
         label: "solarNetwork.download.direct",
         i18n: true,
         variant: "outline",
@@ -451,7 +451,7 @@ const platforms: PlatformConfig[] = [
     descKey: "solarNetwork.download.windows.desc",
     actions: [
       {
-        href: "https://fs.solsynth.dev/d/public/r2/solian/build-output-windows-installer.zip",
+        href: "https://fs.solsynth.dev/d/r2/solian/build-output-windows-installer.zip",
         label: "solarNetwork.download.direct",
         i18n: true,
         variant: "primary",
@@ -475,7 +475,7 @@ const platforms: PlatformConfig[] = [
     descKey: "solarNetwork.download.linux.desc",
     actions: [
       {
-        href: "https://fs.solsynth.dev/d/public/r2/solian/build-output-linux-appimage.zip",
+        href: "https://fs.solsynth.dev/d/r2/solian/build-output-linux-appimage.zip",
         label: "solarNetwork.download.direct",
         i18n: true,
         variant: "primary",

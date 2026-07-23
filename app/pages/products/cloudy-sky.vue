@@ -281,7 +281,7 @@ defineOgImage("UniOgImage", {
 
           <div class="flex flex-wrap gap-2 md:ml-auto md:shrink-0">
             <a
-              :href="githubRelease?.downloadUrl ?? 'https://fs.solsynth.dev/d/public/r2/cloudysky/app-release.apk'"
+              :href="githubRelease?.downloadUrl ?? 'https://fs.solsynth.dev/d/r2/cloudysky/app-release.apk'"
               target="_blank"
               rel="noopener noreferrer"
               class="btn btn-primary btn-sm sm:btn-md md:btn-lg rounded-full gap-2"

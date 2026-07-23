@@ -45,7 +45,7 @@ const { t, locale } = useI18n();
 const PRODUCT_SLUG = "maid-kit";
 const GITHUB_REPO = "https://github.com/Solsynth/MaidKit";
 const GITHUB_RELEASES = `${GITHUB_REPO}/releases`;
-const FS_BASE = "https://fs.solsynth.dev/d/public/r2/maidkit";
+const FS_BASE = "https://fs.solsynth.dev/d/r2/maidkit";
 const TESTFLIGHT_URL = "https://testflight.apple.com/join/fVQB3qq5";
 
 const aboutCards = [
