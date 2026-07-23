@@ -1,0 +1,10 @@
+{
+  "title": "MaidKit",
+  "description": "A cross-platform SSH server manager — maintain servers without installing anything on them.",
+  "icon": "/images/maid-kit/icon.png",
+  "background": "/images/maid-kit/main-visual.webp",
+  "repo": "https://github.com/Solsynth/MaidKit",
+  "hasPage": true,
+  "tags": ["SSH", "Server", "DevOps", "Desktop", "Mobile"],
+  "series": "MaidKit"
+}

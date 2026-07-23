@@ -1,0 +1,10 @@
+{
+  "title": "MaidKit",
+  "description": "跨平台 SSH 服务器管理器 — 不在服务器上安装任何软件，也能从容维护。",
+  "icon": "/images/maid-kit/icon.png",
+  "background": "/images/maid-kit/main-visual.webp",
+  "repo": "https://github.com/Solsynth/MaidKit",
+  "hasPage": true,
+  "tags": ["SSH", "服务器", "运维", "桌面", "移动端"],
+  "series": "MaidKit"
+}

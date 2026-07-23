@@ -1009,5 +1009,128 @@
       "title": "Need Help?",
       "desc": "Having trouble joining or found a problem on the server? Reach out to the Solsynth team and we'll sort it out."
     }
+  },
+  "maidKit": {
+    "tagline": "A cross-platform SSH server manager — non-intrusive maintenance for the servers you look after.",
+    "openSource": "AGPL-3.0",
+    "badgeSsh": "100% SSH",
+    "badgeCrossPlatform": "Desktop & Mobile",
+    "about": {
+      "badge": "About",
+      "title": "Server care without footprint",
+      "desc": "MaidKit is the toolkit LittleSheep uses when acting as a “maid” for servers. Everything runs over SSH — no agents to install, no extra attack surface on the host. Built with Flutter for desktop and mobile, with the same calm, functional approach as the Island desktop apps."
+    },
+    "aboutCard": {
+      "ssh": {
+        "title": "SSH only",
+        "desc": "Connect with credentials you already trust. No sidecars, no host agents, no elevated install on the server."
+      },
+      "crossPlatform": {
+        "title": "Anywhere you work",
+        "desc": "Flutter builds for desktop and mobile so you can check load, open a terminal, or push a snippet from wherever you are."
+      },
+      "vault": {
+        "title": "Encrypted vault",
+        "desc": "AES-GCM 256-bit credential storage with PBKDF2 key derivation, biometric unlock, and encrypted backup archives."
+      }
+    },
+    "features": {
+      "badge": "Features",
+      "title": "Everything a careful operator needs",
+      "desc": "From live metrics and a full terminal to containers, projects, and reusable scripts — one calm workspace.",
+      "dashboard": {
+        "title": "Server dashboard",
+        "desc": "Grid of server cards with live status, load, memory, and uptime so you see health at a glance."
+      },
+      "activity": {
+        "title": "Activity charts",
+        "desc": "Real-time CPU, memory, network, and disk charts for the servers you are watching."
+      },
+      "terminal": {
+        "title": "Full SSH terminal",
+        "desc": "Split panes, drag-and-drop tabs, and a command palette — powered by Ghostty or xterm renderers."
+      },
+      "files": {
+        "title": "SFTP file browser",
+        "desc": "Dual-pane browser with drag-and-drop transfers and an in-app editor for quick fixes."
+      },
+      "services": {
+        "title": "Services & processes",
+        "desc": "List and kill processes; manage systemd units — start, stop, enable, disable."
+      },
+      "webServers": {
+        "title": "Web servers",
+        "desc": "nginx and Caddy configuration management without leaving the app."
+      },
+      "ops": {
+        "title": "Crontab, packages, firewall",
+        "desc": "Edit scheduled tasks, manage packages (apt, dnf, and more), and control UFW, firewalld, nftables, or iptables."
+      },
+      "tunnels": {
+        "title": "Port forwarding",
+        "desc": "Configure local and remote tunnels when you need a path through."
+      },
+      "containers": {
+        "title": "Containers",
+        "desc": "Docker and Podman lifecycle control, Compose project grouping, image management, and runtime install help."
+      },
+      "projects": {
+        "title": "Deployment projects",
+        "desc": "Group compose stacks, web servers, and containers; import and export as TOML."
+      },
+      "snippets": {
+        "title": "Snippets",
+        "desc": "Reusable shell scripts run on one or many servers, with streaming output and progress."
+      },
+      "security": {
+        "title": "Credential security",
+        "desc": "AES-GCM vault, 310,000-iteration PBKDF2, biometric unlock, and encrypted .mkb backups."
+      }
+    },
+    "platforms": {
+      "title": "Platforms",
+      "desc": "Built with Flutter — the same codebase on the machines you already use."
+    },
+    "download": {
+      "btn": "Download",
+      "sectionTitle": "Get MaidKit",
+      "sectionDesc": "Pick your platform and install the latest build. Artifacts are hosted on our file server; source and releases live on GitHub.",
+      "direct": "Direct Download",
+      "github": "GitHub Releases",
+      "viewGithub": "View on GitHub",
+      "release": {
+        "viewOnGithub": "View on GitHub",
+        "expand": "Show full changelog",
+        "collapse": "Show less"
+      },
+      "android": {
+        "title": "Android",
+        "desc": "Download a split APK for your architecture, or grab builds from GitHub Releases."
+      },
+      "ios": {
+        "title": "iPhone & iPad",
+        "desc": "Join the TestFlight beta for early access on iOS.",
+        "testflight": "Join TestFlight"
+      },
+      "macos": {
+        "title": "macOS",
+        "desc": "Join TestFlight for the Mac beta, or download the build archive directly.",
+        "testflight": "Join TestFlight"
+      },
+      "windows": {
+        "title": "Windows",
+        "desc": "Download the Windows installer package from our file server."
+      },
+      "linux": {
+        "title": "Linux",
+        "desc": "Download the AppImage package from our file server."
+      }
+    },
+    "help": {
+      "title": "Need Help?",
+      "desc": "Found a bug or have feedback? Open an issue on GitHub and we'll take a look."
+    }
   }
 }
+
+

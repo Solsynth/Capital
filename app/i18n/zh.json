@@ -1009,5 +1009,128 @@
       "title": "需要帮助？",
       "desc": "加入遇到问题，或在服务器上发现了故障？联系 Solsynth 团队，我们会帮你解决。"
     }
+  },
+  "maidKit": {
+    "tagline": "跨平台 SSH 服务器管理器 — 非侵入式地照看好你的每一台服务器。",
+    "openSource": "AGPL-3.0",
+    "badgeSsh": "纯 SSH",
+    "badgeCrossPlatform": "桌面与移动端",
+    "about": {
+      "badge": "关于",
+      "title": "不留脚印的服务器养护",
+      "desc": "MaidKit 是小羊在给服务器当「女仆」（维护服务器）时用的工具合集。全部操作走 SSH — 不在主机上安装代理，也不额外扩大攻击面。基于 Flutter，可在桌面与移动端运行，秉承与 Island 桌面应用相同的简洁、实用理念。"
+    },
+    "aboutCard": {
+      "ssh": {
+        "title": "纯 SSH",
+        "desc": "使用你本就信任的凭证连接。无需边车、无需主机代理、无需在服务器上额外提权安装。"
+      },
+      "crossPlatform": {
+        "title": "随处可用",
+        "desc": "Flutter 覆盖桌面与移动端，无论你在哪里都能看负载、开终端，或批量执行脚本片段。"
+      },
+      "vault": {
+        "title": "加密凭证库",
+        "desc": "AES-GCM 256 位凭证存储，配合 PBKDF2 密钥派生、生物识别解锁与加密备份归档。"
+      }
+    },
+    "features": {
+      "badge": "功能",
+      "title": "运维该有的都在这",
+      "desc": "从实时指标与完整终端，到容器、部署项目与可复用脚本 — 一个安静好用的工作台。",
+      "dashboard": {
+        "title": "服务器仪表盘",
+        "desc": "服务器卡片网格，实时展示状态、负载、内存与运行时间，健康一目了然。"
+      },
+      "activity": {
+        "title": "活动监控",
+        "desc": "CPU、内存、网络与磁盘的实时性能图表，盯紧你正在看的机器。"
+      },
+      "terminal": {
+        "title": "完整 SSH 终端",
+        "desc": "分屏、拖拽标签页与命令面板 — 可选 Ghostty 或 xterm 渲染器。"
+      },
+      "files": {
+        "title": "SFTP 文件管理",
+        "desc": "双窗格浏览器，支持拖拽传输与内置编辑器，快速改配置。"
+      },
+      "services": {
+        "title": "服务与进程",
+        "desc": "查看并结束进程；管理 systemd 单元 — 启动、停止、启用、禁用。"
+      },
+      "webServers": {
+        "title": "Web 服务器",
+        "desc": "在应用内管理 nginx 与 Caddy 配置，无需来回切换工具。"
+      },
+      "ops": {
+        "title": "定时任务、软件包与防火墙",
+        "desc": "编辑 crontab、管理软件包（apt、dnf 等），以及 UFW、firewalld、nftables 或 iptables。"
+      },
+      "tunnels": {
+        "title": "端口转发",
+        "desc": "配置本地与远程隧道，需要通路时随时打通。"
+      },
+      "containers": {
+        "title": "容器",
+        "desc": "Docker 与 Podman 生命周期管理、Compose 项目分组、镜像管理与运行时安装辅助。"
+      },
+      "projects": {
+        "title": "部署项目",
+        "desc": "将 Compose 堆栈、Web 服务器与容器分组管理，支持 TOML 导入导出。"
+      },
+      "snippets": {
+        "title": "脚本片段",
+        "desc": "可复用的 Shell 脚本，可在一台或多台已连接服务器上执行，流式输出与进度追踪。"
+      },
+      "security": {
+        "title": "凭证安全",
+        "desc": "AES-GCM 凭证库、31 万次迭代 PBKDF2、生物识别解锁与加密 .mkb 备份。"
+      }
+    },
+    "platforms": {
+      "title": "支持平台",
+      "desc": "基于 Flutter 构建 — 同一套代码覆盖你日常使用的设备。"
+    },
+    "download": {
+      "btn": "下载",
+      "sectionTitle": "获取 MaidKit",
+      "sectionDesc": "选择你的平台安装最新构建。安装包托管在文件服务器，源码与 Release 在 GitHub。",
+      "direct": "直接下载",
+      "github": "GitHub Releases",
+      "viewGithub": "在 GitHub 查看",
+      "release": {
+        "viewOnGithub": "在 GitHub 查看",
+        "expand": "展开完整更新日志",
+        "collapse": "收起"
+      },
+      "android": {
+        "title": "Android",
+        "desc": "按架构下载拆分 APK，或从 GitHub Releases 获取构建。"
+      },
+      "ios": {
+        "title": "iPhone 与 iPad",
+        "desc": "通过 TestFlight 加入 beta，抢先在 iOS 上体验。",
+        "testflight": "加入 TestFlight"
+      },
+      "macos": {
+        "title": "macOS",
+        "desc": "通过 TestFlight 体验 Mac beta，或直接下载构建归档。",
+        "testflight": "加入 TestFlight"
+      },
+      "windows": {
+        "title": "Windows",
+        "desc": "从文件服务器下载 Windows 安装包。"
+      },
+      "linux": {
+        "title": "Linux",
+        "desc": "从文件服务器下载 AppImage 安装包。"
+      }
+    },
+    "help": {
+      "title": "需要帮助？",
+      "desc": "发现问题或有反馈？请在 GitHub 上提交 Issue，我们会处理。"
+    }
   }
 }
+
+
