@@ -2,8 +2,8 @@ FROM node:26-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json ./
-RUN npm install
+COPY package.json package-lock.json ./
+RUN npm ci
 
 ENV NITRO_DATA_DIR=/data/nitro
 RUN mkdir -p /data/nitro
