@@ -44,8 +44,7 @@ const { t, locale } = useI18n();
 
 const PRODUCT_SLUG = "maid-kit";
 const GITHUB_REPO = "https://github.com/Solsynth/MaidKit";
-const GITHUB_RELEASES = `${GITHUB_REPO}/releases`;
-const FS_BASE = "https://fs.solsynth.dev/d/r2/maidkit";
+const FS_BASE = "https://fs.solsynth.dev/d/public/r2/maidkit";
 const TESTFLIGHT_URL = "https://testflight.apple.com/join/fVQB3qq5";
 
 const aboutCards = [
@@ -151,7 +150,7 @@ type DownloadAction = {
   href: string;
   label: string;
   i18n?: boolean;
-  variant: "primary" | "outline" | "ghost";
+  variant: "primary" | "outline";
   icon: Component;
   iconClass?: string;
 };
@@ -196,13 +195,6 @@ const platforms: PlatformConfig[] = [
         icon: IconsIconAndroid,
         iconClass: "fill-current",
       },
-      {
-        href: GITHUB_RELEASES,
-        label: "maidKit.download.github",
-        i18n: true,
-        variant: "ghost",
-        icon: CodeXml,
-      },
     ],
   },
   {
@@ -220,13 +212,6 @@ const platforms: PlatformConfig[] = [
         variant: "primary",
         icon: IconsIconIos,
         iconClass: "fill-current",
-      },
-      {
-        href: GITHUB_RELEASES,
-        label: "maidKit.download.github",
-        i18n: true,
-        variant: "ghost",
-        icon: CodeXml,
       },
     ],
   },
@@ -246,20 +231,6 @@ const platforms: PlatformConfig[] = [
         icon: IconsIconMacos,
         iconClass: "fill-current",
       },
-      {
-        href: `${FS_BASE}/maidkit-macos.tar.gz`,
-        label: "maidKit.download.direct",
-        i18n: true,
-        variant: "outline",
-        icon: ExternalLink,
-      },
-      {
-        href: GITHUB_RELEASES,
-        label: "maidKit.download.github",
-        i18n: true,
-        variant: "ghost",
-        icon: CodeXml,
-      },
     ],
   },
   {
@@ -275,13 +246,6 @@ const platforms: PlatformConfig[] = [
         i18n: true,
         variant: "primary",
         icon: ExternalLink,
-      },
-      {
-        href: GITHUB_RELEASES,
-        label: "maidKit.download.github",
-        i18n: true,
-        variant: "outline",
-        icon: CodeXml,
       },
     ],
   },
@@ -300,13 +264,6 @@ const platforms: PlatformConfig[] = [
         variant: "primary",
         icon: ExternalLink,
       },
-      {
-        href: GITHUB_RELEASES,
-        label: "maidKit.download.github",
-        i18n: true,
-        variant: "outline",
-        icon: CodeXml,
-      },
     ],
   },
 ];
@@ -321,8 +278,6 @@ const actionRowClass: Record<DownloadAction["variant"], string> = {
     "border-primary/25 bg-primary/10 hover:bg-primary/15 text-base-content",
   outline:
     "border-base-content/10 bg-base-100 hover:bg-base-300/60 text-base-content",
-  ghost:
-    "border-transparent bg-transparent hover:bg-base-300/50 text-base-content/80",
 };
 
 const releaseExpanded = ref(false);
