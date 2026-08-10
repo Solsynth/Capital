@@ -75,7 +75,7 @@ useSeoMeta({
                 class="flex items-center gap-3 hover:text-primary transition-colors group"
               >
                 <img
-                  :src="`https://api.solian.app/passport/accounts/${row.solarUsername}/picture`"
+                  :src="`https://api.solian.app/stargate/accounts/${row.solarUsername}/picture`"
                   :alt="row.solarUsername"
                   class="w-8 h-8 rounded-full"
                 >

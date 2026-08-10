@@ -30,7 +30,7 @@ export async function getCachedSolarProfile(userId: string, force = false) {
   if (!token) return record.solarProfile
 
   try {
-    const profile = await fetchSolarApi(token, '/passport/accounts/me')
+    const profile = await fetchSolarApi(token, '/stargate/accounts/me')
     const accountId = profile.id || record.solarAccountId || null
 
     await db.update(user).set({

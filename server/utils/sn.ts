@@ -17,7 +17,7 @@ export async function getGithubConnection(userId: string) {
     const token = await getSolarToken(userId)
     if (!token) return null
 
-    const response = await fetch(`${SOLAR_API}/passport/accounts/me/connections?provider=github`, {
+    const response = await fetch(`${SOLAR_API}/stargate/accounts/me/connections?provider=github`, {
       headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
     })
     if (!response.ok) return null
@@ -29,7 +29,7 @@ export async function getGithubConnection(userId: string) {
 
 export async function getSolarUser(username: string) {
   return cached(`solar-user:${username}`, 10 * 60_000, async () => {
-    const resp = await fetch(`${SOLAR_API}/passport/accounts/${username}`)
+    const resp = await fetch(`${SOLAR_API}/stargate/accounts/${username}`)
     if (!resp.ok) return null
     return resp.json()
   })

@@ -1,5 +1,5 @@
 const API_BASE = 'https://api.solian.app/sphere'
-const PASSPORT_BASE = 'https://api.solian.app/passport'
+const STARGATE_BASE = 'https://api.solian.app/stargate'
 const DRIVE_BASE = 'https://api.solian.app/drive'
 
 export interface Post {
@@ -114,8 +114,8 @@ export function useApi() {
     return `${DRIVE_BASE}/files/${fileId}`
   }
 
-  function getPassportUrl(path: string): string {
-    return `${PASSPORT_BASE}${path}`
+  function getStargateUrl(path: string): string {
+    return `${STARGATE_BASE}${path}`
   }
 
   return {
@@ -126,6 +126,6 @@ export function useApi() {
     truncateContent,
     getAttachmentUrl,
     getPictureUrl,
-    getPassportUrl,
+    getStargateUrl,
   }
 }

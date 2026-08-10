@@ -1,5 +1,5 @@
 /**
- * Solar Network profile response from /passport/accounts/me
+ * Solar Network profile response from /stargate/accounts/me
  */
 export interface SolarProfile {
   id: string;

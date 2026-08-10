@@ -17,7 +17,7 @@ const team = computed(() => [
   {
     name: 'LittleSheep',
     role: t('about.team.role.founder'),
-    avatar: 'https://api.solian.app/passport/accounts/littlesheep/picture',
+    avatar: 'https://api.solian.app/stargate/accounts/littlesheep/picture',
     bio: t('about.team.littlesheep.bio'),
     profileUrl: 'https://id.solian.app/@littlesheep',
     github: 'https://github.com/LittleSheep2Code',

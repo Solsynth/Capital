@@ -18,7 +18,7 @@ export async function fetchSolarProfile(
   apiBaseUrl: string = DEFAULT_API_BASE_URL,
 ): Promise<SolarProfile | null> {
   try {
-    const response = await fetch(`${apiBaseUrl}/passport/accounts/me`, {
+    const response = await fetch(`${apiBaseUrl}/stargate/accounts/me`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export function getSolarAvatarUrl(
   apiBaseUrl: string = DEFAULT_API_BASE_URL,
 ): string | null {
   if (!profile.name) return null;
-  return `${apiBaseUrl}/passport/accounts/${encodeURIComponent(profile.name)}/picture`;
+  return `${apiBaseUrl}/stargate/accounts/${encodeURIComponent(profile.name)}/picture`;
 }
 
 /**

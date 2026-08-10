@@ -171,7 +171,7 @@ The plugin extends the standard better-auth `account` table:
 - The `account.connections` scope is required for fetching connected accounts
 - Profile `name` field is the Solar Network account handle (e.g., `littlesheep`)
 - Profile `nick` field is the display name (e.g., `小羊`)
-- Avatar URLs use the account handle: `https://api.solian.app/passport/accounts/{name}/picture`
+- Avatar URLs use the account handle: `https://api.solian.app/stargate/accounts/{name}/picture`
 
 ## License
 
