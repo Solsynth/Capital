@@ -12,7 +12,6 @@ import {
   CircleUser,
   LogOut,
   UserRound,
-  Trophy,
 } from "@lucide/vue";
 
 const { t, locale, locales } = useI18n();
@@ -48,7 +47,6 @@ const pathname = computed(() => route.fullPath);
 const navItems = computed(() => [
   { to: localePath("/"), label: t("nav.explore"), icon: Compass },
   { to: localePath("/products"), label: t("nav.products"), icon: Layers },
-  { to: localePath("/contests"), label: t("nav.contests"), icon: Trophy },
   { to: localePath("/updates"), label: t("nav.updates"), icon: Newspaper },
 ]);
 

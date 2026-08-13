@@ -155,7 +155,7 @@ function statusColor(status: string) {
               </span>
               <div class="flex gap-1">
                 <NuxtLink
-                  :to="`/contests/${sub.contestId}/submissions/${sub.id}`"
+                  :to="`/admin/contests/${sub.contestId}`"
                   class="btn btn-xs btn-ghost"
                   title="View"
                 >
