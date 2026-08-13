@@ -17,8 +17,7 @@ export default defineContentConfig({
         hasPage: z.boolean().default(false),
         tags: z.array(z.string()).default([]),
         series: z.string().optional(),
-        githubRepo: z.string().optional(),
-        trackReleases: z.boolean().default(false),
+        distributionProductId: z.string().optional(),
       }),
     }),
     legal: defineCollection({

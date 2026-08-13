@@ -226,8 +226,8 @@
   "solarNetwork.download.sectionTitle": "获取 Solian",
   "solarNetwork.download.sectionDesc": "选择你的平台并安装最新版本。如果只是想先试试，也可以直接使用网页版。",
   "solarNetwork.download.direct": "直接下载",
-  "solarNetwork.download.github": "GitHub Releases",
-  "solarNetwork.download.release.viewOnGithub": "在 GitHub 上查看",
+  "solarNetwork.download.github": "Distribution 版本",
+  "solarNetwork.download.release.viewOnGithub": "在 GitHub 查看源代码",
   "solarNetwork.download.release.expand": "展开完整更新日志",
   "solarNetwork.download.release.collapse": "收起",
   "solarNetwork.about.badge": "关于",
@@ -304,17 +304,17 @@
   "solarNetwork.download.ios.desc": "加入 TestFlight 测试版，提前在 iOS 上体验。",
   "solarNetwork.download.ios.testflight": "加入 TestFlight",
   "solarNetwork.download.android.title": "Android",
-  "solarNetwork.download.android.desc": "直接从 GitHub releases 下载 APK。",
+  "solarNetwork.download.android.desc": "从 Distribution 下载 APK。",
   "solarNetwork.download.android.download": "下载 APK",
   "solarNetwork.download.macos.title": "macOS",
   "solarNetwork.download.macos.desc": "通过 TestFlight 安装 Mac 测试版，也可使用 Homebrew 或直接下载构建包。",
   "solarNetwork.download.macos.testflight": "加入 TestFlight",
-  "solarNetwork.download.macos.github": "从 GitHub 下载",
+  "solarNetwork.download.macos.github": "从 Distribution 下载",
   "solarNetwork.download.windows.title": "Windows",
-  "solarNetwork.download.windows.desc": "从 GitHub releases 下载安装程序。",
+  "solarNetwork.download.windows.desc": "从 Distribution 下载安装程序。",
   "solarNetwork.download.windows.download": "下载 Windows 版",
   "solarNetwork.download.linux.title": "Linux",
-  "solarNetwork.download.linux.desc": "从 GitHub releases 下载 AppImage 或其他安装包。",
+  "solarNetwork.download.linux.desc": "从 Distribution 下载 AppImage 或其他安装包。",
   "solarNetwork.download.linux.download": "下载 Linux 版",
   "solarNetwork.help.title": "需要帮助？",
   "solarNetwork.help.desc": "欢迎在 GitHub 上报告 Bug 或联系我们。",
@@ -643,12 +643,13 @@
     "changelog": "更新日志",
     "download": "下载",
     "noReleases": "暂无发布版本",
-    "viewOnGitHub": "在 GitHub 上查看",
-    "prerelease": "预发布",
-    "synced": "已同步",
-    "syncPending": "同步待处理",
-    "syncFailed": "同步失败",
-    "retrySync": "重试同步"
+    "prerelease": "预发布版本",
+    "loading": "正在加载下载信息…",
+    "artifact": {
+      "bundleSize": "包大小",
+      "checksum": "校验和",
+      "uploadedOn": "上传于"
+    }
   },
   "reviews": {
     "title": "评价",
@@ -681,16 +682,6 @@
     "content_placeholder": "分享你的详细体验"
   },
   "admin": {
-    "nav": {
-      "products": "产品"
-    },
-    "products": {
-      "title": "产品",
-      "releases": "版本管理",
-      "addRelease": "添加版本",
-      "reviews": "评价管理",
-      "syncToGithub": "同步到 GitHub"
-    },
     "submissions": {
       "title": "提交管理",
       "all": "全部",
@@ -1094,18 +1085,18 @@
     "download": {
       "btn": "下载",
       "sectionTitle": "获取 MaidKit",
-      "sectionDesc": "选择你的平台安装最新构建。安装包托管在文件服务器，源码与 Release 在 GitHub。",
+      "sectionDesc": "选择平台并安装最新构建。发布构件由 Distribution 托管，源代码位于 GitHub。",
       "direct": "直接下载",
-      "github": "GitHub Releases",
+      "github": "Distribution 版本",
       "viewGithub": "在 GitHub 查看",
       "release": {
-        "viewOnGithub": "在 GitHub 查看",
+        "viewOnGithub": "在 GitHub 查看源代码",
         "expand": "展开完整更新日志",
         "collapse": "收起"
       },
       "android": {
         "title": "Android",
-        "desc": "按架构下载拆分 APK，或从 GitHub Releases 获取构建。"
+        "desc": "从 Distribution 下载对应架构的拆分 APK。"
       },
       "ios": {
         "title": "iPhone 与 iPad",

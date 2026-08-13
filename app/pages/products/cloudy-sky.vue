@@ -36,26 +36,6 @@ import { useProductReviewSubmission } from "~/composables/useProductReviewSubmis
 const { t, locale } = useI18n();
 
 const PRODUCT_SLUG = "cloudy-sky";
-const GITHUB_REPO = "Solsynth/CloudySky";
-
-const { data: githubRelease } = await useFetch(
-  `https://api.github.com/repos/${GITHUB_REPO}/releases/latest`,
-  {
-    transform: (data: {
-      tag_name?: string;
-      html_url?: string;
-      assets?: { name: string; browser_download_url: string }[];
-    } | null) => {
-      if (!data) return null;
-      const apk = data.assets?.find((a) => a.name.endsWith(".apk"));
-      return {
-        tag: data.tag_name,
-        url: data.html_url,
-        downloadUrl: apk?.browser_download_url || null,
-      };
-    },
-  },
-);
 
 const aboutCards = [
   {
@@ -281,7 +261,8 @@ defineOgImage("UniOgImage", {
 
           <div class="flex flex-wrap gap-2 md:ml-auto md:shrink-0">
             <a
-              :href="githubRelease?.downloadUrl ?? 'https://fs.solsynth.dev/d/r2/cloudysky/app-release.apk'"
+              v-if="latest?.downloadUrl"
+              :href="latest.downloadUrl"
               target="_blank"
               rel="noopener noreferrer"
               class="btn btn-primary btn-sm sm:btn-md md:btn-lg rounded-full gap-2"
@@ -454,7 +435,6 @@ defineOgImage("UniOgImage", {
         :released-at="latest.releasedAt"
         :changelog="latest.changelog"
         :download-url="latest.downloadUrl"
-        :github-release-url="latest.githubReleaseUrl"
         :is-prerelease="latest.isPrerelease"
       />
 

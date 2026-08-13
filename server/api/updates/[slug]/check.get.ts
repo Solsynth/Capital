@@ -1,4 +1,4 @@
-import { getLatestRelease } from "#server/utils/products"
+import { getDistributionProductId, getLatestDistributionRelease } from "#server/utils/distribution"
 
 function compareVersions(v1: string, v2: string): number {
   const parts1 = v1.replace(/^v/, "").split(".").map(Number)
@@ -22,7 +22,8 @@ export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   const current = query.current as string | undefined
 
-  const release = await getLatestRelease(slug)
+  const productId = await getDistributionProductId(event, slug)
+  const release = await getLatestDistributionRelease(slug, { productId })
   if (!release) {
     return {
       updateAvailable: false,
@@ -49,7 +50,6 @@ export default defineEventHandler(async (event) => {
     version: release.version,
     releasedAt: release.releasedAt,
     downloadUrl: release.downloadUrl,
-    githubReleaseUrl: release.githubReleaseUrl,
     changelog: release.changelog,
     isPrerelease: release.isPrerelease,
     minimumVersion: release.minimumVersion,

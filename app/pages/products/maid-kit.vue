@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { Component } from "vue";
+import ProductDownloadSection from "~/components/ProductDownloadSection.vue";
+import type { ProductDownloadPlatform } from "~/types/product-download";
 import {
   Activity,
   Box,
@@ -21,7 +22,6 @@ import {
   Settings2,
   Shield,
   Star,
-  Tag,
   Terminal,
   Wrench,
 } from "@lucide/vue";
@@ -38,13 +38,11 @@ import StarRating from "~/components/StarRating.vue";
 import { useProductReleases } from "~/composables/useProductReleases";
 import { useProductReviews } from "~/composables/useProductReviews";
 import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
-import { renderMarkdown } from "~/utils/marked";
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 const PRODUCT_SLUG = "maid-kit";
 const GITHUB_REPO = "https://github.com/Solsynth/MaidKit";
-const FS_BASE = "https://fs.solsynth.dev/d/public/r2/maidkit";
 const TESTFLIGHT_URL = "https://testflight.apple.com/join/fVQB3qq5";
 
 const aboutCards = [
@@ -146,26 +144,8 @@ const features = [
   },
 ] as const;
 
-type DownloadAction = {
-  href: string;
-  label: string;
-  i18n?: boolean;
-  variant: "primary" | "outline";
-  icon: Component;
-  iconClass?: string;
-};
 
-type PlatformConfig = {
-  id: string;
-  label: string;
-  icon: Component;
-  iconClass?: string;
-  titleKey: string;
-  descKey: string;
-  actions: DownloadAction[];
-};
-
-const platforms: PlatformConfig[] = [
+const platforms: ProductDownloadPlatform[] = [
   {
     id: "android",
     label: "Android",
@@ -175,21 +155,24 @@ const platforms: PlatformConfig[] = [
     descKey: "maidKit.download.android.desc",
     actions: [
       {
-        href: `${FS_BASE}/app-arm64-v8a-release.apk`,
+        artifactPlatform: "android",
+        artifactArchitecture: "arm64",
         label: "ARM64 (arm64-v8a)",
         variant: "primary",
         icon: IconsIconAndroid,
         iconClass: "fill-current",
       },
       {
-        href: `${FS_BASE}/app-armeabi-v7a-release.apk`,
+        artifactPlatform: "android",
+        artifactArchitecture: "armeabi-v7a",
         label: "ARMv7 (armeabi-v7a)",
         variant: "outline",
         icon: IconsIconAndroid,
         iconClass: "fill-current",
       },
       {
-        href: `${FS_BASE}/app-x86_64-release.apk`,
+        artifactPlatform: "android",
+        artifactArchitecture: "x86_64",
         label: "x86_64",
         variant: "outline",
         icon: IconsIconAndroid,
@@ -241,7 +224,7 @@ const platforms: PlatformConfig[] = [
     descKey: "maidKit.download.windows.desc",
     actions: [
       {
-        href: `${FS_BASE}/build-output-windows-installer.zip`,
+        artifactPlatform: "windows",
         label: "maidKit.download.direct",
         i18n: true,
         variant: "primary",
@@ -258,7 +241,7 @@ const platforms: PlatformConfig[] = [
     descKey: "maidKit.download.linux.desc",
     actions: [
       {
-        href: `${FS_BASE}/build-output-linux-appimage.zip`,
+        artifactPlatform: "linux",
         label: "maidKit.download.direct",
         i18n: true,
         variant: "primary",
@@ -268,54 +251,7 @@ const platforms: PlatformConfig[] = [
   },
 ];
 
-const activePlatform = ref("android");
-const currentPlatform = computed(
-  () => platforms.find((p) => p.id === activePlatform.value) ?? platforms[0],
-);
 
-const actionRowClass: Record<DownloadAction["variant"], string> = {
-  primary:
-    "border-primary/25 bg-primary/10 hover:bg-primary/15 text-base-content",
-  outline:
-    "border-base-content/10 bg-base-100 hover:bg-base-300/60 text-base-content",
-};
-
-const releaseExpanded = ref(false);
-
-const { data: latestRelease } = await useFetch(
-  "https://api.github.com/repos/Solsynth/MaidKit/releases/latest",
-  {
-    transform: (
-      data: {
-        tag_name?: string;
-        name?: string;
-        body?: string;
-        html_url?: string;
-        published_at?: string;
-      } | null,
-    ) => {
-      if (!data?.tag_name) return null;
-      return {
-        tag: data.tag_name,
-        name: data.name,
-        body: data.body,
-        url: data.html_url,
-        date: data.published_at
-          ? new Date(data.published_at).toLocaleDateString(
-              locale.value === "zh" ? "zh-CN" : "en-US",
-              { year: "numeric", month: "long", day: "numeric" },
-            )
-          : "",
-      };
-    },
-  },
-);
-
-const releaseBodyHtml = computed(() =>
-  latestRelease.value?.body
-    ? renderMarkdown(latestRelease.value.body)
-    : "",
-);
 
 const {
   releases,
@@ -324,6 +260,7 @@ const {
   fetchLatest,
 } = useProductReleases(PRODUCT_SLUG);
 const showAllReleases = ref(false);
+
 
 const {
   reviews,
@@ -576,7 +513,7 @@ defineOgImage("UniOgImage", {
 
     <div class="divider" />
 
-    <!-- Product-managed releases (admin CMS) -->
+    <!-- Distribution release artifacts -->
     <section
       v-if="latest || (!releasesLoading && releases.length > 0)"
       class="container mx-auto px-4 py-8"
@@ -605,7 +542,6 @@ defineOgImage("UniOgImage", {
         :released-at="latest.releasedAt"
         :changelog="latest.changelog"
         :download-url="latest.downloadUrl"
-        :github-release-url="latest.githubReleaseUrl"
         :is-prerelease="latest.isPrerelease"
       />
 
@@ -616,188 +552,18 @@ defineOgImage("UniOgImage", {
     </section>
 
     <!-- Download -->
-    <section id="download" class="container mx-auto px-4 py-16 scroll-mt-24">
-      <div class="text-center mb-12">
-        <span class="badge badge-accent badge-outline mb-4">{{
-          t("maidKit.download.btn")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">
-          {{ t("maidKit.download.sectionTitle") }}
-        </h2>
-        <p class="text-lg opacity-70 max-w-2xl mx-auto">
-          {{ t("maidKit.download.sectionDesc") }}
-        </p>
-      </div>
-
-      <!-- Latest GitHub release notes -->
-      <div
-        v-if="latestRelease"
-        class="mb-8 rounded-xl border border-base-content/5 bg-base-200 overflow-hidden"
-      >
-        <div
-          class="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-base-content/5 bg-base-300/40"
-        >
-          <div class="flex items-center gap-2.5 flex-wrap min-w-0">
-            <Tag class="w-4 h-4 text-primary shrink-0" />
-            <span class="badge badge-primary badge-soft font-mono">{{
-              latestRelease.tag
-            }}</span>
-            <span
-              v-if="
-                latestRelease.name && latestRelease.name !== latestRelease.tag
-              "
-              class="text-sm font-medium truncate max-w-[min(100%,20rem)]"
-            >
-              {{ latestRelease.name }}
-            </span>
-            <span class="text-sm opacity-50">{{ latestRelease.date }}</span>
-          </div>
-          <a
-            v-if="latestRelease.url"
-            :href="latestRelease.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-ghost btn-sm gap-1.5 shrink-0"
-          >
-            <ExternalLink class="w-4 h-4" />
-            {{ t("maidKit.download.release.viewOnGithub") }}
-          </a>
-        </div>
-
-        <div v-if="releaseBodyHtml" class="relative">
-          <div
-            class="prose prose-sm max-w-none px-5 py-4 release-notes"
-            :class="releaseExpanded ? 'max-h-none' : 'max-h-56 overflow-hidden'"
-            v-html="releaseBodyHtml"
-          />
-          <div
-            v-if="!releaseExpanded"
-            class="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-base-200 to-transparent"
-          />
-          <div class="flex justify-center px-5 pb-4">
-            <button
-              type="button"
-              class="btn btn-ghost btn-xs gap-1 relative z-10"
-              @click="releaseExpanded = !releaseExpanded"
-            >
-              <ChevronDown v-if="!releaseExpanded" class="w-3.5 h-3.5" />
-              <ChevronUp v-else class="w-3.5 h-3.5" />
-              {{
-                releaseExpanded
-                  ? t("maidKit.download.release.collapse")
-                  : t("maidKit.download.release.expand")
-              }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Platform downloads -->
-      <div
-        class="rounded-xl border border-base-content/5 bg-base-200 overflow-hidden"
-      >
-        <div class="grid md:grid-cols-[220px_minmax(0,1fr)]">
-          <nav
-            class="flex md:flex-col gap-1 p-2 md:p-3 overflow-x-auto md:overflow-x-visible border-b md:border-b-0 md:border-r border-base-content/5"
-            role="tablist"
-            :aria-label="t('maidKit.download.btn')"
-          >
-            <button
-              v-for="platform in platforms"
-              :key="platform.id"
-              type="button"
-              role="tab"
-              :aria-selected="activePlatform === platform.id"
-              class="btn btn-sm md:btn-md justify-start gap-2.5 shrink-0 md:w-full border-0"
-              :class="
-                activePlatform === platform.id
-                  ? 'btn-primary'
-                  : 'btn-ghost opacity-70 hover:opacity-100'
-              "
-              @click="activePlatform = platform.id"
-            >
-              <component
-                :is="platform.icon"
-                class="w-4 h-4 md:w-5 md:h-5 shrink-0"
-                :class="platform.iconClass"
-              />
-              <span class="hidden sm:inline">{{ platform.label }}</span>
-            </button>
-          </nav>
-
-          <div
-            v-if="currentPlatform"
-            class="p-5 sm:p-6 md:p-8 min-h-[280px]"
-            role="tabpanel"
-          >
-            <div class="flex items-start gap-3 mb-2">
-              <div
-                class="w-11 h-11 rounded-xl bg-primary/15 flex items-center justify-center shrink-0"
-              >
-                <component
-                  :is="currentPlatform.icon"
-                  class="w-6 h-6 text-primary"
-                  :class="
-                    currentPlatform.iconClass
-                      ? `${currentPlatform.iconClass} fill-primary`
-                      : undefined
-                  "
-                />
-              </div>
-              <div class="min-w-0">
-                <h3 class="text-xl md:text-2xl font-bold">
-                  {{ t(currentPlatform.titleKey) }}
-                </h3>
-                <p class="text-sm opacity-65 mt-1 leading-relaxed">
-                  {{ t(currentPlatform.descKey) }}
-                </p>
-              </div>
-            </div>
-
-            <div class="mt-6 space-y-2">
-              <a
-                v-for="action in currentPlatform.actions"
-                :key="action.href + action.label"
-                :href="action.href"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-3 rounded-lg border px-4 py-3 transition-colors"
-                :class="actionRowClass[action.variant]"
-              >
-                <component
-                  :is="action.icon"
-                  class="w-5 h-5 shrink-0 opacity-80"
-                  :class="action.iconClass"
-                />
-                <span class="flex-1 text-sm font-medium min-w-0">
-                  {{ action.i18n ? t(action.label) : action.label }}
-                </span>
-                <Download
-                  v-if="action.variant === 'primary'"
-                  class="w-4 h-4 shrink-0 opacity-60"
-                />
-                <ExternalLink v-else class="w-4 h-4 shrink-0 opacity-50" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="text-center mt-6">
-        <a
-          :href="GITHUB_REPO"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-ghost btn-sm gap-2"
-        >
-          <CodeXml class="w-4 h-4" />
-          {{ t("maidKit.download.viewGithub") }}
-        </a>
-      </div>
-    </section>
-
-    <div class="divider" />
-
+    <ProductDownloadSection
+      :latest="latest"
+      :loading="releasesLoading"
+      :github-url="GITHUB_REPO"
+      :platforms="platforms"
+      badge-key="maidKit.download.btn"
+      title-key="maidKit.download.sectionTitle"
+      desc-key="maidKit.download.sectionDesc"
+      view-github-key="maidKit.download.viewGithub"
+      release-expand-key="maidKit.download.release.expand"
+      release-collapse-key="maidKit.download.release.collapse"
+    />
     <!-- Reviews -->
     <section class="container mx-auto px-4 py-16">
       <div class="text-center mb-12">

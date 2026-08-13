@@ -226,8 +226,8 @@
   "solarNetwork.download.sectionTitle": "Get Solian",
   "solarNetwork.download.sectionDesc": "Choose your platform and install the latest build. Prefer the web app if you just want to try it out.",
   "solarNetwork.download.direct": "Direct Download",
-  "solarNetwork.download.github": "GitHub Releases",
-  "solarNetwork.download.release.viewOnGithub": "View on GitHub",
+  "solarNetwork.download.github": "Distribution Releases",
+  "solarNetwork.download.release.viewOnGithub": "View source on GitHub",
   "solarNetwork.download.release.expand": "Show full changelog",
   "solarNetwork.download.release.collapse": "Show less",
   "solarNetwork.about.badge": "About",
@@ -304,17 +304,17 @@
   "solarNetwork.download.ios.desc": "Join the TestFlight beta to get early access on iOS.",
   "solarNetwork.download.ios.testflight": "Join TestFlight",
   "solarNetwork.download.android.title": "Android",
-  "solarNetwork.download.android.desc": "Download the APK directly from GitHub releases.",
+  "solarNetwork.download.android.desc": "Download the APK from Distribution.",
   "solarNetwork.download.android.download": "Download APK",
   "solarNetwork.download.macos.title": "macOS",
   "solarNetwork.download.macos.desc": "Join TestFlight for the Mac beta, install via Homebrew, or download the build directly.",
   "solarNetwork.download.macos.testflight": "Join TestFlight",
-  "solarNetwork.download.macos.github": "Download from GitHub",
+  "solarNetwork.download.macos.github": "Download from Distribution",
   "solarNetwork.download.windows.title": "Windows",
-  "solarNetwork.download.windows.desc": "Download the installer from GitHub releases.",
+  "solarNetwork.download.windows.desc": "Download the installer from Distribution.",
   "solarNetwork.download.windows.download": "Download for Windows",
   "solarNetwork.download.linux.title": "Linux",
-  "solarNetwork.download.linux.desc": "Download AppImage or other packages from GitHub releases.",
+  "solarNetwork.download.linux.desc": "Download AppImage or other packages from Distribution.",
   "solarNetwork.download.linux.download": "Download for Linux",
   "solarNetwork.help.title": "Need Help?",
   "solarNetwork.help.desc": "Feel free to report bugs or contact us on GitHub.",
@@ -643,12 +643,13 @@
     "changelog": "Changelog",
     "download": "Download",
     "noReleases": "No releases yet",
-    "viewOnGitHub": "View on GitHub",
     "prerelease": "Pre-release",
-    "synced": "Synced",
-    "syncPending": "Sync pending",
-    "syncFailed": "Sync failed",
-    "retrySync": "Retry sync"
+    "loading": "Loading download information…",
+    "artifact": {
+      "bundleSize": "Bundle size",
+      "checksum": "Checksum",
+      "uploadedOn": "Uploaded"
+    }
   },
   "reviews": {
     "title": "Reviews",
@@ -681,16 +682,6 @@
     "content_placeholder": "Share your detailed experience"
   },
   "admin": {
-    "nav": {
-      "products": "Products"
-    },
-    "products": {
-      "title": "Products",
-      "releases": "Releases",
-      "addRelease": "Add Release",
-      "reviews": "Reviews",
-      "syncToGithub": "Sync to GitHub"
-    },
     "submissions": {
       "title": "Submissions",
       "all": "All",
@@ -1094,18 +1085,18 @@
     "download": {
       "btn": "Download",
       "sectionTitle": "Get MaidKit",
-      "sectionDesc": "Pick your platform and install the latest build. Artifacts are hosted on our file server; source and releases live on GitHub.",
+      "sectionDesc": "Pick your platform and install the latest build. Release artifacts are hosted by Distribution; source code lives on GitHub.",
       "direct": "Direct Download",
-      "github": "GitHub Releases",
+      "github": "Distribution Releases",
       "viewGithub": "View on GitHub",
       "release": {
-        "viewOnGithub": "View on GitHub",
+        "viewOnGithub": "View source on GitHub",
         "expand": "Show full changelog",
         "collapse": "Show less"
       },
       "android": {
         "title": "Android",
-        "desc": "Download a split APK for your architecture, or grab builds from GitHub Releases."
+        "desc": "Download a split APK for your architecture from Distribution."
       },
       "ios": {
         "title": "iPhone & iPad",

@@ -1,14 +1,13 @@
 <script setup lang="ts">
-import { Calendar, Download, ExternalLink } from "@lucide/vue"
+import { Calendar, Download } from "@lucide/vue"
 import { renderMarkdown } from "~/utils/marked"
 
 interface Props {
   version: string
   title?: string | null
-  releasedAt: Date | string
+  releasedAt: Date | string | null
   changelog?: string
   downloadUrl?: string | null
-  githubReleaseUrl?: string | null
   isPrerelease?: boolean
 }
 
@@ -20,7 +19,9 @@ const props = withDefaults(defineProps<Props>(), {
 const { t, locale } = useI18n()
 
 const formattedDate = computed(() => {
+  if (!props.releasedAt) return null
   const date = new Date(props.releasedAt)
+  if (Number.isNaN(date.getTime())) return null
   return date.toLocaleDateString(locale.value === "zh" ? "zh-CN" : "en-US", {
     year: "numeric",
     month: "short",
@@ -28,10 +29,9 @@ const formattedDate = computed(() => {
   })
 })
 
-const changelogHtml = computed(() =>
-  props.changelog ? renderMarkdown(props.changelog) : "",
-)
+const renderedChangelog = computed(() => renderMarkdown(props.changelog))
 </script>
+
 
 <template>
   <div class="card bg-base-100 border border-base-200 p-5">
@@ -48,36 +48,30 @@ const changelogHtml = computed(() =>
         </div>
         <p v-if="title" class="text-sm opacity-80">{{ title }}</p>
       </div>
-      <div class="flex items-center gap-1.5 text-sm opacity-60 shrink-0">
+      <div
+        v-if="formattedDate"
+        class="flex items-center gap-1.5 text-sm opacity-60 shrink-0"
+      >
         <Calendar class="w-3.5 h-3.5" />
-        <time :datetime="new Date(releasedAt).toISOString()">{{ formattedDate }}</time>
+        <time :datetime="new Date(releasedAt || '').toISOString()">{{ formattedDate }}</time>
       </div>
     </div>
 
     <div
-      v-if="changelogHtml"
+      v-if="renderedChangelog"
       class="prose prose-sm max-w-none mb-4 max-h-48 overflow-y-auto"
-      v-html="changelogHtml"
+      v-html="renderedChangelog"
     />
 
-    <div v-if="downloadUrl || githubReleaseUrl" class="flex gap-2">
+    <div v-if="downloadUrl" class="flex gap-2">
       <a
-        v-if="downloadUrl"
         :href="downloadUrl"
         target="_blank"
+        rel="noopener noreferrer"
         class="btn btn-sm btn-primary"
       >
         <Download class="w-3.5 h-3.5" />
         {{ t("releases.download") }}
-      </a>
-      <a
-        v-if="githubReleaseUrl"
-        :href="githubReleaseUrl"
-        target="_blank"
-        class="btn btn-sm btn-outline"
-      >
-        <ExternalLink class="w-3.5 h-3.5" />
-        {{ t("releases.viewOnGitHub") }}
       </a>
     </div>
   </div>

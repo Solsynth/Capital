@@ -328,33 +328,7 @@ export const contestVote = pgTable("contest_votes", {
   unique("contest_vote_submission_user_unique").on(table.submissionId, table.userId),
 ]);
 
-// ==================== Product Release & Review Tables ====================
-
-export const productRelease = pgTable("product_releases", {
-  id: text("id").primaryKey(),
-  slug: text("slug").notNull(),
-  version: text("version").notNull(),
-  releasedAt: timestamp("released_at").notNull(),
-  title: text("title"),
-  changelog: text("changelog").notNull().default(""),
-  downloadUrl: text("download_url"),
-  githubReleaseUrl: text("github_release_url"),
-  githubReleaseId: text("github_release_id"),
-  githubSyncStatus: text("github_sync_status").notNull().default("pending"),
-  githubSyncError: text("github_sync_error"),
-  minimumVersion: text("minimum_version"),
-  isPrerelease: boolean("is_prerelease").notNull().default(false),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-  updatedAt: timestamp("updated_at")
-    .defaultNow()
-    .$onUpdate(() => new Date())
-    .notNull(),
-}, (table) => [
-  index("release_slug_idx").on(table.slug),
-  index("release_released_at_idx").on(table.releasedAt),
-  unique("release_slug_version_unique").on(table.slug, table.version),
-]);
-
+// ==================== Product Review Table ====================
 export const productReview = pgTable("product_reviews", {
   id: text("id").primaryKey(),
   slug: text("slug").notNull(),
@@ -424,9 +398,6 @@ export const userRelations = relations(user, ({ many }) => ({
   reviews: many(productReview),
 }));
 
-export const productReleaseRelations = relations(productRelease, () => ({
-  // No user FK — releases are managed by admin.
-}));
 
 export const productReviewRelations = relations(productReview, ({ one }) => ({
   user: one(user, {

@@ -631,7 +631,6 @@ useSchemaOrg([
         :released-at="latest.releasedAt"
         :changelog="latest.changelog"
         :download-url="latest.downloadUrl"
-        :github-release-url="latest.githubReleaseUrl"
         :is-prerelease="latest.isPrerelease"
       />
 

@@ -1,34 +1,46 @@
-import type { Ref } from "vue"
+export interface ProductReleaseArtifact {
+  id?: string
+  platform?: string
+  architecture?: string
+  file_name?: string
+  mime_type?: string
+  size?: number
+  hash?: string
+  download_url?: string
+  expired?: boolean
+  uploaded_at?: string | null
+  created_at?: string | null
+}
 
-interface Release {
+export interface ProductRelease {
   id: string
   slug: string
   version: string
-  releasedAt: Date
+  createdAt: string | null
+  releasedAt: string | null
   title: string | null
   changelog: string
   downloadUrl: string | null
-  githubReleaseUrl: string | null
   isPrerelease: boolean
   minimumVersion: string | null
-  createdAt: Date
-  updatedAt: Date
+  status: string
+  artifacts: ProductReleaseArtifact[]
 }
 
 export function useProductReleases(slug: string) {
   const loading = ref(false)
   const error = ref<string | null>(null)
-  const releases = ref<Release[]>([])
-  const latest = ref<Release | null>(null)
+  const releases = ref<ProductRelease[]>([])
+  const latest = ref<ProductRelease | null>(null)
 
   async function fetchReleases() {
     loading.value = true
     error.value = null
     try {
-      const data = await $fetch(`/api/products/${slug}/releases`)
+      const data = await $fetch<{ releases: ProductRelease[] }>(`/api/products/${slug}/releases`)
       releases.value = data.releases
-    } catch (e: any) {
-      error.value = e.message || "Failed to fetch releases"
+    } catch (cause: unknown) {
+      error.value = cause instanceof Error ? cause.message : "Failed to fetch releases"
     } finally {
       loading.value = false
     }
@@ -36,7 +48,7 @@ export function useProductReleases(slug: string) {
 
   async function fetchLatest() {
     try {
-      const data = await $fetch(`/api/products/${slug}/releases/latest`)
+      const data = await $fetch<{ release: ProductRelease }>(`/api/products/${slug}/releases/latest`)
       latest.value = data.release
     } catch {
       latest.value = null
@@ -57,3 +69,4 @@ export function useProductReleases(slug: string) {
     refresh,
   }
 }
+

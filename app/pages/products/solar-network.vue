@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import type { Component } from "vue";
+import ProductDownloadSection from "~/components/ProductDownloadSection.vue";
+import type { ProductDownloadPlatform } from "~/types/product-download";
 import {
   CodeXml,
   ExternalLink,
@@ -23,35 +24,26 @@ import {
   Wallet,
   Image,
   CheckCircle,
-  Copy,
-  Check,
   SmilePlus,
   History,
   ChevronDown,
   ChevronUp,
   Star,
   BookOpen,
-  Download,
-  Tag,
 } from "@lucide/vue";
 import IconsIconIos from "~/components/Icons/IconIos.vue";
 import IconsIconAndroid from "~/components/Icons/IconAndroid.vue";
 import IconsIconMacos from "~/components/Icons/IconMacos.vue";
 import IconsIconLinux from "~/components/Icons/IconLinux.vue";
-import { renderMarkdown } from "~/utils/marked";
 
 const { t, locale } = useI18n();
 
 const PRODUCT_SLUG = "solar-network";
-const BREW_COMMAND = "brew install --cask solsynth/solian/solian";
 const docsUrl = computed(() =>
   locale.value === "zh"
     ? "https://kb.solsynth.dev/zh/solar-network/account/"
     : "https://kb.solsynth.dev/solar-network/account/",
 );
-const activePlatform = ref("web");
-const copied = ref(false);
-const releaseExpanded = ref(false);
 const showAllReleases = ref(false);
 const reviewFormOpen = ref(false);
 const reviewForm = ref({
@@ -61,33 +53,6 @@ const reviewForm = ref({
   isRecommended: null as boolean | null,
 });
 
-const { data: latestRelease } = await useFetch("/api/github-release", {
-  transform: (data: {
-    tag?: string;
-    name?: string;
-    body?: string;
-    url?: string;
-    date?: string;
-  } | null) => {
-    if (!data) return null;
-    return {
-      tag: data.tag,
-      name: data.name,
-      body: data.body,
-      url: data.url,
-      date: new Date(data.date!).toLocaleDateString(
-        locale.value === "zh" ? "zh-CN" : "en-US",
-        { year: "numeric", month: "long", day: "numeric" },
-      ),
-    };
-  },
-});
-
-const releaseBodyHtml = computed(() =>
-  latestRelease.value?.body
-    ? renderMarkdown(latestRelease.value.body)
-    : "",
-);
 
 const {
   releases,
@@ -95,6 +60,7 @@ const {
   loading: releasesLoading,
   refresh: refreshReleases,
 } = useProductReleases(PRODUCT_SLUG);
+
 
 const {
   reviews,
@@ -123,17 +89,6 @@ onMounted(() => {
   void Promise.all([refreshReleases(), fetchMyReview(), refreshReviews()]);
 });
 
-async function copyCommand() {
-  try {
-    await navigator.clipboard.writeText(BREW_COMMAND);
-    copied.value = true;
-    setTimeout(() => {
-      copied.value = false;
-    }, 2000);
-  } catch {
-    // clipboard may be unavailable
-  }
-}
 
 function openReviewForm() {
   if (myReview.value) {
@@ -324,27 +279,8 @@ const simpleFeatures = [
   { key: "more", icon: Sparkles },
 ] as const;
 
-type DownloadAction = {
-  href: string;
-  label: string;
-  i18n?: boolean;
-  variant: "primary" | "outline" | "ghost";
-  icon: Component;
-  iconClass?: string;
-};
 
-type PlatformConfig = {
-  id: string;
-  label: string;
-  icon: Component;
-  iconClass?: string;
-  titleKey: string;
-  descKey: string;
-  brew?: boolean;
-  actions: DownloadAction[];
-};
-
-const platforms: PlatformConfig[] = [
+const platforms: ProductDownloadPlatform[] = [
   {
     id: "web",
     label: "Web",
@@ -388,32 +324,28 @@ const platforms: PlatformConfig[] = [
     descKey: "solarNetwork.download.android.desc",
     actions: [
       {
-        href: "https://fs.solsynth.dev/d/r2/solian/app-arm64-v8a-release.apk",
+        artifactPlatform: "android",
+        artifactArchitecture: "arm64",
         label: "ARM64 (arm64-v8a)",
         variant: "primary",
         icon: IconsIconAndroid,
         iconClass: "fill-current",
       },
       {
-        href: "https://fs.solsynth.dev/d/r2/solian/app-armeabi-v7a-release.apk",
+        artifactPlatform: "android",
+        artifactArchitecture: "armeabi-v7a",
         label: "ARMv7 (armeabi-v7a)",
         variant: "outline",
         icon: IconsIconAndroid,
         iconClass: "fill-current",
       },
       {
-        href: "https://fs.solsynth.dev/d/r2/solian/app-x86_64-release.apk",
+        artifactPlatform: "android",
+        artifactArchitecture: "x86_64",
         label: "x86_64",
         variant: "outline",
         icon: IconsIconAndroid,
         iconClass: "fill-current",
-      },
-      {
-        href: "https://github.com/Solsynth/Solian/releases",
-        label: "solarNetwork.download.github",
-        i18n: true,
-        variant: "ghost",
-        icon: CodeXml,
       },
     ],
   },
@@ -435,7 +367,7 @@ const platforms: PlatformConfig[] = [
         iconClass: "fill-current",
       },
       {
-        href: "https://fs.solsynth.dev/d/r2/solian/solian-macos.tar.gz",
+        artifactPlatform: "macos",
         label: "solarNetwork.download.direct",
         i18n: true,
         variant: "outline",
@@ -451,18 +383,11 @@ const platforms: PlatformConfig[] = [
     descKey: "solarNetwork.download.windows.desc",
     actions: [
       {
-        href: "https://fs.solsynth.dev/d/r2/solian/build-output-windows-installer.zip",
+        artifactPlatform: "windows",
         label: "solarNetwork.download.direct",
         i18n: true,
         variant: "primary",
         icon: ExternalLink,
-      },
-      {
-        href: "https://github.com/Solsynth/Solian/releases",
-        label: "solarNetwork.download.github",
-        i18n: true,
-        variant: "outline",
-        icon: CodeXml,
       },
     ],
   },
@@ -475,35 +400,16 @@ const platforms: PlatformConfig[] = [
     descKey: "solarNetwork.download.linux.desc",
     actions: [
       {
-        href: "https://fs.solsynth.dev/d/r2/solian/build-output-linux-appimage.zip",
+        artifactPlatform: "linux",
         label: "solarNetwork.download.direct",
         i18n: true,
         variant: "primary",
         icon: ExternalLink,
       },
-      {
-        href: "https://github.com/Solsynth/Solian/releases",
-        label: "solarNetwork.download.github",
-        i18n: true,
-        variant: "outline",
-        icon: CodeXml,
-      },
     ],
   },
 ];
 
-const currentPlatform = computed(
-  () => platforms.find((p) => p.id === activePlatform.value) ?? platforms[0],
-);
-
-const actionRowClass: Record<DownloadAction["variant"], string> = {
-  primary:
-    "border-primary/25 bg-primary/10 hover:bg-primary/15 text-base-content",
-  outline:
-    "border-base-content/10 bg-base-100 hover:bg-base-300/60 text-base-content",
-  ghost:
-    "border-transparent bg-transparent hover:bg-base-300/50 text-base-content/80",
-};
 
 definePageMeta({
   title: "Solar Network",
@@ -786,7 +692,6 @@ defineOgImage("UniOgImage", {
         :released-at="latest.releasedAt"
         :changelog="latest.changelog"
         :download-url="latest.downloadUrl"
-        :github-release-url="latest.githubReleaseUrl"
         :is-prerelease="latest.isPrerelease"
       />
 
@@ -801,215 +706,19 @@ defineOgImage("UniOgImage", {
     </section>
 
     <!-- Download -->
-    <section id="download" class="container mx-auto px-4 py-16">
-      <div class="text-center mb-12">
-        <span class="badge badge-accent badge-outline mb-4">{{
-          t("solarNetwork.download.btn")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">
-          {{ t("solarNetwork.download.sectionTitle") }}
-        </h2>
-        <p class="text-lg opacity-70 max-w-2xl mx-auto">
-          {{ t("solarNetwork.download.sectionDesc") }}
-        </p>
-      </div>
-
-      <!-- Latest GitHub release -->
-      <div
-        v-if="latestRelease"
-        class="mb-8 rounded-xl border border-base-content/5 bg-base-200 overflow-hidden"
-      >
-        <div
-          class="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-base-content/5 bg-base-300/40"
-        >
-          <div class="flex items-center gap-2.5 flex-wrap min-w-0">
-            <Tag class="w-4 h-4 text-primary shrink-0" />
-            <span class="badge badge-primary badge-soft font-mono">{{
-              latestRelease.tag
-            }}</span>
-            <span
-              v-if="latestRelease.name && latestRelease.name !== latestRelease.tag"
-              class="text-sm font-medium truncate max-w-[min(100%,20rem)]"
-            >
-              {{ latestRelease.name }}
-            </span>
-            <span class="text-sm opacity-50">{{ latestRelease.date }}</span>
-          </div>
-          <a
-            v-if="latestRelease.url"
-            :href="latestRelease.url"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-ghost btn-sm gap-1.5 shrink-0"
-          >
-            <ExternalLink class="w-4 h-4" />
-            {{ t("solarNetwork.download.release.viewOnGithub") }}
-          </a>
-        </div>
-
-        <div v-if="releaseBodyHtml" class="relative">
-          <div
-            class="prose prose-sm max-w-none px-5 py-4 release-notes"
-            :class="
-              releaseExpanded
-                ? 'max-h-none'
-                : 'max-h-56 overflow-hidden'
-            "
-            v-html="releaseBodyHtml"
-          />
-          <div
-            v-if="!releaseExpanded"
-            class="pointer-events-none absolute inset-x-0 bottom-0 h-16 bg-linear-to-t from-base-200 to-transparent"
-          />
-          <div class="flex justify-center px-5 pb-4">
-            <button
-              type="button"
-              class="btn btn-ghost btn-xs gap-1 relative z-10"
-              @click="releaseExpanded = !releaseExpanded"
-            >
-              <ChevronDown
-                v-if="!releaseExpanded"
-                class="w-3.5 h-3.5"
-              />
-              <ChevronUp v-else class="w-3.5 h-3.5" />
-              {{
-                releaseExpanded
-                  ? t("solarNetwork.download.release.collapse")
-                  : t("solarNetwork.download.release.expand")
-              }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Platform downloads -->
-      <div
-        class="rounded-xl border border-base-content/5 bg-base-200 overflow-hidden"
-      >
-        <div class="grid md:grid-cols-[220px_minmax(0,1fr)]">
-          <nav
-            class="flex md:flex-col gap-1 p-2 md:p-3 overflow-x-auto md:overflow-x-visible border-b md:border-b-0 md:border-r border-base-content/5"
-            role="tablist"
-            :aria-label="t('solarNetwork.download.btn')"
-          >
-            <button
-              v-for="platform in platforms"
-              :key="platform.id"
-              type="button"
-              role="tab"
-              :aria-selected="activePlatform === platform.id"
-              class="btn btn-sm md:btn-md justify-start gap-2.5 shrink-0 md:w-full border-0"
-              :class="
-                activePlatform === platform.id
-                  ? 'btn-primary'
-                  : 'btn-ghost opacity-70 hover:opacity-100'
-              "
-              @click="activePlatform = platform.id"
-            >
-              <component
-                :is="platform.icon"
-                class="w-4 h-4 md:w-5 md:h-5 shrink-0"
-                :class="platform.iconClass"
-              />
-              <span class="hidden sm:inline">{{ platform.label }}</span>
-            </button>
-          </nav>
-
-          <div
-            v-if="currentPlatform"
-            class="p-5 sm:p-6 md:p-8 min-h-[280px]"
-            role="tabpanel"
-          >
-            <div class="flex items-start gap-3 mb-2">
-              <div
-                class="w-11 h-11 rounded-xl bg-primary/15 flex items-center justify-center shrink-0"
-              >
-                <component
-                  :is="currentPlatform.icon"
-                  class="w-6 h-6 text-primary"
-                  :class="
-                    currentPlatform.iconClass
-                      ? `${currentPlatform.iconClass} fill-primary`
-                      : undefined
-                  "
-                />
-              </div>
-              <div class="min-w-0">
-                <h3 class="text-xl md:text-2xl font-bold">
-                  {{ t(currentPlatform.titleKey) }}
-                </h3>
-                <p class="text-sm opacity-65 mt-1 leading-relaxed">
-                  {{ t(currentPlatform.descKey) }}
-                </p>
-              </div>
-            </div>
-
-            <div v-if="currentPlatform.brew" class="mt-6 mb-5">
-              <p class="text-xs font-medium opacity-50 mb-2 uppercase tracking-wide">
-                Homebrew
-              </p>
-              <div
-                class="rounded-lg border border-base-content/10 bg-base-100 px-3 py-2.5 flex items-center gap-2"
-              >
-                <code class="flex-1 text-xs sm:text-sm font-mono break-all">{{
-                  BREW_COMMAND
-                }}</code>
-                <button
-                  type="button"
-                  class="btn btn-ghost btn-sm btn-square shrink-0"
-                  :aria-label="copied ? 'Copied' : 'Copy command'"
-                  @click="copyCommand"
-                >
-                  <Check v-if="copied" class="w-4 h-4 text-success" />
-                  <Copy v-else class="w-4 h-4" />
-                </button>
-              </div>
-            </div>
-
-            <div class="mt-6 space-y-2">
-              <a
-                v-for="action in currentPlatform.actions"
-                :key="action.href + action.label"
-                :href="action.href"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="flex items-center gap-3 rounded-lg border px-4 py-3 transition-colors"
-                :class="actionRowClass[action.variant]"
-              >
-                <component
-                  :is="action.icon"
-                  class="w-5 h-5 shrink-0 opacity-80"
-                  :class="action.iconClass"
-                />
-                <span class="flex-1 text-sm font-medium min-w-0">
-                  {{ action.i18n ? t(action.label) : action.label }}
-                </span>
-                <Download
-                  v-if="action.variant === 'primary'"
-                  class="w-4 h-4 shrink-0 opacity-60"
-                />
-                <ExternalLink v-else class="w-4 h-4 shrink-0 opacity-50" />
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="text-center mt-6">
-        <a
-          href="https://github.com/Solsynth/Solian"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-ghost btn-sm gap-2"
-        >
-          <CodeXml class="w-4 h-4" />
-          {{ t("solarNetwork.journey.viewGithub") }}
-        </a>
-      </div>
-    </section>
-
-    <div class="divider" />
-
+    <ProductDownloadSection
+      :latest="latest"
+      :loading="releasesLoading"
+      :github-url="'https://github.com/Solsynth/Solian'"
+      :platforms="platforms"
+      badge-key="solarNetwork.download.btn"
+      title-key="solarNetwork.download.sectionTitle"
+      desc-key="solarNetwork.download.sectionDesc"
+      view-github-key="solarNetwork.journey.viewGithub"
+      release-expand-key="solarNetwork.download.release.expand"
+      release-collapse-key="solarNetwork.download.release.collapse"
+      brew-command="brew install --cask solsynth/solian/solian"
+    />
     <!-- Reviews Section -->
     <section class="container mx-auto px-4 py-16">
       <div class="text-center mb-12">

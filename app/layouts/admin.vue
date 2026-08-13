@@ -10,7 +10,6 @@ import {
   GitPullRequest,
   FileCheck,
   Trophy,
-  Package,
   MessageSquare,
 } from "@lucide/vue";
 
@@ -82,16 +81,11 @@ const navSections = computed<NavSection[]>(() => [
     ],
   },
   {
-    title: t("admin.nav.products"),
+    title: t("reviews.title"),
     items: [
       {
-        icon: Package,
-        label: t("admin.products.title"),
-        to: "/admin/products",
-      },
-      {
         icon: MessageSquare,
-        label: "Reviews",
+        label: t("reviews.title"),
         to: "/admin/reviews",
       },
     ],

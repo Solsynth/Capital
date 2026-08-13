@@ -4,6 +4,7 @@
   "icon": "/images/maid-kit/icon.png",
   "background": "/images/maid-kit/main-visual.webp",
   "repo": "https://github.com/Solsynth/MaidKit",
+  "distributionProductId": "ba8fa0fa-e0af-4c33-871f-25090e13dd3a",
   "hasPage": true,
   "tags": ["SSH", "Server", "DevOps", "Desktop", "Mobile"],
   "series": "MaidKit"
