@@ -21,7 +21,7 @@ useSchemaOrg([
   defineOrganization({
     name: 'Solsynth',
     url: 'https://solsynth.dev',
-    logo: 'https://solsynth.dev/favicon.png',
+    logo: 'https://solsynth.dev/favicon-64.png',
     description: () => t('seo.about.description'),
     sameAs: ['https://github.com/solsynth'],
   }),

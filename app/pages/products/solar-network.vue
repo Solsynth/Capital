@@ -58,7 +58,8 @@ const {
   releases,
   latest,
   loading: releasesLoading,
-  refresh: refreshReleases,
+  fetchReleases,
+  fetchLatest,
 } = useProductReleases(PRODUCT_SLUG);
 
 
@@ -86,8 +87,15 @@ const {
 } = useProductReviewSubmission(PRODUCT_SLUG);
 
 onMounted(() => {
-  void Promise.all([refreshReleases(), fetchMyReview(), refreshReviews()]);
+  void Promise.all([fetchLatest(), fetchMyReview(), refreshReviews()]);
 });
+
+async function toggleAllReleases() {
+  showAllReleases.value = !showAllReleases.value;
+  if (showAllReleases.value && releases.value.length === 0) {
+    await fetchReleases();
+  }
+}
 
 
 function openReviewForm() {
@@ -437,7 +445,10 @@ defineOgImage("UniOgImage", {
       <NuxtImg
         src="/images/solar-network/main-visual.webp"
         class="absolute inset-0 w-full h-full object-cover object-top-left -z-10 opacity-80"
+        width="1920"
+        height="1080"
         loading="eager"
+        fetchpriority="high"
         format="webp"
         alt=""
       />
@@ -450,12 +461,15 @@ defineOgImage("UniOgImage", {
           class="container mx-auto flex flex-col md:flex-row md:items-end gap-4 md:gap-6"
         >
           <div class="flex items-center gap-3 sm:gap-4 min-w-0">
-            <img
+            <NuxtImg
               src="/images/solar-network/icon.png"
               class="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 rounded-xl md:rounded-2xl shadow-2xl shrink-0"
               alt="Solar Network"
               width="112"
               height="112"
+              format="webp"
+              loading="eager"
+              decoding="async"
             />
             <div class="min-w-0 flex-1">
               <h1 class="text-2xl sm:text-4xl md:text-5xl font-bold mb-0.5 sm:mb-2">
@@ -599,6 +613,9 @@ defineOgImage("UniOgImage", {
               :src="feature.image"
               class="rounded-xl shadow-md w-full max-w-md"
               :alt="feature.alt"
+              width="640"
+              height="480"
+              sizes="sm:100vw md:50vw"
               loading="lazy"
               format="webp"
             />
@@ -617,6 +634,9 @@ defineOgImage("UniOgImage", {
               :src="feature.image"
               class="rounded-lg w-full aspect-[4/3] object-cover"
               :alt="feature.alt"
+              width="640"
+              height="480"
+              sizes="sm:100vw md:50vw lg:33vw"
               loading="lazy"
               format="webp"
             />
@@ -667,17 +687,17 @@ defineOgImage("UniOgImage", {
     <div class="divider" />
 
     <!-- Releases Section -->
-    <section v-if="releases.length > 0" class="container mx-auto px-4 py-8">
+    <section v-if="latest || releases.length > 0" class="container mx-auto px-4 py-8">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-2xl font-bold flex items-center gap-2">
           <History class="w-5 h-5 text-primary" />
           {{ t("releases.title") }}
         </h2>
         <button
-          v-if="releases.length > 1"
+          v-if="latest"
           type="button"
           class="btn btn-sm btn-ghost gap-1"
-          @click="showAllReleases = !showAllReleases"
+          @click="toggleAllReleases"
         >
           {{ showAllReleases ? "Collapse" : t("releases.all") }}
           <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
@@ -694,6 +714,10 @@ defineOgImage("UniOgImage", {
         :download-url="latest.downloadUrl"
         :is-prerelease="latest.isPrerelease"
       />
+
+      <div v-if="showAllReleases && releasesLoading" class="py-4 text-center opacity-60">
+        Loading releases…
+      </div>
 
       <ReleaseTimeline
         v-else-if="showAllReleases && releases.length > 0"

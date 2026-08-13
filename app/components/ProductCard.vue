@@ -35,7 +35,17 @@ const rating = computed(() => Number(props.averageRating) || 0);
   >
     <div class="relative aspect-video overflow-hidden">
       <NuxtLink :to="routes(`/products/${slug}`)">
-        <img :src="background" class="w-full h-full object-cover" :alt="name" />
+        <NuxtImg
+          :src="background"
+          class="w-full h-full object-cover"
+          :alt="name"
+          width="640"
+          height="360"
+          sizes="sm:100vw md:50vw lg:33vw"
+          format="webp"
+          loading="lazy"
+          decoding="async"
+        />
       </NuxtLink>
       <div
         class="absolute inset-0 bg-linear-to-t from-black/70 to-transparent"
@@ -83,7 +93,16 @@ const rating = computed(() => Number(props.averageRating) || 0);
         class="absolute bottom-0 left-0 right-0 p-5"
       >
         <div class="flex items-center gap-3 mb-2">
-          <img :src="icon" class="w-9 h-9 rounded shadow-sm" :alt="name" />
+          <NuxtImg
+            :src="icon"
+            class="w-9 h-9 rounded shadow-sm"
+            :alt="name"
+            width="36"
+            height="36"
+            format="webp"
+            loading="lazy"
+            decoding="async"
+          />
           <h3 class="text-lg font-bold text-white">
             {{ name }}
           </h3>

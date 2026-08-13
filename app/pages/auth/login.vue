@@ -51,7 +51,7 @@ async function handleSolianSignIn() {
           @click="handleSolianSignIn"
         >
           <img
-            src="/favicon.png"
+            src="/favicon-64.png"
             alt=""
             class="h-5 w-5 rounded"
           >

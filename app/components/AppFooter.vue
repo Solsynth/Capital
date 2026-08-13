@@ -26,7 +26,7 @@ const isAdmin = computed(() => adminCheck.value?.isAdmin ?? false)
     <div class="container mx-auto">
       <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
         <aside class="col-span-1 sm:col-span-2 md:col-span-1">
-          <img src="/favicon.png" alt="Solsynth" class="w-10 md:w-12">
+          <img src="/favicon-64.png" alt="Solsynth" class="w-10 md:w-12">
           <div class="mt-2">
             <h3 class="font-bold text-lg">
               Solsynth

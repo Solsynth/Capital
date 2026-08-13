@@ -374,7 +374,10 @@ defineOgImage("UniOgImage", {
       <NuxtImg
         src="/images/maid-kit/main-visual.webp"
         class="absolute inset-0 w-full h-full object-cover object-top -z-10 opacity-90"
+        width="1920"
+        height="1080"
         loading="eager"
+        fetchpriority="high"
         format="webp"
         alt=""
       />
@@ -387,12 +390,15 @@ defineOgImage("UniOgImage", {
           class="container mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-4 md:gap-6"
         >
           <div class="flex items-center gap-3 sm:gap-4 min-w-0 md:min-w-0 md:flex-1 md:pr-6">
-            <img
+            <NuxtImg
               src="/images/maid-kit/icon.png"
               class="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 rounded-xl md:rounded-2xl shadow-2xl shrink-0"
               alt="MaidKit"
               width="112"
               height="112"
+              format="webp"
+              loading="eager"
+              decoding="async"
             />
             <div class="min-w-0">
               <h1 class="text-2xl sm:text-4xl md:text-5xl font-bold mb-0.5 sm:mb-2">

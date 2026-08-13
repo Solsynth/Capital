@@ -42,7 +42,10 @@ defineOgImage("UniOgImage", {
       <NuxtImg
         src="/images/republic-of-yang/greatwall.webp"
         class="absolute inset-0 w-full h-full object-cover object-center -z-10 opacity-60"
+        width="1920"
+        height="1280"
         loading="eager"
+        fetchpriority="high"
         format="webp"
         alt=""
       />
@@ -52,10 +55,15 @@ defineOgImage("UniOgImage", {
 
       <div class="absolute bottom-0 left-0 right-0 p-8">
         <div class="container mx-auto text-center">
-          <img
+          <NuxtImg
             src="/images/republic-of-yang/filling.png"
             class="w-20 h-20 rounded-2xl shadow-2xl mx-auto mb-4"
             alt="ROY ICP Filling"
+            width="80"
+            height="80"
+            format="webp"
+            loading="eager"
+            decoding="async"
           />
           <h1 class="text-4xl md:text-5xl font-bold mb-3">
             {{ t("royIcpFilling.title") }}

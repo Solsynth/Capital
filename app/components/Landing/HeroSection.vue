@@ -10,7 +10,10 @@ const localePath = useLocalePath()
     <NuxtImg
       src="/images/hero/background.webp"
       class="absolute inset-0 -z-10 h-full w-full object-cover object-center opacity-35"
+      width="1600"
+      height="900"
       loading="eager"
+      fetchpriority="high"
       format="webp"
       alt=""
     />

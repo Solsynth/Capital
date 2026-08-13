@@ -147,7 +147,7 @@ onMounted(() => {
         :to="localePath('/')"
         class="flex items-center gap-2 shrink-0 ms-4"
       >
-        <img src="/favicon.png" :alt="t('nav.brandName')" class="w-8 h-8" />
+        <img src="/favicon-64.png" :alt='t("nav.brandName")' class="w-8 h-8" />
         <span class="font-bold text-lg hidden sm:inline">{{
           t("nav.brandName")
         }}</span>

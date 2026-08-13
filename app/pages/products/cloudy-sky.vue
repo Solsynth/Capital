@@ -218,10 +218,14 @@ defineOgImage("UniOgImage", {
     <section
       class="relative h-[60vh] min-h-100 overflow-hidden -mt-(--site-page-offset,64px)"
     >
-      <img
+      <NuxtImg
         src="/images/cloudy-sky/main-visual.svg"
         class="absolute inset-0 w-full h-full object-cover object-center -z-10 opacity-70"
+        width="1920"
+        height="1080"
         loading="eager"
+        fetchpriority="high"
+        format="webp"
         alt=""
       />
       <div
@@ -233,12 +237,15 @@ defineOgImage("UniOgImage", {
           class="container mx-auto flex flex-col md:flex-row md:items-end gap-4 md:gap-6"
         >
           <div class="flex items-center gap-4 min-w-0">
-            <img
+            <NuxtImg
               src="/images/cloudy-sky/icon.png"
               class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl shadow-2xl shrink-0"
               alt="CloudySky"
               width="96"
               height="96"
+              format="webp"
+              loading="eager"
+              decoding="async"
             />
             <div class="min-w-0">
               <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-1">

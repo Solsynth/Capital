@@ -48,17 +48,19 @@ const { data: allProducts } = await useAsyncData(`products-list-${lang.value}`, 
     .where('path', 'LIKE', `/products/${lang.value}/%`)
     .all()
 
-  const summaries = await Promise.all(
-    products.map(p =>
-      $fetch(`/api/products/${p.path.replace(`/products/${lang.value}/`, '')}/reviews/summary`)
-        .catch(() => ({ summary: null }))
-    )
-  )
+  const slugs = products.map(p => p.path.replace(`/products/${lang.value}/`, ''))
+  const { summaries } = await $fetch<{
+    summaries: Record<string, { average?: number; count?: number }>
+  }>('/api/products/reviews/summaries', {
+    query: { slugs: slugs.join(',') },
+  }).catch(() => ({ summaries: {} }))
 
   return products.map((p, i) => {
-    const summary = summaries[i]?.summary
+    const slug = slugs[i]
+    const summary = summaries[slug]
+
     return {
-      slug: p.path.replace(`/products/${lang.value}/`, ''),
+      slug,
       title: p.title || '',
       description: p.description || '',
       icon: p.icon || '',
@@ -110,7 +112,7 @@ const filteredProducts = computed(() => {
 <template>
   <div>
     <section class="border-b border-base-200 px-4 py-16 md:py-20">
-      <div class="container mx-auto max-w-5xl">
+      <div class="container mx-auto">
         <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
           {{ t('products.title') }}
         </h1>
@@ -121,7 +123,7 @@ const filteredProducts = computed(() => {
     </section>
 
     <section class="px-4 py-10">
-      <div class="container mx-auto max-w-5xl">
+      <div class="container mx-auto">
         <div
           v-if="seriesMap.size > 0"
           class="mb-8"

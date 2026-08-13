@@ -177,10 +177,15 @@ useSchemaOrg([
     <!-- Variant 1: Has markdown content -->
     <template v-if="hasContent">
       <div class="relative h-[40vh] min-h-75">
-        <img
+        <NuxtImg
           :src="product.background"
           class="w-full h-full object-cover"
           :alt="title"
+          width="1920"
+          height="1080"
+          format="webp"
+          loading="eager"
+          decoding="async"
         />
         <div
           class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"
@@ -190,10 +195,15 @@ useSchemaOrg([
           <div
             class="container mx-auto flex flex-col md:flex-row items-end gap-6"
           >
-            <img
+            <NuxtImg
               :src="product.icon"
               class="w-20 h-20 rounded-2xl shadow-xl"
               :alt="title"
+              width="96"
+              height="96"
+              format="webp"
+              loading="eager"
+              decoding="async"
             />
             <div class="flex-1">
               <h1 class="text-3xl md:text-4xl font-bold mb-2">
@@ -259,10 +269,15 @@ useSchemaOrg([
     <!-- Variant 2: hasPage but no content -->
     <template v-else-if="hasPage">
       <div class="relative h-[50vh] min-h-100">
-        <img
+        <NuxtImg
           :src="product.background"
           class="w-full h-full object-cover"
           :alt="title"
+          width="1920"
+          height="1080"
+          format="webp"
+          loading="eager"
+          decoding="async"
         />
         <div
           class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"
@@ -272,10 +287,15 @@ useSchemaOrg([
           <div
             class="container mx-auto flex flex-col md:flex-row items-end gap-6"
           >
-            <img
+            <NuxtImg
               :src="product.icon"
               class="w-24 h-24 rounded-2xl shadow-xl"
               :alt="title"
+              width="112"
+              height="112"
+              format="webp"
+              loading="eager"
+              decoding="async"
             />
             <div class="flex-1">
               <h1 class="text-4xl md:text-5xl font-bold mb-2">
@@ -453,10 +473,15 @@ useSchemaOrg([
     <!-- Variant 3: Simple card (no page) -->
     <template v-else>
       <div class="relative h-[40vh] min-h-75">
-        <img
+        <NuxtImg
           :src="product.background"
           class="w-full h-full object-cover"
           :alt="title"
+          width="1920"
+          height="1080"
+          format="webp"
+          loading="eager"
+          decoding="async"
         />
         <div
           class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"
@@ -466,10 +491,15 @@ useSchemaOrg([
           <div
             class="container mx-auto flex flex-col md:flex-row items-end gap-6"
           >
-            <img
+            <NuxtImg
               :src="product.icon"
               class="w-20 h-20 rounded-2xl shadow-xl"
               :alt="title"
+              width="96"
+              height="96"
+              format="webp"
+              loading="eager"
+              decoding="async"
             />
             <div class="flex-1">
               <h1 class="text-3xl md:text-4xl font-bold mb-2">
@@ -528,10 +558,15 @@ useSchemaOrg([
       <div class="container mx-auto px-4 py-12">
         <div class="card bg-base-200 p-8 max-w-2xl mx-auto">
           <div class="flex items-center gap-3 mb-4">
-            <img
+            <NuxtImg
               :src="product.icon"
               class="w-12 h-12 rounded-lg"
               :alt="title"
+              width="48"
+              height="48"
+              format="webp"
+              loading="lazy"
+              decoding="async"
             />
             <div>
               <h2 class="text-xl font-bold">

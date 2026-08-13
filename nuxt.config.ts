@@ -2,7 +2,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 export default defineNuxtConfig({
   compatibilityDate: "2025-07-15",
-  devtools: { enabled: true },
+  devtools: { enabled: false },
 
   future: {
     compatibilityVersion: 4,
@@ -125,7 +125,7 @@ export default defineNuxtConfig({
       type: "Organization",
       name: "Solsynth",
       url: "https://solsynth.dev",
-      logo: "https://solsynth.dev/favicon.png",
+      logo: "https://solsynth.dev/favicon-64.png",
     },
   },
 
@@ -195,7 +195,7 @@ export default defineNuxtConfig({
         {
           rel: "icon",
           type: "image/png",
-          href: "/favicon.png",
+          href: "/favicon-64.png",
         },
       ],
     },

@@ -1,6 +1,6 @@
 import { db } from "#server/utils/db"
 import { productReview, user } from "#server/db"
-import { and, desc, eq, sql } from "drizzle-orm"
+import { and, desc, eq, inArray, sql } from "drizzle-orm"
 
 
 // ==================== Product Reviews ====================
@@ -45,7 +45,17 @@ export async function getReviewsForProduct(slug: string, opts?: { limit?: number
     .offset(offset)
 }
 
-export async function getReviewSummary(slug: string) {
+export interface ReviewSummary {
+  average: number
+  count: number
+  fiveStar: number
+  fourStar: number
+  threeStar: number
+  twoStar: number
+  oneStar: number
+}
+
+export async function getReviewSummary(slug: string): Promise<ReviewSummary | null> {
   const [result] = await db
     .select({
       average: sql<string | number>`round(avg(${productReview.rating})::numeric, 1)`,
@@ -76,6 +86,43 @@ export async function getReviewSummary(slug: string) {
     twoStar: Number(result.twoStar ?? 0),
     oneStar: Number(result.oneStar ?? 0),
   }
+}
+
+export async function getReviewSummaries(slugs: string[]): Promise<Record<string, ReviewSummary>> {
+  if (slugs.length === 0) return {}
+
+  const results = await db
+    .select({
+      slug: productReview.slug,
+      average: sql<string | number>`round(avg(${productReview.rating})::numeric, 1)`,
+      count: sql<number>`count(*)::int`,
+      fiveStar: sql<number>`count(*) filter (where ${productReview.rating} = 5)::int`,
+      fourStar: sql<number>`count(*) filter (where ${productReview.rating} = 4)::int`,
+      threeStar: sql<number>`count(*) filter (where ${productReview.rating} = 3)::int`,
+      twoStar: sql<number>`count(*) filter (where ${productReview.rating} = 2)::int`,
+      oneStar: sql<number>`count(*) filter (where ${productReview.rating} = 1)::int`,
+    })
+    .from(productReview)
+    .where(
+      and(
+        inArray(productReview.slug, slugs),
+        eq(productReview.status, "published"),
+      ),
+    )
+    .groupBy(productReview.slug)
+
+  return Object.fromEntries(results.map(result => [
+    result.slug,
+    {
+      average: Number(result.average ?? 0),
+      count: Number(result.count ?? 0),
+      fiveStar: Number(result.fiveStar ?? 0),
+      fourStar: Number(result.fourStar ?? 0),
+      threeStar: Number(result.threeStar ?? 0),
+      twoStar: Number(result.twoStar ?? 0),
+      oneStar: Number(result.oneStar ?? 0),
+    },
+  ]))
 }
 
 export async function getReviewById(id: string) {

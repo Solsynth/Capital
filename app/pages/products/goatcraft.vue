@@ -519,7 +519,10 @@ defineOgImage("UniOgImage", {
       <NuxtImg
         src="/images/goatcraft/main-visual.png"
         class="absolute inset-0 w-full h-full object-cover object-center -z-10 opacity-60"
+        width="1920"
+        height="1080"
         loading="eager"
+        fetchpriority="high"
         format="webp"
         alt=""
       />

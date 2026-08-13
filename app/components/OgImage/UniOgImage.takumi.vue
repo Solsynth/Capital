@@ -79,7 +79,7 @@ const {
         />
         <img
           v-else
-          src="/favicon.png"
+          src="/favicon-64.png"
           alt="Solsynth"
           style="width: 120px; height: 120px; filter: invert(1) brightness(10)"
         />
