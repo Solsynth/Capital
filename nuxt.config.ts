@@ -190,6 +190,17 @@ export default defineNuxtConfig({
           defer: true,
           "data-website-id": "eef151fb-07e2-461b-8b7f-2547aab735d4",
         },
+        {
+          src: "https://www.googletagmanager.com/gtag/js?id=G-61P6XB5BQS",
+          async: true,
+        },
+        {
+          innerHTML: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-61P6XB5BQS');`,
+          tagPosition: "head",
+        },
       ],
       link: [
         {
