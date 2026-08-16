@@ -975,8 +975,12 @@
         "desc": "Dual-pane browser with drag-and-drop transfers and an in-app editor for quick fixes."
       },
       "services": {
-        "title": "Services & processes",
-        "desc": "List and kill processes; manage systemd units — start, stop, enable, disable."
+        "title": "Services",
+        "desc": "Manage systemd units — start, stop, enable, disable."
+      },
+      "processes": {
+        "title": "Processes",
+        "desc": "List and kill running processes; pin the ones you watch and track their usage over time."
       },
       "webServers": {
         "title": "Web servers",
@@ -987,8 +991,8 @@
         "desc": "Edit scheduled tasks, manage packages (apt, dnf, and more), and control UFW, firewalld, nftables, or iptables."
       },
       "tunnels": {
-        "title": "Port forwarding",
-        "desc": "Configure local and remote tunnels when you need a path through."
+        "title": "Tunnels, proxy & jump hosts",
+        "desc": "Local and remote port forwarding with saved presets, HTTP CONNECT or SOCKS5 proxy, and hopping through another managed server."
       },
       "containers": {
         "title": "Containers",
@@ -1005,6 +1009,34 @@
       "security": {
         "title": "Credential security",
         "desc": "AES-GCM vault, 310,000-iteration PBKDF2, biometric unlock, and encrypted .mkb backups."
+      },
+      "databases": {
+        "title": "Databases",
+        "desc": "PostgreSQL, MySQL, and MariaDB: engine inspection, logical backups and restores, quick maintenance, and pgBackRest."
+      },
+      "tailscale": {
+        "title": "Tailscale",
+        "desc": "Connect over your tailnet with an embedded node — no Tailscale app required."
+      },
+      "maidcafe": {
+        "title": "MaidCafe Cloud",
+        "desc": "Optional fleet layer: an outbound-only daemon streams live metrics, evaluates alarm thresholds locally, and exposes an audit log and CI/CD API credentials."
+      },
+      "agent": {
+        "title": "AI agent",
+        "desc": "Chat with an agent that operates your servers through tools. Bring your own AI provider; proposed actions need your approval before they run."
+      },
+      "github": {
+        "title": "GitHub",
+        "desc": "Sign in with device flow, pin repositories, and follow workflow runs, pull requests, and releases."
+      },
+      "mcp": {
+        "title": "Local MCP server",
+        "desc": "Expose MaidKit's SSH servers, snippets, and skills to other agents on this machine via Model Context Protocol."
+      },
+      "settings": {
+        "title": "Settings",
+        "desc": "Theme and accent color, terminal renderer and scheme, connect on startup, and hide server addresses when sharing your screen."
       }
     },
     "platforms": {

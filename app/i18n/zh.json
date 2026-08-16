@@ -975,8 +975,12 @@
         "desc": "双窗格浏览器，支持拖拽传输与内置编辑器，快速改配置。"
       },
       "services": {
-        "title": "服务与进程",
-        "desc": "查看并结束进程；管理 systemd 单元 — 启动、停止、启用、禁用。"
+        "title": "服务",
+        "desc": "管理 systemd 单元 — 启动、停止、启用、禁用。"
+      },
+      "processes": {
+        "title": "进程",
+        "desc": "查看并结束运行中的进程；固定常看的进程，跟踪其历史用量。"
       },
       "webServers": {
         "title": "Web 服务器",
@@ -987,8 +991,8 @@
         "desc": "编辑 crontab、管理软件包（apt、dnf 等），以及 UFW、firewalld、nftables 或 iptables。"
       },
       "tunnels": {
-        "title": "端口转发",
-        "desc": "配置本地与远程隧道，需要通路时随时打通。"
+        "title": "隧道、代理与跳板机",
+        "desc": "本地与远程端口转发，支持保存预设；还可经 HTTP CONNECT 或 SOCKS5 代理访问主机，或通过另一台已管理服务器跳转。"
       },
       "containers": {
         "title": "容器",
@@ -1005,6 +1009,34 @@
       "security": {
         "title": "凭证安全",
         "desc": "AES-GCM 凭证库、31 万次迭代 PBKDF2、生物识别解锁与加密 .mkb 备份。"
+      },
+      "databases": {
+        "title": "数据库",
+        "desc": "PostgreSQL、MySQL 与 MariaDB：引擎检查、逻辑备份与恢复、快捷维护，以及 pgBackRest。"
+      },
+      "tailscale": {
+        "title": "Tailscale",
+        "desc": "通过内置节点接入你的 tailnet — 无需安装 Tailscale 应用。"
+      },
+      "maidcafe": {
+        "title": "MaidCafe Cloud",
+        "desc": "可选的集群层：仅出站的小型守护进程实时推送指标，在本地评估告警阈值，并提供审计日志与 CI/CD API 凭证。"
+      },
+      "agent": {
+        "title": "AI 代理",
+        "desc": "与可通过工具操作服务器的 AI 代理对话。自带 AI 服务商；提议的操作需先经你审批才会执行。"
+      },
+      "github": {
+        "title": "GitHub",
+        "desc": "设备流授权登录，固定仓库，跟进工作流运行、Pull Request 与发布。"
+      },
+      "mcp": {
+        "title": "本地 MCP 服务器",
+        "desc": "通过 Model Context Protocol 将 MaidKit 的 SSH 服务器、脚本片段与技能开放给本机其他代理。"
+      },
+      "settings": {
+        "title": "设置",
+        "desc": "主题与强调色、终端渲染器与配色、启动时自动连接，以及共享屏幕时隐藏服务器地址。"
       }
     },
     "platforms": {
