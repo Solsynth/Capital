@@ -54,6 +54,7 @@ const { data: products } = await useAsyncData(`products-home-${lang.value}`, asy
     hasPage: p.hasPage ?? false,
     tags: p.tags || [],
     series: p.series,
+    color: p.color,
   }))
 })
 </script>

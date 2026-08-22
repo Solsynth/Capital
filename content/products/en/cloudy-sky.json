@@ -5,6 +5,11 @@
   "background": "/images/cloudy-sky/main-visual.svg",
   "repo": "https://github.com/Solsynth/CloudySky",
   "hasPage": false,
-  "tags": ["Android", "Notifications", "Companion"],
-  "series": "Solar Network"
+  "tags": [
+    "Android",
+    "Notifications",
+    "Companion"
+  ],
+  "series": "Solar Network",
+  "color": "#38A3DC"
 }

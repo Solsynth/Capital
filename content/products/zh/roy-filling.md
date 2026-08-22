@@ -7,6 +7,7 @@ url: "https://solsynth.dev/icp"
 repo: "https://github.com/Solsynth/Capital.Next"
 version: "1.0.0"
 releasedDate: "2026-05-24"
+color: "#D07C2C"
 hasPage: true
 tags: ["Community"]
 series: "Republic of Yang"

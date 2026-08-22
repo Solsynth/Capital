@@ -436,6 +436,7 @@ defineOgImage("UniOgImage", {
         fetchpriority="high"
         format="webp"
         alt=""
+        style="view-transition-name: product-hero-maid-kit"
       />
       <div
         class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/30 to-transparent dark:via-base-100/50"

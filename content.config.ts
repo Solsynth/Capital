@@ -17,6 +17,7 @@ export default defineContentConfig({
         hasPage: z.boolean().default(false),
         tags: z.array(z.string()).default([]),
         series: z.string().optional(),
+        color: z.string().optional(),
         distributionProductId: z.string().optional(),
       }),
     }),

@@ -9,6 +9,11 @@
   "distributionProductId": "5260a14a-97f3-431c-9c2a-b174a4de7d97",
   "releasedDate": "2024-03-16",
   "hasPage": true,
-  "tags": ["Social Network", "Community", "ACG"],
-  "series": "Solar Network"
+  "tags": [
+    "Social Network",
+    "Community",
+    "ACG"
+  ],
+  "series": "Solar Network",
+  "color": "#6366F1"
 }

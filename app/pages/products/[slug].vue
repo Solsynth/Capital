@@ -184,6 +184,7 @@ useSchemaOrg([
           width="1920"
           height="1080"
           format="webp"
+          :style="{ viewTransitionName: `product-hero-${slug}` }"
           loading="eager"
           decoding="async"
         />
@@ -274,6 +275,7 @@ useSchemaOrg([
           class="w-full h-full object-cover"
           :alt="title"
           width="1920"
+          :style="{ viewTransitionName: `product-hero-${slug}` }"
           height="1080"
           format="webp"
           loading="eager"
@@ -482,6 +484,7 @@ useSchemaOrg([
           format="webp"
           loading="eager"
           decoding="async"
+          :style="{ viewTransitionName: `product-hero-${slug}` }"
         />
         <div
           class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"

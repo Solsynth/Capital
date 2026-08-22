@@ -525,6 +525,7 @@ defineOgImage("UniOgImage", {
         fetchpriority="high"
         format="webp"
         alt=""
+        style="view-transition-name: product-hero-goatcraft"
       />
       <div
         class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/40 to-base-100/10"

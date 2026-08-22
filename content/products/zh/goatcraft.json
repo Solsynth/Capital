@@ -4,6 +4,12 @@
   "icon": "/images/goatcraft/icon.png",
   "background": "/images/goatcraft/main-visual.png",
   "hasPage": true,
-  "tags": ["Minecraft", "游戏服务器", "社区", "跨端"],
-  "series": "GoatCraft"
+  "tags": [
+    "Minecraft",
+    "游戏服务器",
+    "社区",
+    "跨端"
+  ],
+  "series": "GoatCraft",
+  "color": "#D97BA6"
 }

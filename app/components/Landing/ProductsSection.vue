@@ -13,6 +13,7 @@ interface Props {
     hasPage: boolean
     tags?: string[]
     series?: string
+    color?: string
   }>
 }
 
@@ -44,8 +45,8 @@ const localePath = useLocalePath()
       </div>
 
       <div
-        v-if="products.length > 0"
         class="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
+        v-if="products.length > 0"
       >
         <ProductCard
           v-for="product in products"
@@ -60,6 +61,8 @@ const localePath = useLocalePath()
           :slug="product.id"
           :tags="product.tags"
           :series="product.series"
+          :color="product.color"
+          vertical
         />
       </div>
       <p

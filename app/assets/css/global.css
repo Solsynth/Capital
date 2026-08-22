@@ -150,6 +150,18 @@ header.fixed,
   }
 }
 
+/* Hero image morphs between listing card and detail page */
+::view-transition-group(*) {
+  animation-duration: 0.4s;
+  animation-timing-function: cubic-bezier(0.22, 1, 0.36, 1);
+}
+/* Snapshots stretch by default; keep cover behavior while morphing */
+::view-transition-old(*),
+::view-transition-new(*) {
+  height: 100%;
+  object-fit: cover;
+}
+
 /* Firefox-specific optimizations */
 @-moz-document url-prefix() {
   .blur-\[60px\],

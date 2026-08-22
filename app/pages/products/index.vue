@@ -70,6 +70,7 @@ const { data: allProducts } = await useAsyncData(`products-list-${lang.value}`, 
       hasPage: p.hasPage ?? false,
       tags: p.tags || [],
       series: p.series,
+      color: p.color,
       averageRating: Number(summary?.average ?? 0) || 0,
       reviewCount: Number(summary?.count ?? 0) || 0,
     }
@@ -186,11 +187,10 @@ const filteredProducts = computed(() => {
           </NuxtLink>
         </div>
         <div
-          v-else
-          class="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-6 lg:grid-cols-3"
+          class="grid grid-cols-1 gap-5"
         >
           <ProductCard
-            v-for="product in filteredProducts"
+            v-for="(product, i) in filteredProducts"
             :key="product.slug"
             :name="product.title"
             :description="product.description"
@@ -202,8 +202,9 @@ const filteredProducts = computed(() => {
             :slug="product.slug"
             :tags="product.tags"
             :series="product.series"
-            :average-rating="product.averageRating"
+            :color="product.color"
             :review-count="product.reviewCount"
+            :flip="i % 2 === 1"
           />
         </div>
       </div>

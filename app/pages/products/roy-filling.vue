@@ -48,6 +48,7 @@ defineOgImage("UniOgImage", {
         fetchpriority="high"
         format="webp"
         alt=""
+        style="view-transition-name: product-hero-roy-filling"
       />
       <div
         class="absolute inset-0 bg-linear-to-b from-transparent to-base-100"
