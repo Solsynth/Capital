@@ -295,7 +295,13 @@ const platforms: ProductDownloadPlatform[] = [
   },
 ];
 
-const { latest, loading: releasesLoading, fetchLatest } = useProductReleases(PRODUCT_SLUG);
+const {
+  releases,
+  selected,
+  loading: releasesLoading,
+  fetchReleases,
+  selectRelease,
+} = useProductReleases(PRODUCT_SLUG);
 
 const {
   reviews,
@@ -329,7 +335,7 @@ const reviewForm = ref({
 });
 
 onMounted(async () => {
-  await Promise.all([fetchLatest(), fetchMyReview(), refreshReviews()]);
+  await Promise.all([fetchReleases(), fetchMyReview(), refreshReviews()]);
 });
 
 function openReviewForm() {
@@ -538,8 +544,10 @@ defineOgImage("UniOgImage", {
 
     <!-- Download -->
     <ProductDownloadSection
-      :latest="latest"
+      :release="selected"
+      :releases="releases"
       :loading="releasesLoading"
+      @select-release="selectRelease"
       :github-url="GITHUB_REPO"
       :platforms="platforms"
       badge-key="maidKit.download.btn"

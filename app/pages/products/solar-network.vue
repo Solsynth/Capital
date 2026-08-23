@@ -53,7 +53,13 @@ const reviewForm = ref({
   isRecommended: null as boolean | null,
 });
 
-const { latest, loading: releasesLoading, fetchLatest } = useProductReleases(PRODUCT_SLUG);
+const {
+  releases,
+  selected,
+  loading: releasesLoading,
+  fetchReleases,
+  selectRelease,
+} = useProductReleases(PRODUCT_SLUG);
 
 const {
   reviews,
@@ -79,7 +85,7 @@ const {
 } = useProductReviewSubmission(PRODUCT_SLUG);
 
 onMounted(() => {
-  void Promise.all([fetchLatest(), fetchMyReview(), refreshReviews()]);
+  void Promise.all([fetchReleases(), fetchMyReview(), refreshReviews()]);
 });
 
 function openReviewForm() {
@@ -639,8 +645,10 @@ defineOgImage("UniOgImage", {
 
     <!-- Download -->
     <ProductDownloadSection
-      :latest="latest"
+      :release="selected"
+      :releases="releases"
       :loading="releasesLoading"
+      @select-release="selectRelease"
       :github-url="'https://github.com/Solsynth/Solian'"
       :platforms="platforms"
       badge-key="solarNetwork.download.btn"

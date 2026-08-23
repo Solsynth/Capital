@@ -50,11 +50,21 @@ if (!product.value) {
   navigateTo(localePath("/products"));
 }
 
-// ==================== Releases ====================
-const { releases, latest, loading: releasesLoading, fetchReleases, fetchLatest } = useProductReleases(slug.value)
+const {
+  releases,
+  latest,
+  selected,
+  loading: releasesLoading,
+  fetchReleases,
+  selectRelease,
+} = useProductReleases(slug.value)
 const showAllReleases = ref(false)
+function handleReleaseSelect(version: string) {
+  selectRelease(version)
+  showAllReleases.value = false
+}
 onMounted(async () => {
-  await fetchLatest()
+  await fetchReleases()
 })
 
 // ==================== Reviews ====================
@@ -584,26 +594,35 @@ useSchemaOrg([
           <History class="w-5 h-5 text-primary" />
           {{ t("releases.title") }}
         </h2>
-        <button
-          v-if="releases.length > 1"
-          class="btn btn-sm btn-ghost gap-1"
-          @click="showAllReleases = !showAllReleases"
-        >
-          {{ showAllReleases ? "Collapse" : t("releases.all") }}
-          <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
-          <ChevronDown v-else class="w-4 h-4" />
-        </button>
+        <div class="flex items-center gap-2">
+          <ReleaseSelector
+            :releases="releases"
+            :selected-version="selected?.version"
+            :label="t('releases.version')"
+            @select="handleReleaseSelect"
+          />
+          <button
+            v-if="releases.length > 1"
+            class="btn btn-sm btn-ghost gap-1"
+            @click="showAllReleases = !showAllReleases"
+          >
+            {{ showAllReleases ? "Collapse" : t("releases.all") }}
+            <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
+            <ChevronDown v-else class="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
-      <!-- Latest release card -->
+      <!-- Selected release card -->
       <ReleaseCard
-        v-if="latest && !showAllReleases"
-        :version="latest.version"
-        :title="latest.title"
-        :released-at="latest.releasedAt"
-        :changelog="latest.changelog"
-        :download-url="latest.downloadUrl"
-        :is-prerelease="latest.isPrerelease"
+        v-if="selected && !showAllReleases"
+        :version="selected.version"
+        :title="selected.title"
+        :released-at="selected.releasedAt"
+        :changelog="selected.changelog"
+        :download-url="selected.downloadUrl"
+        :is-prerelease="selected.isPrerelease"
+        :is-expired="selected.artifactsExpired"
       />
 
       <!-- All releases timeline -->
@@ -612,15 +631,14 @@ useSchemaOrg([
         :releases="releases"
       />
 
-      <!-- Fetch all releases when expanded -->
       <div v-if="showAllReleases && releases.length <= 1 && !releasesLoading" class="text-center py-4">
         <p class="opacity-60">{{ t("releases.noReleases") }}</p>
       </div>
 
-      <!-- Empty state -->
-      <div v-if="!latest && !releasesLoading" class="text-center py-4">
+      <div v-if="!selected && !releasesLoading" class="text-center py-4">
         <p class="opacity-60">{{ t("releases.noReleases") }}</p>
       </div>
+
     </section>
 
     <!-- ==================== Reviews Section ==================== -->

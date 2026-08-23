@@ -9,11 +9,13 @@ interface Props {
   changelog?: string
   downloadUrl?: string | null
   isPrerelease?: boolean
+  isExpired?: boolean
 }
 
 const props = withDefaults(defineProps<Props>(), {
   changelog: "",
   isPrerelease: false,
+  isExpired: false,
 })
 
 const { t, locale } = useI18n()
@@ -45,6 +47,12 @@ const renderedChangelog = computed(() => renderMarkdown(props.changelog))
           >
             {{ t("releases.prerelease") }}
           </span>
+          <span
+            v-if="isExpired"
+            class="badge badge-error badge-outline badge-xs"
+          >
+            {{ t("releases.expired") }}
+          </span>
         </div>
         <p v-if="title" class="text-sm opacity-80">{{ title }}</p>
       </div>
@@ -62,6 +70,18 @@ const renderedChangelog = computed(() => renderMarkdown(props.changelog))
       class="prose prose-sm max-w-none mb-4 max-h-48 overflow-y-auto"
       v-html="renderedChangelog"
     />
+    <div
+      v-else
+      class="mb-4 rounded-lg border border-dashed border-base-content/10 bg-base-200/50 px-4 py-3 text-sm opacity-60"
+    >
+      {{ t("releases.noNotes") }}
+    </div>
+    <div
+      v-if="isExpired"
+      class="mb-4 rounded-lg border border-dashed border-warning/30 bg-warning/5 px-4 py-3 text-sm text-warning-content opacity-80"
+    >
+      {{ t("releases.expiredDetails") }}
+    </div>
 
     <div v-if="downloadUrl" class="flex gap-2">
       <a

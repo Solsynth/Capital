@@ -572,6 +572,10 @@
     "changelog": "Changelog",
     "download": "Download",
     "noReleases": "No releases yet",
+    "noNotes": "No release notes were provided for this version.",
+    "noDownloads": "No download is available for this platform in this version.",
+    "expired": "Expired",
+    "expiredDetails": "Artifacts for this release have expired and are no longer available.",
     "prerelease": "Pre-release",
     "loading": "Loading download information…",
     "artifact": {

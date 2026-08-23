@@ -572,6 +572,10 @@
     "changelog": "更新日志",
     "download": "下载",
     "noReleases": "暂无发布版本",
+    "noNotes": "此版本未提供更新说明。",
+    "noDownloads": "此版本没有适用于该平台的下载文件。",
+    "expired": "已过期",
+    "expiredDetails": "此版本的文件已过期，无法再下载。",
     "prerelease": "预发布版本",
     "loading": "正在加载下载信息…",
     "artifact": {

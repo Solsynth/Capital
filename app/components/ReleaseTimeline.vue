@@ -9,6 +9,7 @@ interface Release {
   changelog?: string
   downloadUrl?: string | null
   isPrerelease?: boolean
+  isExpired?: boolean
 }
 
 interface Props {
@@ -37,6 +38,7 @@ defineProps<Props>()
           :changelog="release.changelog"
           :download-url="release.downloadUrl"
           :is-prerelease="release.isPrerelease"
+          :is-expired="release.isExpired"
         />
       </div>
     </div>

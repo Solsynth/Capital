@@ -28,6 +28,11 @@ interface DistributionRelease {
   published_at?: string | null
   artifacts?: DistributionArtifact[]
 }
+interface DistributionListResponse {
+  data?: DistributionRelease[]
+}
+
+ 
 
 export interface CapitalRelease {
   id: string
@@ -41,6 +46,7 @@ export interface CapitalRelease {
   isPrerelease: boolean
   minimumVersion: string | null
   status: string
+  artifactsExpired: boolean
   artifacts: DistributionArtifact[]
 }
 
@@ -135,18 +141,22 @@ function sortReleases(releases: CapitalRelease[]): CapitalRelease[] {
 function mapRelease(slug: string, release: DistributionRelease): CapitalRelease {
   const artifacts = release.artifacts || []
   const metadata = release.metadata || {}
+  const primaryArtifact = artifacts.find((artifact) => !artifact.expired && artifact.download_url)
+  const artifactsExpired = artifacts.length > 0 && artifacts.every((artifact) => artifact.expired)
 
   return {
     id: release.id,
     slug,
     version: release.version,
     createdAt: release.created_at || release.published_at || null,
-    releasedAt: release.created_at || release.published_at || null,
+    releasedAt: release.published_at || release.created_at || null,
+    title: release.title || null,
     changelog: release.release_notes || "",
-    downloadUrl: null,
+    downloadUrl: primaryArtifact?.download_url || null,
     isPrerelease: (release.channels || [release.channel]).some((channel) => channel && channel !== "stable"),
     minimumVersion: typeof metadata.minimum_version === "string" ? metadata.minimum_version : null,
     status: release.status || "published",
+    artifactsExpired,
     artifacts,
   }
 }

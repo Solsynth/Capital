@@ -4,6 +4,7 @@
   "icon": "/images/cloudy-sky/icon.png",
   "background": "/images/cloudy-sky/main-visual.svg",
   "repo": "https://github.com/Solsynth/CloudySky",
+  "distributionProductId": "a5f91e27-5b37-4a07-afc8-70d1699285d6",
   "hasPage": false,
   "tags": [
     "Android",

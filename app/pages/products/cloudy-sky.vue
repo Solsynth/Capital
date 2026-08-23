@@ -87,17 +87,28 @@ const features = [
 const {
   releases,
   latest,
+  selected,
   loading: releasesLoading,
   fetchReleases,
-  fetchLatest,
+  selectRelease,
 } = useProductReleases(PRODUCT_SLUG);
 const showAllReleases = ref(false);
+const androidDownloadUrl = computed(() =>
+  selected.value?.artifacts.find((artifact) =>
+    artifact.platform === "android" && !artifact.expired && artifact.download_url,
+  )?.download_url || null,
+);
 
 async function toggleAllReleases() {
   showAllReleases.value = !showAllReleases.value;
   if (showAllReleases.value && releases.value.length === 0) {
     await fetchReleases();
   }
+}
+
+function handleReleaseSelect(version: string) {
+  selectRelease(version);
+  showAllReleases.value = false;
 }
 
 const {
@@ -132,7 +143,7 @@ const reviewForm = ref({
 });
 
 onMounted(async () => {
-  await Promise.all([fetchLatest(), fetchMyReview(), refreshReviews()]);
+  await Promise.all([fetchReleases(), fetchMyReview(), refreshReviews()]);
 });
 
 function openReviewForm() {
@@ -250,8 +261,8 @@ defineOgImage("UniOgImage", {
           </p>
           <div class="mt-7 flex flex-wrap items-center gap-3">
             <a
-              v-if="latest?.downloadUrl"
-              :href="latest.downloadUrl"
+              v-if="androidDownloadUrl"
+              :href="androidDownloadUrl"
               target="_blank"
               rel="noopener noreferrer"
               class="btn btn-primary btn-md rounded-full px-6 gap-2"
@@ -346,34 +357,22 @@ defineOgImage("UniOgImage", {
         <li class="flex items-start gap-3 py-4 border-t border-base-content/10">
           <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
           <div>
-            <p class="font-medium text-sm">
-              {{ t("cloudySky.requirements.android.title") }}
-            </p>
-            <p class="text-sm opacity-55 leading-relaxed">
-              {{ t("cloudySky.requirements.android.desc") }}
-            </p>
+            <p class="font-medium text-sm">{{ t("cloudySky.requirements.android.title") }}</p>
+            <p class="text-sm opacity-55 leading-relaxed">{{ t("cloudySky.requirements.android.desc") }}</p>
           </div>
         </li>
         <li class="flex items-start gap-3 py-4 border-t border-base-content/10">
           <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
           <div>
-            <p class="font-medium text-sm">
-              {{ t("cloudySky.requirements.account.title") }}
-            </p>
-            <p class="text-sm opacity-55 leading-relaxed">
-              {{ t("cloudySky.requirements.account.desc") }}
-            </p>
+            <p class="font-medium text-sm">{{ t("cloudySky.requirements.account.title") }}</p>
+            <p class="text-sm opacity-55 leading-relaxed">{{ t("cloudySky.requirements.account.desc") }}</p>
           </div>
         </li>
         <li class="flex items-start gap-3 py-4 border-t border-base-content/10">
           <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
           <div>
-            <p class="font-medium text-sm">
-              {{ t("cloudySky.requirements.battery.title") }}
-            </p>
-            <p class="text-sm opacity-55 leading-relaxed">
-              {{ t("cloudySky.requirements.battery.desc") }}
-            </p>
+            <p class="font-medium text-sm">{{ t("cloudySky.requirements.battery.title") }}</p>
+            <p class="text-sm opacity-55 leading-relaxed">{{ t("cloudySky.requirements.battery.desc") }}</p>
           </div>
         </li>
       </ul>
@@ -381,7 +380,7 @@ defineOgImage("UniOgImage", {
 
     <!-- Releases -->
     <section
-      v-if="latest || !releasesLoading"
+      v-if="selected || !releasesLoading"
       id="releases"
       class="container mx-auto px-4 pb-24 scroll-mt-24"
     >
@@ -392,32 +391,38 @@ defineOgImage("UniOgImage", {
             {{ t("releases.title") }}
           </h2>
         </div>
-        <button
-          v-if="releases.length > 1"
-          type="button"
-          class="btn btn-sm btn-ghost gap-1 shrink-0"
-          @click="toggleAllReleases"
-        >
-          {{ showAllReleases ? "Collapse" : t("releases.all") }}
-          <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
-          <ChevronDown v-else class="w-4 h-4" />
-        </button>
+        <div class="flex items-center gap-2">
+          <ReleaseSelector
+            :releases="releases"
+            :selected-version="selected?.version"
+            :label="t('releases.version')"
+            @select="handleReleaseSelect"
+          />
+          <button
+            v-if="releases.length > 1"
+            type="button"
+            class="btn btn-sm btn-ghost gap-1 shrink-0"
+            @click="toggleAllReleases"
+          >
+            {{ showAllReleases ? "Collapse" : t("releases.all") }}
+            <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
+            <ChevronDown v-else class="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       <ReleaseCard
-        v-if="latest && !showAllReleases"
-        :version="latest.version"
-        :title="latest.title"
-        :released-at="latest.releasedAt"
-        :changelog="latest.changelog"
-        :download-url="latest.downloadUrl"
-        :is-prerelease="latest.isPrerelease"
+        v-if="selected && !showAllReleases"
+        :version="selected.version"
+        :title="selected.title"
+        :released-at="selected.releasedAt"
+        :changelog="selected.changelog"
+        :download-url="androidDownloadUrl"
+        :is-expired="selected.artifactsExpired"
+        :is-prerelease="selected.isPrerelease"
       />
 
-      <div
-        v-if="showAllReleases && releasesLoading"
-        class="py-4 text-center opacity-60"
-      >
+      <div v-if="showAllReleases && releasesLoading" class="py-4 text-center opacity-60">
         {{ t("releases.loading") }}
       </div>
 
@@ -426,7 +431,7 @@ defineOgImage("UniOgImage", {
         :releases="releases"
       />
 
-      <div v-if="!latest && !releasesLoading" class="py-4">
+      <div v-if="!selected && !releasesLoading" class="py-4">
         <p class="opacity-60">{{ t("releases.noReleases") }}</p>
       </div>
     </section>

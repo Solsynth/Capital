@@ -13,12 +13,14 @@ import type {
   ProductDownloadAction,
   ProductDownloadPlatform,
 } from "~/types/product-download"
+import type { ProductRelease } from "~/composables/useProductReleases"
 import { renderMarkdown } from "~/utils/marked"
 
 const { t, locale } = useI18n()
 
 const props = defineProps<{
-  latest: ProductRelease | null
+  release: ProductRelease | null
+  releases: ProductRelease[]
   loading?: boolean
   githubUrl: string
   platforms: ProductDownloadPlatform[]
@@ -31,6 +33,10 @@ const props = defineProps<{
   brewCommand?: string
 }>()
 
+const emit = defineEmits<{
+  selectRelease: [version: string]
+}>()
+
 const activePlatform = ref(props.platforms[0]?.id ?? "")
 const releaseExpanded = ref(false)
 const copied = ref(false)
@@ -38,7 +44,7 @@ const copied = ref(false)
 const currentPlatform = computed(
   () => props.platforms.find((platform) => platform.id === activePlatform.value) ?? props.platforms[0],
 )
-const releaseBodyHtml = computed(() => renderMarkdown(props.latest?.changelog || ""))
+const releaseBodyHtml = computed(() => renderMarkdown(props.release?.changelog || ""))
 const loadingLabel = computed(() =>
   locale.value === "zh" ? "正在加载下载信息…" : "Loading download information…",
 )
@@ -54,7 +60,7 @@ const actionRowClass: Record<ProductDownloadAction["variant"], string> = {
 
 function actionArtifact(action: ProductDownloadAction) {
   if (!action.artifactPlatform) return undefined
-  return props.latest?.artifacts.find((candidate) =>
+  return props.release?.artifacts.find((candidate) =>
     candidate.platform === action.artifactPlatform &&
     (!action.artifactArchitecture || candidate.architecture === action.artifactArchitecture),
   )
@@ -64,6 +70,10 @@ function actionHref(action: ProductDownloadAction): string | undefined {
   if (!action.artifactPlatform) return action.href
   return actionArtifact(action)?.download_url
 }
+
+const hasAvailableAction = computed(() =>
+  Boolean(currentPlatform.value?.actions.some((action) => actionHref(action))),
+)
 
 function formatArtifactSize(size?: number): string | undefined {
   if (size == null || !Number.isFinite(size) || size < 0) return undefined
@@ -118,7 +128,7 @@ async function copyCommand() {
       <p class="text-lg opacity-70 max-w-2xl mx-auto">{{ t(props.descKey) }}</p>
     </div>
     <div
-      v-if="props.loading && !props.latest"
+      v-if="props.loading && !props.release"
       class="mb-8 rounded-xl border border-base-content/5 bg-base-200 px-5 py-8 flex items-center justify-center gap-3 text-sm opacity-70"
       role="status"
     >
@@ -126,25 +136,37 @@ async function copyCommand() {
       {{ loadingLabel }}
     </div>
     <div
-      v-if="props.latest"
+      v-if="props.release"
       class="mb-8 rounded-xl border border-base-content/5 bg-base-200 overflow-hidden"
     >
       <div
-        class="flex flex-wrap items-center gap-3 px-5 py-4 border-b border-base-content/5 bg-base-300/40"
+        class="flex flex-wrap items-center justify-between gap-3 px-5 py-4 border-b border-base-content/5 bg-base-300/40"
       >
         <div class="flex items-center gap-2.5 flex-wrap min-w-0">
           <Tag class="w-4 h-4 text-primary shrink-0" />
-          <span class="badge badge-primary badge-soft font-mono">v{{ props.latest.version }}</span>
+          <span class="badge badge-primary badge-soft font-mono">v{{ props.release.version }}</span>
           <span
-            v-if="props.latest.title"
+            v-if="props.release.title"
             class="text-sm font-medium truncate max-w-[min(100%,20rem)]"
           >
-            {{ props.latest.title }}
+            {{ props.release.title }}
           </span>
-          <span v-if="props.latest.releasedAt" class="text-sm opacity-50">
-            {{ new Date(props.latest.releasedAt).toLocaleDateString(locale === "zh" ? "zh-CN" : "en-US") }}
+          <span v-if="props.release.releasedAt" class="text-sm opacity-50">
+            {{ new Date(props.release.releasedAt).toLocaleDateString(locale === "zh" ? "zh-CN" : "en-US") }}
           </span>
         </div>
+        <ReleaseSelector
+          :releases="props.releases"
+          :selected-version="props.release.version"
+          :label="t('releases.version')"
+          @select="emit('selectRelease', $event)"
+        />
+      </div>
+      <div
+        v-if="props.release.artifactsExpired"
+        class="px-5 py-3 border-b border-warning/20 bg-warning/5 text-sm text-warning-content opacity-80"
+      >
+        {{ t("releases.expiredDetails") }}
       </div>
 
       <div v-if="releaseBodyHtml" class="relative">
@@ -168,6 +190,12 @@ async function copyCommand() {
             {{ releaseExpanded ? t(props.releaseCollapseKey) : t(props.releaseExpandKey) }}
           </button>
         </div>
+      </div>
+      <div
+        v-else
+        class="px-5 py-4 text-sm opacity-60"
+      >
+        {{ t("releases.noNotes") }}
       </div>
     </div>
 
@@ -301,6 +329,12 @@ async function copyCommand() {
                 <Download class="w-4 h-4 shrink-0 opacity-60 mt-0.5" />
               </a>
             </template>
+            <div
+              v-if="!hasAvailableAction"
+              class="rounded-lg border border-dashed border-base-content/10 bg-base-100/50 px-4 py-3 text-sm opacity-60"
+            >
+              {{ t("releases.noDownloads") }}
+            </div>
           </div>
         </div>
       </div>
