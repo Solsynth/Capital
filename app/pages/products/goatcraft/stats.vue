@@ -79,10 +79,13 @@ useSeoMeta({ title: "GoatCraft Server Stats" });
         <div>
           <NuxtLink to="/products/goatcraft#status" class="btn btn-ghost btn-sm -ml-3 gap-2">
             <ArrowLeft class="h-4 w-4" />
-            返回 GoatCraft
+            GoatCraft
           </NuxtLink>
-          <h1 class="mt-3 text-3xl font-bold sm:text-4xl">GoatCraft 服务器状态</h1>
-          <p class="mt-2 opacity-65">实时查看服务器运行情况与在线玩家。</p>
+          <p class="eyebrow mt-5 mb-2">GoatCraft</p>
+          <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
+            {{ t("goatCraft.stats.title") }}
+          </h1>
+          <p class="mt-2 opacity-65">{{ t("goatCraft.stats.desc") }}</p>
         </div>
         <button type="button" class="btn btn-outline btn-sm gap-2" :disabled="status === 'pending'" @click="refresh">
           <RefreshCw class="h-4 w-4" :class="status === 'pending' ? 'animate-spin' : ''" />
@@ -174,3 +177,13 @@ useSeoMeta({ title: "GoatCraft Server Stats" });
     </div>
   </main>
 </template>
+
+<style scoped>
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+</style>

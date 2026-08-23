@@ -114,6 +114,7 @@ const filteredProducts = computed(() => {
   <div>
     <section class="border-b border-base-200 px-4 py-16 md:py-20">
       <div class="container mx-auto">
+        <p class="eyebrow mb-3">Solsynth</p>
         <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
           {{ t('products.title') }}
         </h1>
@@ -211,3 +212,13 @@ const filteredProducts = computed(() => {
     </section>
   </div>
 </template>
+
+<style scoped>
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+</style>

@@ -7,8 +7,6 @@ import {
   Box,
   Bug,
   Cable,
-  ChevronDown,
-  ChevronUp,
   CodeXml,
   Container,
   Cpu,
@@ -19,7 +17,6 @@ import {
   FolderKanban,
   GitBranch,
   Globe,
-  History,
   KeyRound,
   LayoutDashboard,
   Monitor,
@@ -37,8 +34,6 @@ import IconsIconAndroid from "~/components/Icons/IconAndroid.vue";
 import IconsIconIos from "~/components/Icons/IconIos.vue";
 import IconsIconLinux from "~/components/Icons/IconLinux.vue";
 import IconsIconMacos from "~/components/Icons/IconMacos.vue";
-import ReleaseCard from "~/components/ReleaseCard.vue";
-import ReleaseTimeline from "~/components/ReleaseTimeline.vue";
 import ReviewSummary from "~/components/ReviewSummary.vue";
 import ReviewForm from "~/components/ReviewForm.vue";
 import ReviewList from "~/components/ReviewList.vue";
@@ -56,22 +51,16 @@ const TESTFLIGHT_URL = "https://testflight.apple.com/join/fVQB3qq5";
 const aboutCards = [
   {
     icon: Server,
-    bg: "bg-primary/20",
-    iconClass: "text-primary",
     titleKey: "maidKit.aboutCard.ssh.title",
     descKey: "maidKit.aboutCard.ssh.desc",
   },
   {
     icon: LayoutDashboard,
-    bg: "bg-secondary/20",
-    iconClass: "text-secondary",
     titleKey: "maidKit.aboutCard.crossPlatform.title",
     descKey: "maidKit.aboutCard.crossPlatform.desc",
   },
   {
     icon: KeyRound,
-    bg: "bg-accent/20",
-    iconClass: "text-accent",
     titleKey: "maidKit.aboutCard.vault.title",
     descKey: "maidKit.aboutCard.vault.desc",
   },
@@ -200,7 +189,6 @@ const features = [
   },
 ] as const;
 
-
 const platforms: ProductDownloadPlatform[] = [
   {
     id: "android",
@@ -307,16 +295,7 @@ const platforms: ProductDownloadPlatform[] = [
   },
 ];
 
-
-
-const {
-  releases,
-  latest,
-  loading: releasesLoading,
-  fetchLatest,
-} = useProductReleases(PRODUCT_SLUG);
-const showAllReleases = ref(false);
-
+const { latest, loading: releasesLoading, fetchLatest } = useProductReleases(PRODUCT_SLUG);
 
 const {
   reviews,
@@ -425,13 +404,13 @@ defineOgImage("UniOgImage", {
   <div class="maid-kit-page">
     <!-- Hero -->
     <section
-      class="relative h-[70vh] min-h-120 overflow-hidden -mt-(--site-page-offset,64px)"
+      class="relative min-h-[64vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
     >
       <NuxtImg
         src="/images/maid-kit/main-visual.webp"
-        class="absolute inset-0 w-full h-full object-cover object-top -z-10 opacity-90"
+        class="absolute inset-0 w-full h-full object-cover object-top -z-10 opacity-80"
         width="1920"
-        height="1080"
+        height="694"
         loading="eager"
         fetchpriority="high"
         format="webp"
@@ -439,63 +418,53 @@ defineOgImage("UniOgImage", {
         style="view-transition-name: product-hero-maid-kit"
       />
       <div
-        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/30 to-transparent dark:via-base-100/50"
+        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/55 to-transparent dark:via-base-100/60"
       />
 
-      <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
-        <div
-          class="container mx-auto flex flex-col md:flex-row md:items-end md:justify-between gap-4 md:gap-6"
-        >
-          <div class="flex items-center gap-3 sm:gap-4 min-w-0 md:min-w-0 md:flex-1 md:pr-6">
-            <NuxtImg
-              src="/images/maid-kit/icon.png"
-              class="w-16 h-16 sm:w-20 sm:h-20 md:w-28 md:h-28 rounded-xl md:rounded-2xl shadow-2xl shrink-0"
-              alt="MaidKit"
-              width="112"
-              height="112"
-              format="webp"
-              loading="eager"
-              decoding="async"
+      <div class="relative container mx-auto px-4 pb-14 pt-44">
+        <div class="hero-rise max-w-2xl">
+          <NuxtImg
+            src="/images/maid-kit/icon.png"
+            class="w-14 h-14 rounded-2xl shadow-lg mb-5"
+            alt="MaidKit"
+            width="56"
+            height="56"
+            format="webp"
+            loading="eager"
+            decoding="async"
+          />
+          <p class="eyebrow mb-3">
+            {{ t("maidKit.badgeSsh") }} &middot;
+            {{ t("maidKit.badgeCrossPlatform") }} &middot;
+            {{ t("maidKit.openSource") }}
+          </p>
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+            MaidKit
+          </h1>
+          <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed max-w-xl">
+            {{ t("maidKit.tagline") }}
+          </p>
+          <p class="mt-5 font-mono text-sm opacity-80" aria-hidden="true">
+            <span class="text-primary">$</span>
+            ssh keeper@your-server<span
+              class="caret ml-1 inline-block w-[9px] h-4 -mb-0.5 bg-primary/80 rounded-[1px]"
             />
-            <div class="min-w-0">
-              <h1 class="text-2xl sm:text-4xl md:text-5xl font-bold mb-0.5 sm:mb-2">
-                MaidKit
-              </h1>
-              <p class="text-sm sm:text-xl opacity-90 line-clamp-2">
-                {{ t("maidKit.tagline") }}
-              </p>
-              <div class="flex flex-wrap items-center gap-2 mt-3">
-                <span class="badge badge-primary badge-sm gap-1">
-                  <Terminal class="w-3.5 h-3.5" />
-                  {{ t("maidKit.badgeSsh") }}
-                </span>
-                <span class="badge badge-ghost badge-sm">
-                  {{ t("maidKit.badgeCrossPlatform") }}
-                </span>
-                <span class="badge badge-ghost badge-sm">
-                  {{ t("maidKit.openSource") }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div
-            class="flex flex-row flex-wrap items-center gap-2 w-full md:w-auto md:shrink-0 md:ml-auto md:justify-end md:gap-3"
-          >
+          </p>
+          <div class="mt-7 flex flex-wrap items-center gap-3">
             <a
               href="#download"
-              class="btn btn-primary btn-sm sm:btn-md md:btn-lg rounded-full gap-1.5 flex-1 sm:flex-none"
+              class="btn btn-primary btn-md rounded-full px-6 gap-2"
             >
-              <Download class="w-4 h-4 sm:w-5 sm:h-5" />
+              <Download class="w-4 h-4" />
               {{ t("maidKit.download.btn") }}
             </a>
             <a
               :href="GITHUB_REPO"
               target="_blank"
               rel="noopener noreferrer"
-              class="btn btn-outline btn-sm sm:btn-md md:btn-lg rounded-full gap-1.5 flex-1 sm:flex-none"
+              class="btn btn-ghost rounded-full px-5 gap-2"
             >
-              <CodeXml class="w-4 h-4 sm:w-5 sm:h-5" />
+              <CodeXml class="w-4 h-4" />
               GitHub
             </a>
           </div>
@@ -503,115 +472,68 @@ defineOgImage("UniOgImage", {
       </div>
     </section>
 
-    <div class="divider mt-0 h-px" />
-
     <!-- About -->
-    <section class="container mx-auto px-4 pt-24 pb-16">
-      <div class="text-center mb-12">
-        <span class="badge badge-primary badge-outline mb-4">{{
-          t("maidKit.about.badge")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">
+    <section class="container mx-auto px-4 py-24">
+      <div class="max-w-2xl">
+        <p class="eyebrow mb-3">{{ t("maidKit.about.badge") }}</p>
+        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
           {{ t("maidKit.about.title") }}
         </h2>
-        <p class="text-lg opacity-70 max-w-3xl mx-auto">
+        <p class="mt-4 opacity-70 leading-relaxed">
           {{ t("maidKit.about.desc") }}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="mt-14 grid md:grid-cols-3 gap-x-10 gap-y-10">
         <div
           v-for="card in aboutCards"
           :key="card.titleKey"
-          class="card bg-base-200 hover:bg-base-300 transition-colors duration-150 p-8 border border-base-content/5"
+          class="pt-6 border-t border-base-content/10"
         >
-          <div
-            class="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
-            :class="card.bg"
-          >
-            <component :is="card.icon" class="w-8 h-8" :class="card.iconClass" />
-          </div>
-          <h3 class="text-xl font-bold mb-2">{{ t(card.titleKey) }}</h3>
-          <p class="opacity-80">{{ t(card.descKey) }}</p>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider" />
-
-    <!-- Features -->
-    <section class="container mx-auto px-4 py-16">
-      <div class="text-center mb-16">
-        <span class="badge badge-secondary badge-outline mb-4">{{
-          t("maidKit.features.badge")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">
-          {{ t("maidKit.features.title") }}
-        </h2>
-        <p class="text-lg opacity-70 max-w-2xl mx-auto">
-          {{ t("maidKit.features.desc") }}
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div
-          v-for="feature in features"
-          :key="feature.key"
-          class="card bg-base-200 rounded-2xl border border-base-content/5 p-6"
-        >
-          <div
-            class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4"
-          >
-            <component :is="feature.icon" class="w-5 h-5 text-primary" />
-          </div>
-          <h3 class="text-base font-semibold mb-2">
-            {{ t(feature.titleKey) }}
-          </h3>
-          <p class="text-sm opacity-60 leading-relaxed">
-            {{ t(feature.descKey) }}
+          <component
+            :is="card.icon"
+            class="w-5 h-5 text-primary mb-3"
+            aria-hidden="true"
+          />
+          <h3 class="font-semibold">{{ t(card.titleKey) }}</h3>
+          <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
+            {{ t(card.descKey) }}
           </p>
         </div>
       </div>
     </section>
 
-    <div class="divider" />
-
-    <!-- Distribution release artifacts -->
-    <section
-      v-if="latest || (!releasesLoading && releases.length > 0)"
-      class="container mx-auto px-4 py-8"
-    >
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-bold flex items-center gap-2">
-          <History class="w-5 h-5 text-primary" />
-          {{ t("releases.title") }}
+    <!-- Features -->
+    <section class="container mx-auto px-4 py-24">
+      <div class="max-w-2xl">
+        <p class="eyebrow mb-3">{{ t("maidKit.features.badge") }}</p>
+        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
+          {{ t("maidKit.features.title") }}
         </h2>
-        <button
-          v-if="releases.length > 1"
-          type="button"
-          class="btn btn-sm btn-ghost gap-1"
-          @click="showAllReleases = !showAllReleases"
-        >
-          {{ showAllReleases ? "Collapse" : t("releases.all") }}
-          <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
-          <ChevronDown v-else class="w-4 h-4" />
-        </button>
+        <p class="mt-4 opacity-70 leading-relaxed">
+          {{ t("maidKit.features.desc") }}
+        </p>
       </div>
 
-      <ReleaseCard
-        v-if="latest && !showAllReleases"
-        :version="latest.version"
-        :title="latest.title"
-        :released-at="latest.releasedAt"
-        :changelog="latest.changelog"
-        :download-url="latest.downloadUrl"
-        :is-prerelease="latest.isPrerelease"
-      />
-
-      <ReleaseTimeline
-        v-else-if="showAllReleases && releases.length > 0"
-        :releases="releases"
-      />
+      <ul class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10">
+        <li
+          v-for="feature in features"
+          :key="feature.key"
+          class="flex items-start gap-4 py-5 border-t border-base-content/10"
+        >
+          <component
+            :is="feature.icon"
+            class="w-5 h-5 mt-0.5 text-primary shrink-0"
+            aria-hidden="true"
+          />
+          <div class="min-w-0">
+            <h3 class="text-sm font-semibold">{{ t(feature.titleKey) }}</h3>
+            <p class="mt-1 text-sm opacity-55 leading-relaxed">
+              {{ t(feature.descKey) }}
+            </p>
+          </div>
+        </li>
+      </ul>
     </section>
 
     <!-- Download -->
@@ -627,16 +549,16 @@ defineOgImage("UniOgImage", {
       release-expand-key="maidKit.download.release.expand"
       release-collapse-key="maidKit.download.release.collapse"
     />
+
     <!-- Reviews -->
-    <section class="container mx-auto px-4 py-16">
-      <div class="text-center mb-12">
-        <span class="badge badge-primary badge-outline mb-4">{{
-          t("reviews.title")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">{{ t("reviews.title") }}</h2>
-        <p class="text-lg opacity-70 max-w-2xl mx-auto">
-          {{ t("reviews.shareExperience") }}
-        </p>
+    <section class="container mx-auto px-4 py-24">
+      <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-12">
+        <div class="max-w-xl">
+          <p class="eyebrow mb-3">{{ t("reviews.title") }}</p>
+          <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
+            {{ t("reviews.shareExperience") }}
+          </h2>
+        </div>
       </div>
 
       <div
@@ -738,31 +660,25 @@ defineOgImage("UniOgImage", {
     </section>
 
     <!-- Help -->
-    <section class="container mx-auto px-4 py-16">
-      <div class="card bg-base-200 p-8">
-        <div
-          class="flex flex-col md:flex-row items-center justify-between gap-6"
-        >
-          <div>
-            <h2 class="text-3xl font-bold mb-2">
-              {{ t("maidKit.help.title") }}
-            </h2>
-            <p class="text-lg opacity-80">
-              {{ t("maidKit.help.desc") }}
-            </p>
-          </div>
-          <div class="flex flex-wrap gap-4 justify-center">
-            <a
-              :href="`${GITHUB_REPO}/issues`"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-outline btn-lg gap-2"
-            >
-              <Bug class="w-5 h-5" />
-              {{ t("product.reportIssue") }}
-            </a>
-          </div>
+    <section class="container mx-auto px-4 pb-24">
+      <div
+        class="border-t border-base-content/10 pt-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+      >
+        <div class="max-w-xl">
+          <h2 class="text-2xl font-semibold tracking-tight">
+            {{ t("maidKit.help.title") }}
+          </h2>
+          <p class="mt-1.5 opacity-60">{{ t("maidKit.help.desc") }}</p>
         </div>
+        <a
+          :href="`${GITHUB_REPO}/issues`"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline btn-md rounded-full gap-2 shrink-0"
+        >
+          <Bug class="w-4 h-4" />
+          {{ t("product.reportIssue") }}
+        </a>
       </div>
     </section>
   </div>
@@ -770,23 +686,63 @@ defineOgImage("UniOgImage", {
 
 <style scoped>
 .maid-kit-page {
-  /* Soft lavender / pink aligned with the character palette */
-  --color-primary: oklch(62% 0.12 320deg);
+  /* Soft mauve — the "maid" palette, dialed down for calm */
+  --color-primary: oklch(58% 0.09 320deg);
   --color-primary-content: oklch(98% 0.01 320deg);
-  --color-secondary: oklch(58% 0.1 280deg);
-  --color-accent: oklch(65% 0.14 20deg);
 }
 
-:global([data-theme="dark"]) .maid-kit-page {
-  --color-primary: oklch(78% 0.1 320deg);
-  --color-primary-content: oklch(18% 0.03 320deg);
-  --color-secondary: oklch(72% 0.08 280deg);
-  --color-accent: oklch(75% 0.1 25deg);
+::global([data-theme="dark"]) .maid-kit-page {
+  --color-primary: oklch(74% 0.09 320deg);
+  --color-primary-content: oklch(17% 0.03 320deg);
 }
 
-.release-notes :deep(a) {
-  color: var(--color-primary);
-  text-decoration: underline;
-  text-underline-offset: 2px;
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.caret {
+  animation: caret-blink 1.1s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+/* One orchestrated moment: hero content rises on load */
+.hero-rise > * {
+  animation: hero-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-rise > *:nth-child(2) {
+  animation-delay: 0.06s;
+}
+.hero-rise > *:nth-child(3) {
+  animation-delay: 0.12s;
+}
+.hero-rise > *:nth-child(4) {
+  animation-delay: 0.18s;
+}
+.hero-rise > *:nth-child(5) {
+  animation-delay: 0.24s;
+}
+.hero-rise > *:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>

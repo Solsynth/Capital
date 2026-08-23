@@ -9,6 +9,7 @@
 
 @theme {
   --font-sans: 'Nunito', sans-serif;
+  --font-mono: ui-monospace, 'SFMono-Regular', 'Menlo', 'Consolas', monospace;
   --default-font-family: var(--font-sans);
 }
 

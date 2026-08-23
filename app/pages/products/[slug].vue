@@ -176,10 +176,12 @@ useSchemaOrg([
   <div v-if="product">
     <!-- Variant 1: Has markdown content -->
     <template v-if="hasContent">
-      <div class="relative h-[40vh] min-h-75">
+      <div
+        class="relative min-h-[56vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
+      >
         <NuxtImg
           :src="product.background"
-          class="w-full h-full object-cover"
+          class="absolute inset-0 w-full h-full object-cover -z-10 opacity-80"
           :alt="title"
           width="1920"
           height="1080"
@@ -192,67 +194,42 @@ useSchemaOrg([
           class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"
         />
 
-        <div class="absolute bottom-0 left-0 right-0 p-8">
-          <div
-            class="container mx-auto flex flex-col md:flex-row items-end gap-6"
-          >
+        <div class="relative container mx-auto px-4 pb-14 pt-40">
+          <div class="max-w-2xl">
             <NuxtImg
               :src="product.icon"
-              class="w-20 h-20 rounded-2xl shadow-xl"
+              class="w-14 h-14 rounded-2xl shadow-lg mb-5"
               :alt="title"
-              width="96"
-              height="96"
+              width="56"
+              height="56"
               format="webp"
               loading="eager"
               decoding="async"
             />
-            <div class="flex-1">
-              <h1 class="text-3xl md:text-4xl font-bold mb-2">
-                {{ title }}
-              </h1>
-              <p class="text-lg opacity-80">
-                {{ description }}
-              </p>
-              <div
-                v-if="product.tags?.length > 0 || product.series"
-                class="flex flex-wrap gap-2 mt-3"
-              >
-                <NuxtLink
-                  v-if="product.series"
-                  :to="`${localePath('/products')}?series=${encodeURIComponent(product.series)}`"
-                  class="badge badge-primary badge-sm"
-                >
-                  <Folder class="w-3 h-3 mr-1" />
-                  {{ product.series }}
-                </NuxtLink>
-                <NuxtLink
-                  v-for="tag in product.tags"
-                  :key="tag"
-                  :to="`${localePath('/products')}?tag=${encodeURIComponent(tag)}`"
-                  class="badge badge-outline badge-sm hover:badge-primary"
-                >
-                  <Tag class="w-3 h-3 mr-1" />
-                  {{ tag }}
-                </NuxtLink>
-              </div>
-            </div>
-            <div class="flex gap-3 flex-wrap">
+            <p v-if="product.series" class="eyebrow mb-3">{{ product.series }}</p>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+              {{ title }}
+            </h1>
+            <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed">
+              {{ description }}
+            </p>
+            <div class="mt-7 flex flex-wrap items-center gap-3">
               <a
                 v-if="product.url"
                 :href="product.url"
                 target="_blank"
-                class="btn btn-primary"
+                class="btn btn-primary btn-md rounded-full px-6 gap-2"
               >
-                <ExternalLink class="w-5 h-5" />
+                <ExternalLink class="w-4 h-4" />
                 {{ t("product.open") }}
               </a>
               <a
                 v-if="product.repo"
                 :href="product.repo"
                 target="_blank"
-                class="btn btn-outline"
+                class="btn btn-ghost rounded-full px-5 gap-2"
               >
-                <CodeXml class="w-5 h-5" />
+                <CodeXml class="w-4 h-4" />
                 {{ t("product.github") }}
               </a>
             </div>
@@ -269,15 +246,17 @@ useSchemaOrg([
 
     <!-- Variant 2: hasPage but no content -->
     <template v-else-if="hasPage">
-      <div class="relative h-[50vh] min-h-100">
+      <div
+        class="relative min-h-[56vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
+      >
         <NuxtImg
           :src="product.background"
-          class="w-full h-full object-cover"
+          class="absolute inset-0 w-full h-full object-cover -z-10 opacity-80"
           :alt="title"
           width="1920"
-          :style="{ viewTransitionName: `product-hero-${slug}` }"
           height="1080"
           format="webp"
+          :style="{ viewTransitionName: `product-hero-${slug}` }"
           loading="eager"
           decoding="async"
         />
@@ -285,56 +264,31 @@ useSchemaOrg([
           class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"
         />
 
-        <div class="absolute bottom-0 left-0 right-0 p-8">
-          <div
-            class="container mx-auto flex flex-col md:flex-row items-end gap-6"
-          >
+        <div class="relative container mx-auto px-4 pb-14 pt-40">
+          <div class="max-w-2xl">
             <NuxtImg
               :src="product.icon"
-              class="w-24 h-24 rounded-2xl shadow-xl"
+              class="w-14 h-14 rounded-2xl shadow-lg mb-5"
               :alt="title"
-              width="112"
-              height="112"
+              width="56"
+              height="56"
               format="webp"
               loading="eager"
               decoding="async"
             />
-            <div class="flex-1">
-              <h1 class="text-4xl md:text-5xl font-bold mb-2">
-                {{ title }}
-              </h1>
-              <p class="text-lg opacity-80">
-                {{ description }}
-              </p>
-              <div
-                v-if="product.tags?.length > 0 || product.series"
-                class="flex flex-wrap gap-2 mt-3"
-              >
-                <NuxtLink
-                  v-if="product.series"
-                  :to="`${localePath('/products')}?series=${encodeURIComponent(product.series)}`"
-                  class="badge badge-primary badge-sm"
-                >
-                  <Folder class="w-3 h-3 mr-1" />
-                  {{ product.series }}
-                </NuxtLink>
-                <NuxtLink
-                  v-for="tag in product.tags"
-                  :key="tag"
-                  :to="`${localePath('/products')}?tag=${encodeURIComponent(tag)}`"
-                  class="badge badge-outline badge-sm hover:badge-primary"
-                >
-                  <Tag class="w-3 h-3 mr-1" />
-                  {{ tag }}
-                </NuxtLink>
-              </div>
-            </div>
-            <div class="flex gap-3 flex-wrap">
+            <p v-if="product.series" class="eyebrow mb-3">{{ product.series }}</p>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+              {{ title }}
+            </h1>
+            <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed">
+              {{ description }}
+            </p>
+            <div class="mt-7 flex flex-wrap items-center gap-3">
               <a
                 v-if="product.url"
                 :href="product.url"
                 target="_blank"
-                class="btn btn-primary btn-lg rounded-full"
+                class="btn btn-primary btn-md rounded-full px-6"
               >
                 {{ t("product.getStarted") }}
               </a>
@@ -342,9 +296,9 @@ useSchemaOrg([
                 v-if="product.repo"
                 :href="product.repo"
                 target="_blank"
-                class="btn btn-outline btn-lg rounded-full"
+                class="btn btn-ghost rounded-full px-5 gap-2"
               >
-                <CodeXml class="w-5 h-5" />
+                <CodeXml class="w-4 h-4" />
                 {{ t("product.github") }}
               </a>
             </div>
@@ -352,25 +306,28 @@ useSchemaOrg([
         </div>
       </div>
 
-      <div class="container mx-auto px-4 py-16">
+      <div class="container mx-auto px-4 py-24">
         <section class="mb-16">
-          <h2 class="text-3xl font-bold mb-4 text-center">
-            {{ lang === "zh" ? `为什么选择 ${title}？` : `Why ${title}?` }}
-          </h2>
-          <p class="text-lg opacity-70 text-center max-w-2xl mx-auto mb-12">
-            {{
-              lang === "zh"
-                ? "为创作者、开发者和连接者打造的平台。体验一个理解您热爱的平台。"
-                : "Built for those who create, code, and connect. Experience a platform that understands your passions."
-            }}
-          </p>
+          <div class="max-w-2xl">
+            <p class="eyebrow mb-3">{{ title }}</p>
+            <h2 class="text-3xl font-semibold tracking-tight">
+              {{ lang === "zh" ? `为什么选择 ${title}？` : `Why ${title}?` }}
+            </h2>
+            <p class="mt-4 opacity-70 leading-relaxed">
+              {{
+                lang === "zh"
+                  ? "为创作者、开发者和连接者打造的平台。体验一个理解您热爱的平台。"
+                  : "Built for those who create, code, and connect. Experience a platform that understands your passions."
+              }}
+            </p>
+          </div>
 
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="card bg-base-200 p-8">
-              <h3 class="text-xl font-bold mb-3 text-primary">
+          <div class="mt-14 grid md:grid-cols-2 gap-x-10 gap-y-10">
+            <div class="border-t border-base-content/10 pt-6">
+              <h3 class="font-semibold">
                 {{ lang === "zh" ? "开发者优先" : "Developer First" }}
               </h3>
-              <p class="opacity-80">
+              <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
                 {{
                   lang === "zh"
                     ? "原生语法高亮、代码片段分享，与您喜爱的开发工具无缝集成。"
@@ -378,9 +335,9 @@ useSchemaOrg([
                 }}
               </p>
             </div>
-            <div class="card bg-base-200 p-8">
-              <h3 class="text-xl font-bold mb-3 text-primary">OpenAPI</h3>
-              <p class="opacity-80">
+            <div class="border-t border-base-content/10 pt-6">
+              <h3 class="font-semibold">OpenAPI</h3>
+              <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
                 {{
                   lang === "zh"
                     ? "完全文档化的 API，透明的速率限制和风险控制。开发自己应用的绝佳起点！"
@@ -388,9 +345,9 @@ useSchemaOrg([
                 }}
               </p>
             </div>
-            <div class="card bg-base-200 p-8">
-              <h3 class="text-xl font-bold mb-3 text-primary">ACG Culture</h3>
-              <p class="opacity-80">
+            <div class="border-t border-base-content/10 pt-6">
+              <h3 class="font-semibold">ACG Culture</h3>
+              <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
                 {{
                   lang === "zh"
                     ? "动漫、游戏爱好者的专属空间。分享您的作品、评论和热情。"
@@ -398,11 +355,11 @@ useSchemaOrg([
                 }}
               </p>
             </div>
-            <div class="card bg-base-200 p-8">
-              <h3 class="text-xl font-bold mb-3 text-primary">
+            <div class="border-t border-base-content/10 pt-6">
+              <h3 class="font-semibold">
                 {{ lang === "zh" ? "友好的社区" : "Friendly Community" }}
               </h3>
-              <p class="opacity-80">
+              <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
                 {{
                   lang === "zh"
                     ? "加入志同道合者的活力社区。分享知识、提出问题、建立联系。"
@@ -413,71 +370,73 @@ useSchemaOrg([
           </div>
         </section>
 
-        <section class="mb-16">
-          <div class="card bg-linear-to-r from-primary/10 to-secondary/10 p-8">
-            <h2 class="text-3xl font-bold mb-4">
+        <section
+          class="border-t border-base-content/10 pt-10 mb-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+        >
+          <div class="max-w-xl">
+            <h2 class="text-2xl font-semibold tracking-tight">
               {{ t("product.startJourney") }}
             </h2>
-            <p class="text-lg opacity-80 mb-6">
-              {{ t("product.available") }}
-            </p>
-            <div class="flex flex-wrap gap-4">
-              <a
-                v-if="product.url"
-                :href="product.url"
-                target="_blank"
-                class="btn btn-primary"
-              >
-                <ExternalLink class="w-5 h-5" />
-                {{ t("product.openBrowser") }}
-              </a>
-              <a
-                v-if="product.repo"
-                :href="product.repo"
-                target="_blank"
-                class="btn btn-outline"
-              >
-                <CodeXml class="w-5 h-5" />
-                {{ t("product.viewGithub") }}
-              </a>
-            </div>
+            <p class="mt-1.5 opacity-60">{{ t("product.available") }}</p>
+          </div>
+          <div class="flex flex-wrap items-center gap-3 shrink-0">
+            <a
+              v-if="product.url"
+              :href="product.url"
+              target="_blank"
+              class="btn btn-primary rounded-full gap-2"
+            >
+              <ExternalLink class="w-4 h-4" />
+              {{ t("product.openBrowser") }}
+            </a>
+            <a
+              v-if="product.repo"
+              :href="product.repo"
+              target="_blank"
+              class="btn btn-ghost rounded-full gap-2"
+            >
+              <CodeXml class="w-4 h-4" />
+              {{ t("product.viewGithub") }}
+            </a>
           </div>
         </section>
 
-        <section>
-          <div class="card bg-base-200 p-8">
-            <h2 class="text-3xl font-bold mb-4">
+        <section
+          class="border-t border-base-content/10 pt-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+        >
+          <div class="max-w-xl">
+            <h2 class="text-2xl font-semibold tracking-tight">
               {{ t("product.needHelp") }}
             </h2>
-            <p class="text-lg opacity-80 mb-6">
+            <p class="mt-1.5 opacity-60">
               {{
                 lang === "zh"
                   ? "请通过客户服务中心或 GitHub 报告问题。"
                   : "Feel free to contact your customer service or report a bug on GitHub."
               }}
             </p>
-            <div class="flex gap-4">
-              <a
-                v-if="product.repo"
-                :href="`${product.repo}/issues`"
-                target="_blank"
-                class="btn btn-outline"
-              >
-                <Bug class="w-5 h-5" />
-                {{ t("product.reportIssue") }}
-              </a>
-            </div>
           </div>
+          <a
+            v-if="product.repo"
+            :href="`${product.repo}/issues`"
+            target="_blank"
+            class="btn btn-outline rounded-full gap-2 shrink-0"
+          >
+            <Bug class="w-4 h-4" />
+            {{ t("product.reportIssue") }}
+          </a>
         </section>
       </div>
     </template>
 
     <!-- Variant 3: Simple card (no page) -->
     <template v-else>
-      <div class="relative h-[40vh] min-h-75">
+      <div
+        class="relative min-h-[56vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
+      >
         <NuxtImg
           :src="product.background"
-          class="w-full h-full object-cover"
+          class="absolute inset-0 w-full h-full object-cover -z-10 opacity-80"
           :alt="title"
           width="1920"
           height="1080"
@@ -490,67 +449,42 @@ useSchemaOrg([
           class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"
         />
 
-        <div class="absolute bottom-0 left-0 right-0 p-8">
-          <div
-            class="container mx-auto flex flex-col md:flex-row items-end gap-6"
-          >
+        <div class="relative container mx-auto px-4 pb-14 pt-40">
+          <div class="max-w-2xl">
             <NuxtImg
               :src="product.icon"
-              class="w-20 h-20 rounded-2xl shadow-xl"
+              class="w-14 h-14 rounded-2xl shadow-lg mb-5"
               :alt="title"
-              width="96"
-              height="96"
+              width="56"
+              height="56"
               format="webp"
               loading="eager"
               decoding="async"
             />
-            <div class="flex-1">
-              <h1 class="text-3xl md:text-4xl font-bold mb-2">
-                {{ title }}
-              </h1>
-              <p class="text-lg opacity-80">
-                {{ description }}
-              </p>
-              <div
-                v-if="product.tags?.length > 0 || product.series"
-                class="flex flex-wrap gap-2 mt-3"
-              >
-                <NuxtLink
-                  v-if="product.series"
-                  :to="`${localePath('/products')}?series=${encodeURIComponent(product.series)}`"
-                  class="badge badge-primary badge-sm"
-                >
-                  <Folder class="w-3 h-3 mr-1" />
-                  {{ product.series }}
-                </NuxtLink>
-                <NuxtLink
-                  v-for="tag in product.tags"
-                  :key="tag"
-                  :to="`${localePath('/products')}?tag=${encodeURIComponent(tag)}`"
-                  class="badge badge-outline badge-sm hover:badge-primary"
-                >
-                  <Tag class="w-3 h-3 mr-1" />
-                  {{ tag }}
-                </NuxtLink>
-              </div>
-            </div>
-            <div class="flex gap-3 flex-wrap">
+            <p v-if="product.series" class="eyebrow mb-3">{{ product.series }}</p>
+            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+              {{ title }}
+            </h1>
+            <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed">
+              {{ description }}
+            </p>
+            <div class="mt-7 flex flex-wrap items-center gap-3">
               <a
                 v-if="product.url"
                 :href="product.url"
                 target="_blank"
-                class="btn btn-primary"
+                class="btn btn-primary btn-md rounded-full px-6 gap-2"
               >
-                <ExternalLink class="w-5 h-5" />
+                <ExternalLink class="w-4 h-4" />
                 {{ t("product.open") }}
               </a>
               <a
                 v-if="product.repo"
                 :href="product.repo"
                 target="_blank"
-                class="btn btn-outline"
+                class="btn btn-ghost rounded-full px-5 gap-2"
               >
-                <CodeXml class="w-5 h-5" />
+                <CodeXml class="w-4 h-4" />
                 {{ t("product.github") }}
               </a>
             </div>
@@ -644,9 +578,9 @@ useSchemaOrg([
     </template>
 
     <!-- ==================== Releases Section ==================== -->
-    <section v-if="latest || !releasesLoading" class="container mx-auto px-4 py-8">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-bold flex items-center gap-2">
+    <section v-if="latest || !releasesLoading" class="container mx-auto px-4 py-16">
+      <div class="flex items-end justify-between gap-4 mb-6">
+        <h2 class="text-2xl font-semibold tracking-tight flex items-center gap-2">
           <History class="w-5 h-5 text-primary" />
           {{ t("releases.title") }}
         </h2>
@@ -690,11 +624,11 @@ useSchemaOrg([
     </section>
 
     <!-- ==================== Reviews Section ==================== -->
-    <section class="container mx-auto px-4 py-8">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-bold flex items-center gap-2">
-          <MessageSquare class="w-5 h-5 text-primary" />
-          {{ t("reviews.title") }}
+    <section class="container mx-auto px-4 pb-24">
+      <div class="max-w-xl mb-10">
+        <p class="eyebrow mb-3">{{ t("reviews.title") }}</p>
+        <h2 class="text-3xl font-semibold tracking-tight">
+          {{ t("reviews.shareExperience") }}
         </h2>
       </div>
 
@@ -759,3 +693,13 @@ useSchemaOrg([
     </section>
   </div>
 </template>
+
+<style scoped>
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+</style>

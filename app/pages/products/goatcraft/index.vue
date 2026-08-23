@@ -545,6 +545,7 @@ defineOgImage("UniOgImage", {
               format="webp"
             />
             <div class="min-w-0">
+              <p class="eyebrow mb-1.5">{{ t("goatCraft.badge") }}</p>
               <div class="mb-1 flex flex-wrap items-center gap-2">
                 <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">
                   GoatCraft
@@ -594,9 +595,7 @@ defineOgImage("UniOgImage", {
         class="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between"
       >
         <div>
-          <h2 class="text-2xl font-bold sm:text-3xl">
-            {{ t("goatCraft.stats.title") }}
-          </h2>
+          <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">{{ t("goatCraft.stats.title") }}</h2>
           <p class="mt-1 max-w-xl text-sm opacity-60">
             {{ t("goatCraft.stats.desc") }}
           </p>
@@ -730,23 +729,20 @@ defineOgImage("UniOgImage", {
     <!-- About -->
     <section class="container mx-auto px-4 py-12">
       <div class="mb-8 max-w-2xl">
-        <h2 class="text-2xl font-bold sm:text-3xl">
-          {{ t("goatCraft.about.title") }}
-        </h2>
+        <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">{{ t("goatCraft.about.title") }}</h2>
         <p class="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
           {{ t("goatCraft.about.desc") }}
         </p>
       </div>
-
-      <div class="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div class="grid grid-cols-1 gap-x-10 gap-y-8 md:grid-cols-3">
         <div
           v-for="card in aboutCards"
           :key="card.titleKey"
-          class="rounded-lg border border-base-content/10 bg-base-200 p-5"
+          class="border-t border-base-content/10 pt-5"
         >
           <component :is="card.icon" class="mb-3 h-5 w-5 text-primary" />
           <h3 class="mb-1.5 font-semibold">{{ t(card.titleKey) }}</h3>
-          <p class="text-sm leading-relaxed opacity-70">{{ t(card.descKey) }}</p>
+          <p class="text-sm leading-relaxed opacity-60">{{ t(card.descKey) }}</p>
         </div>
       </div>
     </section>
@@ -756,30 +752,32 @@ defineOgImage("UniOgImage", {
     <!-- Features -->
     <section class="container mx-auto px-4 py-12">
       <div class="mb-8 max-w-2xl">
-        <h2 class="text-2xl font-bold sm:text-3xl">
-          {{ t("goatCraft.features.title") }}
-        </h2>
+        <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">{{ t("goatCraft.features.title") }}</h2>
         <p class="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
           {{ t("goatCraft.features.desc") }}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        <div
+      <ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-x-10">
+        <li
           v-for="feature in features"
           :key="feature.key"
-          class="rounded-lg border border-base-content/10 bg-base-200 p-4"
+          class="flex items-start gap-3 border-t border-base-content/10 py-4"
         >
-          <component :is="feature.icon" class="mb-3 h-4 w-4 text-primary" />
-          <h3 class="mb-1 text-sm font-semibold">
-            {{ t(feature.titleKey) }}
-          </h3>
-          <p class="text-xs leading-relaxed opacity-60 sm:text-sm">
-            {{ t(feature.descKey) }}
-          </p>
-        </div>
-      </div>
-
+          <component
+            :is="feature.icon"
+            class="mt-0.5 h-4 w-4 shrink-0 text-primary"
+          />
+          <div class="min-w-0">
+            <h3 class="text-sm font-semibold">
+              {{ t(feature.titleKey) }}
+            </h3>
+            <p class="mt-1 text-xs leading-relaxed opacity-55 sm:text-sm">
+              {{ t(feature.descKey) }}
+            </p>
+          </div>
+        </li>
+      </ul>
       <div
         class="mt-10 rounded-lg border border-base-content/10 bg-base-200 p-5 sm:p-6"
       >
@@ -814,9 +812,7 @@ defineOgImage("UniOgImage", {
     <!-- How to join + auth -->
     <section id="join" class="container mx-auto scroll-mt-24 px-4 py-12">
       <div class="mb-8 max-w-2xl">
-        <h2 class="text-2xl font-bold sm:text-3xl">
-          {{ t("goatCraft.howToJoin.title") }}
-        </h2>
+        <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">{{ t("goatCraft.howToJoin.title") }}</h2>
         <p class="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
           {{ t("goatCraft.howToJoin.desc") }}
         </p>
@@ -1051,9 +1047,7 @@ defineOgImage("UniOgImage", {
     <!-- History timeline + gallery -->
     <section id="history" class="container mx-auto scroll-mt-24 px-4 py-12">
       <div class="mb-8 max-w-2xl">
-        <h2 class="text-2xl font-bold sm:text-3xl">
-          {{ t("goatCraft.history.title") }}
-        </h2>
+        <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">{{ t("goatCraft.history.title") }}</h2>
         <p class="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
           {{ t("goatCraft.history.desc") }}
         </p>
@@ -1306,7 +1300,7 @@ defineOgImage("UniOgImage", {
     <!-- Reviews -->
     <section class="container mx-auto px-4 py-12">
       <div class="mb-8 max-w-2xl">
-        <h2 class="text-2xl font-bold sm:text-3xl">{{ t("reviews.title") }}</h2>
+        <h2 class="text-2xl font-semibold tracking-tight sm:text-3xl">{{ t("reviews.title") }}</h2>
         <p class="mt-2 text-sm leading-relaxed opacity-70 sm:text-base">
           {{ t("reviews.shareExperience") }}
         </p>
@@ -1446,6 +1440,14 @@ defineOgImage("UniOgImage", {
 :global([data-theme="dark"]) .goatcraft-page {
   --color-primary: oklch(70% 0.12 130deg);
   --color-primary-content: oklch(20% 0.04 130deg);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.55;
 }
 
 .scrollbar-hide {

@@ -1,31 +1,21 @@
 <script setup lang="ts">
 import {
   Bell,
-  Shield,
-  Smartphone,
-  Zap,
   Bug,
-  CodeXml,
-  Heart,
-  MessageSquare,
-  Star,
-  StarHalf,
-  BookOpen,
-  Download,
-  Tag,
-  Folder,
-  History,
   CheckCircle,
+  CodeXml,
+  History,
   ChevronDown,
   ChevronUp,
-  ExternalLink,
-  Wifi,
-  WifiOff,
+  MessageSquare,
   RefreshCw,
+  Shield,
+  Smartphone,
+  Star,
+  Wifi,
+  Zap,
 } from "@lucide/vue";
 import IconsIconAndroid from "~/components/Icons/IconAndroid.vue";
-import ReleaseCard from "~/components/ReleaseCard.vue";
-import ReleaseTimeline from "~/components/ReleaseTimeline.vue";
 import ReviewSummary from "~/components/ReviewSummary.vue";
 import ReviewForm from "~/components/ReviewForm.vue";
 import ReviewList from "~/components/ReviewList.vue";
@@ -33,29 +23,23 @@ import { useProductReleases } from "~/composables/useProductReleases";
 import { useProductReviews } from "~/composables/useProductReviews";
 import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
 
-const { t, locale } = useI18n();
+const { t } = useI18n();
 
 const PRODUCT_SLUG = "cloudy-sky";
 
 const aboutCards = [
   {
     icon: Bell,
-    bg: "bg-primary/20",
-    iconClass: "text-primary",
     titleKey: "cloudySky.aboutCard.notifications.title",
     descKey: "cloudySky.aboutCard.notifications.desc",
   },
   {
     icon: Shield,
-    bg: "bg-secondary/20",
-    iconClass: "text-secondary",
     titleKey: "cloudySky.aboutCard.secure.title",
     descKey: "cloudySky.aboutCard.secure.desc",
   },
   {
     icon: Zap,
-    bg: "bg-accent/20",
-    iconClass: "text-accent",
     titleKey: "cloudySky.aboutCard.realtime.title",
     descKey: "cloudySky.aboutCard.realtime.desc",
   },
@@ -108,6 +92,13 @@ const {
   fetchLatest,
 } = useProductReleases(PRODUCT_SLUG);
 const showAllReleases = ref(false);
+
+async function toggleAllReleases() {
+  showAllReleases.value = !showAllReleases.value;
+  if (showAllReleases.value && releases.value.length === 0) {
+    await fetchReleases();
+  }
+}
 
 const {
   reviews,
@@ -216,7 +207,7 @@ defineOgImage("UniOgImage", {
   <div class="cloudy-sky-page">
     <!-- Hero -->
     <section
-      class="relative h-[60vh] min-h-100 overflow-hidden -mt-(--site-page-offset,64px)"
+      class="relative min-h-[60vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
     >
       <NuxtImg
         src="/images/cloudy-sky/main-visual.svg"
@@ -230,50 +221,40 @@ defineOgImage("UniOgImage", {
         style="view-transition-name: product-hero-cloudy-sky"
       />
       <div
-        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/30 to-transparent"
+        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent dark:via-base-100/55"
       />
 
-      <div class="absolute bottom-0 left-0 right-0 p-4 sm:p-6 md:p-8">
-        <div
-          class="container mx-auto flex flex-col md:flex-row md:items-end gap-4 md:gap-6"
-        >
-          <div class="flex items-center gap-4 min-w-0">
-            <NuxtImg
-              src="/images/cloudy-sky/icon.png"
-              class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl shadow-2xl shrink-0"
-              alt="CloudySky"
-              width="96"
-              height="96"
-              format="webp"
-              loading="eager"
-              decoding="async"
-            />
-            <div class="min-w-0">
-              <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-1">
-                CloudySky
-              </h1>
-              <p class="text-base sm:text-lg opacity-80 line-clamp-2">
-                {{ t("cloudySky.tagline") }}
-              </p>
-              <div class="flex items-center gap-2 mt-3">
-                <span class="badge badge-primary badge-sm">
-                  <IconsIconAndroid class="w-3.5 h-3.5 fill-current" />
-                  Android
-                </span>
-                <span class="badge badge-ghost badge-sm">
-                  {{ t("cloudySky.openSource") }}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          <div class="flex flex-wrap gap-2 md:ml-auto md:shrink-0">
+      <div class="relative container mx-auto px-4 pb-14 pt-40">
+        <div class="hero-rise max-w-2xl">
+          <NuxtImg
+            src="/images/cloudy-sky/icon.png"
+            class="w-14 h-14 rounded-2xl shadow-lg mb-5"
+            alt="CloudySky"
+            width="56"
+            height="56"
+            format="webp"
+            loading="eager"
+            decoding="async"
+          />
+          <p class="eyebrow mb-3">
+            Android &middot; {{ t("cloudySky.openSource") }}
+          </p>
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+            CloudySky
+          </h1>
+          <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed max-w-xl">
+            {{ t("cloudySky.tagline") }}
+          </p>
+          <p class="mt-5 font-mono text-sm opacity-70" aria-hidden="true">
+            <span class="text-primary">⇅</span> sse://push.solian.app
+          </p>
+          <div class="mt-7 flex flex-wrap items-center gap-3">
             <a
               v-if="latest?.downloadUrl"
               :href="latest.downloadUrl"
               target="_blank"
               rel="noopener noreferrer"
-              class="btn btn-primary btn-sm sm:btn-md md:btn-lg rounded-full gap-2"
+              class="btn btn-primary btn-md rounded-full px-6 gap-2"
             >
               <IconsIconAndroid class="w-4 h-4 fill-current" />
               {{ t("cloudySky.downloadApk") }}
@@ -282,7 +263,7 @@ defineOgImage("UniOgImage", {
               href="https://github.com/Solsynth/CloudySky"
               target="_blank"
               rel="noopener noreferrer"
-              class="btn btn-outline btn-sm sm:btn-md md:btn-lg rounded-full gap-2"
+              class="btn btn-ghost rounded-full px-5 gap-2"
             >
               <CodeXml class="w-4 h-4" />
               GitHub
@@ -292,143 +273,130 @@ defineOgImage("UniOgImage", {
       </div>
     </section>
 
-    <div class="divider mt-0 h-px" />
-
     <!-- About -->
-    <section class="container mx-auto px-4 pt-24 pb-16">
-      <div class="text-center mb-12">
-        <span class="badge badge-primary badge-outline mb-4">{{
-          t("cloudySky.about.badge")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">
+    <section class="container mx-auto px-4 py-24">
+      <div class="max-w-2xl">
+        <p class="eyebrow mb-3">{{ t("cloudySky.about.badge") }}</p>
+        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
           {{ t("cloudySky.about.title") }}
         </h2>
-        <p class="text-lg opacity-70 max-w-3xl mx-auto">
+        <p class="mt-4 opacity-70 leading-relaxed">
           {{ t("cloudySky.about.desc") }}
         </p>
       </div>
 
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="mt-14 grid md:grid-cols-3 gap-x-10 gap-y-10">
         <div
           v-for="card in aboutCards"
           :key="card.titleKey"
-          class="card bg-base-200 hover:bg-base-300 transition-all duration-300 p-8 border border-base-content/5"
+          class="pt-6 border-t border-base-content/10"
         >
-          <div
-            class="w-16 h-16 rounded-2xl flex items-center justify-center mb-4"
-            :class="card.bg"
-          >
-            <component :is="card.icon" class="w-8 h-8" :class="card.iconClass" />
-          </div>
-          <h3 class="text-xl font-bold mb-2">{{ t(card.titleKey) }}</h3>
-          <p class="opacity-80">{{ t(card.descKey) }}</p>
-        </div>
-      </div>
-    </section>
-
-    <div class="divider" />
-
-    <!-- Features -->
-    <section class="container mx-auto px-4 py-16">
-      <div class="text-center mb-16">
-        <span class="badge badge-secondary badge-outline mb-4">{{
-          t("cloudySky.features.badge")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">
-          {{ t("cloudySky.features.title") }}
-        </h2>
-        <p class="text-lg opacity-70 max-w-2xl mx-auto">
-          {{ t("cloudySky.features.desc") }}
-        </p>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-        <div
-          v-for="feature in features"
-          :key="feature.key"
-          class="card bg-base-200 rounded-2xl border border-base-content/5 p-6 hover:shadow-lg transition-shadow"
-        >
-          <div
-            class="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center mb-4"
-          >
-            <component
-              :is="feature.icon"
-              class="w-5 h-5 text-primary"
-            />
-          </div>
-          <h3 class="text-base font-semibold mb-2">
-            {{ t(feature.titleKey) }}
-          </h3>
-          <p class="text-sm opacity-60 leading-relaxed">
-            {{ t(feature.descKey) }}
+          <component
+            :is="card.icon"
+            class="w-5 h-5 text-primary mb-3"
+            aria-hidden="true"
+          />
+          <h3 class="font-semibold">{{ t(card.titleKey) }}</h3>
+          <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
+            {{ t(card.descKey) }}
           </p>
         </div>
       </div>
     </section>
 
-    <div class="divider" />
-
-    <!-- Requirements -->
-    <section class="container mx-auto px-4 py-16">
-      <div class="card bg-base-200 border border-base-content/5 p-8 max-w-3xl mx-auto">
-        <h2 class="text-2xl font-bold mb-6 text-center">
-          {{ t("cloudySky.requirements.title") }}
+    <!-- Features -->
+    <section class="container mx-auto px-4 py-24">
+      <div class="max-w-2xl">
+        <p class="eyebrow mb-3">{{ t("cloudySky.features.badge") }}</p>
+        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
+          {{ t("cloudySky.features.title") }}
         </h2>
-        <div class="space-y-4">
-          <div class="flex items-start gap-3">
-            <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
-            <div>
-              <p class="font-medium">
-                {{ t("cloudySky.requirements.android.title") }}
-              </p>
-              <p class="text-sm opacity-60">
-                {{ t("cloudySky.requirements.android.desc") }}
-              </p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
-            <div>
-              <p class="font-medium">
-                {{ t("cloudySky.requirements.account.title") }}
-              </p>
-              <p class="text-sm opacity-60">
-                {{ t("cloudySky.requirements.account.desc") }}
-              </p>
-            </div>
-          </div>
-          <div class="flex items-start gap-3">
-            <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
-            <div>
-              <p class="font-medium">
-                {{ t("cloudySky.requirements.battery.title") }}
-              </p>
-              <p class="text-sm opacity-60">
-                {{ t("cloudySky.requirements.battery.desc") }}
-              </p>
-            </div>
-          </div>
-        </div>
+        <p class="mt-4 opacity-70 leading-relaxed">
+          {{ t("cloudySky.features.desc") }}
+        </p>
       </div>
+
+      <ul class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10">
+        <li
+          v-for="feature in features"
+          :key="feature.key"
+          class="flex items-start gap-4 py-5 border-t border-base-content/10"
+        >
+          <component
+            :is="feature.icon"
+            class="w-5 h-5 mt-0.5 text-primary shrink-0"
+            aria-hidden="true"
+          />
+          <div class="min-w-0">
+            <h3 class="text-sm font-semibold">{{ t(feature.titleKey) }}</h3>
+            <p class="mt-1 text-sm opacity-55 leading-relaxed">
+              {{ t(feature.descKey) }}
+            </p>
+          </div>
+        </li>
+      </ul>
     </section>
 
-    <div class="divider" />
+    <!-- Requirements -->
+    <section class="container mx-auto px-4 pb-24">
+      <div class="max-w-2xl">
+        <p class="eyebrow mb-3">{{ t("cloudySky.requirements.title") }}</p>
+      </div>
+      <ul class="mt-8 grid sm:grid-cols-3 gap-x-10">
+        <li class="flex items-start gap-3 py-4 border-t border-base-content/10">
+          <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
+          <div>
+            <p class="font-medium text-sm">
+              {{ t("cloudySky.requirements.android.title") }}
+            </p>
+            <p class="text-sm opacity-55 leading-relaxed">
+              {{ t("cloudySky.requirements.android.desc") }}
+            </p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3 py-4 border-t border-base-content/10">
+          <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
+          <div>
+            <p class="font-medium text-sm">
+              {{ t("cloudySky.requirements.account.title") }}
+            </p>
+            <p class="text-sm opacity-55 leading-relaxed">
+              {{ t("cloudySky.requirements.account.desc") }}
+            </p>
+          </div>
+        </li>
+        <li class="flex items-start gap-3 py-4 border-t border-base-content/10">
+          <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
+          <div>
+            <p class="font-medium text-sm">
+              {{ t("cloudySky.requirements.battery.title") }}
+            </p>
+            <p class="text-sm opacity-55 leading-relaxed">
+              {{ t("cloudySky.requirements.battery.desc") }}
+            </p>
+          </div>
+        </li>
+      </ul>
+    </section>
 
-    <!-- Releases Section -->
+    <!-- Releases -->
     <section
       v-if="latest || !releasesLoading"
-      class="container mx-auto px-4 py-8"
+      id="releases"
+      class="container mx-auto px-4 pb-24 scroll-mt-24"
     >
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-2xl font-bold flex items-center gap-2">
-          <History class="w-5 h-5 text-primary" />
-          {{ t("releases.title") }}
-        </h2>
+      <div class="flex items-end justify-between gap-4 mb-6">
+        <div class="flex items-center gap-3">
+          <History class="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
+          <h2 class="text-3xl font-semibold tracking-tight">
+            {{ t("releases.title") }}
+          </h2>
+        </div>
         <button
           v-if="releases.length > 1"
           type="button"
-          class="btn btn-sm btn-ghost gap-1"
-          @click="showAllReleases = !showAllReleases"
+          class="btn btn-sm btn-ghost gap-1 shrink-0"
+          @click="toggleAllReleases"
         >
           {{ showAllReleases ? "Collapse" : t("releases.all") }}
           <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
@@ -446,26 +414,30 @@ defineOgImage("UniOgImage", {
         :is-prerelease="latest.isPrerelease"
       />
 
+      <div
+        v-if="showAllReleases && releasesLoading"
+        class="py-4 text-center opacity-60"
+      >
+        {{ t("releases.loading") }}
+      </div>
+
       <ReleaseTimeline
         v-else-if="showAllReleases && releases.length > 0"
         :releases="releases"
       />
 
-      <div v-if="!latest && !releasesLoading" class="text-center py-4">
+      <div v-if="!latest && !releasesLoading" class="py-4">
         <p class="opacity-60">{{ t("releases.noReleases") }}</p>
       </div>
     </section>
 
-    <!-- Reviews Section -->
-    <section class="container mx-auto px-4 py-16">
-      <div class="text-center mb-12">
-        <span class="badge badge-primary badge-outline mb-4">{{
-          t("reviews.title")
-        }}</span>
-        <h2 class="text-4xl font-bold mb-4">{{ t("reviews.title") }}</h2>
-        <p class="text-lg opacity-70 max-w-2xl mx-auto">
+    <!-- Reviews -->
+    <section class="container mx-auto px-4 pb-24">
+      <div class="max-w-xl mb-12">
+        <p class="eyebrow mb-3">{{ t("reviews.title") }}</p>
+        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
           {{ t("reviews.shareExperience") }}
-        </p>
+        </h2>
       </div>
 
       <div
@@ -567,31 +539,25 @@ defineOgImage("UniOgImage", {
     </section>
 
     <!-- Help -->
-    <section class="container mx-auto px-4 py-16">
-      <div class="card bg-base-200 p-8">
-        <div
-          class="flex flex-col md:flex-row items-center justify-between gap-6"
-        >
-          <div>
-            <h2 class="text-3xl font-bold mb-2">
-              {{ t("cloudySky.help.title") }}
-            </h2>
-            <p class="text-lg opacity-80">
-              {{ t("cloudySky.help.desc") }}
-            </p>
-          </div>
-          <div class="flex flex-wrap gap-4 justify-center">
-            <a
-              href="https://github.com/Solsynth/CloudySky/issues"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-outline btn-lg"
-            >
-              <Bug class="w-5 h-5" />
-              {{ t("royIcpFilling.help.reportIssue") }}
-            </a>
-          </div>
+    <section class="container mx-auto px-4 pb-24">
+      <div
+        class="border-t border-base-content/10 pt-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
+      >
+        <div class="max-w-xl">
+          <h2 class="text-2xl font-semibold tracking-tight">
+            {{ t("cloudySky.help.title") }}
+          </h2>
+          <p class="mt-1.5 opacity-60">{{ t("cloudySky.help.desc") }}</p>
         </div>
+        <a
+          href="https://github.com/Solsynth/CloudySky/issues"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="btn btn-outline btn-md rounded-full gap-2 shrink-0"
+        >
+          <Bug class="w-4 h-4" />
+          {{ t("royIcpFilling.help.reportIssue") }}
+        </a>
       </div>
     </section>
   </div>
@@ -599,12 +565,52 @@ defineOgImage("UniOgImage", {
 
 <style scoped>
 .cloudy-sky-page {
-  --color-primary: oklch(60% 0.12 245deg);
-  --color-primary-content: oklch(95% 0.02 245deg);
+  --color-primary: oklch(58% 0.09 245deg);
+  --color-primary-content: oklch(96% 0.02 245deg);
 }
 
-:global([data-theme="dark"]) .cloudy-sky-page {
-  --color-primary: oklch(75% 0.1 245deg);
-  --color-primary-content: oklch(95% 0.02 245deg);
+::global([data-theme="dark"]) .cloudy-sky-page {
+  --color-primary: oklch(74% 0.09 245deg);
+  --color-primary-content: oklch(16% 0.03 245deg);
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+/* One orchestrated moment: hero content rises on load */
+.hero-rise > * {
+  animation: hero-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.hero-rise > *:nth-child(2) {
+  animation-delay: 0.06s;
+}
+.hero-rise > *:nth-child(3) {
+  animation-delay: 0.12s;
+}
+.hero-rise > *:nth-child(4) {
+  animation-delay: 0.18s;
+}
+.hero-rise > *:nth-child(5) {
+  animation-delay: 0.24s;
+}
+.hero-rise > *:nth-child(6) {
+  animation-delay: 0.3s;
+}
+
+@keyframes hero-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 </style>
