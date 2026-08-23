@@ -45,14 +45,48 @@ const lang = computed(() => locale.value);
 const pathname = computed(() => route.fullPath);
 
 const navItems = computed(() => [
-  { to: localePath("/"), label: t("nav.explore"), icon: Compass },
-  { to: localePath("/products"), label: t("nav.products"), icon: Layers },
-  { to: localePath("/updates"), label: t("nav.updates"), icon: Newspaper },
+  { to: localePath("/"), label: t("nav.explore"), icon: Compass, exact: true },
+  {
+    to: localePath("/products"),
+    label: t("nav.products"),
+    icon: Layers,
+    exact: false,
+  },
+  {
+    to: localePath("/updates"),
+    label: t("nav.updates"),
+    icon: Newspaper,
+    exact: false,
+  },
 ]);
 
 const isMobileMenuOpen = ref(false);
-const isDark = ref(false);
 const themeMode = ref<"auto" | "light" | "dark">("auto");
+
+const displayName = computed(
+  () =>
+    solarProfile.value?.nick ||
+    solarProfile.value?.name ||
+    session.value?.user?.name,
+);
+
+const languageNames: Record<string, string> = {
+  en: "English",
+  zh: "中文",
+};
+
+const localeCodes: Record<string, string> = {
+  en: "EN",
+  zh: "中",
+};
+
+const themeLabel = computed(() =>
+  themeMode.value === "auto"
+    ? "Auto (system)"
+    : themeMode.value === "dark"
+      ? "Dark"
+      : "Light",
+);
 
 function getSystemTheme(): "light" | "dark" {
   return window.matchMedia("(prefers-color-scheme: dark)").matches
@@ -64,13 +98,15 @@ function applyTheme(mode: "auto" | "light" | "dark") {
   if (import.meta.server) return;
   const resolved = mode === "auto" ? getSystemTheme() : mode;
   document.documentElement.setAttribute("data-theme", resolved);
-  isDark.value = resolved === "dark";
 }
 
 function syncTheme() {
   if (import.meta.server) return;
   const stored = localStorage.getItem("theme") as
-    "auto" | "light" | "dark" | null;
+    | "auto"
+    | "light"
+    | "dark"
+    | null;
   themeMode.value = stored || "auto";
   applyTheme(themeMode.value);
 }
@@ -90,7 +126,7 @@ function cycleTheme() {
 
 function closeMobileMenu() {
   isMobileMenuOpen.value = false;
-  document.body.style.overflow = "";
+  if (import.meta.client) document.body.style.overflow = "";
 }
 
 function openMobileMenu() {
@@ -99,11 +135,8 @@ function openMobileMenu() {
 }
 
 function toggleMobileMenu() {
-  if (isMobileMenuOpen.value) {
-    closeMobileMenu();
-  } else {
-    openMobileMenu();
-  }
+  if (isMobileMenuOpen.value) closeMobileMenu();
+  else openMobileMenu();
 }
 
 function getLocalizedPath(targetLang: string): string {
@@ -111,88 +144,90 @@ function getLocalizedPath(targetLang: string): string {
   return `/${targetLang}${pathWithoutLang || "/"}`;
 }
 
-const languageNames: Record<string, string> = {
-  en: "English",
-  zh: "中文",
-};
+function onKeydown(event: KeyboardEvent) {
+  if (event.key === "Escape" && isMobileMenuOpen.value) closeMobileMenu();
+}
+
+let mediaQuery: MediaQueryList | null = null;
+function onSystemThemeChange() {
+  if (themeMode.value === "auto") applyTheme("auto");
+}
+
+watch(
+  () => route.fullPath,
+  () => closeMobileMenu(),
+);
 
 onMounted(() => {
   syncTheme();
+  mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+  mediaQuery.addEventListener("change", onSystemThemeChange);
+  window.addEventListener("keydown", onKeydown);
+});
 
-  window
-    .matchMedia("(prefers-color-scheme: dark)")
-    .addEventListener("change", () => {
-      if (themeMode.value === "auto") {
-        applyTheme("auto");
-      }
-    });
-
-  document.querySelectorAll("#mobile-menu a").forEach((link) => {
-    link.addEventListener("click", () => {
-      closeMobileMenu();
-    });
-  });
+onBeforeUnmount(() => {
+  mediaQuery?.removeEventListener("change", onSystemThemeChange);
+  window.removeEventListener("keydown", onKeydown);
+  closeMobileMenu();
 });
 </script>
 
 <template>
   <header
     id="site-navbar"
-    class="fixed left-0 right-0 z-40 overflow-visible"
-    :style="{ top: `calc(${bannerHeight})` }"
+    class="site-navbar"
+    :class="{ 'is-open': isMobileMenuOpen }"
+    :style="{ top: `calc(${props.bannerHeight})` }"
   >
-    <div class="navbar-glass">
-      <!-- Brand -->
-      <NuxtLink
-        :to="localePath('/')"
-        class="flex items-center gap-2 shrink-0 ms-4"
-      >
-        <img src="/favicon-64.png" :alt='t("nav.brandName")' class="w-8 h-8" />
-        <span class="font-bold text-lg hidden sm:inline">{{
-          t("nav.brandName")
-        }}</span>
-      </NuxtLink>
+    <div class="nav-bar">
+      <div class="nav-cluster">
+        <NuxtLink
+          :to="localePath('/')"
+          class="brand"
+          :aria-label="t('nav.brandName')"
+        >
+          <img src="/favicon-64.png" alt="" class="brand-mark" width="24" height="24">
+          <span class="brand-name">{{ t("nav.brandName") }}</span>
+        </NuxtLink>
 
-      <!-- Desktop nav -->
-      <nav
-        class="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-      >
-        <ul class="flex items-center gap-1">
-          <li v-for="item in navItems" :key="item.to">
-            <NuxtLink
-              :to="item.to"
-              class="nav-link"
-              active-class="!bg-base-content/10 !text-base-content"
-            >
-              <component :is="item.icon" class="w-4 h-4" />
-              {{ item.label }}
-            </NuxtLink>
-          </li>
-        </ul>
-      </nav>
+        <nav class="desktop-nav" :aria-label="t('nav.brandName')">
+          <ul>
+            <li v-for="item in navItems" :key="item.to">
+              <NuxtLink
+                :to="item.to"
+                class="nav-link"
+                :active-class="item.exact ? undefined : 'is-active'"
+                exact-active-class="is-active"
+              >
+                <component :is="item.icon" class="nav-ico" />
+                {{ item.label }}
+              </NuxtLink>
+            </li>
+          </ul>
+        </nav>
+      </div>
 
-      <!-- Actions -->
-      <div class="relative z-50 flex items-center gap-1 shrink-0 md:me-4">
-        <div class="dropdown dropdown-end z-50">
-          <div
+      <div class="nav-actions">
+        <div class="dropdown dropdown-end">
+          <button
             tabindex="0"
-            role="button"
-            class="flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
+            type="button"
+            class="nav-btn locale-btn"
+            :aria-label="languageNames[lang] || lang"
           >
-            <Languages class="h-5 w-5" />
-            <span class="hidden sm:inline">{{ languageNames[lang] }}</span>
-          </div>
+            <Languages class="icon" />
+            <span class="locale-code">{{ localeCodes[lang] || String(lang).toUpperCase() }}</span>
+          </button>
           <ul
             tabindex="0"
-            class="dropdown-content menu z-100 mt-2 w-40 rounded-lg border border-base-200 bg-base-100 p-1.5 shadow-md"
+            class="dropdown-content nav-popover menu"
           >
             <li v-for="l in locales" :key="typeof l === 'string' ? l : l.code">
               <NuxtLink
                 :to="getLocalizedPath(typeof l === 'string' ? l : l.code)"
                 :class="{
-                  active: (typeof l === 'string' ? l : l.code) === lang,
+                  'is-current': (typeof l === 'string' ? l : l.code) === lang,
                 }"
-                class="rounded-md"
               >
                 {{ typeof l === "string" ? languageNames[l] || l : l.name }}
               </NuxtLink>
@@ -200,91 +235,76 @@ onMounted(() => {
           </ul>
         </div>
 
-        <!-- Logged in: user dropdown -->
-        <div v-if="session?.user" class="dropdown dropdown-end z-50">
-          <div
+        <div v-if="session?.user" class="dropdown dropdown-end">
+          <button
             tabindex="0"
-            role="button"
-            class="flex h-9 w-9 items-center justify-center rounded-lg text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
+            type="button"
+            class="nav-btn avatar-btn"
             :aria-label="t('nav.profile')"
           >
             <img
               v-if="solarAvatar"
               :src="solarAvatar"
-              :alt="solarProfile?.nick || solarProfile?.name || session.user.name"
-              class="h-7 w-7 rounded-full object-cover"
+              :alt="displayName"
+              class="avatar-img"
             >
             <img
               v-else-if="session.user.image"
               :src="session.user.image"
               :alt="session.user.name"
-              class="h-7 w-7 rounded-full object-cover"
+              class="avatar-img"
             >
-            <CircleUser v-else class="h-5 w-5" />
-          </div>
-          <div
-            tabindex="0"
-            class="dropdown-content z-100 mt-2 w-56 overflow-hidden rounded-lg border border-base-200 bg-base-100 shadow-md"
-          >
-            <!-- Identity header -->
-            <div class="border-b border-base-200 px-3.5 py-3">
-              <div class="flex items-center gap-2.5">
-                <img
-                  v-if="solarAvatar"
-                  :src="solarAvatar"
-                  :alt="solarProfile?.nick || solarProfile?.name || session.user.name"
-                  class="h-9 w-9 shrink-0 rounded-full object-cover"
+            <CircleUser v-else class="icon" />
+          </button>
+          <div tabindex="0" class="dropdown-content nav-popover account-popover">
+            <div class="account-identity">
+              <img
+                v-if="solarAvatar"
+                :src="solarAvatar"
+                alt=""
+                class="avatar-img lg"
+              >
+              <img
+                v-else-if="session.user.image"
+                :src="session.user.image"
+                alt=""
+                class="avatar-img lg"
+              >
+              <div v-else class="avatar-fallback">
+                <CircleUser class="icon muted" />
+              </div>
+              <div class="account-copy">
+                <p class="account-name">
+                  {{ displayName }}
+                </p>
+                <p
+                  v-if="solarProfile?.name"
+                  class="account-meta"
                 >
-                <img
-                  v-else-if="session.user.image"
-                  :src="session.user.image"
-                  :alt="session.user.name"
-                  class="h-9 w-9 shrink-0 rounded-full object-cover"
+                  @{{ solarProfile.name }}
+                </p>
+                <p
+                  v-else-if="session?.user?.email"
+                  class="account-meta"
                 >
-                <div
-                  v-else
-                  class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-base-200"
-                >
-                  <CircleUser class="h-4 w-4 text-base-content/40" />
-                </div>
-                <div class="min-w-0">
-                  <p class="truncate text-sm font-semibold">
-                    {{ solarProfile?.nick || solarProfile?.name || session?.user?.name }}
-                  </p>
-                  <p
-                    v-if="solarProfile?.name"
-                    class="truncate text-xs text-base-content/45"
-                  >
-                    @{{ solarProfile.name }}
-                  </p>
-                  <p
-                    v-else-if="session?.user?.email"
-                    class="truncate text-xs text-base-content/45"
-                  >
-                    {{ session.user.email }}
-                  </p>
-                </div>
+                  {{ session.user.email }}
+                </p>
               </div>
             </div>
-
-            <ul class="menu p-1.5">
+            <ul class="menu">
               <li>
-                <NuxtLink
-                  :to="localePath('/auth/profile')"
-                  class="rounded-md gap-2"
-                  @click.stop
-                >
-                  <UserRound class="h-4 w-4" />
+                <NuxtLink :to="localePath('/auth/profile')" @click.stop>
+                  <UserRound class="icon" />
                   {{ t("nav.profile") }}
                 </NuxtLink>
               </li>
               <li>
                 <button
                   type="button"
-                  class="rounded-md gap-2 text-error"
+                  class="sign-out"
                   @click.stop="useAuth().signOut()"
                 >
-                  <LogOut class="h-4 w-4" />
+                  <LogOut class="icon" />
                   {{ t("nav.signOut") }}
                 </button>
               </li>
@@ -292,175 +312,587 @@ onMounted(() => {
           </div>
         </div>
 
-        <!-- Logged out: login link -->
         <NuxtLink
           v-else
           :to="localePath('/auth/login')"
-          class="flex h-9 w-9 items-center justify-center rounded-lg text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
+          class="sign-in"
           :aria-label="t('login.title')"
         >
-          <CircleUser class="h-5 w-5" />
+          <CircleUser class="icon sign-in-icon" />
+          <span class="sign-in-label">{{ t("login.title") }}</span>
         </NuxtLink>
 
         <button
           type="button"
-          class="flex h-9 w-9 items-center justify-center rounded-lg text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
-          :title="
-            themeMode === 'auto'
-              ? 'Auto (System)'
-              : themeMode === 'dark'
-                ? 'Dark'
-                : 'Light'
-          "
+          class="nav-btn"
+          :title="themeLabel"
+          :aria-label="themeLabel"
           @click="cycleTheme"
         >
-          <Monitor v-if="themeMode === 'auto'" class="h-5 w-5" />
-          <Sun v-else-if="themeMode === 'dark'" class="h-5 w-5" />
-          <Moon v-else class="h-5 w-5" />
+          <Monitor v-if="themeMode === 'auto'" class="icon" />
+          <Sun v-else-if="themeMode === 'dark'" class="icon" />
+          <Moon v-else class="icon" />
         </button>
 
         <button
           type="button"
-          class="relative flex h-9 w-9 items-center justify-center rounded-lg text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content md:hidden"
+          class="nav-btn menu-toggle"
+          :aria-expanded="isMobileMenuOpen"
+          aria-controls="mobile-menu"
+          :aria-label="isMobileMenuOpen ? 'Close menu' : 'Open menu'"
           @click="toggleMobileMenu"
         >
           <Menu
-            class="w-5 h-5 absolute transition-all duration-200"
-            :class="
-              isMobileMenuOpen ? 'opacity-0 rotate-90' : 'opacity-100 rotate-0'
-            "
+            class="icon menu-glyph"
+            :class="isMobileMenuOpen ? 'is-hidden' : 'is-shown'"
           />
           <X
-            class="w-5 h-5 absolute transition-all duration-200"
-            :class="
-              isMobileMenuOpen ? 'opacity-100 rotate-0' : 'opacity-0 rotate-90'
-            "
+            class="icon menu-glyph"
+            :class="isMobileMenuOpen ? 'is-shown' : 'is-hidden'"
           />
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Mobile Menu Panel -->
   <div
     id="mobile-menu"
-    class="fixed inset-0 z-40 pointer-events-none md:hidden"
+    class="mobile-layer"
+    :class="{ 'is-open': isMobileMenuOpen }"
+    :inert="!isMobileMenuOpen"
   >
-    <div
-      class="absolute inset-0 bg-base-300/60 backdrop-blur-sm opacity-0 transition-opacity duration-300"
-      :class="{ 'pointer-events-auto': isMobileMenuOpen }"
-      :style="{ opacity: isMobileMenuOpen ? 1 : 0 }"
-      @click="closeMobileMenu"
-    />
-    <div
-      class="absolute left-4 right-4 rounded-lg border border-base-200 bg-base-100 p-2 shadow-md transition-all duration-200"
-      :class="{
-        'pointer-events-auto': isMobileMenuOpen,
-        'pointer-events-none': !isMobileMenuOpen,
-      }"
-      :style="{
-        top: `calc(${bannerHeight} + 72px)`,
-        opacity: isMobileMenuOpen ? 1 : 0,
-        transform: isMobileMenuOpen
-          ? 'translateY(0)'
-          : 'translateY(-0.25rem)',
-      }"
+    <div class="mobile-scrim" @click="closeMobileMenu" />
+    <nav
+      class="mobile-sheet"
+      :style="{ top: `calc(${props.bannerHeight} + 4rem)` }"
+      :aria-hidden="!isMobileMenuOpen"
     >
-      <nav>
-        <ul class="flex flex-col gap-0.5">
-          <li v-for="item in navItems" :key="item.to">
-            <NuxtLink
-              :to="item.to"
-              class="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
-              active-class="!bg-base-content/10 !text-base-content"
-              @click="closeMobileMenu"
-            >
-              <component :is="item.icon" class="h-4 w-4" />
-              {{ item.label }}
-            </NuxtLink>
-          </li>
-          <li
-            v-if="session?.user"
-            class="mt-1 border-t border-base-200 pt-1"
+      <ul>
+        <li v-for="item in navItems" :key="item.to">
+          <NuxtLink
+            :to="item.to"
+            class="sheet-link"
+            :active-class="item.exact ? undefined : 'is-active'"
+            exact-active-class="is-active"
+            @click="closeMobileMenu"
           >
-            <NuxtLink
-              :to="localePath('/auth/profile')"
-              class="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
-              @click="closeMobileMenu"
-            >
-              <UserRound class="h-4 w-4" />
-              {{ t("nav.profile") }}
-            </NuxtLink>
-          </li>
-          <li v-else class="mt-1 border-t border-base-200 pt-1">
-            <NuxtLink
-              :to="localePath('/auth/login')"
-              class="flex items-center gap-3 rounded-md px-3 py-2.5 text-sm font-medium text-base-content/70 transition-colors duration-150 hover:bg-base-content/5 hover:text-base-content"
-              @click="closeMobileMenu"
-            >
-              <CircleUser class="h-4 w-4" />
-              {{ t("login.title") }}
-            </NuxtLink>
-          </li>
-        </ul>
-      </nav>
-    </div>
+            <component :is="item.icon" class="sheet-ico" />
+            {{ item.label }}
+          </NuxtLink>
+        </li>
+      </ul>
+      <div class="sheet-foot">
+        <NuxtLink
+          v-if="session?.user"
+          :to="localePath('/auth/profile')"
+          class="sheet-link"
+          @click="closeMobileMenu"
+        >
+          <UserRound class="sheet-ico" />
+          {{ t("nav.profile") }}
+        </NuxtLink>
+        <NuxtLink
+          v-else
+          :to="localePath('/auth/login')"
+          class="sheet-link"
+          @click="closeMobileMenu"
+        >
+          <CircleUser class="sheet-ico" />
+          {{ t("login.title") }}
+        </NuxtLink>
+      </div>
+    </nav>
   </div>
 </template>
 
 <style scoped>
-.navbar-glass {
-  position: relative;
-  display: flex;
-  height: 4rem; /* md:h-16 */
-  padding-inline: 1.5rem; /* md:px-6 */
-  align-items: center;
-  justify-content: space-between;
-  padding-inline: 1rem; /* px-4 */
-  background-color: color-mix(in srgb, var(--color-base-100) 60%, transparent);
-  box-shadow:
-    var(--tw-shadow, 0 0 #0000), var(--tw-shadow-colored, 0 0 #0000),
-    var(--tw-ring-shadow, 0 0 #0000);
-  --tw-shadow:
-    0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-  --tw-shadow-colored:
-    0 10px 15px -3px rgb(0 0 0 / 0.05), 0 4px 6px -4px rgb(0 0 0 / 0.05);
-  --tw-shadow-color: rgb(0 0 0 / 0.05);
+.site-navbar {
+  --nav-h: 4rem;
+  --nav-ink: var(--color-base-content);
+  --nav-quiet: color-mix(in srgb, var(--color-base-content) 48%, transparent);
+  --nav-line: color-mix(in srgb, var(--color-base-content) 10%, transparent);
+  --nav-veil: color-mix(in srgb, var(--color-base-100) 72%, transparent);
+  --nav-hover: color-mix(in srgb, var(--color-base-content) 5%, transparent);
+  --nav-mark: var(--color-primary);
 
-  &::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -10;
-    backdrop-filter: blur(40px);
-  }
+  position: fixed;
+  inset-inline: 0;
+  z-index: 40;
 }
 
-:global(.dark) .navbar-glass {
-  background-color: color-mix(in srgb, var(--color-base-100) 40%, transparent);
-  border-color: color-mix(in srgb, var(--color-base-content) 5%, transparent);
-  --tw-shadow-color: rgb(0 0 0 / 0.2);
+.nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--nav-h);
+  padding-inline: 1.25rem;
+  background: var(--nav-veil);
+  border-bottom: 1px solid var(--nav-line);
+  backdrop-filter: blur(18px) saturate(1.15);
+  -webkit-backdrop-filter: blur(18px) saturate(1.15);
+}
+
+.site-navbar.is-open .nav-bar {
+  background: var(--color-base-100);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.nav-cluster {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  color: var(--nav-ink);
+  text-decoration: none;
+  outline: none;
+}
+
+.brand:focus-visible {
+  border-radius: 0.25rem;
+  outline: 2px solid var(--nav-mark);
+  outline-offset: 4px;
+}
+
+.brand-mark {
+  width: 1.5rem;
+  height: 1.5rem;
+  flex-shrink: 0;
+}
+
+.brand-name {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.desktop-nav {
+  display: none;
+}
+
+.desktop-nav ul {
+  display: flex;
+  align-items: stretch;
+  gap: 1.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .nav-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  height: var(--nav-h);
+  color: var(--nav-quiet);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.nav-ico {
+  width: 0.95rem;
+  height: 0.95rem;
+  flex-shrink: 0;
+  opacity: 0.82;
+}
+
+.nav-link.is-active .nav-ico,
+.nav-link:hover .nav-ico {
+  opacity: 1;
+}
+
+.nav-link:hover,
+.nav-link:focus-visible {
+  color: var(--nav-ink);
+}
+
+.nav-link.is-active {
+  color: var(--nav-ink);
+}
+
+.nav-link::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -1px;
+  width: 0;
+  height: 2px;
+  background: currentColor;
+  border-radius: 1px;
+  transform: translateX(-50%);
+  transition: width 0.22s ease;
+}
+
+.nav-link.is-active::after {
+  width: 1.25rem;
+}
+.nav-link:focus-visible {
+  outline: 2px solid var(--nav-mark);
+  outline-offset: 4px;
+  border-radius: 0.15rem;
+}
+
+.nav-actions {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  border-radius: 9999px;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  line-height: 1.25rem;
-  font-weight: 500;
-  color: color-mix(in srgb, var(--color-base-content) 70%, transparent);
-  transition: all 0.2s;
+  gap: 0.125rem;
+  flex-shrink: 0;
+}
 
-  &:hover {
-    background-color: color-mix(
-      in srgb,
-      var(--color-base-content) 5%,
-      transparent
-    );
-    color: var(--color-base-content);
+.nav-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--nav-quiet);
+  cursor: pointer;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.nav-btn:hover,
+.nav-btn:focus-visible {
+  color: var(--nav-ink);
+  background: var(--nav-hover);
+}
+
+.nav-btn:focus-visible {
+  outline: 2px solid var(--nav-mark);
+  outline-offset: 2px;
+}
+
+.locale-btn {
+  width: auto;
+  min-width: 2.25rem;
+  gap: 0.3rem;
+  padding-inline: 0.55rem;
+}
+
+.locale-code {
+  display: none;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.icon {
+  width: 1.125rem;
+  height: 1.125rem;
+}
+
+.icon.muted {
+  color: var(--nav-quiet);
+}
+
+.sign-in {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  min-width: 2.25rem;
+  height: 2.25rem;
+  padding-inline: 0.7rem;
+  border-radius: 999px;
+  color: var(--nav-quiet);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.sign-in-label {
+  display: none;
+}
+
+.sign-in:hover,
+.sign-in:focus-visible {
+  color: var(--nav-ink);
+  background: var(--nav-hover);
+}
+
+.sign-in:focus-visible {
+  outline: 2px solid var(--nav-mark);
+  outline-offset: 2px;
+}
+
+.menu-toggle {
+  display: inline-flex;
+  overflow: hidden;
+}
+
+.menu-toggle .menu-glyph {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  transition:
+    opacity 0.18s ease,
+    transform 0.18s ease;
+}
+
+.menu-toggle .menu-glyph.is-shown {
+  opacity: 1;
+  transform: rotate(0deg);
+}
+
+.menu-toggle .menu-glyph.is-hidden {
+  opacity: 0;
+  pointer-events: none;
+  transform: rotate(90deg);
+}
+
+.avatar-img {
+  width: 1.5rem;
+  height: 1.5rem;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.avatar-img.lg {
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+}
+
+.avatar-btn {
+  overflow: hidden;
+}
+
+.nav-popover {
+  z-index: 100;
+  margin-top: 0.4rem;
+  padding: 0.35rem;
+  min-width: 10.5rem;
+  border: 1px solid var(--nav-line);
+  border-radius: 0.75rem;
+  background: var(--color-base-100);
+  box-shadow: 0 12px 32px color-mix(in srgb, var(--color-base-content) 6%, transparent);
+  color: var(--nav-ink);
+}
+
+.nav-popover :deep(a),
+.nav-popover :deep(button) {
+  border-radius: 0.45rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+}
+
+.nav-popover :deep(a.is-current) {
+  background: var(--nav-hover);
+  font-weight: 600;
+}
+
+.account-popover {
+  width: 15.5rem;
+  padding: 0;
+  overflow: hidden;
+}
+
+.account-identity {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.9rem 0.95rem 0.8rem;
+  border-bottom: 1px solid var(--nav-line);
+}
+
+.account-copy {
+  min-width: 0;
+}
+
+.account-name {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.account-meta {
+  margin: 0.1rem 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--nav-quiet);
+  font-size: 0.75rem;
+}
+
+.avatar-fallback {
+  display: flex;
+  width: 2.25rem;
+  height: 2.25rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--nav-hover);
+}
+
+.account-popover .menu {
+  padding: 0.35rem;
+}
+
+.sign-out {
+  color: var(--color-error);
+}
+
+.mobile-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  pointer-events: none;
+}
+
+.mobile-layer.is-open {
+  pointer-events: auto;
+}
+
+.mobile-scrim {
+  position: absolute;
+  inset: 0;
+  background: color-mix(in srgb, var(--color-base-100) 35%, transparent);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.mobile-layer.is-open .mobile-scrim {
+  opacity: 1;
+}
+
+.mobile-sheet {
+  position: absolute;
+  inset-inline: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 0.5rem 1.25rem 2rem;
+  background: var(--color-base-100);
+  border-top: 1px solid var(--nav-line);
+  opacity: 0;
+  transform: translateY(-0.4rem);
+  transition:
+    opacity 0.22s ease,
+    transform 0.22s ease;
+}
+
+.mobile-layer.is-open .mobile-sheet {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mobile-sheet ul {
+  margin: 0;
+  padding: 0.5rem 0;
+  list-style: none;
+}
+
+.sheet-link {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  min-height: 3.25rem;
+  color: var(--nav-quiet);
+  font-size: 1.35rem;
+  font-weight: 600;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.sheet-ico {
+  width: 1.2rem;
+  height: 1.2rem;
+  flex-shrink: 0;
+  opacity: 0.7;
+}
+
+.sheet-link.is-active .sheet-ico,
+.sheet-link:hover .sheet-ico {
+  opacity: 1;
+}
+
+.sheet-link:hover,
+.sheet-link:focus-visible,
+.sheet-link.is-active {
+  color: var(--nav-ink);
+}
+
+.sheet-link:focus-visible {
+  outline: 2px solid var(--nav-mark);
+  outline-offset: 4px;
+  border-radius: 0.2rem;
+}
+
+.sheet-foot {
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--nav-line);
+}
+
+.sheet-foot .sheet-link {
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+
+@media (min-width: 768px) {
+  .nav-bar {
+    padding-inline: 1.75rem;
   }
+
+  .desktop-nav {
+    display: block;
+  }
+
+  .menu-toggle,
+  .mobile-layer {
+    display: none;
+  }
+
+  .sign-in-label,
+  .locale-code {
+    display: inline;
+  }
+}
+
+@media (min-width: 1024px) {
+  .nav-bar {
+    padding-inline: 2.25rem;
+  }
+
+  .nav-cluster {
+    gap: 2.5rem;
+  }
+
+  .desktop-nav ul {
+    gap: 2rem;
+  }
+}
+
+:global([data-theme="dark"]) .site-navbar {
+  --nav-veil: color-mix(in srgb, var(--color-base-100) 55%, transparent);
+  --nav-line: color-mix(in srgb, var(--color-base-content) 12%, transparent);
 }
 </style>
