@@ -1086,6 +1086,95 @@
       "title": "Need Help?",
       "desc": "Found a bug or have feedback? Open an issue on GitHub and we'll take a look."
     }
+  },
+  "maidTerm": {
+    "tagline": "A local-first desktop terminal emulator — real PTY sessions on a Ghostty-powered engine.",
+    "openSource": "Open Source",
+    "badgeLocal": "Local-first",
+    "badgeEngine": "Powered by Ghostty",
+    "about": {
+      "badge": "About",
+      "title": "A terminal that stays out of your way",
+      "desc": "MaidTerm is a desktop terminal emulator built on the MaidTerm engine — a Flutter terminal engine that wraps the Ghostty emulator core through Dart FFI. Shells run locally over a real PTY, sessions live in tabs and splits, and every setting persists on your machine."
+    },
+    "aboutCard": {
+      "ghostty": {
+        "title": "Ghostty-powered",
+        "desc": "The libghostty-vt emulator core handles escape sequences, graphics protocols, input encoding, and painting — a real VT engine, not a web view."
+      },
+      "localFirst": {
+        "title": "Local-first",
+        "desc": "Shells spawn on your machine over a real PTY with process-level title tracking. No accounts, no sync, no telemetry."
+      },
+      "desktopNative": {
+        "title": "Desktop native",
+        "desc": "A frameless window frame rendered by the app's own UI layer, on macOS, Windows, and Linux."
+      }
+    },
+    "features": {
+      "badge": "Features",
+      "title": "Everything a real terminal does",
+      "desc": "Full emulation fidelity from the Ghostty core, wrapped in a calm multi-session workspace.",
+      "pty": {
+        "title": "Real PTY sessions",
+        "desc": "Local shell sessions backed by a genuine PTY, with process-level title tracking for tabs and prompts."
+      },
+      "workspace": {
+        "title": "Tabs & splits",
+        "desc": "Multiple terminals in tabs and split layouts, with drag-and-drop tab transfer between windows."
+      },
+      "graphics": {
+        "title": "Kitty graphics & sixel",
+        "desc": "View images directly inside the terminal via the kitty graphics protocol or sixel."
+      },
+      "keyboard": {
+        "title": "Kitty keyboard protocol",
+        "desc": "Modern keyboard enhancement protocol for TUI apps that want every key, modifier, and event."
+      },
+      "color": {
+        "title": "Truecolor & schemes",
+        "desc": "24-bit color with configurable color schemes, fonts, and cursor behavior — all persisted locally."
+      },
+      "osc": {
+        "title": "Rich OSC support",
+        "desc": "OSC 0/2/7/9;4/10/11/52/133 plus OSC 8 hyperlinks — titles, colors, clipboard, and shell integration."
+      },
+      "frameless": {
+        "title": "Custom window frame",
+        "desc": "A quiet frameless desktop window drawn by the app itself, so the chrome matches the canvas."
+      },
+      "engine": {
+        "title": "Shared with MaidKit",
+        "desc": "Built on the same maidterm engine package that powers MaidKit's terminal — battle-tested across both apps."
+      }
+    },
+    "download": {
+      "btn": "Download",
+      "sectionTitle": "Get MaidTerm",
+      "sectionDesc": "Pick your platform and install the latest build. Release artifacts are hosted by Distribution; source code lives on GitHub.",
+      "direct": "Direct Download",
+      "viewGithub": "View on GitHub",
+      "release": {
+        "expand": "Show full changelog",
+        "collapse": "Show less"
+      },
+      "macos": {
+        "title": "macOS",
+        "desc": "Download the latest macOS build archive from Distribution."
+      },
+      "windows": {
+        "title": "Windows",
+        "desc": "Download the Windows installer from Distribution."
+      },
+      "linux": {
+        "title": "Linux",
+        "desc": "Download the Linux build bundle from Distribution."
+      }
+    },
+    "help": {
+      "title": "Need Help?",
+      "desc": "Found a bug or have feedback? Open an issue on GitHub and we'll take a look."
+    }
   }
 }
 

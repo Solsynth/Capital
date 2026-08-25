@@ -1,0 +1,18 @@
+{
+  "title": "MaidTerm",
+  "description": "A local-first desktop terminal emulator for macOS, Windows, and Linux — powered by the Ghostty engine.",
+  "icon": "/images/maid-term/icon.png",
+  "background": "/images/maid-term/main-visual.webp",
+  "repo": "https://github.com/Solsynth/MaidTerm",
+  "distributionProductId": "dd7632e5-80b2-4e56-8248-edc0240e0fe3",
+  "hasPage": true,
+  "tags": [
+    "Terminal",
+    "Desktop",
+    "macOS",
+    "Windows",
+    "Linux"
+  ],
+  "series": "MaidTerm",
+  "color": "#ff9e9b"
+}

@@ -1,0 +1,18 @@
+{
+  "title": "MaidTerm",
+  "description": "本地优先的桌面终端模拟器，覆盖 macOS、Windows 与 Linux — 由 Ghostty 引擎驱动。",
+  "icon": "/images/maid-term/icon.png",
+  "background": "/images/maid-term/main-visual.webp",
+  "repo": "https://github.com/Solsynth/MaidTerm",
+  "distributionProductId": "dd7632e5-80b2-4e56-8248-edc0240e0fe3",
+  "hasPage": true,
+  "tags": [
+    "终端",
+    "桌面端",
+    "macOS",
+    "Windows",
+    "Linux"
+  ],
+  "series": "MaidTerm",
+  "color": "#ff9e9b"
+}

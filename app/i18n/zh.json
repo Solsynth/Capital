@@ -1086,6 +1086,95 @@
       "title": "需要帮助？",
       "desc": "发现问题或有反馈？请在 GitHub 上提交 Issue，我们会处理。"
     }
+  },
+  "maidTerm": {
+    "tagline": "本地优先的桌面终端模拟器 — 由 Ghostty 引擎驱动的真实 PTY 会话。",
+    "openSource": "开源",
+    "badgeLocal": "本地优先",
+    "badgeEngine": "Ghostty 引擎",
+    "about": {
+      "badge": "关于",
+      "title": "安静可靠的终端",
+      "desc": "MaidTerm 是基于 MaidTerm 引擎构建的桌面终端模拟器 — 该引擎通过 Dart FFI 封装 Ghostty 模拟器核心。Shell 通过真实 PTY 在本地运行，会话以标签页与分屏组织，所有设置都保存在你自己的机器上。"
+    },
+    "aboutCard": {
+      "ghostty": {
+        "title": "Ghostty 驱动",
+        "desc": "libghostty-vt 模拟器核心负责转义序列、图形协议、输入编码与绘制 — 真正的 VT 引擎，而非网页视图。"
+      },
+      "localFirst": {
+        "title": "本地优先",
+        "desc": "Shell 通过真实 PTY 在你的机器上启动，并跟踪进程级标题。没有账号、没有同步、没有遥测。"
+      },
+      "desktopNative": {
+        "title": "桌面原生",
+        "desc": "由应用自身 UI 层绘制的无边框窗口，覆盖 macOS、Windows 与 Linux。"
+      }
+    },
+    "features": {
+      "badge": "功能",
+      "title": "真终端该有的都有",
+      "desc": "来自 Ghostty 核心的完整模拟保真度，包裹在一个安静的多会话工作区里。",
+      "pty": {
+        "title": "真实 PTY 会话",
+        "desc": "基于真实 PTY 的本地 Shell 会话，配合进程级标题跟踪，标签页与提示符始终准确。"
+      },
+      "workspace": {
+        "title": "标签页与分屏",
+        "desc": "多个终端以标签页与分屏布局共存，支持跨窗口拖拽转移标签页。"
+      },
+      "graphics": {
+        "title": "Kitty 图形与 sixel",
+        "desc": "通过 kitty graphics protocol 或 sixel 直接在终端内查看图片。"
+      },
+      "keyboard": {
+        "title": "Kitty 键盘协议",
+        "desc": "现代键盘增强协议，让 TUI 应用能拿到每一个按键、修饰键与事件。"
+      },
+      "color": {
+        "title": "真彩与配色方案",
+        "desc": "24 位色，可配置配色方案、字体与光标行为 — 全部保存在本地。"
+      },
+      "osc": {
+        "title": "丰富的 OSC 支持",
+        "desc": "OSC 0/2/7/9;4/10/11/52/133 以及 OSC 8 超链接 — 标题、颜色、剪贴板与 Shell 集成。"
+      },
+      "frameless": {
+        "title": "自定义窗口边框",
+        "desc": "由应用自己绘制的简洁无边框桌面窗口，窗框与终端画布浑然一体。"
+      },
+      "engine": {
+        "title": "与 MaidKit 同源",
+        "desc": "与 MaidKit 内置终端共用同一 maidterm 引擎包 — 在两个应用中久经考验。"
+      }
+    },
+    "download": {
+      "btn": "下载",
+      "sectionTitle": "获取 MaidTerm",
+      "sectionDesc": "选择平台并安装最新构建。发布构件由 Distribution 托管，源代码位于 GitHub。",
+      "direct": "直接下载",
+      "viewGithub": "在 GitHub 查看",
+      "release": {
+        "expand": "展开完整更新日志",
+        "collapse": "收起"
+      },
+      "macos": {
+        "title": "macOS",
+        "desc": "从 Distribution 下载最新的 macOS 构建归档。"
+      },
+      "windows": {
+        "title": "Windows",
+        "desc": "从 Distribution 下载 Windows 安装包。"
+      },
+      "linux": {
+        "title": "Linux",
+        "desc": "从 Distribution 下载 Linux 构建包。"
+      }
+    },
+    "help": {
+      "title": "需要帮助？",
+      "desc": "发现问题或有反馈？请在 GitHub 上提交 Issue，我们会处理。"
+    }
   }
 }
 
