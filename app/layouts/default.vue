@@ -11,8 +11,9 @@ const siteUrl = 'https://solsynth.dev'
 const canonicalUrl = computed(() => `${siteUrl}${route.path}`)
 
 useHead({
-  // nuxt-seo-utils injects "%s | Solsynth" via automaticDefaults; keep bare titles
-  titleTemplate: null,
+  // Single localized brand suffix; overrides nuxt-seo-utils' "%s %separator %siteName"
+  // which uses the non-localized site name.
+  titleTemplate: (chunk?: string) => (chunk ? `${chunk} | ${siteName.value}` : siteName.value),
   htmlAttrs: { lang: () => locale.value },
   link: [
     { rel: 'canonical', href: canonicalUrl.value },
