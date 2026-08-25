@@ -179,7 +179,6 @@ export default defineNuxtConfig({
 
   app: {
     head: {
-      titleTemplate: "%s | Solsynth",
       script: [
         {
           innerHTML: `(function(){try{var t=localStorage.getItem('theme')||'auto';var d=t==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light':t;document.documentElement.setAttribute('data-theme',d)}catch(e){}})()`,

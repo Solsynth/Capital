@@ -5,18 +5,15 @@ const localePath = useLocalePath()
 
 const lang = computed(() => locale.value as string)
 const siteName = computed(() => t('seo.siteName'))
-const fullTitle = computed(() => {
-  const pageTitle = route.meta?.title as string
-  if (!pageTitle) return siteName.value
-  return `${pageTitle} - ${siteName.value}`
-})
+const fullTitle = computed(() => (route.meta?.title as string) || siteName.value)
 
 const siteUrl = 'https://solsynth.dev'
 const canonicalUrl = computed(() => `${siteUrl}${route.path}`)
 
 useHead({
+  // nuxt-seo-utils injects "%s | Solsynth" via automaticDefaults; keep bare titles
+  titleTemplate: null,
   htmlAttrs: { lang: () => locale.value },
-  title: fullTitle,
   link: [
     { rel: 'canonical', href: canonicalUrl.value },
   ],
