@@ -300,13 +300,16 @@
   "solarNetwork.download.web.title": "网页浏览器",
   "solarNetwork.download.web.desc": "直接在浏览器中访问 Solar Network，无需安装。",
   "solarNetwork.download.ios.title": "iPhone 和 iPad",
-  "solarNetwork.download.ios.desc": "加入 TestFlight 测试版，提前在 iOS 上体验。",
+  "solarNetwork.download.ios.desc": "已上架 App Store。也可加入 TestFlight，第一时间获取更新。",
+  "solarNetwork.download.ios.appStore": "在 App Store 下载",
+  "solarNetwork.download.cnNotice": "Solar Network 暂未在中国大陆 App Store 上架，可通过加入 TestFlight 体验。",
   "solarNetwork.download.ios.testflight": "加入 TestFlight",
   "solarNetwork.download.android.title": "Android",
   "solarNetwork.download.android.desc": "从 Distribution 下载 APK。",
   "solarNetwork.download.android.download": "下载 APK",
   "solarNetwork.download.macos.title": "macOS",
-  "solarNetwork.download.macos.desc": "通过 TestFlight 安装 Mac 测试版，也可使用 Homebrew 或直接下载构建包。",
+  "solarNetwork.download.macos.desc": "已上架 Mac App Store；也可通过 Homebrew、直接下载或 TestFlight 安装。",
+  "solarNetwork.download.macos.appStore": "在 Mac App Store 下载",
   "solarNetwork.download.macos.testflight": "加入 TestFlight",
   "solarNetwork.download.macos.github": "从 Distribution 下载",
   "solarNetwork.download.windows.title": "Windows",
@@ -1065,12 +1068,14 @@
       },
       "ios": {
         "title": "iPhone 与 iPad",
-        "desc": "通过 TestFlight 加入 beta，抢先在 iOS 上体验。",
+        "desc": "从 App Store 安装，或通过 TestFlight 加入 beta 抢先体验。",
+        "appStore": "在 App Store 下载",
         "testflight": "加入 TestFlight"
       },
       "macos": {
         "title": "macOS",
-        "desc": "通过 TestFlight 体验 Mac beta，或直接下载构建归档。",
+        "desc": "从 Mac App Store 安装，或通过 TestFlight 体验 Mac beta。",
+        "appStore": "在 Mac App Store 下载",
         "testflight": "加入 TestFlight"
       },
       "windows": {

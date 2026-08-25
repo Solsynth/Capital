@@ -47,6 +47,27 @@ const { t } = useI18n();
 const PRODUCT_SLUG = "maid-kit";
 const GITHUB_REPO = "https://github.com/Solsynth/MaidKit";
 const TESTFLIGHT_URL = "https://testflight.apple.com/join/fVQB3qq5";
+const APP_STORE_URL = "https://apps.apple.com/app/id6793576897";
+const APP_STORE_BADGE = {
+  en: {
+    light: "/images/app-store/app-store-en-light.svg",
+    dark: "/images/app-store/app-store-en-dark.svg",
+  },
+  zh: {
+    light: "/images/app-store/app-store-zh-light.svg",
+    dark: "/images/app-store/app-store-zh-dark.svg",
+  },
+};
+const MAC_APP_STORE_BADGE = {
+  en: {
+    light: "/images/app-store/mac-app-store-en-light.svg",
+    dark: "/images/app-store/mac-app-store-en-dark.svg",
+  },
+  zh: {
+    light: "/images/app-store/mac-app-store-zh-light.svg",
+    dark: "/images/app-store/mac-app-store-zh-dark.svg",
+  },
+};
 
 const aboutCards = [
   {
@@ -233,10 +254,19 @@ const platforms: ProductDownloadPlatform[] = [
     descKey: "maidKit.download.ios.desc",
     actions: [
       {
+        href: APP_STORE_URL,
+        label: "maidKit.download.ios.appStore",
+        i18n: true,
+        variant: "primary",
+        icon: IconsIconIos,
+        iconClass: "fill-current",
+        badge: APP_STORE_BADGE,
+      },
+      {
         href: TESTFLIGHT_URL,
         label: "maidKit.download.ios.testflight",
         i18n: true,
-        variant: "primary",
+        variant: "outline",
         icon: IconsIconIos,
         iconClass: "fill-current",
       },
@@ -251,10 +281,19 @@ const platforms: ProductDownloadPlatform[] = [
     descKey: "maidKit.download.macos.desc",
     actions: [
       {
+        href: APP_STORE_URL,
+        label: "maidKit.download.macos.appStore",
+        i18n: true,
+        variant: "primary",
+        icon: IconsIconMacos,
+        iconClass: "fill-current",
+        badge: MAC_APP_STORE_BADGE,
+      },
+      {
         href: TESTFLIGHT_URL,
         label: "maidKit.download.macos.testflight",
         i18n: true,
-        variant: "primary",
+        variant: "outline",
         icon: IconsIconMacos,
         iconClass: "fill-current",
       },

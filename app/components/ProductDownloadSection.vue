@@ -6,6 +6,7 @@ import {
   CodeXml,
   Copy,
   Download,
+  Info,
   LoaderCircle,
   Tag,
 } from "@lucide/vue"
@@ -285,7 +286,21 @@ async function copyCommand() {
                 class="flex items-start gap-3 rounded-lg border px-4 py-3 transition-colors"
                 :class="actionRowClass[action.variant]"
               >
-                <div class="flex-1 min-w-0">
+                <template v-if="action.badge">
+                  <img
+                    :src="locale === 'zh' ? action.badge.zh.light : action.badge.en.light"
+                    :alt="action.i18n ? t(action.label) : action.label"
+                    class="h-11 w-auto store-badge-light"
+                    loading="lazy"
+                  />
+                  <img
+                    :src="locale === 'zh' ? action.badge.zh.dark : action.badge.en.dark"
+                    :alt="action.i18n ? t(action.label) : action.label"
+                    class="h-11 w-auto store-badge-dark"
+                    loading="lazy"
+                  />
+                </template>
+                <div v-else class="flex-1 min-w-0">
                   <div class="flex flex-wrap items-center gap-2">
                     <span class="text-sm font-medium">
                       {{ action.i18n ? t(action.label) : action.label }}
@@ -326,16 +341,22 @@ async function copyCommand() {
                     </code>
                   </div>
                 </div>
-                <Download class="w-4 h-4 shrink-0 opacity-60 mt-0.5" />
+                <Download v-if="!action.badge" class="w-4 h-4 shrink-0 opacity-60 mt-0.5" />
               </a>
             </template>
             <div
-              v-if="!hasAvailableAction"
               class="rounded-lg border border-dashed border-base-content/10 bg-base-100/50 px-4 py-3 text-sm opacity-60"
             >
               {{ t("releases.noDownloads") }}
             </div>
           </div>
+          <p
+            v-if="currentPlatform.noticeKey"
+            class="mt-4 flex items-start gap-2 text-xs opacity-60 leading-relaxed"
+          >
+            <Info class="w-3.5 h-3.5 shrink-0 mt-0.5" aria-hidden="true" />
+            {{ t(currentPlatform.noticeKey) }}
+          </p>
         </div>
       </div>
     </div>
@@ -377,5 +398,21 @@ async function copyCommand() {
 .release-notes :deep(h3) {
   margin-top: 0.75em;
   margin-bottom: 0.35em;
+}
+
+.store-badge-light {
+  display: inline-block;
+}
+
+.store-badge-dark {
+  display: none;
+}
+
+:global([data-theme="dark"]) .store-badge-light {
+  display: none;
+}
+
+:global([data-theme="dark"]) .store-badge-dark {
+  display: inline-block;
 }
 </style>

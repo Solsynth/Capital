@@ -300,13 +300,16 @@
   "solarNetwork.download.web.title": "Web Browser",
   "solarNetwork.download.web.desc": "Access Solar Network directly from your browser. No installation required.",
   "solarNetwork.download.ios.title": "iPhone & iPad",
-  "solarNetwork.download.ios.desc": "Join the TestFlight beta to get early access on iOS.",
+  "solarNetwork.download.ios.desc": "Available on the App Store. Join the TestFlight beta to get updates as soon as they ship.",
+  "solarNetwork.download.ios.appStore": "Download on the App Store",
+  "solarNetwork.download.cnNotice": "Solar Network is not yet available on the mainland China App Store — join the TestFlight beta instead.",
   "solarNetwork.download.ios.testflight": "Join TestFlight",
   "solarNetwork.download.android.title": "Android",
   "solarNetwork.download.android.desc": "Download the APK from Distribution.",
   "solarNetwork.download.android.download": "Download APK",
   "solarNetwork.download.macos.title": "macOS",
-  "solarNetwork.download.macos.desc": "Join TestFlight for the Mac beta, install via Homebrew, or download the build directly.",
+  "solarNetwork.download.macos.desc": "Available on the Mac App Store. Also via Homebrew, direct download, or TestFlight.",
+  "solarNetwork.download.macos.appStore": "Download on the Mac App Store",
   "solarNetwork.download.macos.testflight": "Join TestFlight",
   "solarNetwork.download.macos.github": "Download from Distribution",
   "solarNetwork.download.windows.title": "Windows",
@@ -1065,12 +1068,14 @@
       },
       "ios": {
         "title": "iPhone & iPad",
-        "desc": "Join the TestFlight beta for early access on iOS.",
+        "desc": "Install from the App Store, or join the TestFlight beta for early access.",
+        "appStore": "Download on the App Store",
         "testflight": "Join TestFlight"
       },
       "macos": {
         "title": "macOS",
-        "desc": "Join TestFlight for the Mac beta, or download the build archive directly.",
+        "desc": "Install from the Mac App Store, or join TestFlight for the beta.",
+        "appStore": "Download on the Mac App Store",
         "testflight": "Join TestFlight"
       },
       "windows": {

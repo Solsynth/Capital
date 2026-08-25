@@ -1,5 +1,10 @@
 import type { Component } from "vue"
 
+export type ProductDownloadBadge = {
+  en: { light: string; dark: string }
+  zh: { light: string; dark: string }
+}
+
 export type ProductDownloadAction = {
   href?: string
   artifactPlatform?: string
@@ -9,6 +14,7 @@ export type ProductDownloadAction = {
   variant: "primary" | "outline" | "ghost"
   icon: Component
   iconClass?: string
+  badge?: ProductDownloadBadge
 }
 
 export type ProductDownloadPlatform = {
@@ -19,5 +25,5 @@ export type ProductDownloadPlatform = {
   titleKey: string
   descKey: string
   brew?: boolean
-  actions: ProductDownloadAction[]
+  noticeKey?: string
 }

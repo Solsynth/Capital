@@ -40,6 +40,27 @@ import StarRating from "~/components/StarRating.vue";
 const { t, locale } = useI18n();
 
 const PRODUCT_SLUG = "solar-network";
+const APP_STORE_URL = "https://apps.apple.com/app/id6499032345";
+const APP_STORE_BADGE = {
+  en: {
+    light: "/images/app-store/app-store-en-light.svg",
+    dark: "/images/app-store/app-store-en-dark.svg",
+  },
+  zh: {
+    light: "/images/app-store/app-store-zh-light.svg",
+    dark: "/images/app-store/app-store-zh-dark.svg",
+  },
+};
+const MAC_APP_STORE_BADGE = {
+  en: {
+    light: "/images/app-store/mac-app-store-en-light.svg",
+    dark: "/images/app-store/mac-app-store-en-dark.svg",
+  },
+  zh: {
+    light: "/images/app-store/mac-app-store-zh-light.svg",
+    dark: "/images/app-store/mac-app-store-zh-dark.svg",
+  },
+};
 const docsUrl = computed(() =>
   locale.value === "zh"
     ? "https://kb.solsynth.dev/zh/solar-network/account/"
@@ -295,12 +316,22 @@ const platforms: ProductDownloadPlatform[] = [
     iconClass: "fill-current",
     titleKey: "solarNetwork.download.ios.title",
     descKey: "solarNetwork.download.ios.desc",
+    noticeKey: "solarNetwork.download.cnNotice",
     actions: [
+      {
+        href: APP_STORE_URL,
+        label: "solarNetwork.download.ios.appStore",
+        i18n: true,
+        variant: "primary",
+        icon: IconsIconIos,
+        iconClass: "fill-current",
+        badge: APP_STORE_BADGE,
+      },
       {
         href: "https://testflight.apple.com/join/YJ0lmN6O",
         label: "solarNetwork.download.ios.testflight",
         i18n: true,
-        variant: "primary",
+        variant: "outline",
         icon: IconsIconIos,
         iconClass: "fill-current",
       },
@@ -348,12 +379,22 @@ const platforms: ProductDownloadPlatform[] = [
     titleKey: "solarNetwork.download.macos.title",
     descKey: "solarNetwork.download.macos.desc",
     brew: true,
+    noticeKey: "solarNetwork.download.cnNotice",
     actions: [
+      {
+        href: APP_STORE_URL,
+        label: "solarNetwork.download.macos.appStore",
+        i18n: true,
+        variant: "primary",
+        icon: IconsIconMacos,
+        iconClass: "fill-current",
+        badge: MAC_APP_STORE_BADGE,
+      },
       {
         href: "https://testflight.apple.com/join/YJ0lmN6O",
         label: "solarNetwork.download.macos.testflight",
         i18n: true,
-        variant: "primary",
+        variant: "outline",
         icon: IconsIconMacos,
         iconClass: "fill-current",
       },
