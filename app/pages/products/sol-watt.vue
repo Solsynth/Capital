@@ -3,20 +3,26 @@ import ProductDownloadSection from "~/components/ProductDownloadSection.vue";
 import type { ProductDownloadPlatform } from "~/types/product-download";
 import {
   AppWindow,
+  Bell,
   Bug,
+  Building2,
   CodeXml,
+  Database,
   Download,
-  FolderGit2,
+  FileInput,
+  GitBranch,
+  HardDrive,
   Image,
-  Keyboard,
-  LayoutDashboard,
+  Kanban,
+  Layers,
+  LogIn,
+  Mail,
   Monitor,
-  Palette,
-  SquareTerminal,
+  RadioTower,
+  Send,
   Star,
-  TerminalSquare,
-  Waves,
 } from "@lucide/vue";
+import IconsIconAndroid from "~/components/Icons/IconAndroid.vue";
 import IconsIconLinux from "~/components/Icons/IconLinux.vue";
 import IconsIconMacos from "~/components/Icons/IconMacos.vue";
 import ReviewSummary from "~/components/ReviewSummary.vue";
@@ -28,107 +34,121 @@ import { useProductReviews } from "~/composables/useProductReviews";
 import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
 
 const { t } = useI18n();
-const PRODUCT_SLUG = "maid-term";
-const GITHUB_REPO = "https://github.com/Solsynth/MaidTerm";
+
+const PRODUCT_SLUG = "sol-watt";
+const REPO_URL = "https://src.solsynth.dev/SoSYS/SolWatt";
 
 const aboutCards = [
   {
-    icon: SquareTerminal,
-    titleKey: "maidTerm.aboutCard.ghostty.title",
-    descKey: "maidTerm.aboutCard.ghostty.desc",
-  },
-  {
-    icon: Waves,
-    titleKey: "maidTerm.aboutCard.localFirst.title",
-    descKey: "maidTerm.aboutCard.localFirst.desc",
-  },
-  {
     icon: AppWindow,
-    titleKey: "maidTerm.aboutCard.desktopNative.title",
-    descKey: "maidTerm.aboutCard.desktopNative.desc",
+    titleKey: "solWatt.aboutCard.shell.title",
+    descKey: "solWatt.aboutCard.shell.desc",
+  },
+  {
+    icon: Building2,
+    titleKey: "solWatt.aboutCard.workspace.title",
+    descKey: "solWatt.aboutCard.workspace.desc",
+  },
+  {
+    icon: RadioTower,
+    titleKey: "solWatt.aboutCard.realtime.title",
+    descKey: "solWatt.aboutCard.realtime.desc",
   },
 ] as const;
 
 const features = [
   {
-    key: "pty",
-    icon: TerminalSquare,
-    titleKey: "maidTerm.features.pty.title",
-    descKey: "maidTerm.features.pty.desc",
+    key: "signIn",
+    icon: LogIn,
+    titleKey: "solWatt.features.signIn.title",
+    descKey: "solWatt.features.signIn.desc",
   },
   {
-    key: "workspace",
-    icon: LayoutDashboard,
-    titleKey: "maidTerm.features.workspace.title",
-    descKey: "maidTerm.features.workspace.desc",
+    key: "workspaces",
+    icon: Layers,
+    titleKey: "solWatt.features.workspaces.title",
+    descKey: "solWatt.features.workspaces.desc",
   },
   {
-    key: "graphics",
+    key: "mail",
+    icon: Mail,
+    titleKey: "solWatt.features.mail.title",
+    descKey: "solWatt.features.mail.desc",
+  },
+  {
+    key: "mailImport",
+    icon: FileInput,
+    titleKey: "solWatt.features.mailImport.title",
+    descKey: "solWatt.features.mailImport.desc",
+  },
+  {
+    key: "boards",
+    icon: Kanban,
+    titleKey: "solWatt.features.boards.title",
+    descKey: "solWatt.features.boards.desc",
+  },
+  {
+    key: "github",
+    icon: GitBranch,
+    titleKey: "solWatt.features.github.title",
+    descKey: "solWatt.features.github.desc",
+  },
+  {
+    key: "drive",
+    icon: HardDrive,
+    titleKey: "solWatt.features.drive.title",
+    descKey: "solWatt.features.drive.desc",
+  },
+  {
+    key: "viewer",
     icon: Image,
-    titleKey: "maidTerm.features.graphics.title",
-    descKey: "maidTerm.features.graphics.desc",
+    titleKey: "solWatt.features.viewer.title",
+    descKey: "solWatt.features.viewer.desc",
   },
   {
-    key: "keyboard",
-    icon: Keyboard,
-    titleKey: "maidTerm.features.keyboard.title",
-    descKey: "maidTerm.features.keyboard.desc",
+    key: "notifications",
+    icon: Bell,
+    titleKey: "solWatt.features.notifications.title",
+    descKey: "solWatt.features.notifications.desc",
   },
   {
-    key: "color",
-    icon: Palette,
-    titleKey: "maidTerm.features.color.title",
-    descKey: "maidTerm.features.color.desc",
+    key: "realtime",
+    icon: RadioTower,
+    titleKey: "solWatt.features.realtime.title",
+    descKey: "solWatt.features.realtime.desc",
   },
   {
-    key: "osc",
-    icon: CodeXml,
-    titleKey: "maidTerm.features.osc.title",
-    descKey: "maidTerm.features.osc.desc",
+    key: "push",
+    icon: Send,
+    titleKey: "solWatt.features.push.title",
+    descKey: "solWatt.features.push.desc",
   },
   {
-    key: "frameless",
+    key: "desktop",
     icon: Monitor,
-    titleKey: "maidTerm.features.frameless.title",
-    descKey: "maidTerm.features.frameless.desc",
+    titleKey: "solWatt.features.desktop.title",
+    descKey: "solWatt.features.desktop.desc",
   },
   {
-    key: "engine",
-    icon: FolderGit2,
-    titleKey: "maidTerm.features.engine.title",
-    descKey: "maidTerm.features.engine.desc",
+    key: "flywheel",
+    icon: Database,
+    titleKey: "solWatt.features.flywheel.title",
+    descKey: "solWatt.features.flywheel.desc",
   },
 ] as const;
 
 const platforms: ProductDownloadPlatform[] = [
   {
-    id: "macos",
-    label: "macOS",
-    icon: IconsIconMacos,
-    iconClass: "fill-current",
-    titleKey: "maidTerm.download.macos.title",
-    descKey: "maidTerm.download.macos.desc",
-    actions: [
-      {
-        artifactPlatform: "macos",
-        label: "maidTerm.download.direct",
-        i18n: true,
-        variant: "primary",
-        icon: IconsIconMacos,
-        iconClass: "fill-current",
-      },
-    ],
-  },
-  {
     id: "windows",
     label: "Windows",
     icon: Monitor,
-    titleKey: "maidTerm.download.windows.title",
-    descKey: "maidTerm.download.windows.desc",
+    titleKey: "solWatt.download.windows.title",
+    descKey: "solWatt.download.windows.desc",
+    noticeKey: "solWatt.download.pendingNotice",
     actions: [
       {
         artifactPlatform: "windows",
-        label: "maidTerm.download.direct",
+        label: "solWatt.download.direct",
         i18n: true,
         variant: "primary",
         icon: Monitor,
@@ -140,16 +160,70 @@ const platforms: ProductDownloadPlatform[] = [
     label: "Linux",
     icon: IconsIconLinux,
     iconClass: "fill-current",
-    titleKey: "maidTerm.download.linux.title",
-    descKey: "maidTerm.download.linux.desc",
+    titleKey: "solWatt.download.linux.title",
+    descKey: "solWatt.download.linux.desc",
+    noticeKey: "solWatt.download.pendingNotice",
     actions: [
       {
         artifactPlatform: "linux",
-        label: "maidTerm.download.direct",
+        label: "solWatt.download.direct",
         i18n: true,
         variant: "primary",
         icon: IconsIconLinux,
         iconClass: "fill-current",
+      },
+    ],
+  },
+  {
+    id: "android",
+    label: "Android",
+    icon: IconsIconAndroid,
+    iconClass: "fill-current",
+    titleKey: "solWatt.download.android.title",
+    descKey: "solWatt.download.android.desc",
+    noticeKey: "solWatt.download.pendingNotice",
+    actions: [
+      {
+        artifactPlatform: "android",
+        artifactArchitecture: "arm64",
+        label: "ARM64 (arm64-v8a)",
+        variant: "primary",
+        icon: IconsIconAndroid,
+        iconClass: "fill-current",
+      },
+      {
+        artifactPlatform: "android",
+        artifactArchitecture: "armeabi-v7a",
+        label: "ARMv7 (armeabi-v7a)",
+        variant: "outline",
+        icon: IconsIconAndroid,
+        iconClass: "fill-current",
+      },
+      {
+        artifactPlatform: "android",
+        artifactArchitecture: "x86_64",
+        label: "x86_64",
+        variant: "outline",
+        icon: IconsIconAndroid,
+        iconClass: "fill-current",
+      },
+    ],
+  },
+  {
+    id: "macos",
+    label: "macOS",
+    icon: IconsIconMacos,
+    iconClass: "fill-current",
+    titleKey: "solWatt.download.macos.title",
+    descKey: "solWatt.download.macos.desc",
+    noticeKey: "solWatt.download.macos.notice",
+    actions: [
+      {
+        href: REPO_URL,
+        label: "solWatt.download.buildFromSource",
+        i18n: true,
+        variant: "primary",
+        icon: CodeXml,
       },
     ],
   },
@@ -250,92 +324,90 @@ async function handleHelpful(id: string) {
 }
 
 definePageMeta({
-  title: "MaidTerm",
+  title: "SolWatt",
   description:
-    "Local-first desktop terminal emulator for macOS, Windows, and Linux — powered by the Ghostty engine.",
+    "The Solar Network workspace client — mail, boards and a team cloud drive in one desktop-first app.",
 });
 
 useSeoMeta({
-  description: () => t("maidTerm.tagline"),
+  description: () => t("solWatt.tagline"),
 });
 
 defineOgImage("UniOgImage", {
-  title: "MaidTerm",
-  description: () => t("maidTerm.tagline"),
-  iconImage: "/images/maid-term/icon.png",
-  backgroundImage: "/images/maid-term/main-visual-og.png",
+  title: "SolWatt",
+  description: () => t("solWatt.tagline"),
+  iconImage: "/images/sol-watt/icon.png",
+  backgroundImage: "/images/sol-watt/main-visual.svg",
 });
 </script>
 
 <template>
-  <div class="maid-term-page">
+  <div class="sol-watt-page">
     <!-- Hero -->
     <section
-      class="relative overflow-hidden -mt-(--site-page-offset,64px) border-b border-base-content/5"
+      class="relative min-h-[64vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
     >
-      <div class="hero-glow absolute inset-0 -z-10" aria-hidden="true" />
+      <NuxtImg
+        src="/images/sol-watt/main-visual.svg"
+        class="absolute inset-0 w-full h-full object-cover object-top -z-10 opacity-80"
+        width="1600"
+        height="1000"
+        loading="eager"
+        fetchpriority="high"
+        format="webp"
+        alt=""
+        style="view-transition-name: product-hero-sol-watt"
+      />
+      <div
+        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/55 to-transparent dark:via-base-100/60"
+      />
 
-      <div class="container mx-auto px-4 pt-40 pb-20">
-        <div class="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)] gap-12 items-center">
-          <div class="hero-rise max-w-xl">
-            <NuxtImg
-              src="/images/maid-term/icon.png"
-              class="w-14 h-14 rounded-2xl shadow-lg mb-5"
-              alt="MaidTerm"
-              width="56"
-              height="56"
-              format="webp"
-              loading="eager"
-              decoding="async"
+      <div class="relative container mx-auto px-4 pb-14 pt-44">
+        <div class="hero-rise max-w-2xl">
+          <NuxtImg
+            src="/images/sol-watt/icon.png"
+            class="w-14 h-14 rounded-2xl shadow-lg mb-5"
+            alt="SolWatt"
+            width="56"
+            height="56"
+            format="webp"
+            loading="eager"
+            decoding="async"
+          />
+          <p class="eyebrow mb-3">
+            {{ t("solWatt.badgeWorkspace") }} &middot;
+            {{ t("solWatt.badgeDesktop") }} &middot;
+            {{ t("solWatt.openSource") }}
+          </p>
+          <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
+            SolWatt
+          </h1>
+          <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed max-w-xl">
+            {{ t("solWatt.tagline") }}
+          </p>
+          <p class="mt-5 font-mono text-sm opacity-80" aria-hidden="true">
+            <span class="text-primary">$</span>
+            solwatt attach solar-network<span
+              class="caret ml-1 inline-block w-[9px] h-4 -mb-0.5 bg-primary/80 rounded-[1px]"
             />
-            <p class="eyebrow mb-3">
-              {{ t("maidTerm.badgeLocal") }} &middot;
-              {{ t("maidTerm.badgeEngine") }} &middot;
-              {{ t("maidTerm.openSource") }}
-            </p>
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight font-mono">
-              MaidTerm
-            </h1>
-            <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed">
-              {{ t("maidTerm.tagline") }}
-            </p>
-            <p class="mt-5 font-mono text-sm opacity-80" aria-hidden="true">
-              <span class="text-primary">$</span>
-              maidterm<span
-                class="caret ml-1 inline-block w-[9px] h-4 -mb-0.5 bg-primary/80 rounded-[1px]"
-              />
-            </p>
-            <div class="mt-7 flex flex-wrap items-center gap-3">
-              <a
-                href="#download"
-                class="btn btn-primary btn-md rounded-full px-6 gap-2"
-              >
-                <Download class="w-4 h-4" />
-                {{ t("maidTerm.download.btn") }}
-              </a>
-              <a
-                :href="GITHUB_REPO"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn btn-ghost rounded-full px-5 gap-2"
-              >
-                <CodeXml class="w-4 h-4" />
-                GitHub
-              </a>
-            </div>
-          </div>
-
-          <div class="hero-rise" aria-hidden="true">
-            <NuxtImg
-              src="/images/maid-term/main-visual.webp"
-              width="1600"
-              height="1048"
-              loading="eager"
-              fetchpriority="high"
-              format="webp"
-              alt=""
-              style="view-transition-name: product-hero-maid-term"
-            />
+          </p>
+          <div class="mt-7 flex flex-wrap items-center gap-3">
+            <a
+              href="#download"
+              class="btn btn-primary btn-md rounded-full px-6 gap-2"
+            >
+              <Download class="w-4 h-4" />
+              {{ t("solWatt.download.btn") }}
+            </a>
+            <a
+              :href="REPO_URL"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-ghost rounded-full px-5 gap-2"
+            >
+              <CodeXml class="w-4 h-4" />
+              {{ t("solWatt.sourceCta") }}
+            </a>
           </div>
         </div>
       </div>
@@ -344,12 +416,12 @@ defineOgImage("UniOgImage", {
     <!-- About -->
     <section class="container mx-auto px-4 py-24">
       <div class="max-w-2xl">
-        <p class="eyebrow mb-3">{{ t("maidTerm.about.badge") }}</p>
+        <p class="eyebrow mb-3">{{ t("solWatt.about.badge") }}</p>
         <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
-          {{ t("maidTerm.about.title") }}
+          {{ t("solWatt.about.title") }}
         </h2>
         <p class="mt-4 opacity-70 leading-relaxed">
-          {{ t("maidTerm.about.desc") }}
+          {{ t("solWatt.about.desc") }}
         </p>
       </div>
 
@@ -375,12 +447,12 @@ defineOgImage("UniOgImage", {
     <!-- Features -->
     <section class="container mx-auto px-4 py-24">
       <div class="max-w-2xl">
-        <p class="eyebrow mb-3">{{ t("maidTerm.features.badge") }}</p>
+        <p class="eyebrow mb-3">{{ t("solWatt.features.badge") }}</p>
         <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
-          {{ t("maidTerm.features.title") }}
+          {{ t("solWatt.features.title") }}
         </h2>
         <p class="mt-4 opacity-70 leading-relaxed">
-          {{ t("maidTerm.features.desc") }}
+          {{ t("solWatt.features.desc") }}
         </p>
       </div>
 
@@ -411,14 +483,14 @@ defineOgImage("UniOgImage", {
       :releases="releases"
       :loading="releasesLoading"
       @select-release="selectRelease"
-      :github-url="GITHUB_REPO"
+      :github-url="REPO_URL"
       :platforms="platforms"
-      badge-key="maidTerm.download.btn"
-      title-key="maidTerm.download.sectionTitle"
-      desc-key="maidTerm.download.sectionDesc"
-      view-github-key="maidTerm.download.viewGithub"
-      release-expand-key="maidTerm.download.release.expand"
-      release-collapse-key="maidTerm.download.release.collapse"
+      badge-key="solWatt.download.btn"
+      title-key="solWatt.download.sectionTitle"
+      desc-key="solWatt.download.sectionDesc"
+      view-github-key="solWatt.download.viewGithub"
+      release-expand-key="solWatt.download.release.expand"
+      release-collapse-key="solWatt.download.release.collapse"
     />
 
     <!-- Reviews -->
@@ -537,12 +609,12 @@ defineOgImage("UniOgImage", {
       >
         <div class="max-w-xl">
           <h2 class="text-2xl font-semibold tracking-tight">
-            {{ t("maidTerm.help.title") }}
+            {{ t("solWatt.help.title") }}
           </h2>
-          <p class="mt-1.5 opacity-60">{{ t("maidTerm.help.desc") }}</p>
+          <p class="mt-1.5 opacity-60">{{ t("solWatt.help.desc") }}</p>
         </div>
         <a
-          :href="`${GITHUB_REPO}/issues`"
+          :href="`${REPO_URL}/issues`"
           target="_blank"
           rel="noopener noreferrer"
           class="btn btn-outline btn-md rounded-full gap-2 shrink-0"
@@ -556,29 +628,15 @@ defineOgImage("UniOgImage", {
 </template>
 
 <style scoped>
-.maid-term-page {
-  /* Salmon — MaidTerm's brand color #ff9e9b, deepened for light-theme contrast */
-  --color-primary: oklch(64% 0.14 23deg);
-  --color-primary-content: oklch(99% 0.01 23deg);
+.sol-watt-page {
+  /* Amber — SolWatt's seed colour, deepened for light-theme contrast */
+  --color-primary: oklch(62% 0.15 62deg);
+  --color-primary-content: oklch(99% 0.01 62deg);
 }
 
-::global([data-theme="dark"]) .maid-term-page {
-  --color-primary: oklch(80% 0.116 22deg);
-  --color-primary-content: oklch(24% 0.06 23deg);
-}
-
-.hero-glow {
-  background:
-    radial-gradient(
-      60rem 30rem at 72% 12%,
-      oklch(80% 0.116 22deg / 0.18),
-      transparent 62%
-    ),
-    linear-gradient(
-      to bottom,
-      color-mix(in oklab, oklch(80% 0.116 22deg) 7%, var(--color-base-100)),
-      var(--color-base-100)
-    );
+::global([data-theme="dark"]) .sol-watt-page {
+  --color-primary: oklch(80% 0.13 70deg);
+  --color-primary-content: oklch(25% 0.06 65deg);
 }
 
 .eyebrow {
@@ -589,6 +647,15 @@ defineOgImage("UniOgImage", {
   opacity: 0.5;
 }
 
+.caret {
+  animation: caret-blink 1.1s steps(1) infinite;
+}
+
+@keyframes caret-blink {
+  50% {
+    opacity: 0;
+  }
+}
 
 /* One orchestrated moment: hero content rises on load */
 .hero-rise > * {

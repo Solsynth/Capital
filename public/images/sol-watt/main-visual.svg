@@ -1,0 +1,168 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="1000" viewBox="0 0 1600 1000" role="img" aria-label="SolWatt interface placeholder — workspace shell with mail, boards and drive">
+  <title>SolWatt interface placeholder</title>
+  <defs>
+    <linearGradient id="sw-canvas" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#FDF7EC" />
+      <stop offset="0.5" stop-color="#F6ECDC" />
+      <stop offset="1" stop-color="#EDE0CD" />
+    </linearGradient>
+    <radialGradient id="sw-warm" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#F2BE53" stop-opacity="0.42" />
+      <stop offset="1" stop-color="#F2BE53" stop-opacity="0" />
+    </radialGradient>
+    <pattern id="sw-dots" width="34" height="34" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1.6" fill="#3F3A33" opacity="0.055" />
+    </pattern>
+    <filter id="sw-lift" x="-15%" y="-15%" width="130%" height="130%">
+      <feDropShadow dx="0" dy="22" stdDeviation="30" flood-color="#3F3A33" flood-opacity="0.2" />
+    </filter>
+    <style>
+      .sw-ui { font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; }
+      .sw-mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; }
+    </style>
+  </defs>
+
+  <rect width="1600" height="1000" fill="url(#sw-canvas)" />
+  <rect width="1600" height="1000" fill="url(#sw-dots)" />
+  <circle cx="1180" cy="220" r="420" fill="url(#sw-warm)" />
+
+  <g filter="url(#sw-lift)">
+    <!-- App shell -->
+    <rect x="150" y="120" width="1300" height="740" rx="28" fill="#FFFDF9" />
+    <rect x="150" y="120" width="1300" height="740" rx="28" fill="none" stroke="#3F3A33" stroke-opacity="0.09" />
+
+    <!-- Title bar -->
+    <path d="M150 180h1300" stroke="#3F3A33" stroke-opacity="0.08" />
+    <circle cx="188" cy="150" r="6" fill="#3F3A33" opacity="0.14" />
+    <circle cx="210" cy="150" r="6" fill="#3F3A33" opacity="0.14" />
+    <circle cx="232" cy="150" r="6" fill="#3F3A33" opacity="0.14" />
+    <rect x="300" y="138" width="236" height="24" rx="12" fill="#D97706" opacity="0.14" />
+    <circle cx="318" cy="150" r="6" fill="#D97706" />
+    <text x="336" y="155" class="sw-ui" font-size="13" font-weight="600" fill="#9A5500" opacity="0.85">Solar Network</text>
+    <rect x="1120" y="136" width="184" height="28" rx="14" fill="#3F3A33" opacity="0.05" />
+    <rect x="1142" y="146" width="90" height="9" rx="4.5" fill="#3F3A33" opacity="0.2" />
+    <circle cx="1392" cy="150" r="15" fill="#F2BE53" />
+    <circle cx="1392" cy="145" r="5" fill="#FFFFFF" opacity="0.85" />
+    <path d="M1382 160a10 10 0 0120 0z" fill="#FFFFFF" opacity="0.85" />
+
+    <!-- Navigation rail -->
+    <path d="M238 180v680" stroke="#3F3A33" stroke-opacity="0.08" />
+    <rect x="150" y="180" width="88" height="680" fill="#3F3A33" opacity="0.025" />
+    <g>
+      <rect x="170" y="212" width="48" height="48" rx="16" fill="#D97706" opacity="0.16" />
+      <path d="M182 226h24v9h-24zM182 241h24v9h-24z" fill="#D97706" opacity="0.75" />
+      <rect x="170" y="278" width="48" height="48" rx="16" fill="#3F3A33" opacity="0.06" />
+      <path d="M184 292h20l4 6-4 6h-20l-4-6z" fill="#3F3A33" opacity="0.35" />
+      <rect x="170" y="344" width="48" height="48" rx="16" fill="#3F3A33" opacity="0.06" />
+      <rect x="180" y="352" width="12" height="32" rx="3" fill="#3F3A33" opacity="0.35" />
+      <rect x="196" y="360" width="12" height="24" rx="3" fill="#3F3A33" opacity="0.35" />
+      <rect x="170" y="410" width="48" height="48" rx="16" fill="#3F3A33" opacity="0.06" />
+      <path d="M182 418h24v18H182zM182 442h24v6H182z" fill="#3F3A33" opacity="0.33" />
+      <rect x="170" y="476" width="48" height="48" rx="16" fill="#3F3A33" opacity="0.06" />
+      <circle cx="194" cy="500" r="9" fill="none" stroke="#3F3A33" stroke-opacity="0.36" stroke-width="2.4" />
+      <path d="M194 491v-4" stroke="#3F3A33" stroke-opacity="0.36" stroke-width="2.4" stroke-linecap="round" />
+      <rect x="170" y="542" width="48" height="48" rx="16" fill="#3F3A33" opacity="0.06" />
+      <circle cx="194" cy="566" r="10" fill="none" stroke="#3F3A33" stroke-opacity="0.36" stroke-width="2.4" />
+      <path d="M194 561v10l6 4" stroke="#3F3A33" stroke-opacity="0.36" stroke-width="2.4" stroke-linecap="round" />
+    </g>
+
+    <!-- Mail list column -->
+    <path d="M616 180v680" stroke="#3F3A33" stroke-opacity="0.08" />
+    <rect x="238" y="180" width="378" height="680" fill="#3F3A33" opacity="0.02" />
+    <rect x="266" y="208" width="136" height="18" rx="9" fill="#3F3A33" opacity="0.18" />
+    <rect x="500" y="204" width="88" height="26" rx="13" fill="#D97706" opacity="0.14" />
+    <g>
+      <rect x="266" y="252" width="322" height="96" rx="14" fill="#D97706" opacity="0.1" />
+      <circle cx="296" cy="284" r="14" fill="#D97706" opacity="0.5" />
+      <rect x="322" y="274" width="150" height="12" rx="6" fill="#3F3A33" opacity="0.3" />
+      <rect x="322" y="294" width="222" height="10" rx="5" fill="#3F3A33" opacity="0.16" />
+      <rect x="282" y="318" width="272" height="10" rx="5" fill="#3F3A33" opacity="0.12" />
+      <circle cx="566" cy="266" r="5" fill="#D97706" />
+
+      <g fill="#3F3A33" opacity="0.05">
+        <rect x="266" y="360" width="322" height="88" rx="14" />
+        <rect x="266" y="460" width="322" height="88" rx="14" />
+        <rect x="266" y="560" width="322" height="88" rx="14" />
+      </g>
+      <g fill="#3F3A33" opacity="0.26">
+        <circle cx="296" cy="392" r="13" />
+        <rect x="322" y="384" width="128" height="11" rx="5.5" />
+        <circle cx="296" cy="492" r="13" />
+        <rect x="322" y="484" width="158" height="11" rx="5.5" />
+        <circle cx="296" cy="592" r="13" />
+        <rect x="322" y="584" width="112" height="11" rx="5.5" />
+      </g>
+      <g fill="#3F3A33" opacity="0.13">
+        <rect x="322" y="404" width="238" height="9" rx="4.5" />
+        <rect x="322" y="504" width="200" height="9" rx="4.5" />
+        <rect x="322" y="604" width="242" height="9" rx="4.5" />
+      </g>
+    </g>
+
+    <!-- Board / drive column -->
+    <rect x="644" y="208" width="180" height="18" rx="9" fill="#3F3A33" opacity="0.18" />
+
+    <!-- Drive quota strip -->
+    <rect x="644" y="252" width="778" height="64" rx="16" fill="#3F3A33" opacity="0.045" />
+    <rect x="668" y="274" width="24" height="20" rx="5" fill="#D97706" opacity="0.6" />
+    <rect x="704" y="270" width="150" height="12" rx="6" fill="#3F3A33" opacity="0.22" />
+    <rect x="704" y="290" width="96" height="9" rx="4.5" fill="#3F3A33" opacity="0.13" />
+    <rect x="980" y="278" width="418" height="12" rx="6" fill="#3F3A33" opacity="0.08" />
+    <rect x="980" y="278" width="246" height="12" rx="6" fill="#D97706" opacity="0.6" />
+
+    <!-- Kanban lanes -->
+    <g>
+      <rect x="644" y="340" width="246" height="440" rx="18" fill="#3F3A33" opacity="0.04" />
+      <rect x="668" y="364" width="104" height="12" rx="6" fill="#3F3A33" opacity="0.22" />
+      <rect x="668" y="398" width="198" height="84" rx="12" fill="#FFFFFF" />
+      <rect x="668" y="398" width="198" height="84" rx="12" fill="none" stroke="#3F3A33" stroke-opacity="0.08" />
+      <rect x="686" y="418" width="150" height="10" rx="5" fill="#3F3A33" opacity="0.24" />
+      <rect x="686" y="438" width="112" height="9" rx="4.5" fill="#3F3A33" opacity="0.13" />
+      <rect x="686" y="458" width="58" height="14" rx="7" fill="#D97706" opacity="0.3" />
+      <rect x="668" y="494" width="198" height="84" rx="12" fill="#FFFFFF" />
+      <rect x="668" y="494" width="198" height="84" rx="12" fill="none" stroke="#3F3A33" stroke-opacity="0.08" />
+      <rect x="686" y="514" width="132" height="10" rx="5" fill="#3F3A33" opacity="0.24" />
+      <rect x="686" y="534" width="150" height="9" rx="4.5" fill="#3F3A33" opacity="0.13" />
+      <rect x="686" y="554" width="72" height="14" rx="7" fill="#0EA5E9" opacity="0.28" />
+
+      <rect x="910" y="340" width="246" height="440" rx="18" fill="#3F3A33" opacity="0.04" />
+      <rect x="934" y="364" width="126" height="12" rx="6" fill="#3F3A33" opacity="0.22" />
+      <rect x="934" y="398" width="198" height="104" rx="12" fill="#FFFFFF" />
+      <rect x="934" y="398" width="198" height="104" rx="12" fill="none" stroke="#3F3A33" stroke-opacity="0.08" />
+      <rect x="952" y="418" width="162" height="10" rx="5" fill="#3F3A33" opacity="0.24" />
+      <rect x="952" y="438" width="120" height="9" rx="4.5" fill="#3F3A33" opacity="0.13" />
+      <circle cx="962" cy="478" r="10" fill="#D97706" opacity="0.45" />
+      <circle cx="982" cy="478" r="10" fill="#E1B1B6" opacity="0.6" />
+      <rect x="934" y="514" width="198" height="84" rx="12" fill="#FFFFFF" />
+      <rect x="934" y="514" width="198" height="84" rx="12" fill="none" stroke="#3F3A33" stroke-opacity="0.08" />
+      <rect x="952" y="534" width="140" height="10" rx="5" fill="#3F3A33" opacity="0.24" />
+      <rect x="952" y="554" width="104" height="9" rx="4.5" fill="#3F3A33" opacity="0.13" />
+      <rect x="952" y="574" width="58" height="14" rx="7" fill="#16A34A" opacity="0.28" />
+
+      <rect x="1176" y="340" width="246" height="440" rx="18" fill="#3F3A33" opacity="0.04" />
+      <rect x="1200" y="364" width="88" height="12" rx="6" fill="#3F3A33" opacity="0.22" />
+      <rect x="1200" y="398" width="198" height="150" rx="12" fill="#FFFFFF" />
+      <rect x="1200" y="398" width="198" height="150" rx="12" fill="none" stroke="#3F3A33" stroke-opacity="0.08" />
+      <rect x="1216" y="414" width="166" height="86" rx="8" fill="#F2BE53" opacity="0.35" />
+      <path d="M1240 476l22-26 18 20 16-14 22 20z" fill="#D97706" opacity="0.45" />
+      <circle cx="1250" cy="436" r="7" fill="#FFFFFF" opacity="0.8" />
+      <rect x="1216" y="512" width="120" height="10" rx="5" fill="#3F3A33" opacity="0.24" />
+      <rect x="1216" y="530" width="80" height="9" rx="4.5" fill="#3F3A33" opacity="0.13" />
+      <rect x="1200" y="564" width="198" height="84" rx="12" fill="#FFFFFF" />
+      <rect x="1200" y="564" width="198" height="84" rx="12" fill="none" stroke="#3F3A33" stroke-opacity="0.08" />
+      <rect x="1216" y="584" width="150" height="10" rx="5" fill="#3F3A33" opacity="0.24" />
+      <rect x="1216" y="604" width="118" height="9" rx="4.5" fill="#3F3A33" opacity="0.13" />
+      <rect x="1216" y="624" width="66" height="14" rx="7" fill="#3F3A33" opacity="0.12" />
+    </g>
+  </g>
+
+  <!-- Realtime feed pill -->
+  <g filter="url(#sw-lift)">
+    <rect x="1130" y="820" width="330" height="66" rx="20" fill="#FFFDF9" />
+    <rect x="1130" y="820" width="330" height="66" rx="20" fill="none" stroke="#3F3A33" stroke-opacity="0.08" />
+    <circle cx="1166" cy="853" r="13" fill="#16A34A" opacity="0.18" />
+    <circle cx="1166" cy="853" r="6" fill="#16A34A" />
+    <rect x="1194" y="838" width="176" height="11" rx="5.5" fill="#3F3A33" opacity="0.22" />
+    <rect x="1194" y="858" width="122" height="9" rx="4.5" fill="#3F3A33" opacity="0.13" />
+  </g>
+</svg>

@@ -1,0 +1,23 @@
+{
+  "title": "SolWatt",
+  "description": "The Solar Network workspace client — threaded mail, kanban boards and a team cloud drive in one desktop-first app.",
+  "icon": "/images/sol-watt/icon.png",
+  "background": "/images/sol-watt/main-visual.svg",
+  "repo": "https://src.solsynth.dev/SoSYS/SolWatt",
+  "distributionProductId": "cbe8b5c1-5956-4ac3-8a7d-37f4d9a0fdab",
+  "hasPage": true,
+  "tags": [
+    "Solar Network",
+    "Mail",
+    "Boards",
+    "Drive",
+    "Notifications",
+    "Desktop",
+    "macOS",
+    "Windows",
+    "Linux",
+    "Android"
+  ],
+  "series": "Solar Network",
+  "color": "#D97706"
+}

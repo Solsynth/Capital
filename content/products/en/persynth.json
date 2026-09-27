@@ -1,0 +1,20 @@
+{
+  "title": "Persynth",
+  "description": "A quiet island-style desktop pet companion — an ASCII face with a mood of its own, and a Personality Core you can talk to.",
+  "icon": "/images/persynth/icon.png",
+  "background": "/images/persynth/main-visual.svg",
+  "repo": "https://src.solsynth.dev/Solsynth/SynthPet",
+  "distributionProductId": "da9a9b07-f97e-4798-8a69-306a33b143d1",
+  "hasPage": true,
+  "tags": [
+    "Desktop Pet",
+    "AI",
+    "Companion",
+    "macOS",
+    "Windows",
+    "Linux",
+    "Android"
+  ],
+  "series": "Persynth",
+  "color": "#E17E92"
+}

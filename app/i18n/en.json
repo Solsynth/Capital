@@ -1092,95 +1092,235 @@
       "desc": "Found a bug or have feedback? Open an issue on GitHub and we'll take a look."
     }
   },
-  "maidTerm": {
-    "tagline": "A local-first desktop terminal emulator — real PTY sessions on a Ghostty-powered engine.",
-    "openSource": "Open Source",
-    "badgeLocal": "Local-first",
-    "badgeEngine": "Powered by Ghostty",
+  "persynth": {
+    "tagline": "A quiet island-style desktop pet companion — an ASCII face with a mood of its own, and a Personality Core you can talk to.",
+    "badgeIsland": "Island window",
+    "badgeAscii": "ASCII face",
+    "badgePlugins": "Plugin-powered",
+    "sourceCta": "Source",
     "about": {
       "badge": "About",
-      "title": "A terminal that stays out of your way",
-      "desc": "MaidTerm is a desktop terminal emulator built on the MaidTerm engine — a Flutter terminal engine that wraps the Ghostty emulator core through Dart FFI. Shells run locally over a real PTY, sessions live in tabs and splits, and every setting persists on your machine."
+      "title": "A companion that lives on your desktop",
+      "desc": "Persynth is a desktop-first companion that lives in a floating, always-on-top island window. Its face is drawn in ASCII, it keeps its own energy and affection, and it reacts to being fed, played with or put to rest — all simulated on your machine, so the pet is alive even when nothing is talking to it. Sign in with your Solar Network account and the same character opens a conversation surface with a Personality Core agent: streamed replies, reasoning traces and tool traces, typed chat on every platform, and voice input on Android, iOS and the web."
     },
     "aboutCard": {
-      "ghostty": {
-        "title": "Ghostty-powered",
-        "desc": "The libghostty-vt emulator core handles escape sequences, graphics protocols, input encoding, and painting — a real VT engine, not a web view."
+      "island": {
+        "title": "Island window",
+        "desc": "A frameless 340x420 window that skips the taskbar and stays on top, living beside a larger conversation console."
       },
-      "localFirst": {
-        "title": "Local-first",
-        "desc": "Shells spawn on your machine over a real PTY with process-level title tracking. No accounts, no sync, no telemetry."
+      "localLife": {
+        "title": "A life simulated locally",
+        "desc": "Energy, affection and eight moods decay and recover on your own machine, so the pet keeps living with the network unplugged."
       },
-      "desktopNative": {
-        "title": "Desktop native",
-        "desc": "A frameless window frame rendered by the app's own UI layer, on macOS, Windows, and Linux."
+      "core": {
+        "title": "Personality Core",
+        "desc": "An OpenAI-compatible endpoint on your Solar Network account gives the character a memory and a bond score — no separate API key."
       }
     },
     "features": {
       "badge": "Features",
-      "title": "Everything a real terminal does",
-      "desc": "Full emulation fidelity from the Ghostty core, wrapped in a calm multi-session workspace.",
-      "pty": {
-        "title": "Real PTY sessions",
-        "desc": "Local shell sessions backed by a genuine PTY, with process-level title tracking for tabs and prompts."
+      "title": "A pet, a console and a plugin host",
+      "desc": "Every capability is a plugin with its own switch: what is off is never offered to the model.",
+      "face": {
+        "title": "A face made of text",
+        "desc": "Face parts such as 0.0, 0-0 and 0^0, configurable and persisted locally on your machine."
       },
-      "workspace": {
-        "title": "Tabs & splits",
-        "desc": "Multiple terminals in tabs and split layouts, with drag-and-drop tab transfer between windows."
+      "moods": {
+        "title": "Moods and stats",
+        "desc": "Neutral, happy, sad, sleepy, curious, excited, lonely and focused — driven by energy and affection."
       },
-      "graphics": {
-        "title": "Kitty graphics & sixel",
-        "desc": "View images directly inside the terminal via the kitty graphics protocol or sixel."
+      "care": {
+        "title": "Feed, play, rest",
+        "desc": "Interactions that move the numbers, with idle decay that keeps running while you are away."
       },
-      "keyboard": {
-        "title": "Kitty keyboard protocol",
-        "desc": "Modern keyboard enhancement protocol for TUI apps that want every key, modifier, and event."
+      "chat": {
+        "title": "Personality Core chat",
+        "desc": "Streamed replies from an OpenAI-compatible chat completions endpoint, authenticated with your Solar Network token."
       },
-      "color": {
-        "title": "Truecolor & schemes",
-        "desc": "24-bit color with configurable color schemes, fonts, and cursor behavior — all persisted locally."
+      "traces": {
+        "title": "Reasoning and tool traces",
+        "desc": "The console shows what the agent thought and which tools it called, folded away until you want them."
       },
-      "osc": {
-        "title": "Rich OSC support",
-        "desc": "OSC 0/2/7/9;4/10/11/52/133 plus OSC 8 hyperlinks — titles, colors, clipboard, and shell integration."
+      "voice": {
+        "title": "Voice and keyboard",
+        "desc": "Typed chat on every platform, speech-to-text on Android, iOS and the web."
       },
-      "frameless": {
-        "title": "Custom window frame",
-        "desc": "A quiet frameless desktop window drawn by the app itself, so the chrome matches the canvas."
+      "harness": {
+        "title": "A validated behaviour harness",
+        "desc": "The model may only change mood, face, status and animation through a checked JSON directive, so the pet stays coherent."
       },
-      "engine": {
-        "title": "Shared with MaidKit",
-        "desc": "Built on the same maidterm engine package that powers MaidKit's terminal — battle-tested across both apps."
+      "switches": {
+        "title": "One switch per plugin",
+        "desc": "A plugin owns its tools, its prompt text and the on/off switch — a capability boundary, not a preference."
+      },
+      "sets": {
+        "title": "Nine Solar Network sets",
+        "desc": "Feed, messages, notifications, calendar, rituals, profile, wallet, mail and boards — off by default, loaded on demand."
+      },
+      "sandbox": {
+        "title": "JavaScript script plugins",
+        "desc": "Drop in a folder with a manifest and a main script; it runs in its own QuickJS sandbox and is quarantined if it crashes."
+      },
+      "webtools": {
+        "title": "Web tools from your own IP",
+        "desc": "Built-in web search and fetch run on your machine, so answers arrive without bot-check walls."
+      },
+      "bond": {
+        "title": "Bond dashboard",
+        "desc": "The affection score with its level and latest reason, plus a reset that clears that agent's memories and history."
       }
     },
     "download": {
       "btn": "Download",
-      "sectionTitle": "Get MaidTerm",
-      "sectionDesc": "Pick your platform and install the latest build. Release artifacts are hosted by Distribution; source code lives on GitHub.",
-      "direct": "Direct Download",
-      "viewGithub": "View on GitHub",
+      "sectionTitle": "Get Persynth",
+      "sectionDesc": "Windows, Linux and Android builds are produced by CI on every tag. macOS and iOS are built locally in Xcode for now.",
+      "direct": "Direct download",
+      "pendingNotice": "No build has been published yet — artifacts appear here as soon as the first tagged release is published.",
+      "viewGithub": "View the repository",
+      "buildFromSource": "Build from source",
       "release": {
         "expand": "Show full changelog",
         "collapse": "Show less"
       },
-      "macos": {
-        "title": "macOS",
-        "desc": "Download the latest macOS build archive from Distribution."
-      },
       "windows": {
         "title": "Windows",
-        "desc": "Download the Windows installer from Distribution."
+        "desc": "Inno Setup installer produced from the tag pipeline."
       },
       "linux": {
         "title": "Linux",
-        "desc": "Download the Linux build bundle from Distribution."
+        "desc": "x86_64 AppImage with the app icon and desktop entry baked in."
+      },
+      "android": {
+        "title": "Android",
+        "desc": "Split-per-ABI APKs, signed by CI — no store account required."
+      },
+      "macos": {
+        "title": "macOS",
+        "desc": "The same Flutter source in a native window frame, sandboxed as the Mac App Store requires.",
+        "notice": "macOS and iOS are not part of the tag pipeline yet — clone the repository and build with Flutter to run them today."
       }
     },
     "help": {
-      "title": "Need Help?",
-      "desc": "Found a bug or have feedback? Open an issue on GitHub and we'll take a look."
+      "title": "Need help?",
+      "desc": "Found a bug, or wrote a plugin worth sharing? Open an issue in the repository and we will take a look."
+    }
+  },
+  "solWatt": {
+    "tagline": "The Solar Network workspace client — threaded mail, kanban boards and a team cloud drive in one desktop-first app.",
+    "openSource": "Open source",
+    "badgeWorkspace": "Workspace-native",
+    "badgeDesktop": "Desktop-first",
+    "badgeRealtime": "Realtime",
+    "sourceCta": "Source",
+    "about": {
+      "badge": "About",
+      "title": "Your whole workspace, in one window",
+      "desc": "SolWatt is the Solar Network client from Solsynth. Sign in with your Solar Network account, pick a workspace, and that workspace's services come together in a single shell: conversation-threaded mail, kanban boards that sync with GitHub issues, a team cloud drive with live quota, notifications and a realtime feed. It is desktop-first — a native window frame with rail navigation on Windows, Linux and macOS — with iOS and Android builds, English and Simplified Chinese, light and dark themes, eight accent colors and switchable app icons."
+    },
+    "aboutCard": {
+      "shell": {
+        "title": "One shell, many services",
+        "desc": "Mail, boards, drive, notifications and the app-data browser share one navigation, one sign-in and one window."
+      },
+      "workspace": {
+        "title": "Workspaces everywhere",
+        "desc": "Every mail, board, drive and flywheel request is scoped to the workspace you chose at the gate."
+      },
+      "realtime": {
+        "title": "Live by default",
+        "desc": "A websocket gateway keeps notifications, task changes and board events flowing, with background push behind it."
+      }
+    },
+    "features": {
+      "badge": "Features",
+      "title": "The workspace client, at desktop scale",
+      "desc": "Everything you use on the web, sized for a keyboard, a mouse and a real window.",
+      "signIn": {
+        "title": "Solar Network sign-in",
+        "desc": "OAuth with PKCE on native desktops and the device-code flow on the web, then a gate to choose or create a workspace."
+      },
+      "workspaces": {
+        "title": "Workspaces as the unit of everything",
+        "desc": "Membership, switching, leaving and a provisioned personal workspace — every request carries the one you picked."
+      },
+      "mail": {
+        "title": "Threaded mail (ElecPostal)",
+        "desc": "One row per conversation with server-side counts, reply chaining, multi-select, star, move, trash and empty-trash."
+      },
+      "mailImport": {
+        "title": "Import .eml and .mbox",
+        "desc": "Client-side parsing in batches of 500, with attachments uploaded to the workspace drive as a background task."
+      },
+      "boards": {
+        "title": "Kanban boards (Ideask)",
+        "desc": "A lane per group with drag-and-drop cards, priorities, deadlines, tags, assignees, comments and cover images."
+      },
+      "github": {
+        "title": "GitHub issue sync",
+        "desc": "Install the GitHub App, link repositories and keep issues on the cards — mirrored comments included."
+      },
+      "drive": {
+        "title": "Workspace drive (DysonFS)",
+        "desc": "Indexed folders and unindexed assets, live quota, drag-and-drop uploads, rename, move and per-file permissions."
+      },
+      "viewer": {
+        "title": "A viewer that stays in the app",
+        "desc": "Image lightbox with EXIF, video and audio playback, and document previews without leaving the workspace."
+      },
+      "notifications": {
+        "title": "Ring inbox",
+        "desc": "An island-style attention sheet over any screen, with an unread badge and mark-all-read."
+      },
+      "realtime": {
+        "title": "Realtime feed",
+        "desc": "A websocket gateway with heartbeat and reconnect backoff folds new notifications and task changes straight into the UI."
+      },
+      "push": {
+        "title": "Background push",
+        "desc": "Metoer subscriptions over FCM and APNs, so the workspace reaches you while the app is closed."
+      },
+      "desktop": {
+        "title": "Desktop-first shell",
+        "desc": "Native window frame, rail or drawer navigation, a background task overlay, light and dark themes, eight accents, English and Chinese."
+      },
+      "flywheel": {
+        "title": "Flywheel app data",
+        "desc": "Browse the workspace's encrypted app data — owner apps, blobs, revisions and audit entries — from the same shell."
+      }
+    },
+    "download": {
+      "btn": "Download",
+      "sectionTitle": "Get SolWatt",
+      "sectionDesc": "Windows, Linux and Android builds are produced by CI on every tag. macOS and iOS are built locally in Xcode for now.",
+      "direct": "Direct download",
+      "pendingNotice": "No build has been published yet — artifacts appear here as soon as the first tagged release is published.",
+      "viewGithub": "View the repository",
+      "buildFromSource": "Build from source",
+      "release": {
+        "expand": "Show full changelog",
+        "collapse": "Show less"
+      },
+      "windows": {
+        "title": "Windows",
+        "desc": "Inno Setup installer produced from the tag pipeline."
+      },
+      "linux": {
+        "title": "Linux",
+        "desc": "x86_64 AppImage with the app icon and desktop entry baked in."
+      },
+      "android": {
+        "title": "Android",
+        "desc": "Split-per-ABI APKs, signed by CI — no store account required."
+      },
+      "macos": {
+        "title": "macOS",
+        "desc": "The same Flutter source in a native window frame, with FCM-managed APNs push.",
+        "notice": "macOS and iOS are not part of the tag pipeline yet — clone the repository and build with Flutter to run them today."
+      }
+    },
+    "help": {
+      "title": "Need help?",
+      "desc": "Found a bug or missing a service? Open an issue in the repository and we will take a look."
     }
   }
 }
-
-

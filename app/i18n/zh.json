@@ -1092,95 +1092,235 @@
       "desc": "发现问题或有反馈？请在 GitHub 上提交 Issue，我们会处理。"
     }
   },
-  "maidTerm": {
-    "tagline": "本地优先的桌面终端模拟器 — 由 Ghostty 引擎驱动的真实 PTY 会话。",
-    "openSource": "开源",
-    "badgeLocal": "本地优先",
-    "badgeEngine": "Ghostty 引擎",
+  "persynth": {
+    "tagline": "安静的“小岛”桌面宠物伙伴 —— ASCII 的表情、自己的情绪，还有一个可以聊天的 Personality Core。",
+    "badgeIsland": "浮动小岛窗口",
+    "badgeAscii": "ASCII 表情",
+    "badgePlugins": "全插件架构",
+    "sourceCta": "源码",
     "about": {
       "badge": "关于",
-      "title": "安静可靠的终端",
-      "desc": "MaidTerm 是基于 MaidTerm 引擎构建的桌面终端模拟器 — 该引擎通过 Dart FFI 封装 Ghostty 模拟器核心。Shell 通过真实 PTY 在本地运行，会话以标签页与分屏组织，所有设置都保存在你自己的机器上。"
+      "title": "一个住在桌面上的伙伴",
+      "desc": "Persynth 是一款桌面优先的伙伴应用，住在一个可浮于最前、无边框的“小岛”窗口里。它的脸是 ASCII 拼出来的，有自己的精力与好感度，会对喂食、玩耍和休息作出反应 —— 这些都在你的机器上模拟，所以即使断网，它依然“活着”。用 Solar Network 账号登录后，同一个角色会打开对话界面，与 Personality Core 智能体交流：流式回复、推理轨迹与工具轨迹；所有平台都能打字聊天，Android、iOS 与 Web 还支持语音输入。"
     },
     "aboutCard": {
-      "ghostty": {
-        "title": "Ghostty 驱动",
-        "desc": "libghostty-vt 模拟器核心负责转义序列、图形协议、输入编码与绘制 — 真正的 VT 引擎，而非网页视图。"
+      "island": {
+        "title": "小岛窗口",
+        "desc": "340x420 的无边框窗口，不占任务栏、始终置顶，与更大的对话控制台并存。"
       },
-      "localFirst": {
-        "title": "本地优先",
-        "desc": "Shell 通过真实 PTY 在你的机器上启动，并跟踪进程级标题。没有账号、没有同步、没有遥测。"
+      "localLife": {
+        "title": "在本地演算的一生",
+        "desc": "精力、好感度与八种情绪都在你自己的机器上消长，拔掉网线它依然在生活。"
       },
-      "desktopNative": {
-        "title": "桌面原生",
-        "desc": "由应用自身 UI 层绘制的无边框窗口，覆盖 macOS、Windows 与 Linux。"
+      "core": {
+        "title": "Personality Core",
+        "desc": "基于你的 Solar Network 账号提供兼容 OpenAI 的接口，让角色拥有记忆与亲密度分数 —— 无需另外准备 API Key。"
       }
     },
     "features": {
       "badge": "功能",
-      "title": "真终端该有的都有",
-      "desc": "来自 Ghostty 核心的完整模拟保真度，包裹在一个安静的多会话工作区里。",
-      "pty": {
-        "title": "真实 PTY 会话",
-        "desc": "基于真实 PTY 的本地 Shell 会话，配合进程级标题跟踪，标签页与提示符始终准确。"
+      "title": "一只宠物、一个控制台、一个插件宿主",
+      "desc": "每一项能力都是一个带开关的插件：关掉的插件不会被交给模型。",
+      "face": {
+        "title": "用文字拼出的脸",
+        "desc": "像 0.0、0-0、0^0 这样的表情组件，可配置并保存在本地。"
       },
-      "workspace": {
-        "title": "标签页与分屏",
-        "desc": "多个终端以标签页与分屏布局共存，支持跨窗口拖拽转移标签页。"
+      "moods": {
+        "title": "情绪与数值",
+        "desc": "平静、开心、难过、困倦、好奇、兴奋、孤单与专注 —— 由精力与好感度驱动。"
       },
-      "graphics": {
-        "title": "Kitty 图形与 sixel",
-        "desc": "通过 kitty graphics protocol 或 sixel 直接在终端内查看图片。"
+      "care": {
+        "title": "喂食、玩耍、休息",
+        "desc": "交互会改变数值，而你不在时它也会自己消耗。"
       },
-      "keyboard": {
-        "title": "Kitty 键盘协议",
-        "desc": "现代键盘增强协议，让 TUI 应用能拿到每一个按键、修饰键与事件。"
+      "chat": {
+        "title": "Personality Core 对话",
+        "desc": "通过兼容 OpenAI 的 chat completions 接口流式回复，使用你的 Solar Network 令牌鉴权。"
       },
-      "color": {
-        "title": "真彩与配色方案",
-        "desc": "24 位色，可配置配色方案、字体与光标行为 — 全部保存在本地。"
+      "traces": {
+        "title": "推理与工具轨迹",
+        "desc": "控制台会展示智能体的思考过程与调用的工具，默认折叠，需要时展开。"
       },
-      "osc": {
-        "title": "丰富的 OSC 支持",
-        "desc": "OSC 0/2/7/9;4/10/11/52/133 以及 OSC 8 超链接 — 标题、颜色、剪贴板与 Shell 集成。"
+      "voice": {
+        "title": "语音与键盘",
+        "desc": "所有平台都可打字聊天，Android、iOS 与 Web 还支持语音转文字。"
       },
-      "frameless": {
-        "title": "自定义窗口边框",
-        "desc": "由应用自己绘制的简洁无边框桌面窗口，窗框与终端画布浑然一体。"
+      "harness": {
+        "title": "经过校验的行为架构",
+        "desc": "模型只能通过校验过的 JSON 指令改变情绪、表情、状态与动画，宠物因此始终自洽。"
       },
-      "engine": {
-        "title": "与 MaidKit 同源",
-        "desc": "与 MaidKit 内置终端共用同一 maidterm 引擎包 — 在两个应用中久经考验。"
+      "switches": {
+        "title": "每个插件一个开关",
+        "desc": "插件拥有自己的工具、提示词与开关 —— 它是能力边界，而不只是偏好设置。"
+      },
+      "sets": {
+        "title": "九组 Solar Network 能力",
+        "desc": "动态、消息、通知、日程、日常仪式、个人资料、钱包、邮件与看板 —— 默认全关，按需加载。"
+      },
+      "sandbox": {
+        "title": "JavaScript 脚本插件",
+        "desc": "放一个含 manifest 与主脚本的文件夹即可；它运行在独立的 QuickJS 沙箱中，崩溃时会被隔离。"
+      },
+      "webtools": {
+        "title": "从你自己的 IP 联网",
+        "desc": "内置的网络搜索与网页获取在本机执行，不会撞上机器人验证墙。"
+      },
+      "bond": {
+        "title": "亲密度看板",
+        "desc": "查看好感度分数、等级与最近一次变化原因，并可重置该智能体的记忆与会话历史。"
       }
     },
     "download": {
       "btn": "下载",
-      "sectionTitle": "获取 MaidTerm",
-      "sectionDesc": "选择平台并安装最新构建。发布构件由 Distribution 托管，源代码位于 GitHub。",
+      "sectionTitle": "获取 Persynth",
+      "sectionDesc": "Windows、Linux 与 Android 构建由 CI 在每个 tag 上产出；macOS 与 iOS 目前在 Xcode 中本地构建。",
       "direct": "直接下载",
-      "viewGithub": "在 GitHub 查看",
+      "pendingNotice": "尚未发布任何构建 —— 首个 tag 版本发布后，安装包会立刻出现在这里。",
+      "viewGithub": "查看仓库",
+      "buildFromSource": "从源码构建",
       "release": {
         "expand": "展开完整更新日志",
         "collapse": "收起"
       },
-      "macos": {
-        "title": "macOS",
-        "desc": "从 Distribution 下载最新的 macOS 构建归档。"
-      },
       "windows": {
         "title": "Windows",
-        "desc": "从 Distribution 下载 Windows 安装包。"
+        "desc": "由 tag 流水线产出的 Inno Setup 安装包。"
       },
       "linux": {
         "title": "Linux",
-        "desc": "从 Distribution 下载 Linux 构建包。"
+        "desc": "x86_64 AppImage，已内置应用图标与桌面条目。"
+      },
+      "android": {
+        "title": "Android",
+        "desc": "按 ABI 拆分的 APK，由 CI 签名 —— 无需应用商店账号。"
+      },
+      "macos": {
+        "title": "macOS",
+        "desc": "同一份 Flutter 源码的原生窗口版本，按 Mac App Store 要求启用沙箱。",
+        "notice": "macOS 与 iOS 尚未接入 tag 流水线 —— 克隆仓库并用 Flutter 构建即可运行。"
       }
     },
     "help": {
       "title": "需要帮助？",
-      "desc": "发现问题或有反馈？请在 GitHub 上提交 Issue，我们会处理。"
+      "desc": "发现了 Bug，或写了一个值得分享的插件？在仓库里提一个 Issue，我们会看看。"
+    }
+  },
+  "solWatt": {
+    "tagline": "Solar Network 工作区客户端 —— 会话式邮件、看板与团队云盘，集于一款桌面优先的应用。",
+    "openSource": "开源",
+    "badgeWorkspace": "工作区为中心",
+    "badgeDesktop": "桌面优先",
+    "badgeRealtime": "实时同步",
+    "sourceCta": "源码",
+    "about": {
+      "badge": "关于",
+      "title": "一个窗口，装下整个工作区",
+      "desc": "SolWatt 是 Solsynth 出品的 Solar Network 客户端。使用 Solar Network 账号登录并选择工作区后，该工作区的各项服务便汇聚于同一界面：会话式邮件、可与 GitHub Issue 同步的看板、带实时配额的团队云盘、通知以及实时信息流。它以桌面优先 —— 在 Windows、Linux 与 macOS 上提供原生窗口框架与侧栏导航 —— 同时支持 iOS 与 Android 构建；内置中英文，提供浅色与深色主题、八种强调色与可切换的应用图标。"
+    },
+    "aboutCard": {
+      "shell": {
+        "title": "一个壳，多种服务",
+        "desc": "邮件、看板、云盘、通知与应用数据浏览器共用同一套导航、同一次登录与同一个窗口。"
+      },
+      "workspace": {
+        "title": "一切围绕工作区",
+        "desc": "每一次邮件、看板、云盘与 Flywheel 请求都以你在入口选定的工作区为范围。"
+      },
+      "realtime": {
+        "title": "默认就是实时的",
+        "desc": "WebSocket 网关让通知、任务变更与看板事件持续流动，背后还有推送支撑。"
+      }
+    },
+    "features": {
+      "badge": "功能",
+      "title": "桌面尺寸的工作区客户端",
+      "desc": "网页端能做的事，这里都为键盘、鼠标与真正的窗口重新尺寸。",
+      "signIn": {
+        "title": "Solar Network 登录",
+        "desc": "原生桌面端使用 PKCE 授权，网页端使用设备码流程，登录后在入口选择或创建工作区。"
+      },
+      "workspaces": {
+        "title": "以工作区为单位",
+        "desc": "成员管理、切换、退出与自动准备的个人工作区 —— 每个请求都携带你选定的那一个。"
+      },
+      "mail": {
+        "title": "会话式邮件（ElecPostal）",
+        "desc": "每个会话一行，数量由服务端统计；支持回复链接、多选、星标、移动、删除与清空回收站。"
+      },
+      "mailImport": {
+        "title": "导入 .eml 与 .mbox",
+        "desc": "在客户端解析，每批最多 500 封，附件作为后台任务上传至工作区云盘。"
+      },
+      "boards": {
+        "title": "看板（Ideask）",
+        "desc": "每组一个泳道，卡片可拖拽，支持优先级、截止日期、标签、负责人、评论与封面图。"
+      },
+      "github": {
+        "title": "GitHub Issue 同步",
+        "desc": "安装 GitHub App、关联仓库，Issue 会出现在卡片上 —— 包括镜像的评论。"
+      },
+      "drive": {
+        "title": "工作区云盘（DysonFS）",
+        "desc": "已索引文件夹与未索引资源、实时配额、拖拽上传、重命名、移动与逐文件权限。"
+      },
+      "viewer": {
+        "title": "不离开应用的查看器",
+        "desc": "图片灯箱带 EXIF，视频与音频可直接播放，文档预览无需跳出工作区。"
+      },
+      "notifications": {
+        "title": "Ring 收件箱",
+        "desc": "小岛式的提醒面板可在任何界面上弹出，带未读角标与一键已读。"
+      },
+      "realtime": {
+        "title": "实时信息流",
+        "desc": "WebSocket 网关带心跳与重连退避，新通知与任务变更直接刷新界面。"
+      },
+      "push": {
+        "title": "后台推送",
+        "desc": "通过 Metoer 订阅 FCM 与 APNs，应用关闭时工作区仍能找到你。"
+      },
+      "desktop": {
+        "title": "桌面优先的外壳",
+        "desc": "原生窗口框架、侧栏或抽屉导航、后台任务浮层、浅色与深色主题、八种强调色、中英双语。"
+      },
+      "flywheel": {
+        "title": "Flywheel 应用数据",
+        "desc": "在同一个壳内浏览工作区的加密应用数据 —— 应用、数据块、修订版本与审计记录。"
+      }
+    },
+    "download": {
+      "btn": "下载",
+      "sectionTitle": "获取 SolWatt",
+      "sectionDesc": "Windows、Linux 与 Android 构建由 CI 在每个 tag 上产出；macOS 与 iOS 目前在 Xcode 中本地构建。",
+      "direct": "直接下载",
+      "pendingNotice": "尚未发布任何构建 —— 首个 tag 版本发布后，安装包会立刻出现在这里。",
+      "viewGithub": "查看仓库",
+      "buildFromSource": "从源码构建",
+      "release": {
+        "expand": "展开完整更新日志",
+        "collapse": "收起"
+      },
+      "windows": {
+        "title": "Windows",
+        "desc": "由 tag 流水线产出的 Inno Setup 安装包。"
+      },
+      "linux": {
+        "title": "Linux",
+        "desc": "x86_64 AppImage，已内置应用图标与桌面条目。"
+      },
+      "android": {
+        "title": "Android",
+        "desc": "按 ABI 拆分的 APK，由 CI 签名 —— 无需应用商店账号。"
+      },
+      "macos": {
+        "title": "macOS",
+        "desc": "同一份 Flutter 源码的原生窗口版本，支持由 FCM 管理的 APNs 推送。",
+        "notice": "macOS 与 iOS 尚未接入 tag 流水线 —— 克隆仓库并用 Flutter 构建即可运行。"
+      }
+    },
+    "help": {
+      "title": "需要帮助？",
+      "desc": "发现了 Bug，或少了一项服务？在仓库里提一个 Issue，我们会看看。"
     }
   }
 }
-
-

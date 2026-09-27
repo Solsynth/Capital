@@ -1,0 +1,20 @@
+{
+  "title": "Persynth",
+  "description": "安静的“小岛”桌面宠物伙伴 —— ASCII 的表情、自己的情绪，还有一个可以聊天的 Personality Core。",
+  "icon": "/images/persynth/icon.png",
+  "background": "/images/persynth/main-visual.svg",
+  "repo": "https://src.solsynth.dev/Solsynth/SynthPet",
+  "distributionProductId": "da9a9b07-f97e-4798-8a69-306a33b143d1",
+  "hasPage": true,
+  "tags": [
+    "Desktop Pet",
+    "AI",
+    "Companion",
+    "macOS",
+    "Windows",
+    "Linux",
+    "Android"
+  ],
+  "series": "Persynth",
+  "color": "#E17E92"
+}
