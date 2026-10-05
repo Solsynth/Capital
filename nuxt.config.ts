@@ -133,17 +133,6 @@ export default defineNuxtConfig({
     sources: ["/api/__sitemap__/urls"],
   },
 
-  // MaidTerm never got its own product site — its landing page was folded
-  // into MaidKit, so keep the old URLs working (301, server and client).
-  routeRules: {
-    "/en/products/maid-term": {
-      redirect: { to: "/en/products/maid-kit", statusCode: 301 },
-    },
-    "/zh/products/maid-term": {
-      redirect: { to: "/zh/products/maid-kit", statusCode: 301 },
-    },
-  },
-
   ogImage: {
     enabled: true,
     security: {
