@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import ProductDownloadSection from "~/components/ProductDownloadSection.vue";
-import type { ProductDownloadPlatform } from "~/types/product-download";
 import {
   Bell,
   BookOpen,
@@ -28,11 +26,8 @@ import {
   Wallet,
   Zap,
 } from "@lucide/vue";
-import IconsIconIos from "~/components/Icons/IconIos.vue";
-import IconsIconAndroid from "~/components/Icons/IconAndroid.vue";
-import IconsIconMacos from "~/components/Icons/IconMacos.vue";
-import IconsIconLinux from "~/components/Icons/IconLinux.vue";
 import ReviewSummary from "~/components/ReviewSummary.vue";
+import ProductDownloadsCta from "~/components/ProductDownloadsCta.vue";
 import ReviewForm from "~/components/ReviewForm.vue";
 import ReviewList from "~/components/ReviewList.vue";
 import StarRating from "~/components/StarRating.vue";
@@ -40,27 +35,6 @@ import StarRating from "~/components/StarRating.vue";
 const { t, locale } = useI18n();
 
 const PRODUCT_SLUG = "solar-network";
-const APP_STORE_URL = "https://apps.apple.com/app/id6499032345";
-const APP_STORE_BADGE = {
-  en: {
-    light: "/images/app-store/app-store-en-light.svg",
-    dark: "/images/app-store/app-store-en-dark.svg",
-  },
-  zh: {
-    light: "/images/app-store/app-store-zh-light.svg",
-    dark: "/images/app-store/app-store-zh-dark.svg",
-  },
-};
-const MAC_APP_STORE_BADGE = {
-  en: {
-    light: "/images/app-store/mac-app-store-en-light.svg",
-    dark: "/images/app-store/mac-app-store-en-dark.svg",
-  },
-  zh: {
-    light: "/images/app-store/mac-app-store-zh-light.svg",
-    dark: "/images/app-store/mac-app-store-zh-dark.svg",
-  },
-};
 const docsUrl = computed(() =>
   locale.value === "zh"
     ? "https://kb.solsynth.dev/zh/solar-network/account/"
@@ -73,14 +47,6 @@ const reviewForm = ref({
   content: "",
   isRecommended: null as boolean | null,
 });
-
-const {
-  releases,
-  selected,
-  loading: releasesLoading,
-  fetchReleases,
-  selectRelease,
-} = useProductReleases(PRODUCT_SLUG);
 
 const {
   reviews,
@@ -106,7 +72,7 @@ const {
 } = useProductReviewSubmission(PRODUCT_SLUG);
 
 onMounted(() => {
-  void Promise.all([fetchReleases(), fetchMyReview(), refreshReviews()]);
+  void Promise.all([fetchMyReview(), refreshReviews()]);
 });
 
 function openReviewForm() {
@@ -291,156 +257,6 @@ const simpleFeatures = [
   { key: "subscription", icon: CreditCard },
   { key: "more", icon: Sparkles },
 ] as const;
-
-const platforms: ProductDownloadPlatform[] = [
-  {
-    id: "web",
-    label: "Web",
-    icon: Globe,
-    titleKey: "solarNetwork.download.web.title",
-    descKey: "solarNetwork.download.web.desc",
-    actions: [
-      {
-        href: "https://web.solian.app",
-        label: "solarNetwork.journey.openBrowser",
-        i18n: true,
-        variant: "primary",
-        icon: ExternalLink,
-      },
-    ],
-  },
-  {
-    id: "ios",
-    label: "iOS",
-    icon: IconsIconIos,
-    iconClass: "fill-current",
-    titleKey: "solarNetwork.download.ios.title",
-    descKey: "solarNetwork.download.ios.desc",
-    noticeKey: "solarNetwork.download.cnNotice",
-    actions: [
-      {
-        href: APP_STORE_URL,
-        label: "solarNetwork.download.ios.appStore",
-        i18n: true,
-        variant: "primary",
-        icon: IconsIconIos,
-        iconClass: "fill-current",
-        badge: APP_STORE_BADGE,
-      },
-      {
-        href: "https://testflight.apple.com/join/YJ0lmN6O",
-        label: "solarNetwork.download.ios.testflight",
-        i18n: true,
-        variant: "outline",
-        icon: IconsIconIos,
-        iconClass: "fill-current",
-      },
-    ],
-  },
-  {
-    id: "android",
-    label: "Android",
-    icon: IconsIconAndroid,
-    iconClass: "fill-current",
-    titleKey: "solarNetwork.download.android.title",
-    descKey: "solarNetwork.download.android.desc",
-    actions: [
-      {
-        artifactPlatform: "android",
-        artifactArchitecture: "arm64",
-        label: "ARM64 (arm64-v8a)",
-        variant: "primary",
-        icon: IconsIconAndroid,
-        iconClass: "fill-current",
-      },
-      {
-        artifactPlatform: "android",
-        artifactArchitecture: "armeabi-v7a",
-        label: "ARMv7 (armeabi-v7a)",
-        variant: "outline",
-        icon: IconsIconAndroid,
-        iconClass: "fill-current",
-      },
-      {
-        artifactPlatform: "android",
-        artifactArchitecture: "x86_64",
-        label: "x86_64",
-        variant: "outline",
-        icon: IconsIconAndroid,
-        iconClass: "fill-current",
-      },
-    ],
-  },
-  {
-    id: "macos",
-    label: "macOS",
-    icon: IconsIconMacos,
-    iconClass: "fill-current",
-    titleKey: "solarNetwork.download.macos.title",
-    descKey: "solarNetwork.download.macos.desc",
-    brew: true,
-    noticeKey: "solarNetwork.download.cnNotice",
-    actions: [
-      {
-        href: APP_STORE_URL,
-        label: "solarNetwork.download.macos.appStore",
-        i18n: true,
-        variant: "primary",
-        icon: IconsIconMacos,
-        iconClass: "fill-current",
-        badge: MAC_APP_STORE_BADGE,
-      },
-      {
-        href: "https://testflight.apple.com/join/YJ0lmN6O",
-        label: "solarNetwork.download.macos.testflight",
-        i18n: true,
-        variant: "outline",
-        icon: IconsIconMacos,
-        iconClass: "fill-current",
-      },
-      {
-        artifactPlatform: "macos",
-        label: "solarNetwork.download.direct",
-        i18n: true,
-        variant: "outline",
-        icon: ExternalLink,
-      },
-    ],
-  },
-  {
-    id: "windows",
-    label: "Windows",
-    icon: Monitor,
-    titleKey: "solarNetwork.download.windows.title",
-    descKey: "solarNetwork.download.windows.desc",
-    actions: [
-      {
-        artifactPlatform: "windows",
-        label: "solarNetwork.download.direct",
-        i18n: true,
-        variant: "primary",
-        icon: ExternalLink,
-      },
-    ],
-  },
-  {
-    id: "linux",
-    label: "Linux",
-    icon: IconsIconLinux,
-    iconClass: "fill-current",
-    titleKey: "solarNetwork.download.linux.title",
-    descKey: "solarNetwork.download.linux.desc",
-    actions: [
-      {
-        artifactPlatform: "linux",
-        label: "solarNetwork.download.direct",
-        i18n: true,
-        variant: "primary",
-        icon: ExternalLink,
-      },
-    ],
-  },
-];
 
 definePageMeta({
   title: "Solar Network",
@@ -685,21 +501,7 @@ defineOgImage("UniOgImage", {
     </section>
 
     <!-- Download -->
-    <ProductDownloadSection
-      :release="selected"
-      :releases="releases"
-      :loading="releasesLoading"
-      @select-release="selectRelease"
-      :github-url="'https://github.com/Solsynth/Solian'"
-      :platforms="platforms"
-      badge-key="solarNetwork.download.btn"
-      title-key="solarNetwork.download.sectionTitle"
-      desc-key="solarNetwork.download.sectionDesc"
-      view-github-key="solarNetwork.journey.viewGithub"
-      release-expand-key="solarNetwork.download.release.expand"
-      release-collapse-key="solarNetwork.download.release.collapse"
-      brew-command="brew install --cask solsynth/solian/solian"
-    />
+    <ProductDownloadsCta :slug="PRODUCT_SLUG" product-title="Solar Network" />
 
     <!-- Reviews -->
     <section class="container mx-auto px-4 py-24">

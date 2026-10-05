@@ -222,13 +222,8 @@
   "solarNetwork.getStarted": "Get Started",
   "solarNetwork.docs": "Docs",
   "solarNetwork.download.btn": "Download",
-  "solarNetwork.download.sectionTitle": "Get Solian",
-  "solarNetwork.download.sectionDesc": "Choose your platform and install the latest build. Prefer the web app if you just want to try it out.",
-  "solarNetwork.download.direct": "Direct Download",
   "solarNetwork.download.github": "Distribution Releases",
   "solarNetwork.download.release.viewOnGithub": "View source on GitHub",
-  "solarNetwork.download.release.expand": "Show full changelog",
-  "solarNetwork.download.release.collapse": "Show less",
   "solarNetwork.about.badge": "About",
   "solarNetwork.about.title": "About Solar Network",
   "solarNetwork.about.desc": "Solian (also known as Solar Network) is a social platform designed to help you express yourself freely and connect with others. We don't aim to replace any mainstream platforms—we simply offer you another peaceful and harmonious community choice.",
@@ -295,28 +290,9 @@
   "solarNetwork.aboutCard.open.desc": "We provide fully documented APIs, transparent rate limits, and risk controls. Whether building your own client or developing third-party apps, Solar Network is an ideal starting point.",
   "solarNetwork.journey.title": "Start Your Journey",
   "solarNetwork.journey.desc": "Access Solar Network Anytime, Anywhere",
-  "solarNetwork.journey.openBrowser": "Open in Browser",
-  "solarNetwork.journey.viewGithub": "View on GitHub",
-  "solarNetwork.download.web.title": "Web Browser",
-  "solarNetwork.download.web.desc": "Access Solar Network directly from your browser. No installation required.",
-  "solarNetwork.download.ios.title": "iPhone & iPad",
-  "solarNetwork.download.ios.desc": "Available on the App Store. Join the TestFlight beta to get updates as soon as they ship.",
-  "solarNetwork.download.ios.appStore": "Download on the App Store",
-  "solarNetwork.download.cnNotice": "Solar Network is not yet available on the mainland China App Store — join the TestFlight beta instead.",
-  "solarNetwork.download.ios.testflight": "Join TestFlight",
-  "solarNetwork.download.android.title": "Android",
-  "solarNetwork.download.android.desc": "Download the APK from Distribution.",
   "solarNetwork.download.android.download": "Download APK",
-  "solarNetwork.download.macos.title": "macOS",
-  "solarNetwork.download.macos.desc": "Available on the Mac App Store. Also via Homebrew, direct download, or TestFlight.",
-  "solarNetwork.download.macos.appStore": "Download on the Mac App Store",
-  "solarNetwork.download.macos.testflight": "Join TestFlight",
   "solarNetwork.download.macos.github": "Download from Distribution",
-  "solarNetwork.download.windows.title": "Windows",
-  "solarNetwork.download.windows.desc": "Download the installer from Distribution.",
   "solarNetwork.download.windows.download": "Download for Windows",
-  "solarNetwork.download.linux.title": "Linux",
-  "solarNetwork.download.linux.desc": "Download AppImage or other packages from Distribution.",
   "solarNetwork.download.linux.download": "Download for Linux",
   "solarNetwork.help.title": "Need Help?",
   "solarNetwork.help.desc": "Feel free to report bugs or contact us on GitHub.",
@@ -569,22 +545,58 @@
   "releases": {
     "title": "Releases",
     "latest": "Latest Release",
-    "all": "All Releases",
     "version": "Version",
     "releasedOn": "Released on",
     "changelog": "Changelog",
     "download": "Download",
     "noReleases": "No releases yet",
     "noNotes": "No release notes were provided for this version.",
-    "noDownloads": "No download is available for this platform in this version.",
     "expired": "Expired",
     "expiredDetails": "Artifacts for this release have expired and are no longer available.",
     "prerelease": "Pre-release",
-    "loading": "Loading download information…",
     "artifact": {
-      "bundleSize": "Bundle size",
       "checksum": "Checksum",
       "uploadedOn": "Uploaded"
+    }
+  },
+  "releasePage": {
+    "breadcrumbLabel": "Breadcrumb",
+    "notes": "Release notes",
+    "downloads": "Downloads",
+    "allVersions": "All versions",
+    "latest": "Latest",
+    "backToProduct": "Back to {name}",
+    "requires": "Requires {version} or later",
+    "fileCount": "{count} files",
+    "noArtifacts": "No files are attached to this version yet.",
+    "emptyHint": "Builds appear here as soon as a release is published.",
+    "loadFailed": "Release information is temporarily unavailable.",
+    "unnamedFile": "Unnamed file",
+    "unknownPlatform": "Other"
+  },
+  "express": {
+    "poweredBy": "Powered by Solsynth Express"
+  },
+  "productDownloadsCta": {
+    "title": "Get {product}",
+    "body": "Release notes, checksums and a build for your platform — all on the release pages."
+  },
+  "downloadDialog": {
+    "title": "Your download has started",
+    "subtitle": "Dispatched for {subject}.",
+    "subtitleGeneric": "Dispatched from Solsynth Express.",
+    "copyChecksum": "Copy checksum",
+    "copied": "Copied",
+    "verifyHint": "Match the seal against the file you received.",
+    "didNotStart": "Download didn't start?",
+    "downloadAgain": "Download again",
+    "close": "Close",
+    "waybill": {
+      "destination": "Destination",
+      "weight": "Weight",
+      "item": "Item",
+      "seal": "Seal · SHA-256",
+      "dispatched": "Dispatched"
     }
   },
   "reviews": {
@@ -651,7 +663,6 @@
   "cloudySky": {
     "tagline": "Solar Network push notifications for regions without Firebase Cloud Messaging.",
     "openSource": "Open Source",
-    "downloadApk": "Download APK",
     "about": {
       "badge": "About",
       "title": "Push Notifications Without Firebase",
@@ -1052,39 +1063,9 @@
     },
     "download": {
       "btn": "Download",
-      "sectionTitle": "Get MaidKit",
-      "sectionDesc": "Pick your platform and install the latest build. Release artifacts are hosted by Distribution; source code lives on GitHub.",
-      "direct": "Direct Download",
       "github": "Distribution Releases",
-      "viewGithub": "View on GitHub",
       "release": {
-        "viewOnGithub": "View source on GitHub",
-        "expand": "Show full changelog",
-        "collapse": "Show less"
-      },
-      "android": {
-        "title": "Android",
-        "desc": "Download a split APK for your architecture from Distribution."
-      },
-      "ios": {
-        "title": "iPhone & iPad",
-        "desc": "Install from the App Store, or join the TestFlight beta for early access.",
-        "appStore": "Download on the App Store",
-        "testflight": "Join TestFlight"
-      },
-      "macos": {
-        "title": "macOS",
-        "desc": "Install from the Mac App Store, or join TestFlight for the beta.",
-        "appStore": "Download on the Mac App Store",
-        "testflight": "Join TestFlight"
-      },
-      "windows": {
-        "title": "Windows",
-        "desc": "Download the Windows installer package from our file server."
-      },
-      "linux": {
-        "title": "Linux",
-        "desc": "Download the AppImage package from our file server."
+        "viewOnGithub": "View source on GitHub"
       }
     },
     "help": {
@@ -1171,34 +1152,7 @@
       }
     },
     "download": {
-      "btn": "Download",
-      "sectionTitle": "Get Persynth",
-      "sectionDesc": "Windows, Linux and Android builds are produced by CI on every tag. macOS and iOS are built locally in Xcode for now.",
-      "direct": "Direct download",
-      "pendingNotice": "No build has been published yet — artifacts appear here as soon as the first tagged release is published.",
-      "viewGithub": "View the repository",
-      "buildFromSource": "Build from source",
-      "release": {
-        "expand": "Show full changelog",
-        "collapse": "Show less"
-      },
-      "windows": {
-        "title": "Windows",
-        "desc": "Inno Setup installer produced from the tag pipeline."
-      },
-      "linux": {
-        "title": "Linux",
-        "desc": "x86_64 AppImage with the app icon and desktop entry baked in."
-      },
-      "android": {
-        "title": "Android",
-        "desc": "Split-per-ABI APKs, signed by CI — no store account required."
-      },
-      "macos": {
-        "title": "macOS",
-        "desc": "The same Flutter source in a native window frame, sandboxed as the Mac App Store requires.",
-        "notice": "macOS and iOS are not part of the tag pipeline yet — clone the repository and build with Flutter to run them today."
-      }
+      "btn": "Download"
     },
     "help": {
       "title": "Need help?",
@@ -1289,34 +1243,7 @@
       }
     },
     "download": {
-      "btn": "Download",
-      "sectionTitle": "Get SolWatt",
-      "sectionDesc": "Windows, Linux and Android builds are produced by CI on every tag. macOS and iOS are built locally in Xcode for now.",
-      "direct": "Direct download",
-      "pendingNotice": "No build has been published yet — artifacts appear here as soon as the first tagged release is published.",
-      "viewGithub": "View the repository",
-      "buildFromSource": "Build from source",
-      "release": {
-        "expand": "Show full changelog",
-        "collapse": "Show less"
-      },
-      "windows": {
-        "title": "Windows",
-        "desc": "Inno Setup installer produced from the tag pipeline."
-      },
-      "linux": {
-        "title": "Linux",
-        "desc": "x86_64 AppImage with the app icon and desktop entry baked in."
-      },
-      "android": {
-        "title": "Android",
-        "desc": "Split-per-ABI APKs, signed by CI — no store account required."
-      },
-      "macos": {
-        "title": "macOS",
-        "desc": "The same Flutter source in a native window frame, with FCM-managed APNs push.",
-        "notice": "macOS and iOS are not part of the tag pipeline yet — clone the repository and build with Flutter to run them today."
-      }
+      "btn": "Download"
     },
     "help": {
       "title": "Need help?",

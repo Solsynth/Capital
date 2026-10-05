@@ -33,7 +33,7 @@ const emit = defineEmits<{
     <DialogPortal>
       <DialogOverlay class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50" />
       <DialogContent
-        class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100-2rem)] rounded-2xl border border-base-content/10 bg-base-100 p-6 shadow-2xl focus:outline-none"
+        class="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-50 w-[calc(100%-2rem)] rounded-2xl border border-base-content/10 bg-base-100 p-6 shadow-2xl focus:outline-none"
         :class="maxWidth"
         @pointer-down-outside="(event: any) => {
           const target = event.detail.originalEvent.target as HTMLElement

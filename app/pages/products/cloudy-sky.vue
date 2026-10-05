@@ -4,9 +4,7 @@ import {
   Bug,
   CheckCircle,
   CodeXml,
-  History,
-  ChevronDown,
-  ChevronUp,
+  Download,
   MessageSquare,
   RefreshCw,
   Shield,
@@ -15,15 +13,15 @@ import {
   Wifi,
   Zap,
 } from "@lucide/vue";
-import IconsIconAndroid from "~/components/Icons/IconAndroid.vue";
 import ReviewSummary from "~/components/ReviewSummary.vue";
+import ProductDownloadsCta from "~/components/ProductDownloadsCta.vue";
 import ReviewForm from "~/components/ReviewForm.vue";
 import ReviewList from "~/components/ReviewList.vue";
-import { useProductReleases } from "~/composables/useProductReleases";
 import { useProductReviews } from "~/composables/useProductReviews";
 import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
 
 const { t } = useI18n();
+const localePath = useLocalePath();
 
 const PRODUCT_SLUG = "cloudy-sky";
 
@@ -85,33 +83,6 @@ const features = [
 ] as const;
 
 const {
-  releases,
-  latest,
-  selected,
-  loading: releasesLoading,
-  fetchReleases,
-  selectRelease,
-} = useProductReleases(PRODUCT_SLUG);
-const showAllReleases = ref(false);
-const androidDownloadUrl = computed(() =>
-  selected.value?.artifacts.find((artifact) =>
-    artifact.platform === "android" && !artifact.expired && artifact.download_url,
-  )?.download_url || null,
-);
-
-async function toggleAllReleases() {
-  showAllReleases.value = !showAllReleases.value;
-  if (showAllReleases.value && releases.value.length === 0) {
-    await fetchReleases();
-  }
-}
-
-function handleReleaseSelect(version: string) {
-  selectRelease(version);
-  showAllReleases.value = false;
-}
-
-const {
   reviews,
   summary,
   loading: reviewsLoading,
@@ -143,7 +114,7 @@ const reviewForm = ref({
 });
 
 onMounted(async () => {
-  await Promise.all([fetchReleases(), fetchMyReview(), refreshReviews()]);
+  await Promise.all([fetchMyReview(), refreshReviews()]);
 });
 
 function openReviewForm() {
@@ -260,16 +231,13 @@ defineOgImage("UniOgImage", {
             <span class="text-primary">⇅</span> sse://push.solian.app
           </p>
           <div class="mt-7 flex flex-wrap items-center gap-3">
-            <a
-              v-if="androidDownloadUrl"
-              :href="androidDownloadUrl"
-              target="_blank"
-              rel="noopener noreferrer"
+            <NuxtLink
+              :to="localePath(`/products/${PRODUCT_SLUG}/releases`)"
               class="btn btn-primary btn-md rounded-full px-6 gap-2"
             >
-              <IconsIconAndroid class="w-4 h-4 fill-current" />
-              {{ t("cloudySky.downloadApk") }}
-            </a>
+              <Download class="w-4 h-4" aria-hidden="true" />
+              {{ t("releasePage.downloads") }}
+            </NuxtLink>
             <a
               href="https://github.com/Solsynth/CloudySky"
               target="_blank"
@@ -378,63 +346,8 @@ defineOgImage("UniOgImage", {
       </ul>
     </section>
 
-    <!-- Releases -->
-    <section
-      v-if="selected || !releasesLoading"
-      id="releases"
-      class="container mx-auto px-4 pb-24 scroll-mt-24"
-    >
-      <div class="flex items-end justify-between gap-4 mb-6">
-        <div class="flex items-center gap-3">
-          <History class="w-5 h-5 text-primary shrink-0" aria-hidden="true" />
-          <h2 class="text-3xl font-semibold tracking-tight">
-            {{ t("releases.title") }}
-          </h2>
-        </div>
-        <div class="flex items-center gap-2">
-          <ReleaseSelector
-            :releases="releases"
-            :selected-version="selected?.version"
-            :label="t('releases.version')"
-            @select="handleReleaseSelect"
-          />
-          <button
-            v-if="releases.length > 1"
-            type="button"
-            class="btn btn-sm btn-ghost gap-1 shrink-0"
-            @click="toggleAllReleases"
-          >
-            {{ showAllReleases ? "Collapse" : t("releases.all") }}
-            <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
-            <ChevronDown v-else class="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      <ReleaseCard
-        v-if="selected && !showAllReleases"
-        :version="selected.version"
-        :title="selected.title"
-        :released-at="selected.releasedAt"
-        :changelog="selected.changelog"
-        :download-url="androidDownloadUrl"
-        :is-expired="selected.artifactsExpired"
-        :is-prerelease="selected.isPrerelease"
-      />
-
-      <div v-if="showAllReleases && releasesLoading" class="py-4 text-center opacity-60">
-        {{ t("releases.loading") }}
-      </div>
-
-      <ReleaseTimeline
-        v-else-if="showAllReleases && releases.length > 0"
-        :releases="releases"
-      />
-
-      <div v-if="!selected && !releasesLoading" class="py-4">
-        <p class="opacity-60">{{ t("releases.noReleases") }}</p>
-      </div>
-    </section>
+    <!-- Downloads -->
+    <ProductDownloadsCta :slug="PRODUCT_SLUG" product-title="CloudySky" />
 
     <!-- Reviews -->
     <section class="container mx-auto px-4 pb-24">

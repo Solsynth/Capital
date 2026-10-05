@@ -7,18 +7,13 @@ import {
   ArrowLeft,
   Tag,
   Folder,
-  History,
   MessageSquare,
-  ChevronDown,
-  ChevronUp,
 } from "@lucide/vue";
 import StarRating from "~/components/StarRating.vue";
-import ReleaseCard from "~/components/ReleaseCard.vue";
-import ReleaseTimeline from "~/components/ReleaseTimeline.vue";
+import ProductDownloadsCta from "~/components/ProductDownloadsCta.vue";
 import ReviewSummary from "~/components/ReviewSummary.vue";
 import ReviewForm from "~/components/ReviewForm.vue";
 import ReviewList from "~/components/ReviewList.vue";
-import { useProductReleases } from "~/composables/useProductReleases";
 import { useProductReviews } from "~/composables/useProductReviews";
 import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
 
@@ -49,23 +44,6 @@ const hasContent = computed(() => {
 if (!product.value) {
   navigateTo(localePath("/products"));
 }
-
-const {
-  releases,
-  latest,
-  selected,
-  loading: releasesLoading,
-  fetchReleases,
-  selectRelease,
-} = useProductReleases(slug.value)
-const showAllReleases = ref(false)
-function handleReleaseSelect(version: string) {
-  selectRelease(version)
-  showAllReleases.value = false
-}
-onMounted(async () => {
-  await fetchReleases()
-})
 
 // ==================== Reviews ====================
 const { reviews, summary, loading: reviewsLoading, sort, setSort, page, totalPages, nextPage, prevPage, refresh: refreshReviews } = useProductReviews(slug.value)
@@ -587,59 +565,8 @@ useSchemaOrg([
       </div>
     </template>
 
-    <!-- ==================== Releases Section ==================== -->
-    <section v-if="latest || !releasesLoading" class="container mx-auto px-4 py-16">
-      <div class="flex items-end justify-between gap-4 mb-6">
-        <h2 class="text-2xl font-semibold tracking-tight flex items-center gap-2">
-          <History class="w-5 h-5 text-primary" />
-          {{ t("releases.title") }}
-        </h2>
-        <div class="flex items-center gap-2">
-          <ReleaseSelector
-            :releases="releases"
-            :selected-version="selected?.version"
-            :label="t('releases.version')"
-            @select="handleReleaseSelect"
-          />
-          <button
-            v-if="releases.length > 1"
-            class="btn btn-sm btn-ghost gap-1"
-            @click="showAllReleases = !showAllReleases"
-          >
-            {{ showAllReleases ? "Collapse" : t("releases.all") }}
-            <ChevronUp v-if="showAllReleases" class="w-4 h-4" />
-            <ChevronDown v-else class="w-4 h-4" />
-          </button>
-        </div>
-      </div>
-
-      <!-- Selected release card -->
-      <ReleaseCard
-        v-if="selected && !showAllReleases"
-        :version="selected.version"
-        :title="selected.title"
-        :released-at="selected.releasedAt"
-        :changelog="selected.changelog"
-        :download-url="selected.downloadUrl"
-        :is-prerelease="selected.isPrerelease"
-        :is-expired="selected.artifactsExpired"
-      />
-
-      <!-- All releases timeline -->
-      <ReleaseTimeline
-        v-else-if="showAllReleases && releases.length > 0"
-        :releases="releases"
-      />
-
-      <div v-if="showAllReleases && releases.length <= 1 && !releasesLoading" class="text-center py-4">
-        <p class="opacity-60">{{ t("releases.noReleases") }}</p>
-      </div>
-
-      <div v-if="!selected && !releasesLoading" class="text-center py-4">
-        <p class="opacity-60">{{ t("releases.noReleases") }}</p>
-      </div>
-
-    </section>
+    <!-- ==================== Downloads CTA ==================== -->
+    <ProductDownloadsCta :slug="slug" :product-title="product?.title" />
 
     <!-- ==================== Reviews Section ==================== -->
     <section class="container mx-auto px-4 pb-24">

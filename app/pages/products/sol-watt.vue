@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import ProductDownloadSection from "~/components/ProductDownloadSection.vue";
-import type { ProductDownloadPlatform } from "~/types/product-download";
 import {
   AppWindow,
   Bell,
@@ -22,14 +20,11 @@ import {
   Send,
   Star,
 } from "@lucide/vue";
-import IconsIconAndroid from "~/components/Icons/IconAndroid.vue";
-import IconsIconLinux from "~/components/Icons/IconLinux.vue";
-import IconsIconMacos from "~/components/Icons/IconMacos.vue";
 import ReviewSummary from "~/components/ReviewSummary.vue";
 import ReviewForm from "~/components/ReviewForm.vue";
 import ReviewList from "~/components/ReviewList.vue";
 import StarRating from "~/components/StarRating.vue";
-import { useProductReleases } from "~/composables/useProductReleases";
+import ProductDownloadsCta from "~/components/ProductDownloadsCta.vue";
 import { useProductReviews } from "~/composables/useProductReviews";
 import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
 
@@ -137,106 +132,6 @@ const features = [
   },
 ] as const;
 
-const platforms: ProductDownloadPlatform[] = [
-  {
-    id: "windows",
-    label: "Windows",
-    icon: Monitor,
-    titleKey: "solWatt.download.windows.title",
-    descKey: "solWatt.download.windows.desc",
-    noticeKey: "solWatt.download.pendingNotice",
-    actions: [
-      {
-        artifactPlatform: "windows",
-        label: "solWatt.download.direct",
-        i18n: true,
-        variant: "primary",
-        icon: Monitor,
-      },
-    ],
-  },
-  {
-    id: "linux",
-    label: "Linux",
-    icon: IconsIconLinux,
-    iconClass: "fill-current",
-    titleKey: "solWatt.download.linux.title",
-    descKey: "solWatt.download.linux.desc",
-    noticeKey: "solWatt.download.pendingNotice",
-    actions: [
-      {
-        artifactPlatform: "linux",
-        label: "solWatt.download.direct",
-        i18n: true,
-        variant: "primary",
-        icon: IconsIconLinux,
-        iconClass: "fill-current",
-      },
-    ],
-  },
-  {
-    id: "android",
-    label: "Android",
-    icon: IconsIconAndroid,
-    iconClass: "fill-current",
-    titleKey: "solWatt.download.android.title",
-    descKey: "solWatt.download.android.desc",
-    noticeKey: "solWatt.download.pendingNotice",
-    actions: [
-      {
-        artifactPlatform: "android",
-        artifactArchitecture: "arm64",
-        label: "ARM64 (arm64-v8a)",
-        variant: "primary",
-        icon: IconsIconAndroid,
-        iconClass: "fill-current",
-      },
-      {
-        artifactPlatform: "android",
-        artifactArchitecture: "armeabi-v7a",
-        label: "ARMv7 (armeabi-v7a)",
-        variant: "outline",
-        icon: IconsIconAndroid,
-        iconClass: "fill-current",
-      },
-      {
-        artifactPlatform: "android",
-        artifactArchitecture: "x86_64",
-        label: "x86_64",
-        variant: "outline",
-        icon: IconsIconAndroid,
-        iconClass: "fill-current",
-      },
-    ],
-  },
-  {
-    id: "macos",
-    label: "macOS",
-    icon: IconsIconMacos,
-    iconClass: "fill-current",
-    titleKey: "solWatt.download.macos.title",
-    descKey: "solWatt.download.macos.desc",
-    noticeKey: "solWatt.download.macos.notice",
-    actions: [
-      {
-        href: REPO_URL,
-        label: "solWatt.download.buildFromSource",
-        i18n: true,
-        variant: "primary",
-        icon: CodeXml,
-      },
-    ],
-  },
-];
-
-const {
-  releases,
-  selected,
-  loading: releasesLoading,
-  fetchReleases,
-  selectRelease,
-} = useProductReleases(PRODUCT_SLUG);
-
 const {
   reviews,
   summary,
@@ -269,7 +164,7 @@ const reviewForm = ref({
 });
 
 onMounted(async () => {
-  await Promise.all([fetchReleases(), fetchMyReview(), refreshReviews()]);
+  await Promise.all([fetchMyReview(), refreshReviews()]);
 });
 
 function openReviewForm() {
@@ -478,20 +373,7 @@ defineOgImage("UniOgImage", {
     </section>
 
     <!-- Download -->
-    <ProductDownloadSection
-      :release="selected"
-      :releases="releases"
-      :loading="releasesLoading"
-      @select-release="selectRelease"
-      :github-url="REPO_URL"
-      :platforms="platforms"
-      badge-key="solWatt.download.btn"
-      title-key="solWatt.download.sectionTitle"
-      desc-key="solWatt.download.sectionDesc"
-      view-github-key="solWatt.download.viewGithub"
-      release-expand-key="solWatt.download.release.expand"
-      release-collapse-key="solWatt.download.release.collapse"
-    />
+    <ProductDownloadsCta :slug="PRODUCT_SLUG" product-title="SolWatt" />
 
     <!-- Reviews -->
     <section class="container mx-auto px-4 py-24">

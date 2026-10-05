@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import ProductDownloadSection from "~/components/ProductDownloadSection.vue";
-import type { ProductDownloadPlatform } from "~/types/product-download";
+import ProductDownloadsCta from "~/components/ProductDownloadsCta.vue";
 import {
   Activity,
   Bot,
@@ -12,14 +11,12 @@ import {
   Cpu,
   Database,
   Download,
-  ExternalLink,
   FileCode2,
   FolderKanban,
   GitBranch,
   Globe,
   KeyRound,
   LayoutDashboard,
-  Monitor,
   Network,
   Radio,
   Server,
@@ -30,15 +27,10 @@ import {
   Terminal,
   Wrench,
 } from "@lucide/vue";
-import IconsIconAndroid from "~/components/Icons/IconAndroid.vue";
-import IconsIconIos from "~/components/Icons/IconIos.vue";
-import IconsIconLinux from "~/components/Icons/IconLinux.vue";
-import IconsIconMacos from "~/components/Icons/IconMacos.vue";
 import ReviewSummary from "~/components/ReviewSummary.vue";
 import ReviewForm from "~/components/ReviewForm.vue";
 import ReviewList from "~/components/ReviewList.vue";
 import StarRating from "~/components/StarRating.vue";
-import { useProductReleases } from "~/composables/useProductReleases";
 import { useProductReviews } from "~/composables/useProductReviews";
 import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
 
@@ -46,28 +38,6 @@ const { t } = useI18n();
 
 const PRODUCT_SLUG = "maid-kit";
 const GITHUB_REPO = "https://github.com/Solsynth/MaidKit";
-const TESTFLIGHT_URL = "https://testflight.apple.com/join/fVQB3qq5";
-const APP_STORE_URL = "https://apps.apple.com/app/id6793576897";
-const APP_STORE_BADGE = {
-  en: {
-    light: "/images/app-store/app-store-en-light.svg",
-    dark: "/images/app-store/app-store-en-dark.svg",
-  },
-  zh: {
-    light: "/images/app-store/app-store-zh-light.svg",
-    dark: "/images/app-store/app-store-zh-dark.svg",
-  },
-};
-const MAC_APP_STORE_BADGE = {
-  en: {
-    light: "/images/app-store/mac-app-store-en-light.svg",
-    dark: "/images/app-store/mac-app-store-en-dark.svg",
-  },
-  zh: {
-    light: "/images/app-store/mac-app-store-zh-light.svg",
-    dark: "/images/app-store/mac-app-store-zh-dark.svg",
-  },
-};
 
 const aboutCards = [
   {
@@ -210,138 +180,6 @@ const features = [
   },
 ] as const;
 
-const platforms: ProductDownloadPlatform[] = [
-  {
-    id: "android",
-    label: "Android",
-    icon: IconsIconAndroid,
-    iconClass: "fill-current",
-    titleKey: "maidKit.download.android.title",
-    descKey: "maidKit.download.android.desc",
-    actions: [
-      {
-        artifactPlatform: "android",
-        artifactArchitecture: "arm64",
-        label: "ARM64 (arm64-v8a)",
-        variant: "primary",
-        icon: IconsIconAndroid,
-        iconClass: "fill-current",
-      },
-      {
-        artifactPlatform: "android",
-        artifactArchitecture: "armeabi-v7a",
-        label: "ARMv7 (armeabi-v7a)",
-        variant: "outline",
-        icon: IconsIconAndroid,
-        iconClass: "fill-current",
-      },
-      {
-        artifactPlatform: "android",
-        artifactArchitecture: "x86_64",
-        label: "x86_64",
-        variant: "outline",
-        icon: IconsIconAndroid,
-        iconClass: "fill-current",
-      },
-    ],
-  },
-  {
-    id: "ios",
-    label: "iOS",
-    icon: IconsIconIos,
-    iconClass: "fill-current",
-    titleKey: "maidKit.download.ios.title",
-    descKey: "maidKit.download.ios.desc",
-    actions: [
-      {
-        href: APP_STORE_URL,
-        label: "maidKit.download.ios.appStore",
-        i18n: true,
-        variant: "primary",
-        icon: IconsIconIos,
-        iconClass: "fill-current",
-        badge: APP_STORE_BADGE,
-      },
-      {
-        href: TESTFLIGHT_URL,
-        label: "maidKit.download.ios.testflight",
-        i18n: true,
-        variant: "outline",
-        icon: IconsIconIos,
-        iconClass: "fill-current",
-      },
-    ],
-  },
-  {
-    id: "macos",
-    label: "macOS",
-    icon: IconsIconMacos,
-    iconClass: "fill-current",
-    titleKey: "maidKit.download.macos.title",
-    descKey: "maidKit.download.macos.desc",
-    actions: [
-      {
-        href: APP_STORE_URL,
-        label: "maidKit.download.macos.appStore",
-        i18n: true,
-        variant: "primary",
-        icon: IconsIconMacos,
-        iconClass: "fill-current",
-        badge: MAC_APP_STORE_BADGE,
-      },
-      {
-        href: TESTFLIGHT_URL,
-        label: "maidKit.download.macos.testflight",
-        i18n: true,
-        variant: "outline",
-        icon: IconsIconMacos,
-        iconClass: "fill-current",
-      },
-    ],
-  },
-  {
-    id: "windows",
-    label: "Windows",
-    icon: Monitor,
-    titleKey: "maidKit.download.windows.title",
-    descKey: "maidKit.download.windows.desc",
-    actions: [
-      {
-        artifactPlatform: "windows",
-        label: "maidKit.download.direct",
-        i18n: true,
-        variant: "primary",
-        icon: ExternalLink,
-      },
-    ],
-  },
-  {
-    id: "linux",
-    label: "Linux",
-    icon: IconsIconLinux,
-    iconClass: "fill-current",
-    titleKey: "maidKit.download.linux.title",
-    descKey: "maidKit.download.linux.desc",
-    actions: [
-      {
-        artifactPlatform: "linux",
-        label: "maidKit.download.direct",
-        i18n: true,
-        variant: "primary",
-        icon: ExternalLink,
-      },
-    ],
-  },
-];
-
-const {
-  releases,
-  selected,
-  loading: releasesLoading,
-  fetchReleases,
-  selectRelease,
-} = useProductReleases(PRODUCT_SLUG);
-
 const {
   reviews,
   summary,
@@ -374,7 +212,7 @@ const reviewForm = ref({
 });
 
 onMounted(async () => {
-  await Promise.all([fetchReleases(), fetchMyReview(), refreshReviews()]);
+  await Promise.all([fetchMyReview(), refreshReviews()]);
 });
 
 function openReviewForm() {
@@ -582,20 +420,7 @@ defineOgImage("UniOgImage", {
     </section>
 
     <!-- Download -->
-    <ProductDownloadSection
-      :release="selected"
-      :releases="releases"
-      :loading="releasesLoading"
-      @select-release="selectRelease"
-      :github-url="GITHUB_REPO"
-      :platforms="platforms"
-      badge-key="maidKit.download.btn"
-      title-key="maidKit.download.sectionTitle"
-      desc-key="maidKit.download.sectionDesc"
-      view-github-key="maidKit.download.viewGithub"
-      release-expand-key="maidKit.download.release.expand"
-      release-collapse-key="maidKit.download.release.collapse"
-    />
+    <ProductDownloadsCta :slug="PRODUCT_SLUG" product-title="MaidKit" />
 
     <!-- Reviews -->
     <section class="container mx-auto px-4 py-24">

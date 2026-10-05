@@ -8,7 +8,8 @@ Added structured data to all major pages:
 - **Layout (default.vue)**: Organization, WebSite, and Breadcrumb schemas
 - **Homepage (index.vue)**: WebPage and Organization schemas
 - **Products Index (products/index.vue)**: CollectionPage and Breadcrumb schemas
-- **Product Detail (products/[slug].vue)**: Product and Breadcrumb schemas
+- **Product Detail (products/[slug]/index.vue)**: Product and Breadcrumb schemas
+- **Release Hub & Detail (products/[slug]/releases/[[version]].vue)**: Product and Breadcrumb schemas
 - **Events Index (events/index.vue)**: CollectionPage and Breadcrumb schemas
 - **Event Detail (events/[slug].vue)**: Event and Breadcrumb schemas
 - **Updates Index (updates/index.vue)**: CollectionPage and Breadcrumb schemas

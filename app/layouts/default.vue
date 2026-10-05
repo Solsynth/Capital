@@ -16,7 +16,7 @@ useHead({
   titleTemplate: (chunk?: string) => (chunk ? `${chunk} | ${siteName.value}` : siteName.value),
   htmlAttrs: { lang: () => locale.value },
   link: [
-    { rel: 'canonical', href: canonicalUrl.value },
+    { rel: 'canonical', href: canonicalUrl.value, key: 'canonical' },
   ],
 })
 
@@ -84,6 +84,8 @@ useSchemaOrg([
 
       <AppFooter />
     </div>
+
+    <DownloadDialog />
   </AppToast>
 </template>
 
