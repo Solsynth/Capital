@@ -3,6 +3,8 @@ FROM node:26-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json ./
+# The vendored @solsynth/sunkenland tarball is a `file:` dependency.
+COPY vendor ./vendor
 RUN npm ci
 
 ENV NITRO_DATA_DIR=/data/nitro

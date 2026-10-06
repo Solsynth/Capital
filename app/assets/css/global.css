@@ -170,3 +170,23 @@ header.fixed,
     filter: blur(30px);
   }
 }
+
+/*
+  SunkenLand widgets (`sk-*` custom elements, see
+  `app/plugins/sunkenland.client.ts`) render into their own shadow root. These
+  custom properties are set on the host element and inherit inside it, keeping
+  the preset stylesheets on-palette in both themes.
+*/
+sk-reaction-list,
+sk-replies-list,
+sk-reply-composer {
+  --sk-font: var(--font-sans);
+  --sk-base-100: var(--color-base-100);
+  --sk-base-200: var(--color-base-200);
+  --sk-base-300: var(--color-base-300);
+  --sk-base-content: var(--color-base-content);
+  --sk-primary: var(--color-primary);
+  --sk-primary-content: var(--color-primary-content);
+  --sk-radius: var(--radius-box);
+  --sk-border: color-mix(in oklab, var(--color-base-300) 70%, transparent);
+}

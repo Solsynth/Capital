@@ -108,13 +108,30 @@ definePageMeta({ middleware: 'auth' })
 
 Unauthenticated users are redirected to `/auth/login`.
 
+## Solar Network widgets (SunkenLand)
+
+Posts on `/updates/[id]` embed SunkenLand's `sk-*` custom elements: reaction chips
+(`sk-reaction-list`) and the reply thread (`sk-reply-composer` + `sk-replies-list`).
+
+- `app/plugins/sunkenland.client.ts` configures the elements once (API origin, preset
+  stylesheets, `public/stickers` for reaction stickers) and hands them the signed-in
+  user's Solar token from `server/api/sn/token.get.ts`, so no second Solarpass sign-in
+  is needed on top of better-auth. Signed-out visitors get the widgets' guest states.
+- `app/components/UpdateReactions.vue` / `UpdateReplies.vue` wrap them for the update
+  pages; `nuxt.config.ts` marks `sk-*` as custom elements and `app/assets/css/global.css`
+  maps DaisyUI tokens onto the widgets' `--sk-*` surface.
+- The dependency is vendored (`vendor/solsynth-sunkenland-0.1.2.tgz`) from the sibling
+  `SolarNetwork/SunkenLand` checkout: 0.1.2 tolerates the `null` tag names the live API
+  sends, which the published 0.1.1 rejects and would break every reply list. Once 0.1.2
+  is on npm, switch back with
+  `bun add @solsynth/sunkenland@^0.1.2 && rm -rf vendor/`.
+
 ## Project Structure
 
 ```
 ├── app/
 │   ├── components/     # Vue components (AppNavbar, etc.)
 │   ├── composables/    # useApi, useAuth
-│   ├── i18n/           # en.json, zh.json
 │   ├── layouts/        # App layout
 │   ├── middleware/      # Route guards (auth)
 │   ├── pages/          # File-based routing
@@ -122,6 +139,8 @@ Unauthenticated users are redirected to `/auth/login`.
 ├── content/            # Nuxt Content (blog, docs)
 ├── drizzle/            # SQLite migrations
 ├── drizzle-pg/         # PostgreSQL migrations
+├── i18n/
+│   └── locales/        # en.json, zh.json (nuxt i18n v10 layout)
 ├── server/
 │   ├── api/            # API routes
 │   │   ├── auth/       # Better Auth catch-all handler

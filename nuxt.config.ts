@@ -101,6 +101,14 @@ export default defineNuxtConfig({
     ],
   },
 
+  // SunkenLand widgets (`sk-*` custom elements) are registered at runtime by
+  // `app/plugins/sunkenland.client.ts`; Vue must leave the tags alone.
+  vue: {
+    compilerOptions: {
+      isCustomElement: (tag: string) => tag.startsWith("sk-"),
+    },
+  },
+
   css: ["~/assets/css/global.css"],
 
   vite: {
@@ -141,7 +149,6 @@ export default defineNuxtConfig({
   },
 
   i18n: {
-    restructureDir: false,
     compilation: {
       strictMessage: false,
     },
@@ -150,8 +157,6 @@ export default defineNuxtConfig({
       { code: "zh", name: "中文", file: "zh.json" },
     ],
     defaultLocale: "en",
-    lazy: true,
-    langDir: "i18n/",
     strategy: "prefix",
     detectBrowserLanguage: {
       useCookie: true,

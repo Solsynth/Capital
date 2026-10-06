@@ -2,9 +2,6 @@
 import {
   ArrowLeft,
   Eye,
-  MessageCircle,
-  Heart,
-  ArrowRight,
   Calendar,
   Paperclip,
 } from '@lucide/vue'
@@ -232,22 +229,13 @@ defineOgImage('UniOgImage', {
           v-html="contentHtml"
         />
 
-        <footer class="border-t border-base-200 pt-6">
+        <UpdateReactions :post-id="post.id" />
+
+        <footer class="mt-8 border-t border-base-200 pt-6">
           <div class="flex flex-wrap items-center gap-5 text-sm text-base-content/50">
             <div class="flex items-center gap-2">
               <Eye class="h-4 w-4" />
               <span>{{ post.views_unique }} {{ t('updates.uniqueViews') }}</span>
-            </div>
-            <div class="flex items-center gap-2">
-              <MessageCircle class="h-4 w-4" />
-              <span>{{ post.replies_count }} {{ t('updates.replies') }}</span>
-            </div>
-            <div
-              v-if="Object.keys(post.reactions_count).length > 0"
-              class="flex items-center gap-2"
-            >
-              <Heart class="h-4 w-4" />
-              <span>{{ Object.values(post.reactions_count).reduce((a, b) => a + b, 0) }}</span>
             </div>
             <div
               v-if="post.attachments.length > 0"
@@ -259,17 +247,7 @@ defineOgImage('UniOgImage', {
           </div>
         </footer>
 
-        <div class="mt-8">
-          <a
-            :href="`https://solian.app/posts/${post.id}`"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn btn-ghost btn-sm gap-2 border border-base-300"
-          >
-            {{ t('updates.discussion') }}
-            <ArrowRight class="h-4 w-4" />
-          </a>
-        </div>
+        <UpdateReplies :post-id="post.id" class="mt-10" />
       </article>
     </section>
   </div>
