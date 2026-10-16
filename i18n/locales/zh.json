@@ -585,7 +585,8 @@
   },
   "productDownloadsCta": {
     "title": "获取 {product}",
-    "body": "更新说明、校验和各平台安装包都在发布页面。"
+    "body": "更新说明、校验和各平台安装包都在发布页面。",
+    "appStore": "也上架了 App Store"
   },
   "downloadDialog": {
     "title": "下载已开始",
@@ -1072,6 +1073,16 @@
       "github": "Distribution 版本",
       "release": {
         "viewOnGithub": "在 GitHub 查看源代码"
+      },
+      "ios": {
+        "desc": "从 App Store 安装，或通过 TestFlight 加入 beta 抢先体验。",
+        "appStore": "在 App Store 下载",
+        "testflight": "加入 TestFlight"
+      },
+      "macos": {
+        "desc": "从 Mac App Store 安装，或通过 TestFlight 体验 Mac beta。",
+        "appStore": "在 Mac App Store 下载",
+        "testflight": "加入 TestFlight"
       }
     },
     "help": {
@@ -1255,5 +1266,12 @@
       "title": "需要帮助？",
       "desc": "发现了 Bug，或少了一项服务？在仓库里提一个 Issue，我们会看看。"
     }
-  }
+  },
+  "solarNetwork.download.ios.desc": "已上架 App Store。也可加入 TestFlight，第一时间获取更新。",
+  "solarNetwork.download.ios.appStore": "在 App Store 下载",
+  "solarNetwork.download.ios.testflight": "加入 TestFlight",
+  "solarNetwork.download.cnNotice": "Solar Network 暂未在中国大陆 App Store 上架，可通过加入 TestFlight 体验。",
+  "solarNetwork.download.macos.desc": "已上架 Mac App Store；也可通过 Homebrew、直接下载或 TestFlight 安装。",
+  "solarNetwork.download.macos.appStore": "在 Mac App Store 下载",
+  "solarNetwork.download.macos.testflight": "加入 TestFlight"
 }

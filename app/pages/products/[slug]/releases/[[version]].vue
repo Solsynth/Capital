@@ -462,12 +462,16 @@ useSchemaOrg([
                   </div>
                 </div>
               </div>
-              <div
-                v-else
-                class="mt-5 rounded-xl border border-dashed border-base-content/10 bg-base-200/50 px-5 py-6 text-sm opacity-60"
-              >
+              <div v-else class="mt-5 rounded-xl border border-dashed border-base-content/10 bg-base-200/50 px-5 py-6 text-sm opacity-60">
                 {{ t("releasePage.noArtifacts") }}
               </div>
+
+              <!-- Builds uploaded here are the packages the store listing points at; the listing
+                   itself is a separate route, so it is offered alongside them. -->
+              <ProductAppStoreListings
+                :slug="slug"
+                class="mt-6 border-t border-dashed border-base-content/15 pt-5"
+              />
             </section>
 
             <a

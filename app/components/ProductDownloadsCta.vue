@@ -7,7 +7,7 @@ const props = defineProps<{
   productTitle?: string
 }>()
 
-const { t, locale } = useI18n()
+const { t } = useI18n()
 const localePath = useLocalePath()
 
 const releasesHref = computed(() => localePath(`/products/${props.slug}/releases`))
@@ -75,6 +75,9 @@ onMounted(async () => {
         <Download class="w-4 h-4" aria-hidden="true" />
         {{ t("releasePage.downloads") }}
       </NuxtLink>
+
+      <!-- App Store listings are a separate delivery route, so they get their own run of stations. -->
+      <ProductAppStoreListings :slug="slug" class="mt-8 border-t border-dashed border-base-content/15 pt-6" />
     </div>
   </section>
 </template>
