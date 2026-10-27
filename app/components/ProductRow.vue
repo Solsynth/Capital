@@ -146,10 +146,13 @@ const released = computed(() => stamp(props.releasedDate))
   background: #fff;
 }
 
+/* Product art is a UI mockup on its own canvas, so it is contained: cropping
+   it cuts the window frame the picture is meant to show. */
 .row-thumb img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
+  background: var(--color-base-200);
 }
 
 .row-mark {
