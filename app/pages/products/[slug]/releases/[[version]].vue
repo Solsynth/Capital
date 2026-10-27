@@ -194,244 +194,168 @@ useSchemaOrg([
 
 <template>
   <div>
-    <!-- Shared spine: identical on the hub and on every version, so it holds still while
-         the sidebar and the release panel change. -->
-    <header
-      class="border-b border-base-200 px-4 pt-8 pb-8"
-      :style="{ viewTransitionName: transitionName('release-header') }"
-    >
-      <div class="container mx-auto">
-        <nav :aria-label="t('releasePage.breadcrumbLabel')" class="mb-7">
-          <ol class="flex flex-wrap items-center gap-x-2 gap-y-1 text-xs opacity-55">
-            <li>
-              <NuxtLink :to="localePath('/')" class="hover:opacity-100">
-                {{ t("seo.home.title") }}
-              </NuxtLink>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>
-              <NuxtLink :to="localePath('/products')" class="hover:opacity-100">
-                {{ t("products.title") }}
-              </NuxtLink>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li>
-              <NuxtLink :to="localePath(`/products/${slug}`)" class="hover:opacity-100">
-                {{ productTitle }}
-              </NuxtLink>
-            </li>
-            <li aria-hidden="true">/</li>
-            <li class="opacity-100">
-              <NuxtLink :to="localePath(hubPath)" class="hover:opacity-100">
-                {{ t("releases.title") }}
-              </NuxtLink>
-            </li>
-          </ol>
+    <header class="band" :style="{ viewTransitionName: transitionName('release-header') }">
+      <div class="shell">
+        <nav :aria-label="t('releasePage.breadcrumbLabel')" class="crumbs">
+          <NuxtLink :to="localePath('/')" class="crumb">{{ t('seo.home.title') }}</NuxtLink>
+          <span class="crumb-sep" aria-hidden="true">/</span>
+          <NuxtLink :to="localePath('/products')" class="crumb">{{ t('products.title') }}</NuxtLink>
+          <span class="crumb-sep" aria-hidden="true">/</span>
+          <NuxtLink :to="localePath(`/products/${slug}`)" class="crumb">{{ productTitle }}</NuxtLink>
+          <span class="crumb-sep" aria-hidden="true">/</span>
+          <NuxtLink :to="localePath(hubPath)" class="crumb is-current">{{ t('releases.title') }}</NuxtLink>
         </nav>
 
-        <div class="flex flex-wrap items-center gap-4">
+        <div class="title-row">
           <NuxtImg
             v-if="product?.icon"
             :src="product.icon"
-            class="w-12 h-12 rounded-xl shrink-0"
-            :alt="productTitle"
+            class="title-mark"
+            :alt="''"
             width="48"
             height="48"
             format="webp"
             loading="eager"
             decoding="async"
           />
-          <div class="min-w-0 flex-1">
-            <p class="eyebrow mb-1.5">{{ product?.series || t("seo.siteName") }}</p>
-            <h1 class="text-2xl md:text-3xl font-extrabold tracking-tight">
-              <NuxtLink :to="localePath(`/products/${slug}`)" class="hover:text-primary transition-colors">
-                {{ productTitle }}
-              </NuxtLink>
+          <div class="title-copy">
+            <p v-if="product?.series" class="title-series">{{ product.series }}</p>
+            <h1 class="title-name">
+              <NuxtLink :to="localePath(`/products/${slug}`)">{{ productTitle }}</NuxtLink>
             </h1>
           </div>
-          <span
-            v-if="accent"
-            class="h-10 w-1 rounded-full shrink-0"
-            :style="{ backgroundColor: accent }"
-            aria-hidden="true"
-          />
         </div>
       </div>
     </header>
 
-    <div class="container mx-auto px-4 py-10">
-      <div class="grid gap-8 lg:grid-cols-[18rem_minmax(0,1fr)] lg:gap-14">
+    <div class="shell body">
+      <div class="grid">
         <nav
           :aria-label="t('releasePage.allVersions')"
-          class="min-w-0 lg:sticky lg:top-24 lg:self-start lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto"
+          class="versions"
           :style="{ viewTransitionName: transitionName('release-versions') }"
         >
-          <h2
-            id="release-versions-heading"
-            class="flex items-center gap-2 text-xs font-semibold uppercase tracking-wide opacity-55"
-          >
-            <Layers class="w-4 h-4" aria-hidden="true" />
-            {{ t("releasePage.allVersions") }}
-            <span v-if="releases.length" class="ml-auto font-mono opacity-60">
-              {{ releases.length }}
-            </span>
+          <h2 class="versions-head">
+            <Layers class="head-icon" aria-hidden="true" />
+            {{ t('releasePage.allVersions') }}
+            <span v-if="releases.length" class="mono versions-count">{{ releases.length }}</span>
           </h2>
 
-          <ol v-if="releases.length" class="mt-3 max-h-64 space-y-1 overflow-y-auto pr-1 lg:max-h-none">
+          <ol v-if="releases.length" class="versions-list">
             <li v-for="(entry, index) in releases" :key="entry.id">
               <NuxtLink
                 :to="versionPath(entry.version)"
-                class="block rounded-lg px-3 py-2.5 transition-colors"
-                :class="
-                  entry.version === release?.version
-                    ? 'bg-primary/10 text-primary'
-                    : 'hover:bg-base-300/60'
-                "
+                class="version"
+                :class="{ 'is-current': entry.version === release?.version }"
                 :aria-current="entry.version === release?.version ? 'page' : undefined"
                 :style="{ viewTransitionName: transitionName('release-version', entry.version) }"
               >
-                <span class="flex items-center gap-2">
-                  <span class="font-mono text-sm" :class="entry.version === release?.version ? 'font-semibold' : ''">
-                    v{{ entry.version }}
-                  </span>
-                  <span v-if="index === 0" class="badge badge-primary badge-xs shrink-0">
-                    {{ t("releasePage.latest") }}
-                  </span>
-                  <span v-if="entry.isPrerelease" class="badge badge-warning badge-xs shrink-0">
-                    {{ t("releases.prerelease") }}
-                  </span>
+                <span class="version-line">
+                  <span class="mono version-number">v{{ entry.version }}</span>
+                  <span v-if="index === 0" class="version-tag is-latest">{{ t('releasePage.latest') }}</span>
+                  <span v-if="entry.isPrerelease" class="version-tag">{{ t('releases.prerelease') }}</span>
                   <span
                     v-if="entry.artifacts.length && entry.artifactsExpired"
-                    class="badge badge-error badge-outline badge-xs shrink-0"
+                    class="version-tag is-expired"
                   >
-                    {{ t("releases.expired") }}
+                    {{ t('releases.expired') }}
                   </span>
                 </span>
-                <span class="mt-0.5 flex items-baseline gap-2 text-xs opacity-60">
-                  <span v-if="entry.title" class="min-w-0 flex-1 truncate">{{ entry.title }}</span>
+                <span class="version-meta">
+                  <span v-if="entry.title && entry.title !== entry.version" class="version-title">{{ entry.title }}</span>
                   <time
                     v-if="formatDate(entry.releasedAt, { year: 'numeric', month: 'short' })"
                     :datetime="entry.releasedAt || ''"
-                    class="ml-auto shrink-0 tabular-nums"
+                    class="mono version-date"
                   >
-                    {{ formatDate(entry.releasedAt, { year: "numeric", month: "short" }) }}
+                    {{ formatDate(entry.releasedAt, { year: 'numeric', month: 'short' }) }}
                   </time>
                 </span>
               </NuxtLink>
             </li>
           </ol>
 
-          <p v-else class="mt-3 text-sm opacity-60">{{ t("releases.noReleases") }}</p>
+          <p v-else class="versions-empty">
+            {{ t('releases.noReleases') }}
+          </p>
 
-          <NuxtLink :to="localePath(`/products/${slug}`)" class="btn btn-ghost btn-sm mt-3 gap-2">
-            <ArrowLeft class="w-4 h-4" aria-hidden="true" />
-            {{ t("releasePage.backToProduct", { name: productTitle }) }}
+          <NuxtLink :to="localePath(`/products/${slug}`)" class="versions-back">
+            <ArrowLeft class="back-icon" aria-hidden="true" />
+            {{ t('releasePage.backToProduct', { name: productTitle }) }}
           </NuxtLink>
         </nav>
 
-        <div class="min-w-0" :style="{ viewTransitionName: transitionName('release-detail') }">
+        <div class="detail" :style="{ viewTransitionName: transitionName('release-detail') }">
           <template v-if="release">
-            <h2
-              id="release-version-heading"
-              class="font-mono text-3xl md:text-4xl font-extrabold tracking-tight break-words"
-            >
-              v{{ release.version }}
-            </h2>
-            <p v-if="release.title" class="mt-3 text-lg md:text-xl opacity-75 leading-relaxed">
-              {{ release.title }}
-            </p>
+            <div class="detail-head">
+              <h2 class="mono detail-version">
+                v{{ release.version }}
+              </h2>
+              <p v-if="release.title && release.title !== release.version" class="detail-title">
+                {{ release.title }}
+              </p>
 
-            <div class="mt-5 flex flex-wrap items-center gap-2">
-              <span v-if="release.isPrerelease" class="badge badge-warning badge-sm">
-                {{ t("releases.prerelease") }}
-              </span>
-              <span
-                v-if="artifacts.length && release.artifactsExpired"
-                class="badge badge-error badge-outline badge-sm"
-              >
-                {{ t("releases.expired") }}
-              </span>
-              <span v-if="showStatus" class="badge badge-ghost badge-sm font-mono">
-                {{ release.status }}
-              </span>
-            </div>
-
-            <div class="mt-4 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm opacity-60">
-              <span v-if="releasedLabel" class="inline-flex items-center gap-1.5">
-                <Calendar class="w-4 h-4" aria-hidden="true" />
-                <span>{{ t("releases.releasedOn") }}</span>
-                <time :datetime="release.releasedAt || ''">{{ releasedLabel }}</time>
-              </span>
-              <span v-if="release.minimumVersion">
-                {{ t("releasePage.requires", { version: release.minimumVersion }) }}
-              </span>
-            </div>
-
-            <section class="mt-12" aria-labelledby="release-notes-heading">
-              <h3
-                id="release-notes-heading"
-                class="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide opacity-55"
-              >
-                <ScrollText class="w-4 h-4" aria-hidden="true" />
-                {{ t("releasePage.notes") }}
-              </h3>
-              <div
-                v-if="changelogHtml"
-                class="prose prose-sm max-w-none mt-5 release-notes"
-                v-html="changelogHtml"
-              />
-              <div
-                v-else
-                class="mt-5 rounded-xl border border-dashed border-base-content/10 bg-base-200/50 px-5 py-6 text-sm opacity-60"
-              >
-                {{ t("releases.noNotes") }}
+              <div v-if="release.isPrerelease || (artifacts.length && release.artifactsExpired) || showStatus" class="detail-tags">
+                <span v-if="release.isPrerelease" class="version-tag">{{ t('releases.prerelease') }}</span>
+                <span v-if="artifacts.length && release.artifactsExpired" class="version-tag is-expired">
+                  {{ t('releases.expired') }}
+                </span>
+                <span v-if="showStatus" class="mono detail-status">{{ release.status }}</span>
               </div>
+
+              <dl class="detail-facts">
+                <div v-if="releasedLabel" class="fact">
+                  <dt>{{ t('releases.releasedOn') }}</dt>
+                  <dd class="mono">
+                    <time :datetime="release.releasedAt || ''">{{ releasedLabel }}</time>
+                  </dd>
+                </div>
+                <div v-if="release.minimumVersion" class="fact">
+                  <dt>{{ t('releasePage.requires', { version: release.minimumVersion }) }}</dt>
+                  <dd class="mono">v{{ release.minimumVersion }}</dd>
+                </div>
+              </dl>
+            </div>
+
+            <section class="detail-section" aria-labelledby="release-notes-heading">
+              <h3 id="release-notes-heading" class="section-head">
+                <ScrollText class="head-icon" aria-hidden="true" />
+                {{ t('releasePage.notes') }}
+              </h3>
+              <div v-if="changelogHtml" class="prose release-notes" v-html="changelogHtml" />
+              <p v-else class="section-empty">
+                {{ t('releases.noNotes') }}
+              </p>
             </section>
 
-            <section class="mt-12" aria-labelledby="release-downloads-heading">
-              <div class="flex flex-wrap items-center justify-between gap-3">
-                <h3
-                  id="release-downloads-heading"
-                  class="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide opacity-55"
-                >
-                  <Package class="w-4 h-4" aria-hidden="true" />
-                  {{ t("releasePage.downloads") }}
+            <section class="detail-section" aria-labelledby="release-downloads-heading">
+              <div class="section-head-row">
+                <h3 id="release-downloads-heading" class="section-head">
+                  <Package class="head-icon" aria-hidden="true" />
+                  {{ t('releasePage.downloads') }}
                 </h3>
-                <div class="flex flex-wrap items-center gap-3">
-                  <span v-if="artifacts.length" class="text-xs font-mono opacity-45">
-                    {{ t("releasePage.fileCount", { count: artifacts.length }) }}
-                  </span>
-                  <ExpressMark />
-                </div>
+                <span v-if="artifacts.length" class="mono section-count">
+                  {{ artifacts.length === 1 ? t('releasePage.fileCount_one') : t('releasePage.fileCount_other', { count: artifacts.length }) }}
+                </span>
               </div>
 
-              <div
-                v-if="artifacts.length && release.artifactsExpired"
-                class="mt-5 rounded-xl border border-dashed border-warning/30 bg-warning/5 px-5 py-3.5 text-sm opacity-80"
-              >
-                {{ t("releases.expiredDetails") }}
-              </div>
+              <p v-if="artifacts.length && release.artifactsExpired" class="note note-warning expired-note">
+                {{ t('releases.expiredDetails') }}
+              </p>
 
-              <div v-if="orderedArtifacts.length" class="mt-5 space-y-3">
-                <div
+              <ul v-if="orderedArtifacts.length" class="artifacts">
+                <li
                   v-for="(artifact, index) in orderedArtifacts"
                   :key="artifact.id || `${artifact.platform}-${artifact.architecture}-${artifact.file_name}-${index}`"
-                  class="rounded-xl border border-base-content/5 bg-base-200/60 px-4 py-3.5 sm:px-5"
+                  class="artifact"
                 >
-                  <div class="flex flex-wrap items-center gap-x-4 gap-y-3">
-                    <span class="badge badge-ghost badge-sm font-mono shrink-0">
-                      {{ artifactPlatformLabel(artifact.platform) || t("releasePage.unknownPlatform") }}
+                  <div class="artifact-main">
+                    <span class="mono artifact-platform">
+                      {{ artifactPlatformLabel(artifact.platform) || t('releasePage.unknownPlatform') }}
                     </span>
-                    <span
-                      v-if="artifact.architecture"
-                      class="text-[11px] font-mono uppercase tracking-wide opacity-45 shrink-0"
-                    >
-                      {{ artifact.architecture }}
-                    </span>
-                    <span class="min-w-0 flex-1 basis-40 truncate font-mono text-sm">
-                      {{ artifact.file_name || t("releasePage.unnamedFile") }}
-                    </span>
-                    <span v-if="formatArtifactSize(artifact.size)" class="text-xs tabular-nums opacity-50 shrink-0">
+                    <span v-if="artifact.architecture" class="mono artifact-arch">{{ artifact.architecture }}</span>
+                    <span class="mono artifact-file">{{ artifact.file_name || t('releasePage.unnamedFile') }}</span>
+                    <span v-if="formatArtifactSize(artifact.size)" class="mono artifact-size">
                       {{ formatArtifactSize(artifact.size) }}
                     </span>
                     <a
@@ -439,39 +363,30 @@ useSchemaOrg([
                       :href="artifact.download_url"
                       target="_blank"
                       rel="noopener noreferrer"
-                      class="btn btn-sm btn-primary shrink-0 gap-1.5"
+                      class="btn btn-sm btn-primary artifact-download"
                       @click="handleDownloadClick($event, artifact)"
                     >
-                      <Download class="w-3.5 h-3.5" aria-hidden="true" />
-                      {{ t("releases.download") }}
+                      <Download class="download-icon" aria-hidden="true" />
+                      {{ t('releases.download') }}
                     </a>
-                    <span v-else class="badge badge-error badge-outline badge-sm shrink-0">
-                      {{ t("releases.expired") }}
-                    </span>
+                    <span v-else class="artifact-expired">{{ t('releases.expired') }}</span>
                   </div>
-                  <div
-                    v-if="artifact.hash || artifactUploadDate(artifact)"
-                    class="mt-2.5 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] opacity-50"
-                  >
-                    <span v-if="artifactUploadDate(artifact)">
-                      {{ t("releases.artifact.uploadedOn") }} {{ artifactUploadDate(artifact) }}
+
+                  <div v-if="artifact.hash || artifactUploadDate(artifact)" class="artifact-meta">
+                    <span v-if="artifactUploadDate(artifact)" class="mono">
+                      {{ t('releases.artifact.uploadedOn') }} {{ artifactUploadDate(artifact) }}
                     </span>
-                    <code v-if="artifact.hash" class="font-mono break-all" :title="artifact.hash">
-                      {{ t("releases.artifact.checksum") }} · {{ artifact.hash }}
+                    <code v-if="artifact.hash" class="mono artifact-hash" :title="artifact.hash">
+                      {{ t('releases.artifact.checksum') }} {{ artifact.hash }}
                     </code>
                   </div>
-                </div>
-              </div>
-              <div v-else class="mt-5 rounded-xl border border-dashed border-base-content/10 bg-base-200/50 px-5 py-6 text-sm opacity-60">
-                {{ t("releasePage.noArtifacts") }}
-              </div>
+                </li>
+              </ul>
+              <p v-else class="section-empty">
+                {{ t('releasePage.noArtifacts') }}
+              </p>
 
-              <!-- Builds uploaded here are the packages the store listing points at; the listing
-                   itself is a separate route, so it is offered alongside them. -->
-              <ProductAppStoreListings
-                :slug="slug"
-                class="mt-6 border-t border-dashed border-base-content/15 pt-5"
-              />
+              <ProductAppStoreListings :slug="slug" class="store-listings" />
             </section>
 
             <a
@@ -479,21 +394,16 @@ useSchemaOrg([
               :href="product.repo"
               target="_blank"
               rel="noopener noreferrer"
-              class="btn btn-ghost btn-sm mt-10 gap-2"
+              class="btn btn-sm detail-source"
             >
-              <CodeXml class="w-4 h-4" aria-hidden="true" />
-              {{ t("product.sourceCode") }}
+              <CodeXml class="download-icon" aria-hidden="true" />
+              {{ t('product.sourceCode') }}
             </a>
           </template>
 
-          <div
-            v-else
-            class="rounded-xl border border-dashed border-base-content/10 bg-base-200/50 px-5 py-8"
-          >
-            <p class="font-medium">{{ t("releases.noReleases") }}</p>
-            <p class="mt-1.5 text-sm opacity-60">
-              {{ loadFailed ? t("releasePage.loadFailed") : t("releasePage.emptyHint") }}
-            </p>
+          <div v-else class="section-empty">
+            <p class="empty-title">{{ t('releases.noReleases') }}</p>
+            <p>{{ loadFailed ? t('releasePage.loadFailed') : t('releasePage.emptyHint') }}</p>
           </div>
         </div>
       </div>
@@ -502,12 +412,400 @@ useSchemaOrg([
 </template>
 
 <style scoped>
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.5;
+.band {
+  padding-block: 1.75rem 2rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.crumbs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.8125rem;
+}
+
+.crumb {
+  color: var(--color-faint);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.crumb:hover,
+.crumb:focus-visible {
+  color: var(--color-base-content);
+}
+
+.crumb.is-current {
+  color: var(--color-dim);
+}
+
+.crumb-sep {
+  color: var(--color-line);
+}
+
+.title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.title-mark {
+  width: 2.75rem;
+  height: 2.75rem;
+  flex-shrink: 0;
+  border-radius: var(--radius-mark);
+  object-fit: cover;
+  background: var(--color-base-300);
+}
+
+.title-copy {
+  min-width: 0;
+}
+
+.title-series {
+  margin: 0 0 0.15rem;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.title-name {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.title-name a {
+  color: var(--color-base-content);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.title-name a:hover {
+  color: var(--color-primary);
+}
+
+.body {
+  padding-block: 2rem 0;
+}
+
+.grid {
+  display: grid;
+  gap: 2rem;
+}
+
+.versions-head {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-faint);
+}
+
+.head-icon {
+  width: 0.9375rem;
+  height: 0.9375rem;
+}
+
+.versions-count {
+  margin-left: auto;
+}
+
+.versions-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
+}
+
+.version {
+  display: block;
+  padding: 0.6rem 0.5rem 0.6rem 0;
+  border-bottom: 1px solid var(--color-line-soft);
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 140ms ease;
+}
+
+.version:hover {
+  background: color-mix(in oklab, var(--color-base-200) 60%, transparent);
+}
+
+.version.is-current {
+  background: color-mix(in oklab, var(--color-primary) 14%, transparent);
+}
+
+.version-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.version-number {
+  font-size: 0.8125rem;
+  color: var(--color-base-content);
+}
+
+.version.is-current .version-number {
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.version-tag {
+  padding: 0.05rem 0.4rem;
+  border: 1px solid var(--color-line);
+  border-radius: 999px;
+  font-size: 0.625rem;
+  font-weight: 600;
+  color: var(--color-faint);
+}
+
+.version-tag.is-latest {
+  border-color: color-mix(in oklab, var(--color-primary) 45%, transparent);
+  color: var(--color-primary);
+}
+
+.version-tag.is-expired {
+  border-color: color-mix(in oklab, var(--color-error) 45%, transparent);
+  color: var(--color-error);
+}
+
+.version-meta {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.version-title {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.version-date {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.versions-empty {
+  margin: 0;
+  padding: 1.5rem 0;
+  border-top: 1px solid var(--color-line);
+  font-size: 0.875rem;
+  color: var(--color-faint);
+}
+
+.versions-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 1rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-faint);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.versions-back:hover,
+.versions-back:focus-visible {
+  color: var(--color-base-content);
+}
+
+.back-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.detail {
+  min-width: 0;
+}
+
+.detail-version {
+  margin: 0;
+  font-size: clamp(1.5rem, 3.5vw, 2.25rem);
+  font-weight: 500;
+  color: var(--color-base-content);
+  word-break: break-word;
+}
+
+.detail-title {
+  margin: 0.5rem 0 0;
+  font-size: 1rem;
+  line-height: 1.55;
+  color: var(--color-dim);
+}
+
+.detail-tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  margin-top: 0.85rem;
+}
+
+.detail-status {
+  color: var(--color-faint);
+}
+
+.detail-facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 1.25rem 0 0;
+}
+
+.fact dt {
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.fact dd {
+  margin: 0.15rem 0 0;
+  color: var(--color-dim);
+}
+
+.detail-section {
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.section-head {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-faint);
+}
+
+.section-head-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.section-count {
+  color: var(--color-faint);
+}
+
+.section-empty {
+  margin: 0.9rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-faint);
+}
+
+.empty-title {
+  margin-bottom: 0.3rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+
+.expired-note {
+  margin-top: 0.9rem;
+}
+
+.artifacts {
+  margin: 0.9rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
+}
+
+.artifact {
+  padding: 0.9rem 0;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.artifact-main {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.85rem;
+}
+
+.artifact-platform {
+  color: var(--color-base-content);
+  font-size: 0.75rem;
+}
+
+.artifact-arch {
+  color: var(--color-faint);
+  font-size: 0.6875rem;
+  text-transform: lowercase;
+}
+
+.artifact-file {
+  min-width: 0;
+  flex: 1 1 10rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 0.75rem;
+  color: var(--color-dim);
+}
+
+.artifact-size {
+  color: var(--color-faint);
+}
+
+.artifact-download {
+  flex-shrink: 0;
+}
+
+.download-icon {
+  width: 0.8125rem;
+  height: 0.8125rem;
+}
+
+.artifact-expired {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-error);
+}
+
+.artifact-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1.25rem;
+  margin-top: 0.5rem;
+  color: var(--color-faint);
+  font-size: 0.6875rem;
+}
+
+.artifact-hash {
+  overflow-wrap: anywhere;
+}
+
+.store-listings {
+  margin-top: 1.25rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.detail-source {
+  margin-top: 2rem;
+}
+
+.release-notes {
+  margin-top: 1rem;
+  max-width: 42rem;
 }
 
 .release-notes :deep(a) {
@@ -516,25 +814,18 @@ useSchemaOrg([
   text-underline-offset: 2px;
 }
 
-.release-notes :deep(ul),
-.release-notes :deep(ol) {
-  margin-top: 0.5em;
-  margin-bottom: 0.5em;
-}
+@media (min-width: 1024px) {
+  .grid {
+    grid-template-columns: 17rem minmax(0, 1fr);
+    gap: 3.5rem;
+  }
 
-.release-notes :deep(pre) {
-  overflow-x: auto;
-}
-
-.release-notes :deep(pre),
-.release-notes :deep(code) {
-  font-size: 0.85em;
-}
-
-.release-notes :deep(h1),
-.release-notes :deep(h2),
-.release-notes :deep(h3) {
-  margin-top: 0.75em;
-  margin-bottom: 0.35em;
+  .versions {
+    position: sticky;
+    top: calc(var(--site-page-offset) + 1.5rem);
+    align-self: start;
+    max-height: calc(100dvh - var(--site-page-offset) - 3rem);
+    overflow-y: auto;
+  }
 }
 </style>

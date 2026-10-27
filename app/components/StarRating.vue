@@ -52,7 +52,7 @@ function setRating(value: number) {
 </script>
 
 <template>
-  <div class="flex items-center gap-1">
+  <div class="flex items-center gap-0.5" role="img" :aria-label="`${displayRating}/5`">
     <button
       v-for="i in 5"
       :key="i"
@@ -61,10 +61,11 @@ function setRating(value: number) {
         starSize,
         'p-0 flex items-center justify-center',
         interactive ? 'cursor-pointer transition-transform hover:scale-110' : 'cursor-default',
-        i <= stars.full ? 'text-warning' : 'text-base-300',
+        i <= stars.full ? 'text-warning' : 'text-line',
       ]"
       :disabled="!interactive"
-      :style="interactive ? 'outline: none' : ''"
+      :aria-hidden="true"
+      :tabindex="interactive ? 0 : -1"
       @click="setRating(i)"
       @mouseenter="interactive && (hoverRating = i)"
       @mouseleave="interactive && (hoverRating = 0)"

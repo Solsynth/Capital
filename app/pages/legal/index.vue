@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { FileText, Scale, Shield, Code, ChevronRight, Calendar } from '@lucide/vue'
-
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
@@ -57,75 +55,130 @@ const { data: currentLangPages } = await useAsyncData(`legal-list-${lang.value}`
 function getSlug(path: string): string {
   return path.replace(/^\/legal\/(en|zh)\//, '')
 }
-
-function getIcon(slug: string) {
-  if (slug.includes('privacy'))
-    return Shield
-  if (slug.includes('user'))
-    return Scale
-  if (slug.includes('refund'))
-    return FileText
-  return Code
-}
 </script>
 
 <template>
   <div>
-    <section class="border-b border-base-200 px-4 py-16 md:py-20">
-      <div class="container mx-auto max-w-3xl">
-        <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
-          {{ t('legal.title') }}
-        </h1>
-        <p class="max-w-xl text-lg text-base-content/65 md:text-xl">
-          {{ t('legal.subtitle') }}
-        </p>
-      </div>
-    </section>
+    <header class="shell masthead">
+      <h1 class="display masthead-title">
+        {{ t('legal.title') }}
+      </h1>
+      <p class="lede masthead-lede">
+        {{ t('legal.subtitle') }}
+      </p>
+    </header>
 
-    <section class="px-4 py-12">
-      <div class="container mx-auto max-w-3xl">
-        <div
-          v-if="!currentLangPages?.length"
-          class="rounded-lg border border-dashed border-base-300 px-6 py-12 text-center text-base-content/50"
-        >
-          {{ t('legal.subtitle') }}
-        </div>
+    <section class="shell body">
+      <p v-if="!currentLangPages?.length" class="note empty">
+        {{ t('legal.subtitle') }}
+      </p>
 
-        <div v-else class="divide-y divide-base-200 rounded-lg border border-base-200">
-          <NuxtLink
-            v-for="page in currentLangPages"
-            :key="page.path"
-            :to="localePath(`/legal/${getSlug(page.path)}`)"
-            class="group flex items-start gap-4 px-5 py-5 transition-colors duration-150 hover:bg-base-200/40"
-          >
-            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-base-200 bg-base-200/50">
-              <component
-                :is="getIcon(getSlug(page.path))"
-                class="h-4 w-4 text-base-content/65"
-              />
-            </div>
-
-            <div class="min-w-0 flex-1">
-              <h2 class="text-base font-semibold transition-colors group-hover:text-primary md:text-lg">
-                {{ page.title }}
-              </h2>
-              <p v-if="page.description" class="mt-1 text-sm text-base-content/60">
-                {{ page.description }}
-              </p>
-              <p
-                v-if="page.updatedDate"
-                class="mt-2 flex items-center gap-1.5 text-xs text-base-content/45"
-              >
-                <Calendar class="h-3 w-3" />
-                {{ lang === 'zh' ? t('legal.lastUpdatedZh') : t('legal.lastUpdated') }}
-                {{ page.updatedDate }}
-              </p>
-            </div>
-
-            <ChevronRight class="mt-1 h-4 w-4 shrink-0 text-base-content/30 transition-colors group-hover:text-base-content/55" />
+      <ul v-else class="docs">
+        <li v-for="page in currentLangPages" :key="page.path" class="doc">
+          <NuxtLink :to="localePath(`/legal/${getSlug(page.path)}`)" class="doc-link">
+            <span class="doc-text">
+              <span class="doc-title">{{ page.title }}</span>
+              <span v-if="page.description" class="doc-desc">{{ page.description }}</span>
+            </span>
+            <span v-if="page.updatedDate" class="mono doc-date">
+              {{ page.updatedDate }}
+            </span>
           </NuxtLink>
-        </div>
-      </div>
+        </li>
+      </ul>
     </section>
   </div>
 </template>
+
+<style scoped>
+.masthead {
+  padding-block: 3.5rem 2.5rem;
+}
+
+.masthead-title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.masthead-lede {
+  margin: 0.75rem 0 0;
+}
+
+.body {
+  padding-bottom: 4rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 1rem 1.125rem;
+}
+
+.docs {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
+}
+
+.doc {
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.doc:last-child {
+  border-bottom: 0;
+}
+
+.doc-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.35rem 1.5rem;
+  align-items: baseline;
+  padding: 1.15rem 0.5rem 1.15rem 0;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 140ms ease;
+}
+
+.doc-link:hover {
+  background: color-mix(in oklab, var(--color-base-200) 55%, transparent);
+}
+
+.doc-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.doc-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.doc-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-base-content);
+  letter-spacing: -0.005em;
+  transition: color 140ms ease;
+}
+
+.doc-link:hover .doc-title {
+  color: var(--color-primary);
+}
+
+.doc-desc {
+  max-width: 40rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--color-faint);
+}
+
+.doc-date {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: right;
+  white-space: nowrap;
+}
+</style>

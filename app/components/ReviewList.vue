@@ -51,20 +51,17 @@ const sortOptions = [
   <div>
     <div
       v-if="reviews.length > 0 || loading"
-      class="flex items-center justify-between gap-3 mb-4"
+      class="list-head"
     >
-      <span class="text-sm opacity-50">{{ t("reviews.sortBy") }}</span>
-      <div class="flex items-center gap-1 p-0.5 rounded-lg bg-base-200 border border-base-content/5">
+      <span class="list-label">{{ t("reviews.sortBy") }}</span>
+      <div class="rail" role="group" :aria-label="t('reviews.sortBy')">
         <button
           v-for="option in sortOptions"
           :key="option.value"
           type="button"
-          class="text-xs px-3 py-1.5 rounded-md transition-colors font-medium"
-          :class="
-            sort === option.value
-              ? 'bg-base-100 text-base-content shadow-sm'
-              : 'opacity-50 hover:opacity-80'
-          "
+          class="rail-tab"
+          :class="{ 'is-current': sort === option.value }"
+          :aria-pressed="sort === option.value"
           @click="emit('update:sort', option.value)"
         >
           {{ t(option.labelKey) }}
@@ -72,37 +69,24 @@ const sortOptions = [
       </div>
     </div>
 
-    <div v-if="loading" class="space-y-3">
-      <div
-        v-for="i in 3"
-        :key="i"
-        class="animate-pulse rounded-xl border border-base-content/5 bg-base-200 p-5"
-      >
-        <div class="flex gap-3 mb-3">
-          <div class="w-9 h-9 rounded-full bg-base-300" />
-          <div class="flex-1 space-y-2">
-            <div class="h-3 w-28 bg-base-300 rounded" />
-            <div class="h-3 w-20 bg-base-300 rounded" />
-          </div>
-        </div>
-        <div class="h-3 w-full bg-base-300 rounded mb-2" />
-        <div class="h-3 w-4/5 bg-base-300 rounded" />
+    <div v-if="loading" class="skeletons" aria-hidden="true">
+      <div v-for="i in 3" :key="i" class="skeleton-row">
+        <span class="skeleton skeleton-avatar" />
+        <span class="skeleton skeleton-line" />
+        <span class="skeleton skeleton-line short" />
       </div>
     </div>
 
-    <div
-      v-else-if="reviews.length === 0"
-      class="rounded-xl border border-dashed border-base-content/15 bg-base-200/40 px-6 py-12 text-center"
-    >
-      <p class="text-sm opacity-60">{{ t("reviews.noReviews") }}</p>
-    </div>
+    <p v-else-if="reviews.length === 0" class="list-empty">
+      {{ t("reviews.noReviews") }}
+    </p>
 
-    <div v-else class="space-y-3">
+    <div v-else class="ledger-list">
       <ReviewCard
         v-for="review in reviews"
         :key="review.id"
         :id="review.id"
-        :user-name="review.user?.name || 'Anonymous'"
+        :user-name="review.user?.name"
         :user-image="review.user?.image"
         :rating="review.rating"
         :title="review.title"
@@ -114,29 +98,129 @@ const sortOptions = [
       />
     </div>
 
-    <div
-      v-if="totalPages > 1 && !loading"
-      class="flex items-center justify-center gap-2 mt-6"
-    >
+    <div v-if="totalPages > 1 && !loading" class="pager">
       <button
         type="button"
         class="btn btn-sm btn-ghost"
         :disabled="page <= 1"
+        :aria-label="t('reviews.previousPage')"
         @click="emit('prevPage')"
       >
-        «
+        ‹
       </button>
-      <span class="text-sm opacity-60 tabular-nums px-2">
-        {{ page }} / {{ totalPages }}
-      </span>
+      <span class="mono pager-count">{{ page }} / {{ totalPages }}</span>
       <button
         type="button"
         class="btn btn-sm btn-ghost"
         :disabled="page >= totalPages"
+        :aria-label="t('reviews.nextPage')"
         @click="emit('nextPage')"
       >
-        »
+        ›
       </button>
     </div>
   </div>
 </template>
+
+<style scoped>
+.list-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.list-label {
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.rail {
+  display: inline-flex;
+  gap: 0.125rem;
+  padding: 0.1875rem;
+  border: 1px solid var(--color-line-soft);
+  border-radius: 999px;
+}
+
+.rail-tab {
+  padding: 0.3rem 0.7rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-faint);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease;
+}
+
+.rail-tab:hover {
+  color: var(--color-base-content);
+}
+
+.rail-tab.is-current {
+  background: var(--color-base-300);
+  color: var(--color-base-content);
+}
+
+.rail-tab:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.skeletons {
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.skeleton-row {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding-block: 1.15rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.skeleton-avatar {
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 999px;
+}
+
+.skeleton-line {
+  height: 0.6rem;
+  flex: 1;
+}
+
+.skeleton-line.short {
+  flex: 0 0 4rem;
+}
+
+.list-empty {
+  margin: 0;
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--color-line-soft);
+  font-size: 0.9375rem;
+  color: var(--color-faint);
+}
+
+.ledger-list {
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.pager {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1.5rem;
+}
+
+.pager-count {
+  color: var(--color-faint);
+}
+</style>

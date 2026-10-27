@@ -1,12 +1,11 @@
 <script setup lang="ts">
 import {
   Search,
-  ExternalLink,
-  CheckCircle,
   Globe,
   CircleQuestionMark,
   Plus,
   FileText,
+  ArrowUpRight,
 } from '@lucide/vue'
 
 const { t, locale } = useI18n()
@@ -95,123 +94,374 @@ async function fetchSearch(raw: string) {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-20 max-w-3xl">
-    <div class="text-center mb-12">
-      <img
-        src="/images/republic-of-yang/filling.png"
-        alt="ROY ICP"
-        class="w-16 h-16 mx-auto mb-8 rounded-2xl"
-      >
-      <h1 class="text-5xl font-bold mb-2">
-        {{ pageTitle }}
-      </h1>
-      <div class="mb-8 max-w-xl mx-auto flex flex-row items-center justify-center gap-2">
-        <p class="text-lg opacity-70">
+  <div>
+    <header class="band">
+      <div class="shell">
+        <h1 class="title page-title">
+          {{ pageTitle }}
+        </h1>
+        <p class="lede page-lede">
           {{ pageDescription }}
         </p>
-        <NuxtLink
-          :to="localePath('/products/roy-filling')"
-          class="btn btn-ghost btn-sm btn-circle"
-        >
-          <CircleQuestionMark class="w-4 h-4 mr-1" />
-        </NuxtLink>
-      </div>
 
-      <div class="flex items-center justify-center gap-3 mb-6">
-        <NuxtLink
-          :to="localePath('/icp/submissions/me')"
-          class="btn btn-outline btn-sm"
-        >
-          <FileText class="w-4 h-4 mr-1" />
-          {{ t('royIcp.mySubmissions.title') }}
-        </NuxtLink>
-        <NuxtLink
-          :to="localePath('/icp/submit')"
-          class="btn btn-primary btn-sm"
-        >
-          <Plus class="w-4 h-4 mr-1" />
-          {{ t('royIcp.mySubmissions.submitNew') }}
-        </NuxtLink>
-      </div>
-
-      <div class="relative max-w-md mx-auto mb-6">
-        <Search class="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 opacity-50" />
-        <input
-          type="text"
-          class="input input-bordered w-full pl-12 input-lg"
-          :placeholder="t('royIcp.search.placeholder')"
-          @input="onSearchInput"
-        >
-        <span
-          v-if="isSearching"
-          class="loading loading-spinner loading-sm absolute right-4 top-1/2 -translate-y-1/2"
-        />
-      </div>
-    </div>
-
-    <section>
-      <h2 class="text-xl font-bold mb-6">
-        {{ t('royIcp.certifiedDomains') }}
-      </h2>
-
-      <div v-if="allSites.length === 0 && !searchQuery.trim()" class="card bg-base-200 p-12 text-center">
-        <Globe class="w-16 h-16 mx-auto mb-4 opacity-30" />
-        <p class="text-lg opacity-60">
-          {{ t('royIcp.directory.empty') }}
-        </p>
-      </div>
-
-      <template v-else>
-        <div class="space-y-3">
-          <template v-if="displayedSites.length > 0">
-            <NuxtLink
-              v-for="site in displayedSites"
-              :key="site.id"
-              :to="localePath(`/icp/${site.filling_no}`)"
-              class="card bg-base-200 hover:bg-base-300 transition-all p-4 flex flex-row items-center gap-4 group site-card"
+        <div class="controls">
+          <div class="search">
+            <Search class="search-icon" aria-hidden="true" />
+            <input
+              type="search"
+              class="input search-input"
+              :placeholder="t('royIcp.search.placeholder')"
+              :aria-label="t('royIcp.search.placeholder')"
+              @input="onSearchInput"
             >
-              <div class="w-12 h-12 rounded-xl overflow-hidden shrink-0 bg-base-100 flex items-center justify-center">
+            <span v-if="isSearching" class="search-busy" aria-hidden="true" />
+          </div>
+
+          <div class="actions">
+            <NuxtLink
+              :to="localePath('/icp/submit')"
+              class="btn btn-primary btn-sm"
+            >
+              <Plus class="icon" aria-hidden="true" />
+              {{ t('royIcp.mySubmissions.submitNew') }}
+            </NuxtLink>
+            <NuxtLink
+              :to="localePath('/icp/submissions/me')"
+              class="btn btn-ghost btn-sm"
+            >
+              <FileText class="icon" aria-hidden="true" />
+              {{ t('royIcp.mySubmissions.title') }}
+            </NuxtLink>
+            <NuxtLink
+              :to="localePath('/products/roy-filling')"
+              class="btn btn-ghost btn-sm btn-square"
+              :aria-label="t('royIcpFilling.learnMore')"
+              :title="t('royIcpFilling.learnMore')"
+            >
+              <CircleQuestionMark class="icon" aria-hidden="true" />
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="body">
+      <div class="shell">
+        <h2 class="section-label register-title">
+          {{ t('royIcp.certifiedDomains') }}
+        </h2>
+
+        <p v-if="displayedSites.length === 0" class="register-empty">
+          {{ t('royIcp.directory.empty') }}
+          <NuxtLink
+            :to="localePath('/icp/submit')"
+            class="link-quiet"
+          >
+            {{ t('royIcp.mySubmissions.submitNew') }}
+          </NuxtLink>
+        </p>
+
+        <ul v-else class="register">
+          <li v-for="site in displayedSites" :key="site.id" class="register-row">
+            <NuxtLink
+              :to="localePath(`/icp/${site.filling_no}`)"
+              class="register-link"
+            >
+              <span class="site-mark">
                 <img
                   v-if="site.iconUrl"
                   :src="site.iconUrl"
-                  :alt="site.name"
-                  class="w-full h-full object-cover"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
                 >
-                <Globe v-else class="w-5 h-5 opacity-50" />
-              </div>
-              <div class="flex-1 min-w-0 flex flex-col gap-1">
-                <div class="flex items-center gap-2 min-w-0">
-                  <h3 class="font-bold truncate group-hover:text-primary transition-colors">
-                    {{ site.name }}
-                  </h3>
-                  <CheckCircle v-if="site.approved" class="w-4 h-4 text-success shrink-0" />
-                  <span v-else class="badge badge-warning badge-outline shrink-0">
-                    {{ t('royIcp.mySubmissions.pending') }}
-                  </span>
-                </div>
-                <code class="text-xs opacity-60 truncate">{{ site.domain }}</code>
-              </div>
-              <span class="text-xs opacity-50 shrink-0">
-                <ExternalLink class="me-2" />
+                <Globe v-else class="icon" aria-hidden="true" />
+              </span>
+
+              <span class="site-ident">
+                <span class="site-name">
+                  {{ site.name }}
+                  <ArrowUpRight class="site-arrow" aria-hidden="true" />
+                </span>
+                <span class="mono site-domain">{{ site.domain }}</span>
+              </span>
+
+              <span class="site-facts">
+                <span class="mono site-number">
+                  {{ t('royIcp.directory.icpNumber', { id: site.filling_no }) }}
+                </span>
+
+                <span class="site-status">
+                  <span
+                    class="dot"
+                    :class="site.approved ? 'is-approved' : 'is-pending'"
+                    aria-hidden="true"
+                  />
+                  {{ site.approved ? t('royIcp.site.certified') : t('royIcp.site.pendingApproval') }}
+                </span>
               </span>
             </NuxtLink>
-          </template>
-
-          <div v-else class="card bg-base-200 p-12 text-center">
-            <Globe class="w-16 h-16 mx-auto mb-4 opacity-30" />
-            <p class="text-lg opacity-60">
-              {{ t('royIcp.directory.empty') }}
-            </p>
-          </div>
-        </div>
+          </li>
+        </ul>
 
         <p
           v-if="hiddenSiteCount > 0 && !searchQuery.trim()"
-          class="mt-4 text-center text-sm opacity-60"
+          class="register-more"
         >
           {{ t('royIcp.moreSites', { count: hiddenSiteCount }) }}
         </p>
-      </template>
+      </div>
     </section>
   </div>
 </template>
+
+<style scoped>
+.band {
+  padding-block: 3.5rem 2.5rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.page-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  margin: 0;
+}
+
+.page-lede {
+  margin: 0.75rem 0 0;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 1.75rem;
+}
+
+.search {
+  position: relative;
+  flex: 1 1 18rem;
+  max-width: 26rem;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.9rem;
+  z-index: 1;
+  width: 1rem;
+  height: 1rem;
+  transform: translateY(-50%);
+  color: var(--color-faint);
+  pointer-events: none;
+}
+
+.search-input {
+  padding-left: 2.5rem;
+  padding-right: 2.25rem;
+}
+
+.search-input::-webkit-search-cancel-button {
+  appearance: none;
+}
+
+.search-busy {
+  position: absolute;
+  top: 50%;
+  right: 0.9rem;
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-top: -0.4rem;
+  border: 1.5px solid var(--color-line);
+  border-top-color: var(--color-primary);
+  border-radius: 999px;
+  animation: search-spin 700ms linear infinite;
+}
+
+@keyframes search-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.body {
+  padding-block: 2rem 4rem;
+}
+
+.register-title {
+  margin: 0 0 0.75rem;
+}
+
+.register {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
+}
+
+.register-row {
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.register-link {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr);
+  grid-template-areas:
+    'mark ident'
+    '.    facts';
+  align-items: start;
+  gap: 0.75rem;
+  padding: 0.95rem 0.5rem 0.95rem 0;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 140ms ease;
+}
+
+.register-link:hover {
+  background: color-mix(in oklab, var(--color-base-200) 55%, transparent);
+}
+
+.register-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.site-mark {
+  grid-area: mark;
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-mark);
+  background: var(--color-base-200);
+  color: var(--color-faint);
+}
+
+.site-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.site-ident {
+  grid-area: ident;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  min-width: 0;
+}
+
+.site-name {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--color-base-content);
+  letter-spacing: -0.005em;
+}
+
+.site-arrow {
+  width: 0.8rem;
+  height: 0.8rem;
+  flex-shrink: 0;
+  opacity: 0.4;
+}
+
+.register-link:hover .site-name {
+  color: var(--color-primary);
+}
+
+.site-domain {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.site-facts {
+  grid-area: facts;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem 0.9rem;
+}
+
+.site-number {
+  color: var(--color-faint);
+  white-space: nowrap;
+}
+
+.site-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--color-faint);
+  white-space: nowrap;
+}
+
+.dot.is-approved {
+  background: var(--color-success);
+}
+
+.dot.is-pending {
+  background: var(--color-warning);
+}
+
+.register-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 2.25rem 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line-soft);
+  font-size: 0.9375rem;
+  color: var(--color-faint);
+}
+
+.register-more {
+  margin: 1rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+@media (min-width: 768px) {
+  .register-link {
+    grid-template-columns: 2rem minmax(0, 1fr) 12rem 8.5rem;
+    grid-template-areas: 'mark ident number status';
+    align-items: center;
+    gap: 1.25rem;
+    padding-block: 0.9rem;
+  }
+
+  .site-facts {
+    display: contents;
+  }
+
+  .site-number {
+    grid-area: number;
+  }
+
+  .site-status {
+    grid-area: status;
+    justify-content: flex-end;
+  }
+}
+</style>

@@ -47,198 +47,342 @@ const steps = [
 </script>
 
 <template>
-  <div class="roy-filling-page">
-    <!-- Hero -->
-    <section
-      class="relative min-h-[60vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
-    >
-      <NuxtImg
-        src="/images/republic-of-yang/greatwall.webp"
-        class="absolute inset-0 w-full h-full object-cover object-center -z-10 opacity-60"
-        width="1920"
-        height="1280"
-        loading="eager"
-        fetchpriority="high"
-        format="webp"
-        style="view-transition-name: product-hero-roy-filling"
-      />
-      <div
-        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/40 to-transparent dark:via-base-100/50"
-      />
+  <div>
+    <header class="masthead">
+      <div class="masthead-media" aria-hidden="true">
+        <NuxtImg
+          src="/images/republic-of-yang/greatwall.webp"
+          alt=""
+          width="1920"
+          height="1080"
+          format="webp"
+          loading="eager"
+          fetchpriority="high"
+          style="view-transition-name: product-hero-roy-filling"
+        />
+      </div>
 
-      <div class="relative container mx-auto px-4 pb-14 pt-44">
-        <div class="hero-rise max-w-2xl">
-          <NuxtImg
-            src="/images/republic-of-yang/filling.png"
-            class="w-14 h-14 rounded-2xl shadow-lg mb-5"
-            alt="ROY ICP Filling"
-            width="56"
-            height="56"
-            format="webp"
-            loading="eager"
-            decoding="async"
-          />
-          <p class="eyebrow mb-3">Republic of Yang</p>
-          <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-            {{ t("royIcpFilling.title") }}
+      <div class="shell masthead-grid">
+        <div class="masthead-copy">
+          <div class="ident">
+            <img
+              src="/images/republic-of-yang/filling.png"
+              class="ident-mark"
+              alt=""
+              width="56"
+              height="56"
+              loading="eager"
+              decoding="async"
+            >
+            <span class="ident-series">Republic of Yang</span>
+          </div>
+
+          <h1 class="display masthead-title">
+            {{ t('royIcpFilling.title') }}
           </h1>
-          <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed max-w-xl">
-            {{ t("royIcpFilling.tagline") }}
+          <p class="masthead-lede">
+            {{ t('royIcpFilling.tagline') }}
           </p>
-          <div class="mt-7 flex flex-wrap items-center gap-3">
-            <a
-              href="https://solsynth.dev/icp"
-              target="_blank"
-              class="btn btn-primary btn-md rounded-full px-6 gap-2"
-            >
-              <FileText class="w-4 h-4" />
-              {{ t("royIcpFilling.applyNow") }}
+
+          <div class="masthead-actions">
+            <a href="https://solsynth.dev/icp" target="_blank" rel="noopener" class="btn btn-primary action">
+              <FileText class="action-icon" aria-hidden="true" />
+              {{ t('royIcpFilling.applyNow') }}
             </a>
-            <NuxtLink
-              :to="localePath('/icp/submissions/me')"
-              class="btn btn-ghost rounded-full px-5 gap-2"
-            >
-              {{ t("royIcpFilling.cta.submissions") }}
+            <NuxtLink :to="localePath('/icp/submissions/me')" class="btn btn-ghost action">
+              {{ t('royIcpFilling.cta.submissions') }}
+            </NuxtLink>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <section class="band">
+      <div class="shell">
+        <p class="about-lede">
+          {{ t('royIcpFilling.about.desc') }}
+        </p>
+      </div>
+    </section>
+
+    <!-- Genuinely a sequence: the filing process has an order. -->
+    <section id="apply" class="band">
+      <div class="shell">
+        <h2 class="band-title">
+          {{ t('royIcpFilling.howToApply.title') }}
+        </h2>
+
+        <ol class="steps">
+          <li v-for="step in steps" :key="step.n" class="step">
+            <span class="mono step-number">{{ step.n }}</span>
+            <div class="step-body">
+              <component :is="step.icon" class="step-icon" aria-hidden="true" />
+              <h3 class="step-title">{{ t(step.titleKey) }}</h3>
+              <p class="step-desc">{{ t(step.descKey) }}</p>
+            </div>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="band">
+      <div class="shell">
+        <div class="apply">
+          <div class="apply-copy">
+            <h2 class="apply-title">
+              {{ t('royIcpFilling.cta.apply') }}
+            </h2>
+            <p class="apply-note">
+              {{ t('royIcpFilling.disclaimer') }}
+            </p>
+          </div>
+          <div class="apply-actions">
+            <NuxtLink :to="localePath('/icp/submit')" class="btn btn-primary action">
+              <Plus class="action-icon" aria-hidden="true" />
+              {{ t('royIcpFilling.cta.apply') }}
+            </NuxtLink>
+            <NuxtLink :to="localePath('/icp/identities')" class="btn btn-ghost action">
+              <User class="action-icon" aria-hidden="true" />
+              {{ t('royIcpFilling.cta.identities') }}
             </NuxtLink>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- About -->
-    <section class="container mx-auto px-4 py-24">
-      <div class="max-w-2xl border-t border-base-content/10 pt-8">
-        <p class="text-lg leading-relaxed opacity-70">
-          {{ t("royIcpFilling.about.desc") }}
-        </p>
-      </div>
-    </section>
-
-    <!-- How it works -->
-    <section id="apply" class="container mx-auto px-4 pb-24 scroll-mt-24">
-      <div class="max-w-2xl">
-        <p class="eyebrow mb-3">{{ t("royIcpFilling.howToApply.title") }}</p>
-      </div>
-
-      <ol class="mt-12 grid md:grid-cols-3 gap-x-10 gap-y-10">
-        <li
-          v-for="step in steps"
-          :key="step.n"
-          class="border-t border-base-content/10 pt-6"
-        >
-          <span class="font-mono text-sm text-primary tabular-nums">{{ step.n }}</span>
-          <component :is="step.icon" class="w-5 h-5 text-primary mt-3 mb-3" aria-hidden="true" />
-          <h3 class="font-semibold">{{ t(step.titleKey) }}</h3>
-          <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
-            {{ t(step.descKey) }}
-          </p>
-        </li>
-      </ol>
-    </section>
-
-    <!-- CTA -->
-    <section class="container mx-auto px-4 pb-16">
-      <div
-        class="border-t border-base-content/10 pt-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
-      >
-        <div class="max-w-xl">
-          <h2 class="text-2xl font-semibold tracking-tight">
-            {{ t("royIcpFilling.cta.apply") }}
-          </h2>
-          <p class="mt-1.5 text-xs opacity-30 max-w-xl leading-relaxed">
-            {{ t("royIcpFilling.disclaimer") }}
-          </p>
-        </div>
-        <div class="flex flex-wrap items-center gap-3 shrink-0">
-          <NuxtLink
-            :to="localePath('/icp/submit')"
-            class="btn btn-primary rounded-full gap-2"
-          >
-            <Plus class="w-4 h-4" />
-            {{ t("royIcpFilling.cta.apply") }}
-          </NuxtLink>
-          <NuxtLink
-            :to="localePath('/icp/identities')"
-            class="btn btn-outline rounded-full gap-2"
-          >
-            <User class="w-4 h-4" />
-            {{ t("royIcpFilling.cta.identities") }}
-          </NuxtLink>
-        </div>
-      </div>
-    </section>
-
-    <!-- Footer links -->
-    <section class="container mx-auto px-4 pb-16">
-      <div class="flex flex-wrap gap-x-8 gap-y-3 text-sm opacity-50 border-t border-base-content/10 pt-8">
-        <a
-          href="https://github.com/Solsynth/Solian/issues"
-          target="_blank"
-          class="hover:opacity-100 transition-opacity inline-flex items-center gap-1.5"
-        >
-          <Bug class="w-4 h-4" />
-          {{ t("royIcpFilling.help.reportIssue") }}
-        </a>
-        <a
-          href="mailto:lily@solsynth.dev"
-          class="hover:opacity-100 transition-opacity inline-flex items-center gap-1.5"
-        >
-          <Mail class="w-4 h-4" />
-          {{ t("royIcpFilling.help.contact") }}
-        </a>
-      </div>
+    <section class="shell help">
+      <a href="https://github.com/Solsynth/Solian/issues" target="_blank" rel="noopener" class="help-link">
+        <Bug class="help-icon" aria-hidden="true" />
+        {{ t('royIcpFilling.help.reportIssue') }}
+      </a>
+      <a href="mailto:lily@solsynth.dev" class="help-link">
+        <Mail class="help-icon" aria-hidden="true" />
+        {{ t('royIcpFilling.help.contact') }}
+      </a>
     </section>
   </div>
 </template>
 
 <style scoped>
-.roy-filling-page {
-  --color-primary: oklch(52% 0.09 35deg);
-  --color-primary-content: oklch(97% 0.02 35deg);
+.masthead {
+  position: relative;
+  overflow: hidden;
+  margin-top: calc(-1 * var(--site-page-offset));
+  padding-top: calc(var(--site-page-offset) + 5rem);
+  padding-bottom: 4rem;
+  border-bottom: 1px solid var(--color-line-soft);
 }
 
-::global([data-theme="dark"]) .roy-filling-page {
-  --color-primary: oklch(72% 0.1 40deg);
-  --color-primary-content: oklch(17% 0.03 35deg);
+.masthead-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
 }
 
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.5;
+.masthead-media img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.55;
 }
 
-/* One orchestrated moment: hero content rises on load */
-.hero-rise > * {
-  animation: hero-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+.masthead-media::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, var(--color-base-100) 12%, color-mix(in oklab, var(--color-base-100) 55%, transparent) 55%, transparent 92%),
+    linear-gradient(to right, var(--color-base-100) 10%, color-mix(in oklab, var(--color-base-100) 55%, transparent) 60%, transparent 100%);
 }
 
-.hero-rise > *:nth-child(2) {
-  animation-delay: 0.06s;
-}
-.hero-rise > *:nth-child(3) {
-  animation-delay: 0.12s;
-}
-.hero-rise > *:nth-child(4) {
-  animation-delay: 0.18s;
-}
-.hero-rise > *:nth-child(5) {
-  animation-delay: 0.24s;
-}
-.hero-rise > *:nth-child(6) {
-  animation-delay: 0.3s;
+.masthead-grid {
+  position: relative;
+  z-index: 1;
 }
 
-@keyframes hero-rise {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+.masthead-copy {
+  max-width: 34rem;
+}
+
+.ident {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.ident-mark {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: var(--radius-mark);
+  object-fit: cover;
+  background: var(--color-base-300);
+}
+
+.ident-series {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-dim);
+}
+
+.masthead-title {
+  margin: 0;
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+}
+
+.masthead-lede {
+  margin: 1rem 0 0;
+  max-width: 32rem;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  color: var(--color-dim);
+}
+
+.masthead-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1.75rem;
+}
+
+.action {
+  padding-inline: 1.25rem;
+}
+
+.action-icon {
+  width: 0.9375rem;
+  height: 0.9375rem;
+}
+
+.band {
+  padding-top: 3.5rem;
+}
+
+.about-lede {
+  margin: 0;
+  max-width: 34rem;
+  font-size: 1.0625rem;
+  line-height: 1.65;
+  color: var(--color-dim);
+}
+
+.band-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.steps {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  gap: 0.9rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.step-number {
+  color: var(--color-primary);
+  font-size: 0.75rem;
+}
+
+.step-body {
+  min-width: 0;
+}
+
+.step-icon {
+  width: 1.0625rem;
+  height: 1.0625rem;
+  color: var(--color-primary);
+}
+
+.step-title {
+  margin: 0.6rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.step-desc {
+  margin: 0.3rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-faint);
+}
+
+.apply {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-line);
+}
+
+.apply-copy {
+  max-width: 30rem;
+}
+
+.apply-title {
+  margin: 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.apply-note {
+  margin: 0.6rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--color-faint);
+}
+
+.apply-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.help {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  padding-top: 2.5rem;
+}
+
+.help-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.help-link:hover,
+.help-link:focus-visible {
+  color: var(--color-base-content);
+}
+
+.help-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+@media (min-width: 768px) {
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2.5rem;
   }
 }
 </style>

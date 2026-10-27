@@ -88,16 +88,21 @@ const themeLabel = computed(() =>
       : "Light",
 );
 
-function getSystemTheme(): "light" | "dark" {
-  return window.matchMedia("(prefers-color-scheme: dark)").matches
-    ? "dark"
-    : "light";
+// The theme preference is stored as a mode; the document attribute is the
+// theme name the stylesheet declares.
+function themeName(mode: "auto" | "light" | "dark"): string {
+  const resolved =
+    mode === "auto"
+      ? window.matchMedia("(prefers-color-scheme: light)").matches
+        ? "light"
+        : "dark"
+      : mode;
+  return resolved === "light" ? "stargate-light" : "stargate";
 }
 
 function applyTheme(mode: "auto" | "light" | "dark") {
   if (import.meta.server) return;
-  const resolved = mode === "auto" ? getSystemTheme() : mode;
-  document.documentElement.setAttribute("data-theme", resolved);
+  document.documentElement.setAttribute("data-theme", themeName(mode));
 }
 
 function syncTheme() {
@@ -179,33 +184,30 @@ onBeforeUnmount(() => {
     :class="{ 'is-open': isMobileMenuOpen }"
     :style="{ top: `calc(${props.bannerHeight})` }"
   >
-    <div class="nav-bar">
-      <div class="nav-cluster">
-        <NuxtLink
-          :to="localePath('/')"
-          class="brand"
-          :aria-label="t('nav.brandName')"
-        >
-          <img src="/favicon-64.png" alt="" class="brand-mark" width="24" height="24">
-          <span class="brand-name">{{ t("nav.brandName") }}</span>
-        </NuxtLink>
+    <div class="shell nav-bar">
+      <NuxtLink
+        :to="localePath('/')"
+        class="brand"
+        :aria-label="t('nav.brandName')"
+      >
+        <img src="/favicon.png" alt="" class="brand-mark brand-glyph" width="24" height="24">
+        <span class="brand-name">{{ t("nav.brandName") }}</span>
+      </NuxtLink>
 
-        <nav class="desktop-nav" :aria-label="t('nav.brandName')">
-          <ul>
-            <li v-for="item in navItems" :key="item.to">
-              <NuxtLink
-                :to="item.to"
-                class="nav-link"
-                :active-class="item.exact ? undefined : 'is-active'"
-                exact-active-class="is-active"
-              >
-                <component :is="item.icon" class="nav-ico" />
-                {{ item.label }}
-              </NuxtLink>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      <nav class="desktop-nav" :aria-label="t('nav.brandName')">
+        <ul>
+          <li v-for="item in navItems" :key="item.to">
+            <NuxtLink
+              :to="item.to"
+              class="nav-link"
+              :active-class="item.exact ? undefined : 'is-active'"
+              exact-active-class="is-active"
+            >
+              {{ item.label }}
+            </NuxtLink>
+          </li>
+        </ul>
+      </nav>
 
       <div class="nav-actions">
         <div class="dropdown dropdown-end">
@@ -214,6 +216,7 @@ onBeforeUnmount(() => {
             type="button"
             class="nav-btn locale-btn"
             :aria-label="languageNames[lang] || lang"
+            :title="languageNames[lang] || lang"
           >
             <Languages class="icon" />
             <span class="locale-code">{{ localeCodes[lang] || String(lang).toUpperCase() }}</span>
@@ -318,7 +321,6 @@ onBeforeUnmount(() => {
           class="sign-in"
           :aria-label="t('login.title')"
         >
-          <CircleUser class="icon sign-in-icon" />
           <span class="sign-in-label">{{ t("login.title") }}</span>
         </NuxtLink>
 
@@ -376,7 +378,6 @@ onBeforeUnmount(() => {
             exact-active-class="is-active"
             @click="closeMobileMenu"
           >
-            <component :is="item.icon" class="sheet-ico" />
             {{ item.label }}
           </NuxtLink>
         </li>
@@ -407,13 +408,12 @@ onBeforeUnmount(() => {
 
 <style scoped>
 .site-navbar {
-  --nav-h: 4rem;
+  --nav-h: 3.5rem;
   --nav-ink: var(--color-base-content);
-  --nav-quiet: color-mix(in srgb, var(--color-base-content) 48%, transparent);
-  --nav-line: color-mix(in srgb, var(--color-base-content) 10%, transparent);
-  --nav-veil: color-mix(in srgb, var(--color-base-100) 72%, transparent);
-  --nav-hover: color-mix(in srgb, var(--color-base-content) 5%, transparent);
-  --nav-mark: var(--color-primary);
+  --nav-quiet: var(--color-faint);
+  --nav-line: var(--color-line-soft);
+  --nav-veil: color-mix(in oklab, var(--color-base-100) 78%, transparent);
+  --nav-hover: color-mix(in oklab, var(--color-base-300) 60%, transparent);
 
   position: fixed;
   inset-inline: 0;
@@ -423,9 +423,8 @@ onBeforeUnmount(() => {
 .nav-bar {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 2rem;
   height: var(--nav-h);
-  padding-inline: 1.25rem;
   background: var(--nav-veil);
   border-bottom: 1px solid var(--nav-line);
   backdrop-filter: blur(18px) saturate(1.15);
@@ -438,48 +437,42 @@ onBeforeUnmount(() => {
   -webkit-backdrop-filter: none;
 }
 
-.nav-cluster {
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  gap: 1.75rem;
-}
-
 .brand {
   display: inline-flex;
   align-items: center;
-  gap: 0.625rem;
+  gap: 0.5rem;
+  min-width: 0;
   color: var(--nav-ink);
   text-decoration: none;
-  outline: none;
 }
 
 .brand:focus-visible {
-  border-radius: 0.25rem;
-  outline: 2px solid var(--nav-mark);
+  border-radius: 4px;
+  outline: 2px solid var(--color-primary);
   outline-offset: 4px;
 }
 
-.brand-mark {
-  width: 1.5rem;
-  height: 1.5rem;
+.brand-glyph {
+  width: 1.375rem;
+  height: 1.375rem;
   flex-shrink: 0;
 }
 
 .brand-name {
   font-size: 0.9375rem;
-  font-weight: 700;
-  letter-spacing: -0.02em;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   line-height: 1;
 }
 
 .desktop-nav {
   display: none;
+  margin-left: 1.25rem;
 }
 
 .desktop-nav ul {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   gap: 1.5rem;
   margin: 0;
   padding: 0;
@@ -490,26 +483,12 @@ onBeforeUnmount(() => {
   position: relative;
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
   height: var(--nav-h);
   color: var(--nav-quiet);
-  font-size: 0.875rem;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-size: 0.8125rem;
+  font-weight: 600;
   text-decoration: none;
-  transition: color 0.2s ease;
-}
-
-.nav-ico {
-  width: 0.95rem;
-  height: 0.95rem;
-  flex-shrink: 0;
-  opacity: 0.82;
-}
-
-.nav-link.is-active .nav-ico,
-.nav-link:hover .nav-ico {
-  opacity: 1;
+  transition: color 140ms ease;
 }
 
 .nav-link:hover,
@@ -518,29 +497,13 @@ onBeforeUnmount(() => {
 }
 
 .nav-link.is-active {
-  color: var(--nav-ink);
+  color: var(--color-primary);
 }
 
-.nav-link::after {
-  content: "";
-  position: absolute;
-  left: 50%;
-  bottom: -1px;
-  width: 0;
-  height: 2px;
-  background: currentColor;
-  border-radius: 1px;
-  transform: translateX(-50%);
-  transition: width 0.22s ease;
-}
-
-.nav-link.is-active::after {
-  width: 1.25rem;
-}
 .nav-link:focus-visible {
-  outline: 2px solid var(--nav-mark);
+  outline: 2px solid var(--color-primary);
   outline-offset: 4px;
-  border-radius: 0.15rem;
+  border-radius: 2px;
 }
 
 .nav-actions {
@@ -548,6 +511,7 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: 0.125rem;
   flex-shrink: 0;
+  margin-left: auto;
 }
 
 .nav-btn {
@@ -563,8 +527,8 @@ onBeforeUnmount(() => {
   color: var(--nav-quiet);
   cursor: pointer;
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
+    color 140ms ease,
+    background-color 140ms ease;
 }
 
 .nav-btn:hover,
@@ -574,27 +538,30 @@ onBeforeUnmount(() => {
 }
 
 .nav-btn:focus-visible {
-  outline: 2px solid var(--nav-mark);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
+/* On a phone the header keeps only the four things a visitor needs: brand,
+   sign-in, theme, menu. Language lives in the footer, which every page has. */
 .locale-btn {
+  display: none;
   width: auto;
   min-width: 2.25rem;
   gap: 0.3rem;
-  padding-inline: 0.55rem;
+  padding-inline: 0.5rem;
 }
 
 .locale-code {
   display: none;
+  font-family: var(--font-mono);
   font-size: 0.6875rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
+  font-weight: 500;
 }
 
 .icon {
-  width: 1.125rem;
-  height: 1.125rem;
+  width: 1.0625rem;
+  height: 1.0625rem;
 }
 
 .icon.muted {
@@ -605,33 +572,27 @@ onBeforeUnmount(() => {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.4rem;
-  min-width: 2.25rem;
-  height: 2.25rem;
-  padding-inline: 0.7rem;
+  height: 2rem;
+  padding-inline: 0.85rem;
+  border: 1px solid var(--nav-line);
   border-radius: 999px;
-  color: var(--nav-quiet);
+  color: var(--nav-ink);
   font-size: 0.8125rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
   text-decoration: none;
   transition:
-    color 0.2s ease,
-    background-color 0.2s ease;
-}
-
-.sign-in-label {
-  display: none;
+    color 140ms ease,
+    border-color 140ms ease;
 }
 
 .sign-in:hover,
 .sign-in:focus-visible {
-  color: var(--nav-ink);
-  background: var(--nav-hover);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .sign-in:focus-visible {
-  outline: 2px solid var(--nav-mark);
+  outline: 2px solid var(--color-primary);
   outline-offset: 2px;
 }
 
@@ -645,8 +606,8 @@ onBeforeUnmount(() => {
   inset: 0;
   margin: auto;
   transition:
-    opacity 0.18s ease,
-    transform 0.18s ease;
+    opacity 140ms ease,
+    transform 140ms ease;
 }
 
 .menu-toggle .menu-glyph.is-shown {
@@ -680,18 +641,18 @@ onBeforeUnmount(() => {
 .nav-popover {
   z-index: 100;
   margin-top: 0.4rem;
-  padding: 0.35rem;
+  padding: 0.25rem;
   min-width: 10.5rem;
-  border: 1px solid var(--nav-line);
-  border-radius: 0.75rem;
-  background: var(--color-base-100);
-  box-shadow: 0 12px 32px color-mix(in srgb, var(--color-base-content) 6%, transparent);
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-chip);
+  background: var(--color-base-200);
+  box-shadow: 0 16px 40px -24px rgb(0 0 0 / 0.6);
   color: var(--nav-ink);
 }
 
 .nav-popover :deep(a),
 .nav-popover :deep(button) {
-  border-radius: 0.45rem;
+  border-radius: var(--radius-mark);
   font-size: 0.8125rem;
   font-weight: 500;
 }
@@ -711,7 +672,7 @@ onBeforeUnmount(() => {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  padding: 0.9rem 0.95rem 0.8rem;
+  padding: 0.85rem 0.9rem 0.75rem;
   border-bottom: 1px solid var(--nav-line);
 }
 
@@ -734,7 +695,7 @@ onBeforeUnmount(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  color: var(--nav-quiet);
+  color: var(--color-faint);
   font-size: 0.75rem;
 }
 
@@ -750,7 +711,7 @@ onBeforeUnmount(() => {
 }
 
 .account-popover .menu {
-  padding: 0.35rem;
+  padding: 0.25rem;
 }
 
 .sign-out {
@@ -771,9 +732,9 @@ onBeforeUnmount(() => {
 .mobile-scrim {
   position: absolute;
   inset: 0;
-  background: color-mix(in srgb, var(--color-base-100) 35%, transparent);
+  background: color-mix(in oklab, var(--color-base-100) 40%, transparent);
   opacity: 0;
-  transition: opacity 0.25s ease;
+  transition: opacity 160ms ease;
 }
 
 .mobile-layer.is-open .mobile-scrim {
@@ -788,12 +749,12 @@ onBeforeUnmount(() => {
   flex-direction: column;
   padding: 0.5rem 1.25rem 2rem;
   background: var(--color-base-100);
-  border-top: 1px solid var(--nav-line);
+  border-top: 1px solid var(--color-line);
   opacity: 0;
   transform: translateY(-0.4rem);
   transition:
-    opacity 0.22s ease,
-    transform 0.22s ease;
+    opacity 160ms ease,
+    transform 160ms ease;
 }
 
 .mobile-layer.is-open .mobile-sheet {
@@ -810,27 +771,21 @@ onBeforeUnmount(() => {
 .sheet-link {
   display: flex;
   align-items: center;
-  gap: 0.85rem;
-  min-height: 3.25rem;
+  gap: 0.75rem;
+  min-height: 3rem;
   color: var(--nav-quiet);
-  font-size: 1.35rem;
+  font-size: 1.125rem;
   font-weight: 600;
-  letter-spacing: -0.03em;
+  letter-spacing: -0.015em;
   line-height: 1.2;
   text-decoration: none;
-  transition: color 0.2s ease;
+  transition: color 140ms ease;
 }
 
 .sheet-ico {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 1.1rem;
+  height: 1.1rem;
   flex-shrink: 0;
-  opacity: 0.7;
-}
-
-.sheet-link.is-active .sheet-ico,
-.sheet-link:hover .sheet-ico {
-  opacity: 1;
 }
 
 .sheet-link:hover,
@@ -840,28 +795,22 @@ onBeforeUnmount(() => {
 }
 
 .sheet-link:focus-visible {
-  outline: 2px solid var(--nav-mark);
+  outline: 2px solid var(--color-primary);
   outline-offset: 4px;
-  border-radius: 0.2rem;
+  border-radius: 2px;
 }
 
 .sheet-foot {
   margin-top: auto;
   padding-top: 0.75rem;
-  border-top: 1px solid var(--nav-line);
+  border-top: 1px solid var(--color-line-soft);
 }
 
 .sheet-foot .sheet-link {
-  font-size: 1.05rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-size: 0.9375rem;
 }
 
 @media (min-width: 768px) {
-  .nav-bar {
-    padding-inline: 1.75rem;
-  }
-
   .desktop-nav {
     display: block;
   }
@@ -871,28 +820,17 @@ onBeforeUnmount(() => {
     display: none;
   }
 
-  .sign-in-label,
+  .locale-btn {
+    display: inline-flex;
+  }
+
   .locale-code {
     display: inline;
   }
-}
 
-@media (min-width: 1024px) {
-  .nav-bar {
-    padding-inline: 2.25rem;
+  .brand-glyph {
+    width: 1.5rem;
+    height: 1.5rem;
   }
-
-  .nav-cluster {
-    gap: 2.5rem;
-  }
-
-  .desktop-nav ul {
-    gap: 2rem;
-  }
-}
-
-:global([data-theme="dark"]) .site-navbar {
-  --nav-veil: color-mix(in srgb, var(--color-base-100) 55%, transparent);
-  --nav-line: color-mix(in srgb, var(--color-base-content) 12%, transparent);
 }
 </style>

@@ -1,16 +1,35 @@
 <script setup lang="ts">
-import { Zap } from "@lucide/vue"
+import { Zap } from '@lucide/vue'
 
 const { t } = useI18n()
 </script>
 
 <template>
-  <span
-    class="inline-flex items-center gap-2 rounded-full border border-dashed border-base-content/15 bg-base-100/40 px-3 py-1"
-  >
-    <Zap class="w-3.5 h-3.5 shrink-0 text-accent" aria-hidden="true" />
-    <span class="font-mono text-[10px] uppercase tracking-[0.16em] opacity-60">
-      {{ t("express.poweredBy") }}
-    </span>
+  <span class="express">
+    <Zap class="express-icon" aria-hidden="true" />
+    <span class="express-label">{{ t('express.poweredBy') }}</span>
   </span>
 </template>
+
+<style scoped>
+.express {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.15rem 0.5rem;
+  border: 1px solid var(--color-line-soft);
+  border-radius: 999px;
+}
+
+.express-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: var(--color-accent);
+}
+
+.express-label {
+  font-family: var(--font-mono);
+  font-size: 0.625rem;
+  color: var(--color-faint);
+}
+</style>

@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { Calendar, MapPin, Tag, ArrowRight, X } from '@lucide/vue'
-
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
@@ -76,17 +74,30 @@ const filteredEvents = computed(() => {
   })
 })
 
-const upcomingCount = computed(() => events.value?.filter(e => e.status === 'upcoming').length || 0)
-const ongoingCount = computed(() => events.value?.filter(e => e.status === 'ongoing').length || 0)
-const pastCount = computed(() => events.value?.filter(e => e.status === 'past').length || 0)
+const statusOptions = computed(() => [
+  { value: '', label: t('events.all') },
+  { value: 'upcoming', label: t('events.upcoming') },
+  { value: 'ongoing', label: t('events.ongoing') },
+  { value: 'past', label: t('events.past') },
+])
 
-function formatDate(dateStr: string) {
-  const date = new Date(dateStr)
-  return date.toLocaleDateString(lang.value === 'zh' ? 'zh-CN' : 'en-US', {
+// A fixed-width stamp: the date column lines up the way a ledger does.
+function stamp(value: string): string {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ''
+  return new Intl.DateTimeFormat(isZh.value ? 'zh-CN' : 'en-CA', {
     year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date)
+}
+
+function endStamp(start: string, end: string): string | null {
+  const startDate = new Date(start)
+  const endDate = new Date(end)
+  if (Number.isNaN(endDate.getTime())) return null
+  if (startDate.toDateString() === endDate.toDateString()) return null
+  return stamp(end)
 }
 
 function statusQuery(status: string) {
@@ -109,183 +120,281 @@ function tagQuery(tag: string) {
 
 <template>
   <div>
-    <section class="border-b border-base-200 px-4 py-16 md:py-20">
-      <div class="container mx-auto max-w-5xl">
-        <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
+    <header class="band">
+      <div class="shell">
+        <h1 class="title page-title">
           {{ t('events.title') }}
         </h1>
-        <p class="max-w-2xl text-lg text-base-content/65 md:text-xl">
+        <p class="lede page-lede">
           {{ t('events.subtitle') }}
         </p>
       </div>
-    </section>
+    </header>
 
-    <section class="px-4 py-10">
-      <div class="container mx-auto max-w-5xl">
-        <div class="mb-6 flex flex-wrap gap-2">
-          <NuxtLink
-            :to="statusQuery('')"
-            class="btn btn-sm"
-            :class="!urlStatus ? 'btn-primary' : 'btn-ghost border border-base-300'"
-          >
-            {{ t('events.all') }}
-          </NuxtLink>
-          <NuxtLink
-            :to="statusQuery('upcoming')"
-            class="btn btn-sm gap-1.5"
-            :class="urlStatus === 'upcoming' ? 'btn-primary' : 'btn-ghost border border-base-300'"
-          >
-            {{ t('events.upcoming') }}
-            <span
-              v-if="upcomingCount > 0"
-              class="text-xs opacity-70"
-            >{{ upcomingCount }}</span>
-          </NuxtLink>
-          <NuxtLink
-            :to="statusQuery('ongoing')"
-            class="btn btn-sm gap-1.5"
-            :class="urlStatus === 'ongoing' ? 'btn-primary' : 'btn-ghost border border-base-300'"
-          >
-            {{ t('events.ongoing') }}
-            <span
-              v-if="ongoingCount > 0"
-              class="text-xs opacity-70"
-            >{{ ongoingCount }}</span>
-          </NuxtLink>
-          <NuxtLink
-            :to="statusQuery('past')"
-            class="btn btn-sm gap-1.5"
-            :class="urlStatus === 'past' ? 'btn-primary' : 'btn-ghost border border-base-300'"
-          >
-            {{ t('events.past') }}
-            <span
-              v-if="pastCount > 0"
-              class="text-xs opacity-70"
-            >{{ pastCount }}</span>
-          </NuxtLink>
+    <section class="body">
+      <div class="shell">
+        <div class="controls">
+          <nav class="rail" :aria-label="t('events.title')">
+            <NuxtLink
+              v-for="option in statusOptions"
+              :key="option.value || 'all'"
+              :to="statusQuery(option.value)"
+              class="rail-tab"
+              :class="{ 'is-current': urlStatus === option.value }"
+              :aria-current="urlStatus === option.value ? 'page' : undefined"
+            >
+              {{ option.label }}
+            </NuxtLink>
+          </nav>
+
+          <div v-if="allTags.length > 0" class="tags">
+            <NuxtLink
+              v-for="tag in allTags"
+              :key="tag"
+              :to="tagQuery(tag)"
+              class="chip"
+              :class="{ 'is-current': urlTag === tag }"
+            >
+              {{ tag }}
+            </NuxtLink>
+            <NuxtLink
+              v-if="urlTag"
+              :to="tagQuery('')"
+              class="chip tag-clear"
+            >
+              {{ t('events.clearFilter') }}
+            </NuxtLink>
+          </div>
         </div>
 
-        <div v-if="allTags.length > 0" class="mb-10 flex flex-wrap items-center gap-2">
-          <NuxtLink
-            v-for="tag in allTags"
-            :key="tag"
-            :to="tagQuery(tag)"
-            class="btn btn-xs gap-1"
-            :class="urlTag === tag ? 'btn-secondary' : 'btn-ghost border border-base-300'"
-          >
-            <Tag class="h-3 w-3" />
-            {{ tag }}
-          </NuxtLink>
-          <NuxtLink
-            v-if="urlTag"
-            :to="tagQuery('')"
-            class="btn btn-xs btn-ghost gap-1 text-error"
-          >
-            <X class="h-3 w-3" />
-            {{ isZh ? '清除筛选' : 'Clear' }}
-          </NuxtLink>
-        </div>
+        <p v-if="filteredEvents.length === 0" class="log-empty">
+          {{ t('events.noEvents') }}
+        </p>
 
-        <div
-          v-if="filteredEvents.length === 0"
-          class="rounded-lg border border-dashed border-base-300 px-6 py-16 text-center"
-        >
-          <p class="mb-4 text-base text-base-content/55">
-            {{ t('events.noEvents') }}
-          </p>
-          <NuxtLink :to="localePath('/events')" class="btn btn-primary btn-sm">
-            {{ t('events.all') }}
-          </NuxtLink>
-        </div>
-
-        <div v-else class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
-          <NuxtLink
-            v-for="event in filteredEvents"
-            :key="event.slug"
-            :to="localePath(`/events/${event.slug}`)"
-            class="group flex flex-col overflow-hidden rounded-lg border border-base-200 bg-base-100 transition-colors duration-150 hover:border-base-300"
-          >
-            <div class="relative aspect-video overflow-hidden border-b border-base-200 bg-base-200/50">
-              <img
-                v-if="event.coverImage"
-                :src="event.coverImage"
-                :alt="event.name"
-                class="h-full w-full object-cover"
-                loading="lazy"
-              >
-              <div
-                v-else
-                class="flex h-full w-full items-center justify-center"
-              >
-                <Calendar class="h-10 w-10 text-base-content/20" />
-              </div>
-            </div>
-
-            <div class="flex flex-1 flex-col p-5">
-              <div class="mb-2">
-                <span
-                  class="badge badge-sm"
-                  :class="{
-                    'badge-primary': event.status === 'upcoming',
-                    'badge-secondary': event.status === 'ongoing',
-                    'badge-ghost': event.status === 'past',
-                  }"
-                >
-                  {{ t(`events.${event.status}`) }}
+        <ol v-else class="log">
+          <li v-for="event in filteredEvents" :key="event.slug" class="log-row">
+            <NuxtLink
+              :to="localePath(`/events/${event.slug}`)"
+              class="log-link"
+            >
+              <span class="mono log-date">
+                {{ stamp(event.startDate) }}
+                <span v-if="endStamp(event.startDate, event.endDate)" class="log-date-end">
+                  {{ endStamp(event.startDate, event.endDate) }}
                 </span>
-              </div>
+              </span>
 
-              <h2 class="mb-2 text-lg font-bold leading-snug transition-colors group-hover:text-primary">
-                {{ event.name }}
-              </h2>
+              <span class="log-body">
+                <span class="log-name">{{ event.name }}</span>
+                <span class="log-desc">{{ event.description }}</span>
+              </span>
 
-              <p class="mb-4 line-clamp-2 flex-1 text-sm text-base-content/60">
-                {{ event.description }}
-              </p>
+              <span v-if="event.location" class="log-place">{{ event.location }}</span>
 
-              <div class="space-y-1.5 text-sm text-base-content/55">
-                <div class="flex items-center gap-2">
-                  <Calendar class="h-3.5 w-3.5 shrink-0" />
-                  <span>
-                    {{ formatDate(event.startDate) }}
-                    <template v-if="event.startDate !== event.endDate">
-                      – {{ formatDate(event.endDate) }}
-                    </template>
-                  </span>
-                </div>
-                <div v-if="event.location" class="flex items-center gap-2">
-                  <MapPin class="h-3.5 w-3.5 shrink-0" />
-                  <span class="truncate">{{ event.location }}</span>
-                </div>
-              </div>
-
-              <div
-                v-if="event.tags?.length"
-                class="mt-3 flex flex-wrap gap-1"
-              >
-                <span
-                  v-for="tag in event.tags.slice(0, 3)"
-                  :key="tag"
-                  class="badge badge-outline badge-xs"
-                >
-                  {{ tag }}
-                </span>
-                <span
-                  v-if="event.tags.length > 3"
-                  class="badge badge-ghost badge-xs"
-                >
-                  +{{ event.tags.length - 3 }}
-                </span>
-              </div>
-
-              <div class="mt-4 flex items-center gap-1 text-sm font-medium text-base-content/50 transition-colors group-hover:text-primary">
-                {{ isZh ? '查看详情' : 'View details' }}
-                <ArrowRight class="h-3.5 w-3.5" />
-              </div>
-            </div>
-          </NuxtLink>
-        </div>
+              <span class="log-status">
+                <span class="dot" :class="`dot-${event.status}`" />
+                {{ t(`events.${event.status}`) }}
+              </span>
+            </NuxtLink>
+          </li>
+        </ol>
       </div>
     </section>
   </div>
 </template>
+
+<style scoped>
+.band {
+  padding-block: 3.5rem 2.5rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.page-lede {
+  margin: 0.75rem 0 0;
+}
+
+.body {
+  padding-block: 2rem 4rem;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+
+.rail {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 0.125rem;
+  padding: 0.1875rem;
+  border: 1px solid var(--color-line-soft);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-base-200) 45%, transparent);
+}
+
+.rail-tab {
+  padding: 0.375rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-faint);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease;
+}
+
+.rail-tab:hover {
+  color: var(--color-base-content);
+}
+
+.rail-tab.is-current {
+  background: var(--color-base-300);
+  color: var(--color-base-content);
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.tag-clear {
+  border-color: color-mix(in oklab, var(--color-error) 40%, transparent);
+  color: var(--color-error);
+}
+
+.log-row {
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.log-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+  padding: 1.1rem 0.5rem 1.1rem 0;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 140ms ease;
+}
+
+.log-link:hover {
+  background: color-mix(in oklab, var(--color-base-200) 55%, transparent);
+}
+
+.log-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.log-date {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding-top: 0.15rem;
+  color: var(--color-faint);
+}
+
+.log-date-end::before {
+  content: '– ';
+  color: var(--color-line);
+}
+
+.log-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.log-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-base-content);
+  letter-spacing: -0.005em;
+}
+
+.log-link:hover .log-name {
+  color: var(--color-primary);
+}
+
+.log-desc {
+  overflow: hidden;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--color-faint);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.log-place {
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.log-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-dim);
+}
+
+.dot-upcoming {
+  background: var(--color-primary);
+}
+
+.dot-ongoing {
+  background: var(--color-success);
+}
+
+.dot-past {
+  background: var(--color-line);
+}
+
+.log-empty {
+  margin: 0;
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line-soft);
+  font-size: 0.9375rem;
+  color: var(--color-faint);
+}
+
+@media (min-width: 768px) {
+  .log-link {
+    grid-template-columns: 6.5rem minmax(0, 1fr) 10rem 7rem;
+    align-items: start;
+    gap: 1.5rem;
+    padding-block: 1.15rem;
+  }
+
+  .log-date {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .log-place {
+    padding-top: 0.15rem;
+  }
+
+  .log-status {
+    justify-content: flex-start;
+    padding-top: 0.15rem;
+  }
+}
+</style>

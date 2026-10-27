@@ -7,10 +7,10 @@ import {
   Edit,
   Check,
   Link,
+  RefreshCw,
 } from '@lucide/vue'
 
 const { locale } = useI18n()
-const localePath = useLocalePath()
 const lang = computed(() => locale.value)
 const isZh = computed(() => lang.value === 'zh')
 
@@ -162,32 +162,40 @@ async function confirmDelete() {
 
 <template>
   <div>
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold">{{ isZh ? '身份管理' : 'Identities' }}</h2>
-      <button class="btn btn-outline btn-sm" @click="refresh()">{{ isZh ? '刷新' : 'Refresh' }}</button>
+    <div class="head">
+      <div>
+        <h2 class="admin-h">
+          {{ isZh ? '身份管理' : 'Identities' }}
+        </h2>
+        <p class="admin-sub">
+          {{ isZh ? '每个备案身份及其所属用户。' : 'Filing identities and the account each one belongs to.' }}
+        </p>
+      </div>
+      <button class="btn btn-sm" @click="refresh()">
+        <RefreshCw class="btn-icon" aria-hidden="true" />
+        {{ isZh ? '刷新' : 'Refresh' }}
+      </button>
     </div>
 
-    <div class="relative max-w-md mb-6">
-      <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" />
+    <div class="search">
+      <Search class="search-icon" aria-hidden="true" />
       <input
         v-model="searchQuery"
-        type="text"
-        class="input input-bordered w-full pl-10"
-        :placeholder="isZh ? '搜索身份...' : 'Search identities...'"
+        type="search"
+        class="input search-input"
+        :placeholder="isZh ? '搜索身份…' : 'Search identities…'"
       >
     </div>
 
-    <!-- Edit Dialog -->
     <AppDialog
       :open="!!editingIdentity"
-      :title="isZh ? '编辑身份' : 'Edit Identity'"
+      :title="isZh ? '编辑身份' : 'Edit identity'"
       max-width="max-w-md"
       @update:open="!$event && (editingIdentity = null)"
     >
-      <div class="space-y-4">
-        <!-- Icon -->
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '图标' : 'Icon' }}</span></label>
+      <div class="form-stack">
+        <div>
+          <span class="field-label">{{ isZh ? '图标' : 'Icon' }}</span>
           <IconUpload
             :current-icon="editForm.iconUrl"
             folder="icp/identities"
@@ -196,109 +204,97 @@ async function confirmDelete() {
           />
         </div>
 
-        <!-- Type -->
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '类型' : 'Type' }} *</span></label>
-          <select v-model="editForm.type" class="select select-bordered w-full">
+        <label>
+          <span class="field-label">{{ isZh ? '类型' : 'Type' }}</span>
+          <select v-model="editForm.type" class="select">
             <option value="individual">{{ isZh ? '个人' : 'Individual' }}</option>
             <option value="organization">{{ isZh ? '组织' : 'Organization' }}</option>
           </select>
-        </div>
+        </label>
 
-        <!-- Name -->
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '名称' : 'Name' }} *</span></label>
-          <input v-model="editForm.name" type="text" class="input input-bordered w-full" required>
-        </div>
+        <label>
+          <span class="field-label">{{ isZh ? '名称' : 'Name' }}</span>
+          <input v-model="editForm.name" type="text" class="input" required>
+        </label>
 
-        <!-- Description -->
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '介绍' : 'Description' }}</span></label>
-          <textarea v-model="editForm.description" class="textarea textarea-bordered w-full h-20" />
-        </div>
+        <label>
+          <span class="field-label">{{ isZh ? '介绍' : 'Description' }}</span>
+          <textarea v-model="editForm.description" class="textarea h-20" />
+        </label>
 
-        <!-- Reassociate user -->
-        <div class="form-control">
-          <label class="label">
-            <span class="label-text flex items-center gap-1.5">
-              <Link class="w-3.5 h-3.5" />
-              {{ isZh ? '关联用户' : 'Associated User' }}
-            </span>
-          </label>
-          <div class="relative">
+        <div>
+          <span class="field-label">
+            <Link class="inline-icon" aria-hidden="true" />
+            {{ isZh ? '关联用户' : 'Associated user' }}
+          </span>
+          <div class="picker">
             <input
               v-model="editForm.userSearch"
               type="text"
-              class="input input-bordered w-full"
-              :placeholder="isZh ? '搜索邮箱或用户名...' : 'Search email or name...'"
+              class="input"
+              :placeholder="isZh ? '搜索邮箱或用户名…' : 'Search email or name…'"
             >
-            <div
-              v-if="filteredUserOptions.length"
-              class="absolute top-full left-0 right-0 mt-1 bg-base-100 border border-base-content/10 rounded-lg shadow-lg z-10 max-h-40 overflow-y-auto"
-            >
+            <div v-if="filteredUserOptions.length" class="picker-menu">
               <button
                 v-for="u in filteredUserOptions"
                 :key="u.id"
-                class="flex items-center gap-2 w-full px-3 py-2 text-left hover:bg-base-200 text-sm transition-colors"
+                type="button"
+                class="picker-option"
                 @click="selectUser(u)"
               >
-                <span class="font-medium">{{ u.name }}</span>
-                <span class="opacity-50">{{ u.email }}</span>
+                <span class="picker-name">{{ u.name }}</span>
+                <span class="picker-email">{{ u.email }}</span>
               </button>
             </div>
           </div>
-          <p class="text-xs opacity-50 mt-1">
+          <p class="picker-current">
             {{ isZh ? '当前：' : 'Current: ' }}{{ editingIdentity?.user?.name }} ({{ editingIdentity?.user?.email }})
           </p>
         </div>
       </div>
 
       <template #footer>
-        <button class="btn" @click="editingIdentity = null">{{ isZh ? '取消' : 'Cancel' }}</button>
+        <button class="btn" @click="editingIdentity = null">
+          {{ isZh ? '取消' : 'Cancel' }}
+        </button>
         <button
           class="btn btn-primary"
           :disabled="isSaving || !editForm.name"
           @click="saveEdit"
         >
-          <span v-if="isSaving" class="loading loading-spinner loading-sm" />
-          <Check v-else class="w-4 h-4 mr-1" />
+          <span v-if="isSaving" class="loading loading-spinner loading-xs" />
+          <Check v-else class="btn-icon" aria-hidden="true" />
           {{ isZh ? '保存' : 'Save' }}
         </button>
       </template>
     </AppDialog>
 
-    <!-- Delete Confirm Dialog -->
     <AppDialog
       :open="!!deletingIdentity"
-      :title="isZh ? '确认删除' : 'Confirm Delete'"
+      :title="isZh ? '确认删除' : 'Confirm delete'"
       max-width="max-w-sm"
       @update:open="!$event && (deletingIdentity = null)"
     >
-      <p class="text-sm">
+      <p class="dialog-copy">
         {{ isZh
           ? `确定要删除身份"${deletingIdentity?.name}"吗？此操作不可撤销。`
           : `Are you sure you want to delete "${deletingIdentity?.name}"? This cannot be undone.`
         }}
       </p>
       <template #footer>
-        <button class="btn" @click="deletingIdentity = null">{{ isZh ? '取消' : 'Cancel' }}</button>
+        <button class="btn" @click="deletingIdentity = null">
+          {{ isZh ? '取消' : 'Cancel' }}
+        </button>
         <button class="btn btn-error" :disabled="isDeleting" @click="confirmDelete">
-          <span v-if="isDeleting" class="loading loading-spinner loading-sm" />
-          <Trash2 v-else class="w-4 h-4 mr-1" />
+          <span v-if="isDeleting" class="loading loading-spinner loading-xs" />
+          <Trash2 v-else class="btn-icon" aria-hidden="true" />
           {{ isZh ? '删除' : 'Delete' }}
         </button>
       </template>
     </AppDialog>
 
-    <!-- Empty state -->
-    <div v-if="filteredIdentities.length === 0" class="card bg-base-200 p-12 text-center">
-      <User class="w-16 h-16 mx-auto mb-4 opacity-30" />
-      <p class="text-lg opacity-60">{{ isZh ? '暂无身份' : 'No identities found' }}</p>
-    </div>
-
-    <!-- Identities table -->
-    <div v-else class="overflow-x-auto">
-      <table class="table table-zebra">
+    <div v-if="filteredIdentities.length" class="table-wrap">
+      <table class="ledger">
         <thead>
           <tr>
             <th>{{ isZh ? '身份' : 'Identity' }}</th>
@@ -311,40 +307,36 @@ async function confirmDelete() {
         <tbody>
           <tr v-for="identity in filteredIdentities" :key="identity.id">
             <td>
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg overflow-hidden bg-base-300 flex items-center justify-center">
-                  <img v-if="identity.icon" :src="identity.icon" :alt="identity.name" class="w-full h-full object-cover">
-                  <component v-else :is="getTypeIcon(identity.type)" class="w-4 h-4 opacity-60" />
-                </div>
-                <div>
-                  <p class="font-bold text-sm">{{ identity.name }}</p>
-                  <p v-if="identity.description" class="text-xs opacity-60 truncate max-w-xs">{{ identity.description }}</p>
-                </div>
+              <div class="entity">
+                <span class="entity-mark">
+                  <img v-if="identity.icon" :src="identity.icon" :alt="identity.name">
+                  <component :is="getTypeIcon(identity.type)" v-else class="entity-icon" aria-hidden="true" />
+                </span>
+                <span class="entity-text">
+                  <span class="entity-name">{{ identity.name }}</span>
+                  <span v-if="identity.description" class="entity-sub">{{ identity.description }}</span>
+                </span>
               </div>
             </td>
             <td>
-              <span class="badge badge-sm" :class="identity.type === 'organization' ? 'badge-primary' : 'badge-ghost'">
-                {{ getTypeLabel(identity.type) }}
+              <span class="chip">{{ getTypeLabel(identity.type) }}</span>
+            </td>
+            <td>
+              <span class="entity-text">
+                <span>{{ identity.user?.name || (isZh ? '未知' : 'Unknown') }}</span>
+                <span class="entity-sub">{{ identity.user?.email }}</span>
               </span>
             </td>
-            <td>
-              <div>
-                <p class="text-sm">{{ identity.user?.name || (isZh ? '未知' : 'Unknown') }}</p>
-                <p class="text-xs opacity-60">{{ identity.user?.email }}</p>
-              </div>
+            <td class="mono">
+              {{ new Date(identity.created).toLocaleDateString(isZh ? 'zh-CN' : 'en-US') }}
             </td>
             <td>
-              <span class="text-sm opacity-60">
-                {{ new Date(identity.created).toLocaleDateString(isZh ? 'zh-CN' : 'en-US') }}
-              </span>
-            </td>
-            <td>
-              <div class="flex gap-1">
-                <button class="btn btn-ghost btn-xs" @click="startEdit(identity)">
-                  <Edit class="w-3 h-3" />
+              <div class="row-actions">
+                <button class="btn btn-xs" :title="isZh ? '编辑' : 'Edit'" @click="startEdit(identity)">
+                  <Edit class="btn-icon" aria-hidden="true" />
                 </button>
-                <button class="btn btn-ghost btn-xs text-error" @click="deletingIdentity = identity">
-                  <Trash2 class="w-3 h-3" />
+                <button class="btn btn-xs" :title="isZh ? '删除' : 'Delete'" @click="deletingIdentity = identity">
+                  <Trash2 class="btn-icon" aria-hidden="true" />
                 </button>
               </div>
             </td>
@@ -352,5 +344,203 @@ async function confirmDelete() {
         </tbody>
       </table>
     </div>
+
+    <p v-else class="empty">
+      {{ searchQuery
+        ? (isZh ? '没有匹配的身份。清空搜索以查看全部。' : 'No identities match that search. Clear the search to see them all.')
+        : (isZh ? '暂无身份。' : 'No identities yet.')
+      }}
+    </p>
   </div>
 </template>
+
+<style scoped>
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.admin-h {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.admin-sub {
+  max-width: 40rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.btn-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.search {
+  position: relative;
+  max-width: 22rem;
+  margin-bottom: 1.25rem;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--color-faint);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search-input {
+  padding-left: 2.15rem;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.inline-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  vertical-align: -1px;
+  margin-right: 0.25rem;
+}
+
+.picker {
+  position: relative;
+}
+
+.picker-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  left: 0;
+  z-index: 10;
+  max-height: 10rem;
+  margin-top: 0.25rem;
+  overflow-y: auto;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-input);
+  background: var(--color-base-200);
+}
+
+.picker-option {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  font-size: 0.8125rem;
+  text-align: left;
+  cursor: pointer;
+}
+
+.picker-option:hover {
+  background: color-mix(in oklab, var(--color-base-300) 55%, transparent);
+}
+
+.picker-name {
+  font-weight: 600;
+}
+
+.picker-email {
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.picker-current {
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.dialog-copy {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.entity {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 11rem;
+}
+
+.entity-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--radius-mark);
+  background: var(--color-base-300);
+}
+
+.entity-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.entity-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--color-faint);
+}
+
+.entity-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+}
+
+.entity-name {
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+
+.entity-sub {
+  overflow: hidden;
+  font-size: 0.75rem;
+  color: var(--color-faint);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.3rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.5rem 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+</style>

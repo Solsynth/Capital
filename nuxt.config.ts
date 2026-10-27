@@ -71,6 +71,20 @@ export default defineNuxtConfig({
         global: true,
       },
       {
+        name: "IBM Plex Mono",
+        src: "/fonts/IBMPlexMono-Regular.woff2",
+        weight: 400,
+        style: "normal",
+        global: true,
+      },
+      {
+        name: "IBM Plex Mono",
+        src: "/fonts/IBMPlexMono-Medium.woff2",
+        weight: 500,
+        style: "normal",
+        global: true,
+      },
+      {
         name: "Noto Sans SC",
         src: "/fonts/NotoSansSC-Regular.woff2",
         weight: 400,
@@ -186,7 +200,7 @@ export default defineNuxtConfig({
     head: {
       script: [
         {
-          innerHTML: `(function(){try{var t=localStorage.getItem('theme')||'auto';var d=t==='auto'?window.matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light':t;document.documentElement.setAttribute('data-theme',d)}catch(e){}})()`,
+          innerHTML: `(function(){try{var p=localStorage.getItem('theme')||'auto';var d=p==='auto'?(window.matchMedia('(prefers-color-scheme: light)').matches?'light':'dark'):p;document.documentElement.setAttribute('data-theme',d==='light'?'stargate-light':'stargate')}catch(e){}})()`,
           tagPosition: "head",
         },
         {
@@ -205,6 +219,12 @@ gtag('js', new Date());
 gtag('config', 'G-61P6XB5BQS');`,
           tagPosition: "head",
         },
+      ],
+      meta: [
+        // Browser chrome follows the chosen scheme instead of staying dark.
+        { name: "theme-color", content: "#171618", media: "(prefers-color-scheme: dark)" },
+        { name: "theme-color", content: "#faf7f9", media: "(prefers-color-scheme: light)" },
+        { name: "color-scheme", content: "dark light" },
       ],
       link: [
         {

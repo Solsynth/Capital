@@ -1,10 +1,5 @@
 <script setup lang="ts">
-import {
-  ArrowLeft,
-  Eye,
-  Calendar,
-  Paperclip,
-} from '@lucide/vue'
+import { ArrowLeft, Eye, Paperclip } from '@lucide/vue'
 import { renderMarkdown } from '~/utils/marked'
 
 const { t, locale } = useI18n()
@@ -15,7 +10,7 @@ const lang = computed(() => locale.value)
 const id = computed(() => route.params.id as string)
 const isZh = computed(() => lang.value === 'zh')
 
-const { getPostById, formatDate, getAttachmentUrl } = useApi()
+const { getPostById, getAttachmentUrl } = useApi()
 
 if (!id.value) {
   navigateTo(localePath('/updates'))
@@ -26,6 +21,19 @@ const { data: post } = await useAsyncData(`update-${id.value}`, () => getPostByI
 if (!post.value) {
   navigateTo(localePath('/updates'))
 }
+
+// A fixed-width stamp: the byline's date reads like a ledger cell.
+const publishedStamp = computed(() => {
+  if (!post.value?.published_at) return ''
+  const date = new Date(post.value.published_at)
+  if (Number.isNaN(date.getTime())) return ''
+  return new Intl.DateTimeFormat(lang.value === 'zh' ? 'zh-CN' : 'en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date)
+})
+
 
 function getDisplayTitle(item: { title: string, content: string }): string | null {
   if (item.title?.trim())
@@ -83,172 +91,293 @@ defineOgImage('UniOgImage', {
 
 <template>
   <div v-if="post">
-    <section class="border-b border-base-200 px-4 py-12 md:py-16">
-      <div class="container mx-auto max-w-3xl">
-        <NuxtLink
-          :to="localePath('/updates')"
-          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
-        >
-          <ArrowLeft class="h-4 w-4" />
+    <header class="band">
+      <div class="shell">
+        <NuxtLink :to="localePath('/updates')" class="back">
+          <ArrowLeft class="back-icon" aria-hidden="true" />
           {{ t('updates.backToUpdates') }}
         </NuxtLink>
 
-        <h1
-          v-if="displayTitle"
-          class="mb-6 text-3xl font-extrabold leading-tight tracking-tight md:text-4xl lg:text-5xl"
-        >
+        <h1 v-if="displayTitle" class="title post-title">
           {{ displayTitle }}
         </h1>
 
-        <div class="flex items-center gap-3">
-          <div v-if="post.publisher?.picture" class="avatar">
-            <div class="h-10 w-10 rounded-full">
-              <img
-                :src="getAttachmentUrl(post.publisher.picture.id)"
-                :alt="post.publisher.nick"
-                class="h-full w-full rounded-full object-cover"
-              >
-            </div>
-          </div>
-          <div v-else class="avatar avatar-placeholder">
-            <div class="h-10 w-10 rounded-full bg-primary text-primary-content">
-              <span class="text-sm font-medium">
-                {{ getInitials(post.publisher?.nick || 'Unknown') }}
-              </span>
-            </div>
-          </div>
-          <div>
-            <span class="block font-semibold">
-              {{ post.publisher?.nick || 'Unknown' }}
-            </span>
-            <span class="flex items-center gap-1 text-sm text-base-content/50">
-              <Calendar class="h-3.5 w-3.5" />
-              {{ formatDate(post.published_at) }}
-              <span
-                v-if="post.edited_at"
-                class="ml-1 italic"
-              >
-                ({{ isZh ? '已编辑' : 'edited' }})
-              </span>
-            </span>
-          </div>
+        <div class="byline">
+          <span v-if="post.publisher?.picture" class="byline-avatar">
+            <img
+              :src="getAttachmentUrl(post.publisher.picture.id)"
+              :alt="''"
+              loading="lazy"
+              decoding="async"
+            >
+          </span>
+          <span v-else class="byline-avatar byline-initials" aria-hidden="true">
+            {{ getInitials(post.publisher?.nick || 'Unknown') }}
+          </span>
+
+          <span class="byline-name">{{ post.publisher?.nick || 'Unknown' }}</span>
+          <span class="byline-sep" aria-hidden="true">/</span>
+          <time class="mono byline-date" :datetime="post.published_at">{{ publishedStamp }}</time>
+          <template v-if="post.edited_at">
+            <span class="byline-sep" aria-hidden="true">/</span>
+            <span class="byline-edited">{{ isZh ? '已编辑' : 'edited' }}</span>
+          </template>
         </div>
       </div>
-    </section>
+    </header>
 
-    <section class="px-4 py-10">
-      <article class="container mx-auto max-w-3xl">
-        <div v-if="post.attachments.length > 0" class="mb-8">
-          <div v-if="post.attachments.length === 1">
-            <div
+    <div class="shell body">
+      <article class="post">
+        <div v-if="post.attachments.length > 0" class="attachments">
+          <figure v-if="post.attachments.length === 1" class="attachment-single">
+            <img
               v-if="isImageAttachment(post.attachments[0])"
-              class="overflow-hidden rounded-lg border border-base-200"
+              :src="getAttachmentUrl(post.attachments[0].id)"
+              :alt="post.attachments[0].name"
+              loading="lazy"
+              decoding="async"
             >
-              <img
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                :alt="post.attachments[0].name"
-                class="max-h-[500px] w-full bg-base-200 object-contain"
-              >
-            </div>
-            <div
+            <video
               v-else-if="isVideoAttachment(post.attachments[0])"
-              class="overflow-hidden rounded-lg border border-base-200"
-            >
-              <video
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                class="max-h-[500px] w-full"
-                controls
-                preload="metadata"
-              />
+              :src="getAttachmentUrl(post.attachments[0].id)"
+              controls
+              preload="metadata"
+            />
+            <div v-else-if="isAudioAttachment(post.attachments[0])" class="attachment-audio">
+              <audio :src="getAttachmentUrl(post.attachments[0].id)" class="w-full" controls preload="metadata" />
             </div>
-            <div
-              v-else-if="isAudioAttachment(post.attachments[0])"
-              class="rounded-lg border border-base-200 bg-base-200/40 p-4"
-            >
-              <audio
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                class="w-full"
-                controls
-                preload="metadata"
-              />
+            <div v-else class="attachment-file">
+              <Paperclip class="file-icon" aria-hidden="true" />
+              <span>{{ post.attachments[0].name }}</span>
             </div>
-            <div
-              v-else
-              class="rounded-lg border border-base-200 bg-base-200/40 p-4"
-            >
-              <div class="flex items-center gap-3">
-                <Paperclip class="h-5 w-5 text-base-content/50" />
-                <span class="text-sm">{{ post.attachments[0].name }}</span>
-              </div>
-            </div>
-          </div>
+          </figure>
 
-          <div v-else class="grid grid-cols-2 gap-3 md:grid-cols-3">
-            <div
-              v-for="attachment in post.attachments"
-              :key="attachment.id"
-              class="overflow-hidden rounded-lg border border-base-200 bg-base-200"
-            >
+          <div v-else class="attachment-grid">
+            <figure v-for="attachment in post.attachments" :key="attachment.id" class="attachment-cell">
               <img
                 v-if="isImageAttachment(attachment)"
                 :src="getAttachmentUrl(attachment.id)"
                 :alt="attachment.name"
-                class="aspect-video w-full object-cover"
+                loading="lazy"
+                decoding="async"
               >
               <video
                 v-else-if="isVideoAttachment(attachment)"
                 :src="getAttachmentUrl(attachment.id)"
-                class="aspect-video w-full object-cover"
                 controls
                 preload="metadata"
               />
-              <div
-                v-else-if="isAudioAttachment(attachment)"
-                class="p-3"
-              >
-                <audio
-                  :src="getAttachmentUrl(attachment.id)"
-                  class="w-full"
-                  controls
-                  preload="metadata"
-                />
+              <div v-else-if="isAudioAttachment(attachment)" class="attachment-audio">
+                <audio :src="getAttachmentUrl(attachment.id)" class="w-full" controls preload="metadata" />
               </div>
-              <div
-                v-else
-                class="flex items-center gap-2 p-3"
-              >
-                <Paperclip class="h-4 w-4 text-base-content/50" />
-                <span class="truncate text-xs">{{ attachment.name }}</span>
+              <div v-else class="attachment-file">
+                <Paperclip class="file-icon" aria-hidden="true" />
+                <span class="truncate">{{ attachment.name }}</span>
               </div>
-            </div>
+            </figure>
           </div>
         </div>
 
-        <div
-          class="prose prose-base mb-10 max-w-none md:prose-lg prose-headings:tracking-tight prose-a:text-primary"
-          v-html="contentHtml"
-        />
+        <div class="prose post-prose" v-html="contentHtml" />
 
-        <UpdateReactions :post-id="post.id" />
+        <UpdateReactions :post-id="post.id" class="post-extras" />
 
-        <footer class="mt-8 border-t border-base-200 pt-6">
-          <div class="flex flex-wrap items-center gap-5 text-sm text-base-content/50">
-            <div class="flex items-center gap-2">
-              <Eye class="h-4 w-4" />
-              <span>{{ post.views_unique }} {{ t('updates.uniqueViews') }}</span>
-            </div>
-            <div
-              v-if="post.attachments.length > 0"
-              class="flex items-center gap-2"
-            >
-              <Paperclip class="h-4 w-4" />
-              <span>{{ t('home.updates.attachments', { count: post.attachments.length }) }}</span>
-            </div>
-          </div>
-        </footer>
+        <div class="post-foot">
+          <span class="post-foot-item">
+            <Eye class="foot-icon" aria-hidden="true" />
+            {{ post.views_unique }} {{ t('updates.uniqueViews') }}
+          </span>
+          <span v-if="post.attachments.length > 0" class="post-foot-item">
+            <Paperclip class="foot-icon" aria-hidden="true" />
+            {{ post.attachments.length === 1 ? t('home.updates.attachments_one') : t('home.updates.attachments_other', { count: post.attachments.length }) }}
+          </span>
+        </div>
 
-        <UpdateReplies :post-id="post.id" class="mt-10" />
+        <UpdateReplies :post-id="post.id" class="post-extras" />
       </article>
-    </section>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.band {
+  padding-block: 2.5rem 2rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-faint);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--color-base-content);
+}
+
+.back-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.post-title {
+  margin: 0;
+  max-width: 40rem;
+  font-size: clamp(1.75rem, 3.5vw, 2.5rem);
+}
+
+.byline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.25rem;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.byline-avatar {
+  display: flex;
+  width: 1.5rem;
+  height: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-base-300);
+}
+
+.byline-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.byline-initials {
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  color: var(--color-dim);
+}
+
+.byline-name {
+  color: var(--color-dim);
+  font-weight: 600;
+}
+
+.byline-sep {
+  color: var(--color-line);
+}
+
+.body {
+  padding-block: 2.25rem 0;
+}
+
+.post {
+  max-width: 42rem;
+}
+
+.attachments {
+  margin-bottom: 2rem;
+}
+
+.attachment-single {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-card);
+  background: var(--color-base-200);
+}
+
+.attachment-single img,
+.attachment-single video {
+  display: block;
+  width: 100%;
+  max-height: 32rem;
+  object-fit: contain;
+}
+
+.attachment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.attachment-cell {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-chip);
+  background: var(--color-base-200);
+}
+
+.attachment-cell img,
+.attachment-cell video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+}
+
+.attachment-audio {
+  padding: 0.75rem;
+}
+
+.attachment-file {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+
+.file-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  flex-shrink: 0;
+  color: var(--color-faint);
+}
+
+.post-prose {
+  max-width: none;
+}
+
+.post-extras {
+  margin-top: 1.75rem;
+}
+
+.post-foot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+  margin-top: 1.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.post-foot-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.foot-icon {
+  width: 0.8125rem;
+  height: 0.8125rem;
+}
+
+@media (min-width: 768px) {
+  .attachment-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+</style>

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { FileCheck, CheckCircle, Loader2, ArrowLeft, ScrollText } from '@lucide/vue'
+import { FileCheck, CheckCircle, Loader2 } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
@@ -56,91 +56,222 @@ async function handleSign() {
 </script>
 
 <template>
-  <div class="min-h-[calc(100dvh-200px)]">
-    <!-- Hero -->
-    <div class="bg-gradient-to-br from-primary/5 via-secondary/5 to-accent/5 border-b border-base-content/5">
-      <div class="container mx-auto max-w-3xl px-6 py-12">
-        <NuxtLink :to="localePath('/contributions')" class="inline-flex items-center gap-1.5 text-sm opacity-60 hover:opacity-100 transition-opacity mb-6">
-          <ArrowLeft class="w-3.5 h-3.5" />
+  <div>
+    <header class="band">
+      <div class="shell">
+        <NuxtLink :to="localePath('/contributions')" class="back">
           {{ t('contributions.backToLeaderboard') }}
         </NuxtLink>
-        <div class="flex items-center gap-4">
-          <div class="w-14 h-14 rounded-2xl bg-primary/10 flex items-center justify-center">
-            <ScrollText class="w-7 h-7 text-primary" />
-          </div>
-          <div>
-            <h1 class="text-2xl font-bold">{{ t('cla.title') }}</h1>
-            <p class="text-sm opacity-60 mt-0.5">{{ t('cla.description') }}</p>
-          </div>
-        </div>
+        <h1 class="title page-title">
+          {{ t('cla.title') }}
+        </h1>
+        <p class="lede page-lede">
+          {{ t('cla.description') }}
+        </p>
       </div>
-    </div>
+    </header>
 
-    <div class="container mx-auto max-w-3xl px-6 py-10">
-      <!-- Already signed -->
-      <div v-if="status?.claSigned" class="card bg-success/5 border border-success/20 p-8 text-center">
-        <CheckCircle class="w-12 h-12 mx-auto mb-4 text-success" />
-        <h2 class="text-xl font-bold mb-2">{{ t('cla.alreadySigned') }}</h2>
-        <p class="text-sm opacity-60 mb-6">{{ t('cla.alreadySignedDesc') }}</p>
-        <NuxtLink :to="localePath('/contributions/me')" class="btn btn-primary btn-sm">
+    <div class="shell body">
+      <section v-if="status?.claSigned" class="plate block">
+        <h2 class="block-title">
+          <CheckCircle class="block-icon icon-success" aria-hidden="true" />
+          {{ t('cla.alreadySigned') }}
+        </h2>
+        <p class="block-note">
+          {{ t('cla.alreadySignedDesc') }}
+        </p>
+        <NuxtLink :to="localePath('/contributions/me')" class="btn block-action">
           {{ t('contributions.viewProfile') }}
         </NuxtLink>
-      </div>
+      </section>
 
-      <!-- Not logged in -->
-      <div v-else-if="!session?.user" class="card bg-base-200/60 border border-base-content/5 p-8 text-center">
-        <FileCheck class="w-12 h-12 mx-auto mb-4 text-base-content/20" />
-        <h2 class="text-xl font-bold mb-2">{{ t('cla.signInRequired') }}</h2>
-        <p class="text-sm opacity-60 mb-6">{{ t('cla.signInDescription') }}</p>
-        <NuxtLink :to="localePath('/auth/login')" class="btn btn-primary btn-sm">
-          {{ t('auth.login') }}
+      <section v-else-if="!session?.user" class="plate block">
+        <h2 class="block-title">
+          <FileCheck class="block-icon" aria-hidden="true" />
+          {{ t('cla.signInRequired') }}
+        </h2>
+        <p class="block-note">
+          {{ t('cla.signInDescription') }}
+        </p>
+        <NuxtLink :to="localePath('/auth/login')" class="btn btn-primary block-action">
+          {{ t('login.title') }}
         </NuxtLink>
-      </div>
+      </section>
 
-      <!-- CLA content + sign -->
-      <template v-else>
-        <div class="card bg-base-100 border border-base-content/10 shadow-sm overflow-hidden">
-          <!-- CLA body -->
-          <div
-            ref="claBody"
-            class="prose prose-sm max-w-none p-6 md:p-8 max-h-[60vh] overflow-y-auto border-b border-base-content/5"
-            @scroll="onScroll"
-          >
-            <ContentRenderer v-if="claContent" :value="claContent" />
-            <div v-else class="text-center py-8 opacity-50">
-              <Loader2 class="w-5 h-5 animate-spin inline" />
-              <p class="text-sm mt-2">{{ t('cla.loading') }}</p>
-            </div>
-          </div>
+      <section v-else class="plate block reading">
+        <div
+          ref="claBody"
+          class="prose clause"
+          @scroll="onScroll"
+        >
+          <ContentRenderer v-if="claContent" :value="claContent" />
+          <p v-else class="clause-loading">
+            <Loader2 class="block-icon spin" aria-hidden="true" />
+            {{ t('cla.loading') }}
+          </p>
+        </div>
 
-          <!-- Sign action -->
-          <div class="p-6 md:p-8 bg-base-200/30">
-            <!-- Error -->
-            <div v-if="error" class="alert alert-error mb-4 text-sm">
-              <span>{{ error }}</span>
-            </div>
+        <div class="sign">
+          <p v-if="error" class="note note-error sign-error">
+            {{ error }}
+          </p>
 
-            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <p class="text-sm font-medium">{{ t('cla.readyToSign') }}</p>
-                <p class="text-xs opacity-50 mt-0.5">
-                  {{ scrolledToBottom ? t('cla.scrollComplete') : t('cla.scrollPrompt') }}
-                </p>
-              </div>
-              <button
-                class="btn btn-primary btn-sm"
-                :disabled="!scrolledToBottom || signing || signed"
-                @click="handleSign"
-              >
-                <Loader2 v-if="signing" class="w-4 h-4 animate-spin" />
-                <CheckCircle v-else-if="signed" class="w-4 h-4" />
-                <FileCheck v-else class="w-4 h-4" />
-                {{ signed ? t('cla.signed') : t('cla.signButton') }}
-              </button>
+          <div class="sign-row">
+            <div>
+              <p class="sign-title">
+                {{ t('cla.readyToSign') }}
+              </p>
+              <p class="sign-note">
+                {{ scrolledToBottom ? t('cla.scrollComplete') : t('cla.scrollPrompt') }}
+              </p>
             </div>
+            <button
+              class="btn btn-primary"
+              :disabled="!scrolledToBottom || signing || signed"
+              @click="handleSign"
+            >
+              <Loader2 v-if="signing" class="block-icon spin" aria-hidden="true" />
+              <CheckCircle v-else-if="signed" class="block-icon" aria-hidden="true" />
+              <FileCheck v-else class="block-icon" aria-hidden="true" />
+              {{ signed ? t('cla.signed') : t('cla.signButton') }}
+            </button>
           </div>
         </div>
-      </template>
+      </section>
     </div>
   </div>
 </template>
+
+<style scoped>
+.band {
+  padding-block: 3.5rem 2.5rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.back {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--color-faint);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.back:hover {
+  color: var(--color-base-content);
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.page-lede {
+  margin: 0.75rem 0 0;
+}
+
+.body {
+  padding-block: 2.5rem 4rem;
+}
+
+.block {
+  max-width: 44rem;
+  padding: 1.5rem;
+}
+
+.block-title {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.5rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  color: var(--color-base-content);
+}
+
+.block-icon {
+  width: 1rem;
+  height: 1rem;
+  flex: none;
+  color: var(--color-faint);
+}
+
+.icon-success {
+  color: var(--color-success);
+}
+
+.block-note {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-dim);
+}
+
+.block-action {
+  margin-top: 1.25rem;
+}
+
+/* The clause scrolls inside the plate; the sign action is separated by
+   spacing, not by a second border. */
+.reading {
+  padding: 0;
+  overflow: hidden;
+}
+
+.clause {
+  max-height: 60vh;
+  margin: 0;
+  padding: 1.5rem;
+  overflow-y: auto;
+}
+
+.clause-loading {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.sign {
+  padding: 1.5rem;
+  background: color-mix(in oklab, var(--color-base-100) 45%, transparent);
+}
+
+.sign-error {
+  margin: 0 0 1rem;
+}
+
+.sign-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.sign-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+
+.sign-note {
+  margin: 0.2rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.spin {
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

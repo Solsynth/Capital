@@ -21,54 +21,78 @@ const uniqueNotices = computed(() => [...new Set(listings.value.map((listing) =>
 </script>
 
 <template>
-  <div v-if="listings.length">
-    <p class="store-label">{{ t("productDownloadsCta.appStore") }}</p>
-    <div class="mt-3.5 flex flex-wrap items-start gap-6">
-      <div v-for="listing in listings" :key="listing.label" class="max-w-xs">
-        <a
-          :href="listing.url"
-          target="_blank"
-          rel="noopener noreferrer"
-          :aria-label="listing.label"
-          class="inline-flex rounded-lg transition-opacity hover:opacity-85 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
+  <div v-if="listings.length" class="listings">
+    <p class="listings-label">
+      {{ t('productDownloadsCta.appStore') }}
+    </p>
+    <div class="listings-row">
+      <a
+        v-for="listing in listings"
+        :key="listing.label"
+        :href="listing.url"
+        target="_blank"
+        rel="noopener noreferrer"
+        :aria-label="listing.label"
+        class="listing-link"
+      >
+        <img
+          :src="listing.src.light"
+          :alt="listing.label"
+          :width="listing.src.width"
+          :height="listing.src.height"
+          class="store-badge app-store-badge-light"
         >
-          <img
-            :src="listing.src.light"
-            :alt="listing.label"
-            :width="listing.src.width"
-            :height="listing.src.height"
-            class="store-badge app-store-badge-light"
-          />
-          <img
-            :src="listing.src.dark"
-            :alt="listing.label"
-            :width="listing.src.width"
-            :height="listing.src.height"
-            class="store-badge app-store-badge-dark"
-          />
-        </a>
-      </div>
+        <img
+          :src="listing.src.dark"
+          :alt="listing.label"
+          :width="listing.src.width"
+          :height="listing.src.height"
+          class="store-badge app-store-badge-dark"
+        >
+      </a>
     </div>
-    <p v-for="notice in uniqueNotices" :key="notice" class="mt-3 max-w-2xl text-xs leading-relaxed opacity-60">
+    <p v-for="notice in uniqueNotices" :key="notice" class="listings-note">
       {{ notice }}
     </p>
   </div>
 </template>
 
 <style scoped>
-.store-label {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  opacity: 0.5;
+.listings-label {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-faint);
 }
 
-/* Display is owned by the unscoped theme block below; this only sizes the badge. */
+.listings-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 0.75rem;
+}
+
+.listing-link {
+  display: inline-flex;
+  border-radius: var(--radius-mark);
+}
+
+.listing-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 3px;
+}
+
 .store-badge {
-  height: 2.75rem;
+  height: 2.5rem;
   width: auto;
+}
+
+.listings-note {
+  margin: 0.6rem 0 0;
+  max-width: 34rem;
+  font-size: 0.75rem;
+  line-height: 1.55;
+  color: var(--color-faint);
 }
 </style>
 
@@ -86,11 +110,11 @@ const uniqueNotices = computed(() => [...new Set(listings.value.map((listing) =>
   display: none;
 }
 
-[data-theme="dark"] .app-store-badge-light {
+[data-theme='stargate'] .app-store-badge-light {
   display: none;
 }
 
-[data-theme="dark"] .app-store-badge-dark {
+[data-theme='stargate'] .app-store-badge-dark {
   display: block;
 }
 </style>

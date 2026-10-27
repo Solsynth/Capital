@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import HeroSection from '../components/Landing/HeroSection.vue'
-import ProductsSection from '../components/Landing/ProductsSection.vue'
 import StatsSection from '../components/Landing/StatsSection.vue'
+import ProductsSection from '../components/Landing/ProductsSection.vue'
 import UpdatesSection from '../components/Landing/UpdatesSection.vue'
 
 const { t, locale } = useI18n()
@@ -55,6 +55,8 @@ const { data: products } = await useAsyncData(`products-home-${lang.value}`, asy
     tags: p.tags || [],
     series: p.series,
     color: p.color,
+    version: p.version,
+    releasedDate: p.releasedDate,
   }))
 })
 </script>
@@ -64,23 +66,6 @@ const { data: products } = await useAsyncData(`products-home-${lang.value}`, asy
     <HeroSection />
     <StatsSection />
     <ProductsSection :products="products || []" />
-    <ClientOnly>
-      <UpdatesSection />
-      <template #fallback>
-        <div class="px-4 py-16">
-          <div class="container mx-auto space-y-4">
-            <div class="h-8 w-48 animate-pulse rounded bg-base-200" />
-            <div class="h-4 w-72 animate-pulse rounded bg-base-200" />
-            <div class="mt-6 flex gap-4 overflow-hidden">
-              <div
-                v-for="n in 3"
-                :key="n"
-                class="h-56 w-80 shrink-0 animate-pulse rounded-box border border-base-200 bg-base-200/60"
-              />
-            </div>
-          </div>
-        </div>
-      </template>
-    </ClientOnly>
+    <UpdatesSection />
   </div>
 </template>

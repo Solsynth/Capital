@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import {
   Globe,
-  CheckCircle,
   ExternalLink,
   Search,
   Edit,
   Check,
+  RefreshCw,
 } from '@lucide/vue'
 
 const { locale } = useI18n()
@@ -106,31 +106,40 @@ async function saveEdit() {
 
 <template>
   <div>
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold">{{ isZh ? '站点管理' : 'Sites' }}</h2>
-      <button class="btn btn-outline btn-sm" @click="refresh()">{{ isZh ? '刷新' : 'Refresh' }}</button>
+    <div class="head">
+      <div>
+        <h2 class="admin-h">
+          {{ isZh ? '站点管理' : 'Sites' }}
+        </h2>
+        <p class="admin-sub">
+          {{ isZh ? '已备案的站点及其认证状态。' : 'Certified sites and their review state.' }}
+        </p>
+      </div>
+      <button class="btn btn-sm" @click="refresh()">
+        <RefreshCw class="btn-icon" aria-hidden="true" />
+        {{ isZh ? '刷新' : 'Refresh' }}
+      </button>
     </div>
 
-    <div class="relative max-w-md mb-6">
-      <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" />
+    <div class="search">
+      <Search class="search-icon" aria-hidden="true" />
       <input
         v-model="searchQuery"
-        type="text"
-        class="input input-bordered w-full pl-10"
-        :placeholder="isZh ? '搜索站点...' : 'Search sites...'"
+        type="search"
+        class="input search-input"
+        :placeholder="isZh ? '搜索站点…' : 'Search sites…'"
       >
     </div>
 
-    <!-- Edit Dialog -->
     <AppDialog
       :open="!!editingSite"
-      :title="isZh ? '编辑站点' : 'Edit Site'"
+      :title="isZh ? '编辑站点' : 'Edit site'"
       max-width="max-w-md"
       @update:open="!$event && (editingSite = null)"
     >
-      <div class="space-y-4">
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '图标' : 'Icon' }}</span></label>
+      <div class="form-stack">
+        <div>
+          <span class="field-label">{{ isZh ? '图标' : 'Icon' }}</span>
           <IconUpload
             :current-icon="editForm.iconUrl"
             folder="icp/sites"
@@ -138,51 +147,46 @@ async function saveEdit() {
             @removed="handleIconRemoved"
           />
         </div>
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '站点名称' : 'Site Name' }} *</span></label>
-          <input v-model="editForm.name" type="text" class="input input-bordered w-full" required>
-        </div>
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '域名' : 'Domain' }} *</span></label>
-          <input v-model="editForm.domain" type="text" class="input input-bordered w-full" required>
-        </div>
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '网站链接' : 'Site URL' }} *</span></label>
-          <input v-model="editForm.siteUrl" type="url" class="input input-bordered w-full" required>
-        </div>
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '介绍' : 'Description' }}</span></label>
-          <textarea v-model="editForm.description" class="textarea textarea-bordered w-full h-20" />
-        </div>
+        <label>
+          <span class="field-label">{{ isZh ? '站点名称' : 'Site name' }}</span>
+          <input v-model="editForm.name" type="text" class="input" required>
+        </label>
+        <label>
+          <span class="field-label">{{ isZh ? '域名' : 'Domain' }}</span>
+          <input v-model="editForm.domain" type="text" class="input" required>
+        </label>
+        <label>
+          <span class="field-label">{{ isZh ? '网站链接' : 'Site URL' }}</span>
+          <input v-model="editForm.siteUrl" type="url" class="input" required>
+        </label>
+        <label>
+          <span class="field-label">{{ isZh ? '介绍' : 'Description' }}</span>
+          <textarea v-model="editForm.description" class="textarea h-20" />
+        </label>
       </div>
       <template #footer>
-        <button class="btn" @click="editingSite = null">{{ isZh ? '取消' : 'Cancel' }}</button>
+        <button class="btn" @click="editingSite = null">
+          {{ isZh ? '取消' : 'Cancel' }}
+        </button>
         <button
           class="btn btn-primary"
           :disabled="isSaving || !editForm.name || !editForm.domain || !editForm.siteUrl"
           @click="saveEdit"
         >
-          <span v-if="isSaving" class="loading loading-spinner loading-sm" />
-          <Check v-else class="w-4 h-4 mr-1" />
+          <span v-if="isSaving" class="loading loading-spinner loading-xs" />
+          <Check v-else class="btn-icon" aria-hidden="true" />
           {{ isZh ? '保存' : 'Save' }}
         </button>
       </template>
     </AppDialog>
 
-    <!-- Empty state -->
-    <div v-if="filteredSites.length === 0" class="card bg-base-200 p-12 text-center">
-      <Globe class="w-16 h-16 mx-auto mb-4 opacity-30" />
-      <p class="text-lg opacity-60">{{ isZh ? '暂无站点' : 'No sites found' }}</p>
-    </div>
-
-    <!-- Sites table -->
-    <div v-else class="overflow-x-auto">
-      <table class="table table-zebra">
+    <div v-if="filteredSites.length" class="table-wrap">
+      <table class="ledger">
         <thead>
           <tr>
-            <th>{{ isZh ? '站点名称' : 'Site Name' }}</th>
+            <th>{{ isZh ? '站点名称' : 'Site' }}</th>
             <th>{{ isZh ? '域名' : 'Domain' }}</th>
-            <th>{{ isZh ? '备案号' : 'Filling No' }}</th>
+            <th>{{ isZh ? '备案号' : 'Filling no' }}</th>
             <th>{{ isZh ? '状态' : 'Status' }}</th>
             <th>{{ isZh ? '操作' : 'Actions' }}</th>
           </tr>
@@ -190,32 +194,40 @@ async function saveEdit() {
         <tbody>
           <tr v-for="site in filteredSites" :key="site.id">
             <td>
-              <div class="flex items-center gap-3">
-                <div class="w-8 h-8 rounded-lg overflow-hidden bg-base-300 flex items-center justify-center">
-                  <img v-if="site.iconUrl" :src="site.iconUrl" :alt="site.name" class="w-full h-full object-cover">
-                  <Globe v-else class="w-4 h-4 opacity-50" />
-                </div>
-                <div>
-                  <p class="font-bold text-sm">{{ site.name }}</p>
-                  <p v-if="site.description" class="text-xs opacity-60 truncate max-w-xs">{{ site.description }}</p>
-                </div>
+              <div class="entity">
+                <span class="entity-mark">
+                  <img v-if="site.iconUrl" :src="site.iconUrl" :alt="site.name">
+                  <Globe v-else class="entity-icon" aria-hidden="true" />
+                </span>
+                <span class="entity-text">
+                  <span class="entity-name">{{ site.name }}</span>
+                  <span v-if="site.description" class="entity-sub">{{ site.description }}</span>
+                </span>
               </div>
             </td>
-            <td><code class="text-xs">{{ site.domain }}</code></td>
-            <td><code class="text-xs">{{ site.filling_no }}</code></td>
+            <td class="mono">
+              {{ site.domain }}
+            </td>
+            <td class="mono">
+              {{ site.filling_no }}
+            </td>
             <td>
-              <span class="badge badge-sm" :class="site.approved ? 'badge-success' : 'badge-warning'">
-                <CheckCircle v-if="site.approved" class="w-3 h-3 mr-1" />
+              <span class="status" :class="site.approved ? 'status-ok' : 'status-warn'">
+                <span class="dot" aria-hidden="true" />
                 {{ site.approved ? (isZh ? '已认证' : 'Certified') : (isZh ? '待审核' : 'Pending') }}
               </span>
             </td>
             <td>
-              <div class="flex gap-1">
-                <button class="btn btn-ghost btn-xs" @click="startEdit(site)">
-                  <Edit class="w-3 h-3" />
+              <div class="row-actions">
+                <button class="btn btn-xs" :title="isZh ? '编辑' : 'Edit'" @click="startEdit(site)">
+                  <Edit class="btn-icon" aria-hidden="true" />
                 </button>
-                <NuxtLink :to="localePath(`/icp/${site.filling_no}`)" class="btn btn-ghost btn-xs">
-                  <ExternalLink class="w-3 h-3" />
+                <NuxtLink
+                  :to="localePath(`/icp/${site.filling_no}`)"
+                  class="btn btn-xs"
+                  :title="isZh ? '查看' : 'View'"
+                >
+                  <ExternalLink class="btn-icon" aria-hidden="true" />
                 </NuxtLink>
               </div>
             </td>
@@ -223,5 +235,160 @@ async function saveEdit() {
         </tbody>
       </table>
     </div>
+
+    <p v-else class="empty">
+      {{ searchQuery
+        ? (isZh ? '没有匹配的站点。清空搜索以查看全部。' : 'No sites match that search. Clear the search to see them all.')
+        : (isZh ? '暂无站点。' : 'No sites yet.')
+      }}
+    </p>
   </div>
 </template>
+
+<style scoped>
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.admin-h {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.admin-sub {
+  max-width: 40rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.btn-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.search {
+  position: relative;
+  max-width: 22rem;
+  margin-bottom: 1.25rem;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--color-faint);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search-input {
+  padding-left: 2.15rem;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.entity {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 11rem;
+}
+
+.entity-mark {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  overflow: hidden;
+  border-radius: var(--radius-mark);
+  background: var(--color-base-300);
+}
+
+.entity-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.entity-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--color-faint);
+}
+
+.entity-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+}
+
+.entity-name {
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+
+.entity-sub {
+  overflow: hidden;
+  max-width: 16rem;
+  font-size: 0.75rem;
+  color: var(--color-faint);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status .dot {
+  background: currentColor;
+}
+
+.status-ok {
+  color: var(--color-success);
+}
+
+.status-warn {
+  color: var(--color-warning);
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.3rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.5rem 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+</style>

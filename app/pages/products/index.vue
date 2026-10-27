@@ -71,25 +71,17 @@ const { data: allProducts } = await useAsyncData(`products-list-${lang.value}`, 
       tags: p.tags || [],
       series: p.series,
       color: p.color,
+      version: p.version,
+      releasedDate: p.releasedDate,
       averageRating: Number(summary?.average ?? 0) || 0,
       reviewCount: Number(summary?.count ?? 0) || 0,
     }
   })
 })
 
-const seriesMap = computed(() => {
-  const map = new Map<string, typeof allProducts.value>()
-  if (!allProducts.value) return map
-  for (const product of allProducts.value) {
-    const series = product.series
-    if (series) {
-      if (!map.has(series)) {
-        map.set(series, [])
-      }
-      map.get(series)!.push(product)
-    }
-  }
-  return map
+const seriesList = computed(() => {
+  if (!allProducts.value) return []
+  return [...new Set(allProducts.value.map(p => p.series).filter(Boolean))] as string[]
 })
 
 const allTags = computed(() => {
@@ -108,105 +100,102 @@ const filteredProducts = computed(() => {
   }
   return filtered
 })
+
+const filtered = computed(() => Boolean(urlTag.value || urlSeries.value))
+
+// One filter at a time: choosing a tag clears the series and the reverse, so
+// the list never narrows through a combination the page does not show.
+function tagLink(tag: string) {
+  return tag ? `${localePath('/products')}?tag=${encodeURIComponent(tag)}` : localePath('/products')
+}
+
+function seriesLink(series: string) {
+  return series ? `${localePath('/products')}?series=${encodeURIComponent(series)}` : localePath('/products')
+}
 </script>
 
 <template>
   <div>
-    <section class="border-b border-base-200 px-4 py-16 md:py-20">
-      <div class="container mx-auto">
-        <p class="eyebrow mb-3">Solsynth</p>
-        <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
+    <header class="band">
+      <div class="shell">
+        <h1 class="title page-title">
           {{ t('products.title') }}
         </h1>
-        <p class="max-w-2xl text-lg text-base-content/65 md:text-xl">
+        <p class="lede page-lede">
           {{ t('products.subtitle') }}
         </p>
       </div>
-    </section>
+    </header>
 
-    <section class="px-4 py-10">
-      <div class="container mx-auto">
-        <div
-          v-if="seriesMap.size > 0"
-          class="mb-8"
-        >
-          <h2 class="mb-3 text-sm font-semibold text-base-content/60">
-            {{ t('products.series') }}
-          </h2>
-          <div class="flex flex-wrap gap-2">
+    <section class="body">
+      <div class="shell">
+        <div class="filters">
+          <div v-if="seriesList.length" class="filter-row">
+            <span class="filter-label">{{ t('products.series') }}</span>
             <NuxtLink
-              v-for="series in seriesMap.keys()"
-              :key="series"
-              :to="`${localePath('/products')}?series=${encodeURIComponent(series)}`"
-              class="btn btn-sm"
-              :class="urlSeries === series ? 'btn-primary' : 'btn-ghost border border-base-300'"
-            >
-              {{ series }}
-            </NuxtLink>
-          </div>
-        </div>
-
-        <div
-          v-if="allTags.length > 0"
-          class="mb-10"
-        >
-          <h2 class="mb-3 text-sm font-semibold text-base-content/60">
-            {{ t('products.tags') }}
-          </h2>
-          <div class="flex flex-wrap gap-2">
-            <NuxtLink
-              :to="localePath('/products')"
-              class="btn btn-sm"
-              :class="!urlTag && !urlSeries ? 'btn-primary' : 'btn-ghost border border-base-300'"
+              :to="seriesLink('')"
+              class="chip"
+              :class="{ 'is-current': !urlSeries && !urlTag }"
             >
               {{ t('products.all') }}
             </NuxtLink>
             <NuxtLink
+              v-for="series in seriesList"
+              :key="series"
+              :to="seriesLink(series)"
+              class="chip"
+              :class="{ 'is-current': urlSeries === series }"
+            >
+              {{ series }}
+            </NuxtLink>
+          </div>
+
+          <div v-if="allTags.length" class="filter-row">
+            <span class="filter-label">{{ t('products.tags') }}</span>
+            <NuxtLink
               v-for="tag in allTags"
               :key="tag"
-              :to="`${localePath('/products')}?tag=${encodeURIComponent(tag)}`"
-              class="btn btn-sm"
-              :class="urlTag === tag ? 'btn-primary' : 'btn-ghost border border-base-300'"
+              :to="tagLink(tag)"
+              class="chip"
+              :class="{ 'is-current': urlTag === tag }"
             >
               {{ tag }}
+            </NuxtLink>
+            <NuxtLink v-if="filtered" :to="localePath('/products')" class="chip filter-clear">
+              {{ t('products.clearFilter') }}
             </NuxtLink>
           </div>
         </div>
 
-        <div
-          v-if="filteredProducts.length === 0"
-          class="rounded-lg border border-dashed border-base-300 px-6 py-16 text-center"
-        >
-          <p class="mb-4 text-base text-base-content/55">
-            {{ t('products.noProducts') }}
-          </p>
-          <NuxtLink
-            :to="localePath('/')"
-            class="btn btn-primary btn-sm"
-          >
-            {{ lang === 'zh' ? '返回首页' : 'Back to Home' }}
-          </NuxtLink>
+        <div class="list-head">
+          <span class="list-count">{{ filteredProducts.length.toString().padStart(2, '0') }}</span>
+          <span class="list-count-label">{{ t('home.products.count') }}</span>
         </div>
-        <div
-          class="grid grid-cols-1 gap-5"
-        >
-          <ProductCard
-            v-for="(product, i) in filteredProducts"
+
+        <ol v-if="filteredProducts.length" class="list">
+          <ProductRow
+            v-for="product in filteredProducts"
             :key="product.slug"
-            :name="product.title"
+            thumb
+            :slug="product.slug"
+            :title="product.title"
             :description="product.description"
             :icon="product.icon"
             :background="product.background"
-            :url="product.url"
-            :repo="product.repo"
-            :has-page="product.hasPage"
-            :slug="product.slug"
-            :tags="product.tags"
             :series="product.series"
-            :color="product.color"
+            :version="product.version"
+            :released-date="product.releasedDate"
+            :tags="product.tags"
+            :average-rating="product.averageRating"
             :review-count="product.reviewCount"
-            :flip="i % 2 === 1"
           />
+        </ol>
+
+        <div v-else class="empty">
+          <p>{{ t('products.noProducts') }}</p>
+          <NuxtLink v-if="filtered" :to="localePath('/products')" class="btn btn-sm">
+            {{ t('products.clearFilter') }}
+          </NuxtLink>
         </div>
       </div>
     </section>
@@ -214,11 +203,79 @@ const filteredProducts = computed(() => {
 </template>
 
 <style scoped>
-.eyebrow {
+.band {
+  padding-block: 3.5rem 2.5rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.page-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  margin: 0;
+}
+
+.page-lede {
+  margin: 0.75rem 0 0;
+}
+
+.body {
+  padding-block: 2rem 0;
+}
+
+.filters {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.filter-label {
+  margin-right: 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-faint);
+}
+
+.filter-clear {
+  color: var(--color-error);
+  border-color: color-mix(in oklab, var(--color-error) 40%, transparent);
+}
+
+.list-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  margin: 1.75rem 0 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.list-count {
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.5;
+  color: var(--color-dim);
+  font-variant-numeric: tabular-nums;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 3rem 0;
+  border-top: 1px solid var(--color-line);
+  font-size: 0.9375rem;
+  color: var(--color-faint);
 }
 </style>

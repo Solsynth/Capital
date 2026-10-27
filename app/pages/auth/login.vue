@@ -1,6 +1,4 @@
 <script setup lang="ts">
-import { CircleUser, ArrowRight } from '@lucide/vue'
-
 const { t } = useI18n()
 const localePath = useLocalePath()
 
@@ -29,49 +27,104 @@ async function handleSolianSignIn() {
 </script>
 
 <template>
-  <div class="flex min-h-[calc(100dvh-12rem)] items-center justify-center px-4 py-16">
-    <div class="w-full max-w-sm">
-      <div class="mb-8 text-center">
-        <div class="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-lg border border-base-200 bg-base-200/50">
-          <CircleUser class="h-7 w-7 text-base-content/40" />
-        </div>
-        <h1 class="text-2xl font-extrabold tracking-tight md:text-3xl">
-          {{ t('login.title') }}
-        </h1>
-        <p class="mt-2 text-sm text-base-content/60">
-          {{ t('login.subtitle') }}
-        </p>
-      </div>
+  <div class="page">
+    <div class="sheet">
+      <img src="/favicon.png" alt="" class="brand-mark mark" width="40" height="40">
 
-      <div class="rounded-lg border border-base-200 bg-base-100 p-5">
-        <button
-          type="button"
-          class="btn btn-primary w-full gap-2"
-          :disabled="isLoading"
-          @click="handleSolianSignIn"
-        >
-          <img
-            src="/favicon-64.png"
-            alt=""
-            class="h-5 w-5 rounded"
-          >
-          <span
-            v-if="isLoading"
-            class="loading loading-spinner loading-sm"
-          />
-          <template v-else>
-            {{ t('login.solian') }}
-            <ArrowRight class="h-4 w-4" />
-          </template>
-        </button>
+      <h1 class="title page-title">
+        {{ t('login.title') }}
+      </h1>
+      <p class="page-lede">
+        {{ t('login.subtitle') }}
+      </p>
 
-        <p
-          v-if="error"
-          class="mt-4 text-center text-sm text-error"
+      <p v-if="error" class="note note-error">
+        {{ error }}
+      </p>
+
+      <button
+        type="button"
+        class="btn btn-primary login-button"
+        :disabled="isLoading"
+        @click="handleSolianSignIn"
+      >
+        <img
+          src="/favicon-64.png"
+          alt=""
+          class="btn-mark"
         >
-          {{ error }}
-        </p>
-      </div>
+        <span v-if="isLoading" class="spinner" aria-hidden="true" />
+        <span v-else>{{ t('login.solian') }}</span>
+      </button>
     </div>
   </div>
 </template>
+
+<style scoped>
+.page {
+  display: flex;
+  min-height: calc(100dvh - 12rem);
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 1.25rem;
+}
+
+.sheet {
+  width: 100%;
+  max-width: 26rem;
+  padding: 2rem 1.75rem 1.75rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sheet);
+  background: var(--color-base-200);
+  text-align: center;
+}
+
+.mark {
+  display: block;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin: 0 auto 1.25rem;
+  color: var(--color-primary);
+}
+
+.page-title {
+  margin: 0;
+  font-size: 1.375rem;
+}
+
+.page-lede {
+  margin: 0.4rem 0 1.5rem;
+  font-size: 0.9375rem;
+  color: var(--color-faint);
+}
+
+.note {
+  margin: 0 0 1rem;
+  text-align: left;
+}
+
+.login-button {
+  width: 100%;
+}
+
+.btn-mark {
+  width: 1.1rem;
+  height: 1.1rem;
+  border-radius: 4px;
+}
+
+.spinner {
+  width: 0.85rem;
+  height: 0.85rem;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 999px;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

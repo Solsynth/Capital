@@ -39,7 +39,7 @@ const distributionBars = computed(() => {
     { star: 3, count: Number(d.threeStar) || 0 },
     { star: 2, count: Number(d.twoStar) || 0 },
     { star: 1, count: Number(d.oneStar) || 0 },
-  ].map((bar) => ({
+  ].map(bar => ({
     ...bar,
     pct: Math.min(100, (bar.count / total) * 100),
   }))
@@ -47,43 +47,103 @@ const distributionBars = computed(() => {
 </script>
 
 <template>
-  <div class="w-full">
-    <div class="flex items-center gap-5 mb-5">
-      <div class="flex flex-col items-center shrink-0 min-w-16">
-        <span class="text-4xl font-bold leading-none tabular-nums tracking-tight">
-          {{ averageValue.toFixed(1) }}
-        </span>
-        <StarRating
-          :model-value="averageValue"
-          size="sm"
-          readonly
-          class="my-1.5"
-        />
-        <span class="text-xs opacity-50 text-center">
-          {{ t("reviews.summary.count", { count: countValue }) }}
-        </span>
-      </div>
-
-      <div class="flex-1 space-y-1.5 min-w-0">
-        <div
-          v-for="bar in distributionBars"
-          :key="bar.star"
-          class="flex items-center gap-2"
-        >
-          <span class="text-xs opacity-50 w-3 text-right tabular-nums">{{
-            bar.star
-          }}</span>
-          <div class="flex-1 h-1.5 bg-base-300 rounded-full overflow-hidden">
-            <div
-              class="h-full bg-warning rounded-full transition-all duration-300"
-              :style="{ width: `${bar.pct}%` }"
-            />
-          </div>
-          <span class="text-xs opacity-40 w-5 text-right tabular-nums">{{
-            bar.count
-          }}</span>
-        </div>
-      </div>
+  <section class="summary" :aria-label="t('reviews.title')">
+    <div class="score">
+      <span class="score-figure">{{ averageValue.toFixed(1) }}</span>
+      <StarRating :model-value="averageValue" size="sm" readonly class="score-stars" />
+      <span class="score-count">{{ t("reviews.summary.count", { count: countValue }) }}</span>
     </div>
-  </div>
+
+    <dl class="bars">
+      <div v-for="bar in distributionBars" :key="bar.star" class="bar">
+        <dt class="mono bar-star">{{ bar.star }}</dt>
+        <dd class="bar-track">
+          <span class="bar-fill" :style="{ width: `${bar.pct}%` }" />
+          <span class="sr-only">{{ t("reviews.summary.distribution", { count: bar.count, star: bar.star }) }}</span>
+        </dd>
+        <dd class="mono bar-count">{{ bar.count }}</dd>
+      </div>
+    </dl>
+  </section>
 </template>
+
+<style scoped>
+.summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem 2.5rem;
+  padding: 1.25rem 1.5rem;
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-card);
+}
+
+.score {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.2rem;
+  min-width: 7rem;
+}
+
+.score-figure {
+  font-family: var(--font-mono);
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-base-content);
+}
+
+.score-stars {
+  margin-block: 0.15rem;
+}
+
+.score-count {
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.bars {
+  flex: 1;
+  min-width: 11rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  margin: 0;
+}
+
+.bar {
+  display: grid;
+  grid-template-columns: 1rem minmax(0, 1fr) 2rem;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.bar-star {
+  margin: 0;
+  text-align: right;
+  color: var(--color-faint);
+}
+
+.bar-track {
+  position: relative;
+  height: 4px;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--color-base-300);
+}
+
+.bar-fill {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: var(--color-warning);
+}
+
+.bar-count {
+  margin: 0;
+  text-align: right;
+  color: var(--color-faint);
+}
+</style>

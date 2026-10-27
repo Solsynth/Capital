@@ -43,7 +43,6 @@ async function handleRefresh() {
 }
 
 const pictureUrl = computed(() => useSolarFileUrl(solarProfile.value?.profile?.picture))
-const backgroundUrl = computed(() => useSolarFileUrl(solarProfile.value?.profile?.background))
 
 const { status: claStatus, refresh: refreshCla } = useContribution()
 
@@ -74,222 +73,401 @@ useSeoMeta({
 
 <template>
   <div>
-    <section class="border-b border-base-200 px-4 py-12 md:py-16">
-      <div class="container mx-auto max-w-lg">
+    <header class="band">
+      <div class="shell">
         <NuxtLink
           :to="localePath('/')"
-          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
+          class="back"
         >
-          <ArrowLeft class="h-4 w-4" />
+          <ArrowLeft class="back-icon" aria-hidden="true" />
           {{ t('about.backToHome') }}
         </NuxtLink>
 
-        <!-- Cover; avatar overlaps bottom only. Name stays fully below the banner. -->
-        <div class="relative mb-12">
-          <div class="h-28 overflow-hidden rounded-lg border border-base-200">
-            <div
-              v-if="backgroundUrl"
-              class="h-full w-full bg-cover bg-center"
-              :style="{ backgroundImage: `url(${backgroundUrl})` }"
-            />
-            <div
-              v-else
-              class="h-full w-full bg-base-200/60"
-            />
+        <div class="masthead">
+          <div class="avatar">
+            <img
+              v-if="pictureUrl"
+              :src="pictureUrl"
+              :alt="displayName"
+              decoding="async"
+            >
+            <img
+              v-else-if="user?.image"
+              :src="user.image"
+              :alt="displayName"
+              decoding="async"
+            >
+            <CircleUser v-else class="avatar-icon" aria-hidden="true" />
+            <span
+              v-if="user?.emailVerified"
+              class="avatar-badge"
+              :title="t('profile.verified')"
+            >
+              <ShieldCheck class="avatar-badge-icon" aria-hidden="true" />
+            </span>
           </div>
 
-          <div class="absolute bottom-0 left-1 translate-y-1/2">
-            <div class="relative">
-              <img
-                v-if="pictureUrl"
-                :src="pictureUrl"
-                :alt="displayName"
-                class="h-20 w-20 rounded-full border-2 border-base-100 bg-base-200 object-cover"
-              >
-              <img
-                v-else-if="user?.image"
-                :src="user.image"
-                :alt="displayName"
-                class="h-20 w-20 rounded-full border-2 border-base-100 bg-base-200 object-cover"
-              >
-              <div
-                v-else
-                class="flex h-20 w-20 items-center justify-center rounded-full border-2 border-base-100 bg-base-200"
-              >
-                <CircleUser class="h-10 w-10 text-base-content/30" />
-              </div>
-              <div
-                v-if="user?.emailVerified"
-                class="absolute -bottom-0.5 -right-0.5 flex h-6 w-6 items-center justify-center rounded-full border-2 border-base-100 bg-success text-success-content"
-                :title="t('profile.verified')"
-              >
-                <ShieldCheck class="h-3.5 w-3.5" />
-              </div>
+          <div class="masthead-text">
+            <div v-if="solarLoading" class="loading-name">
+              <span class="skeleton" />
             </div>
-          </div>
-        </div>
-
-        <div class="min-w-0">
-          <div
-            v-if="solarLoading"
-            class="flex items-center gap-2 py-1"
-          >
-            <span class="loading loading-spinner loading-xs" />
-          </div>
-          <template v-else>
-            <div class="flex items-center gap-2">
-              <h1 class="truncate text-2xl font-extrabold tracking-tight">
+            <div v-else class="name-line">
+              <h1 class="title page-title">
                 {{ displayName }}
               </h1>
               <button
                 type="button"
-                class="btn btn-ghost btn-xs btn-square shrink-0 text-base-content/50"
+                class="btn btn-ghost btn-xs btn-square refresh"
                 :disabled="refreshing"
+                :aria-label="t('profile.refresh')"
                 :title="t('profile.refresh')"
                 @click="handleRefresh"
               >
-                <span
-                  v-if="refreshing"
-                  class="loading loading-spinner loading-xs"
-                />
-                <RefreshCw
-                  v-else
-                  class="h-3.5 w-3.5"
-                />
+                <span v-if="refreshing" class="spinner" aria-hidden="true" />
+                <RefreshCw v-else class="icon" aria-hidden="true" />
               </button>
             </div>
-            <p
-              v-if="solarProfile?.name"
-              class="mt-0.5 text-sm text-base-content/50"
-            >
+
+            <p v-if="solarProfile?.name" class="mono handle">
               @{{ solarProfile.name }}
             </p>
-          </template>
-        </div>
 
-        <div
-          v-if="solarProfile?.perk_subscription?.is_active"
-          class="mt-3"
-        >
-          <span class="badge badge-sm badge-outline gap-1 border-warning/40 text-warning">
-            <Zap class="h-3 w-3" />
-            {{ solarProfile.perk_subscription.display_name }}
-            · Lv{{ solarProfile.perk_subscription.perk_level }}
-          </span>
+            <p
+              v-if="solarProfile?.perk_subscription?.is_active"
+              class="perk"
+            >
+              <Zap class="icon perk-icon" aria-hidden="true" />
+              {{ solarProfile.perk_subscription.display_name }}
+              · Lv{{ solarProfile.perk_subscription.perk_level }}
+            </p>
+          </div>
         </div>
       </div>
-    </section>
+    </header>
 
-    <section class="px-4 py-10">
-      <div class="container mx-auto max-w-lg">
-        <div class="divide-y divide-base-200 rounded-lg border border-base-200">
-          <!-- Email -->
-          <div class="flex items-center gap-3 px-4 py-4">
-            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-base-200 bg-base-200/50">
-              <Mail class="h-4 w-4 text-base-content/55" />
-            </div>
-            <div class="min-w-0 flex-1">
-              <p class="text-xs text-base-content/45">
+    <div class="body">
+      <div class="shell sections">
+        <section class="plate section">
+          <h2 class="section-label">
+            {{ t('profile.account') }}
+          </h2>
+
+          <dl class="details">
+            <div class="detail">
+              <dt class="detail-label">
+                <Mail class="icon" aria-hidden="true" />
                 {{ t('profile.email') }}
-              </p>
-              <p
-                class="cursor-pointer truncate text-sm transition-all"
-                :class="showEmail ? '' : 'select-none blur-sm'"
-                @click="showEmail = true"
-              >
-                {{ user?.email }}
-              </p>
+              </dt>
+              <dd class="detail-value">
+                <button
+                  type="button"
+                  class="email"
+                  :class="{ 'is-shown': showEmail }"
+                  @click="showEmail = true"
+                >
+                  {{ showEmail ? user?.email : t('profile.revealEmail') }}
+                </button>
+                <span v-if="user?.emailVerified" class="chip chip-verified">
+                  {{ t('profile.verifiedShort') }}
+                </span>
+                <span v-else class="chip chip-pending">
+                  {{ t('profile.unverified') }}
+                </span>
+              </dd>
             </div>
-            <span
-              v-if="user?.emailVerified"
-              class="badge badge-success badge-xs shrink-0"
-            >
-              {{ t('profile.verifiedShort') }}
-            </span>
-            <span
-              v-else
-              class="badge badge-warning badge-xs shrink-0"
-            >
-              {{ t('profile.unverified') }}
-            </span>
-          </div>
 
-          <!-- Capital User ID -->
-          <div class="flex items-center gap-3 px-4 py-4">
-            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-base-200 bg-base-200/50">
-              <ShieldCheck class="h-4 w-4 text-base-content/55" />
-            </div>
-            <div class="min-w-0 flex-1">
-              <p class="text-xs text-base-content/45">
+            <div class="detail">
+              <dt class="detail-label">
+                <ShieldCheck class="icon" aria-hidden="true" />
                 {{ t('profile.id') }}
-              </p>
-              <p class="truncate font-mono text-xs text-base-content/60">
+              </dt>
+              <dd class="detail-value mono">
                 {{ user?.id }}
-              </p>
+              </dd>
             </div>
-          </div>
+          </dl>
+        </section>
 
-          <!-- Solar Network -->
-          <div
-            v-if="solarProfile"
-            class="flex items-center gap-3 px-4 py-4"
-          >
-            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-base-200 bg-base-200/50">
-              <ExternalLink class="h-4 w-4 text-base-content/55" />
-            </div>
-            <div class="min-w-0 flex-1">
-              <p class="text-xs text-base-content/45">
+        <section class="plate section">
+          <h2 class="section-label">
+            {{ t('profile.links') }}
+          </h2>
+
+          <dl class="details">
+            <div v-if="solarProfile" class="detail">
+              <dt class="detail-label">
+                <ExternalLink class="icon" aria-hidden="true" />
                 {{ t('profile.solarNetwork') }}
-              </p>
-              <a
-                :href="`https://id.solian.app/@${solarProfile.name}`"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-sm text-primary hover:underline"
-              >
-                @{{ solarProfile.name }}
-              </a>
+              </dt>
+              <dd class="detail-value">
+                <a
+                  :href="`https://id.solian.app/@${solarProfile.name}`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="link-quiet mono"
+                >
+                  @{{ solarProfile.name }}
+                </a>
+              </dd>
             </div>
-          </div>
 
-          <!-- GitHub -->
-          <div
-            v-if="claStatus?.githubConnected"
-            class="flex items-center gap-3 px-4 py-4"
-          >
-            <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-md border border-base-200 bg-base-200/50">
-              <GitBranch class="h-4 w-4 text-base-content/55" />
-            </div>
-            <div class="min-w-0 flex-1">
-              <p class="text-xs text-base-content/45">
+            <div v-if="claStatus?.githubConnected" class="detail">
+              <dt class="detail-label">
+                <GitBranch class="icon" aria-hidden="true" />
                 {{ t('profile.github') }}
-              </p>
-              <div class="flex flex-wrap items-center gap-2">
+              </dt>
+              <dd class="detail-value detail-links">
                 <a
                   :href="`https://github.com/${claStatus.githubUsername}`"
                   target="_blank"
                   rel="noopener noreferrer"
-                  class="text-sm text-primary hover:underline"
+                  class="link-quiet mono"
                 >
                   @{{ claStatus.githubUsername }}
                 </a>
+                <span v-if="claStatus.signed" class="chip">
+                  CLA
+                </span>
                 <NuxtLink
                   :to="localePath('/contributions/me')"
-                  class="btn btn-ghost btn-xs border border-base-300"
+                  class="link-quiet view-contribution"
                 >
                   {{ t('profile.viewContribution') }}
                 </NuxtLink>
-              </div>
+              </dd>
             </div>
-            <span
-              v-if="claStatus.signed"
-              class="badge badge-success badge-xs shrink-0"
-            >
-              CLA
-            </span>
-          </div>
-        </div>
+          </dl>
+        </section>
       </div>
-    </section>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.band {
+  padding-block: 2rem 2.5rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.75rem;
+  color: var(--color-faint);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--color-base-content);
+}
+
+.back-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.masthead {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+}
+
+.avatar {
+  position: relative;
+  display: flex;
+  width: 4.5rem;
+  height: 4.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  border-radius: 999px;
+  background: var(--color-base-200);
+  color: var(--color-faint);
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.avatar-icon {
+  width: 2rem;
+  height: 2rem;
+}
+
+.avatar-badge {
+  position: absolute;
+  right: -0.15rem;
+  bottom: -0.15rem;
+  display: flex;
+  width: 1.35rem;
+  height: 1.35rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--color-success);
+  color: var(--color-success-content);
+}
+
+.avatar-badge-icon {
+  width: 0.8rem;
+  height: 0.8rem;
+}
+
+.masthead-text {
+  min-width: 0;
+}
+
+.name-line {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  overflow-wrap: anywhere;
+}
+
+.loading-name .skeleton {
+  width: 10rem;
+  height: 1.75rem;
+}
+
+.refresh {
+  color: var(--color-faint);
+}
+
+.icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.handle {
+  margin: 0.3rem 0 0;
+}
+
+.perk {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin: 0.5rem 0 0;
+  padding: 0.15rem 0.55rem;
+  border: 1px solid color-mix(in oklab, var(--color-warning) 40%, transparent);
+  border-radius: 999px;
+  color: var(--color-warning);
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.perk-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.body {
+  padding-block: 2rem 4rem;
+}
+
+.sections {
+  display: grid;
+  gap: 1rem;
+}
+
+.section {
+  padding: 1.375rem 1.5rem 1.5rem;
+}
+
+.details {
+  display: grid;
+  gap: 1.1rem;
+  margin: 0.9rem 0 0;
+}
+
+.detail {
+  min-width: 0;
+}
+
+.detail-label {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-faint);
+}
+
+.detail-value {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0.3rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--color-base-content);
+  overflow-wrap: anywhere;
+}
+
+.detail-links {
+  gap: 0.6rem;
+}
+
+.email {
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  color: var(--color-base-content);
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+
+.email:not(.is-shown) {
+  filter: blur(4px);
+  user-select: none;
+}
+
+.chip-verified {
+  border-color: color-mix(in oklab, var(--color-success) 40%, transparent);
+  color: var(--color-success);
+}
+
+.chip-pending {
+  border-color: color-mix(in oklab, var(--color-warning) 40%, transparent);
+  color: var(--color-warning);
+}
+
+.view-contribution {
+  font-size: 0.8125rem;
+}
+
+@media (min-width: 640px) {
+  .details {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.1rem 2rem;
+  }
+}
+
+.spinner {
+  width: 0.75rem;
+  height: 0.75rem;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 999px;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

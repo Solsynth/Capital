@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ArrowLeft, Calendar } from '@lucide/vue'
+import { ArrowLeft } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
@@ -72,46 +72,75 @@ useSchemaOrg([
 
 <template>
   <div v-if="page">
-    <section class="border-b border-base-200 px-4 py-12 md:py-16">
-      <div class="container mx-auto max-w-3xl">
-        <NuxtLink
-          :to="localePath('/legal')"
-          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
-        >
-          <ArrowLeft class="h-4 w-4" />
-          {{ t('legal.backToLegal') }}
-        </NuxtLink>
+    <header class="shell masthead">
+      <NuxtLink :to="localePath('/legal')" class="back">
+        <ArrowLeft class="back-icon" aria-hidden="true" />
+        {{ t('legal.backToLegal') }}
+      </NuxtLink>
 
-        <h1 class="mb-3 text-3xl font-extrabold tracking-tight md:text-4xl lg:text-5xl">
-          {{ page.title }}
-        </h1>
+      <h1 class="display masthead-title">
+        {{ page.title }}
+      </h1>
 
-        <p
-          v-if="page.description"
-          class="mb-4 max-w-2xl text-base text-base-content/65 md:text-lg"
-        >
-          {{ page.description }}
-        </p>
+      <p v-if="page.description" class="lede masthead-lede">
+        {{ page.description }}
+      </p>
 
-        <div
-          v-if="page.updatedDate"
-          class="flex items-center gap-1.5 text-sm text-base-content/50"
-        >
-          <Calendar class="h-4 w-4" />
-          <span>
-            {{ lang === 'zh' ? t('legal.lastUpdatedZh') : t('legal.lastUpdated') }}
-            {{ page.updatedDate }}
-          </span>
-        </div>
-      </div>
-    </section>
+      <p v-if="page.updatedDate" class="mono masthead-date">
+        {{ lang === 'zh' ? t('legal.lastUpdatedZh') : t('legal.lastUpdated') }}
+        {{ page.updatedDate }}
+      </p>
+    </header>
 
-    <section class="px-4 py-12">
-      <article class="container mx-auto max-w-3xl">
-        <div class="prose prose-base max-w-none md:prose-lg prose-headings:tracking-tight prose-a:text-primary">
-          <ContentRenderer :value="page" />
-        </div>
+    <section class="shell body">
+      <article class="prose measure">
+        <ContentRenderer :value="page" />
       </article>
     </section>
   </div>
 </template>
+
+<style scoped>
+.masthead {
+  padding-block: 3rem 2rem;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-faint);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--color-base-content);
+}
+
+.back-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.masthead-title {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.4vw, 2.375rem);
+}
+
+.masthead-lede {
+  margin: 0.75rem 0 0;
+}
+
+.masthead-date {
+  margin: 0.9rem 0 0;
+}
+
+.body {
+  padding-bottom: 4rem;
+}
+</style>

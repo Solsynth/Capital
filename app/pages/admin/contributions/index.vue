@@ -1,12 +1,9 @@
 <script setup lang="ts">
 import {
-  GitPullRequest,
   FileCheck,
   Clock,
-  Loader2,
   RefreshCw,
   Users,
-  Search,
 } from '@lucide/vue'
 
 const { locale } = useI18n()
@@ -77,140 +74,272 @@ async function backfillSolar() {
 
 <template>
   <div>
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold">
-        {{ isZh ? '贡献管理' : 'Contributions' }}
-      </h2>
-      <div class="flex gap-2">
+    <div class="head">
+      <div>
+        <h2 class="admin-h">
+          {{ isZh ? '贡献管理' : 'Contributions' }}
+        </h2>
+        <p class="admin-sub">
+          {{ isZh ? '查看贡献统计、CLA 签署情况与待处理的 PR。' : 'Contribution totals, CLA signatures, and pull requests waiting on a signature.' }}
+        </p>
+      </div>
+      <div class="head-actions">
         <button
-          class="btn btn-sm btn-outline gap-2"
+          class="btn btn-sm"
           :disabled="backfilling"
           @click="backfillSolar"
         >
-          <RefreshCw class="w-4 h-4" :class="{ 'animate-spin': backfilling }" />
-          {{ isZh ? '缓存 Solar 用户名' : 'Backfill Solar Names' }}
+          <RefreshCw class="btn-icon" :class="{ 'is-spinning': backfilling }" aria-hidden="true" />
+          {{ isZh ? '缓存 Solar 用户名' : 'Backfill Solar names' }}
         </button>
-        <NuxtLink :to="localePath('/admin/contributions/cla')" class="btn btn-sm btn-ghost gap-2">
-          <FileCheck class="w-4 h-4" />
-          {{ isZh ? '查看 CLA 签署' : 'View CLA Signatures' }}
+        <NuxtLink :to="localePath('/admin/contributions/cla')" class="btn btn-sm">
+          <FileCheck class="btn-icon" aria-hidden="true" />
+          {{ isZh ? '查看 CLA 签署' : 'CLA signatures' }}
         </NuxtLink>
       </div>
     </div>
 
-    <!-- Stats -->
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-      <div class="card bg-base-200/60 border border-base-content/5 p-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-            <Users class="w-5 h-5 text-primary" />
-          </div>
-          <div>
-            <p class="text-2xl font-bold tabular-nums">{{ stats?.totalTrackedUsers ?? 0 }}</p>
-            <p class="text-xs opacity-50">{{ isZh ? '追踪用户' : 'Tracked Users' }}</p>
-          </div>
-        </div>
+    <div class="stat-row">
+      <div class="stat">
+        <span class="stat-label">{{ isZh ? '追踪用户' : 'Tracked users' }}</span>
+        <span class="stat-figure">
+          <Users class="stat-icon" aria-hidden="true" />
+          {{ stats?.totalTrackedUsers ?? 0 }}
+        </span>
       </div>
-
-      <div class="card bg-base-200/60 border border-base-content/5 p-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-success/10 flex items-center justify-center">
-            <FileCheck class="w-5 h-5 text-success" />
-          </div>
-          <div>
-            <p class="text-2xl font-bold tabular-nums">{{ stats?.currentSignatures ?? 0 }}</p>
-            <p class="text-xs opacity-50">{{ isZh ? '当前版本 CLA' : 'Current CLA' }}</p>
-          </div>
-        </div>
+      <div class="stat">
+        <span class="stat-label">{{ isZh ? '当前版本 CLA' : 'Current CLA' }}</span>
+        <span class="stat-figure">
+          <FileCheck class="stat-icon" aria-hidden="true" />
+          {{ stats?.currentSignatures ?? 0 }}
+        </span>
       </div>
-
-      <div class="card bg-base-200/60 border border-base-content/5 p-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-info/10 flex items-center justify-center">
-            <FileCheck class="w-5 h-5 text-info" />
-          </div>
-          <div>
-            <p class="text-2xl font-bold tabular-nums">{{ stats?.totalSignatures ?? 0 }}</p>
-            <p class="text-xs opacity-50">{{ isZh ? '总签署数' : 'Total Signatures' }}</p>
-          </div>
-        </div>
+      <div class="stat">
+        <span class="stat-label">{{ isZh ? '总签署数' : 'Total signatures' }}</span>
+        <span class="stat-figure">
+          <FileCheck class="stat-icon" aria-hidden="true" />
+          {{ stats?.totalSignatures ?? 0 }}
+        </span>
       </div>
-
-      <div class="card bg-base-200/60 border border-base-content/5 p-4">
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-lg bg-warning/10 flex items-center justify-center">
-            <Clock class="w-5 h-5 text-warning" />
-          </div>
-          <div>
-            <p class="text-2xl font-bold tabular-nums">{{ stats?.pendingChecks ?? 0 }}</p>
-            <p class="text-xs opacity-50">{{ isZh ? '待处理 PR' : 'Pending PRs' }}</p>
-          </div>
-        </div>
+      <div class="stat">
+        <span class="stat-label">{{ isZh ? '待处理 PR' : 'Pending PRs' }}</span>
+        <span class="stat-figure">
+          <Clock class="stat-icon" aria-hidden="true" />
+          {{ stats?.pendingChecks ?? 0 }}
+        </span>
       </div>
     </div>
 
-    <!-- Backfill result -->
-    <div v-if="backfillResult" class="alert alert-success mb-6 text-sm">
-      <span>{{ isZh ? `已更新 ${backfillResult.updated} / ${backfillResult.total} 个用户的 Solar 用户名` : `Updated ${backfillResult.updated} / ${backfillResult.total} users with Solar usernames` }}</span>
-    </div>
-    <div class="card bg-base-200/60 border border-base-content/5">
-      <div class="flex items-center justify-between p-4 border-b border-base-content/5">
-        <h3 class="font-semibold text-sm">
-          {{ isZh ? '等待 CLA 的 PR' : 'PRs Waiting for CLA' }}
+    <p v-if="backfillResult" class="note note-success mb-4">
+      {{ isZh ? `已更新 ${backfillResult.updated} / ${backfillResult.total} 个用户的 Solar 用户名` : `Updated ${backfillResult.updated} / ${backfillResult.total} users with Solar usernames` }}
+    </p>
+    <p v-if="resetResult && !resetResult.startsWith('Error')" class="note note-success mb-4">
+      {{ isZh ? `已重置 ${resetResult} 的冷却` : `Cooldown reset for ${resetResult}` }}
+    </p>
+    <p v-else-if="resetResult" class="note note-error mb-4">
+      {{ resetResult }}
+    </p>
+
+    <section class="queue">
+      <div class="queue-head">
+        <h3 class="queue-title">
+          {{ isZh ? '等待 CLA 的 PR' : 'PRs waiting for a CLA' }}
         </h3>
-        <button class="btn btn-xs btn-ghost gap-1" @click="refreshPending()">
-          <RefreshCw class="w-3 h-3" />
+        <button class="btn btn-xs" @click="refreshPending()">
+          <RefreshCw class="btn-icon" aria-hidden="true" />
           {{ isZh ? '刷新' : 'Refresh' }}
         </button>
       </div>
 
-      <div v-if="pendingStatus === 'pending'" class="flex justify-center py-8">
-        <Loader2 class="w-5 h-5 animate-spin text-primary" />
+      <div v-if="pendingStatus === 'pending'" class="loading-rows">
+        <span class="skeleton sk-row" />
+        <span class="skeleton sk-row" />
+        <span class="skeleton sk-row" />
       </div>
 
-      <div v-else-if="pendingData?.checks?.length" class="overflow-x-auto">
-        <table class="table table-sm">
+      <div v-else-if="pendingData?.checks?.length" class="table-wrap">
+        <table class="ledger">
           <thead>
-            <tr class="text-xs opacity-60">
+            <tr>
               <th>GitHub</th>
-              <th>Repo</th>
+              <th>{{ isZh ? '仓库' : 'Repository' }}</th>
               <th>PR</th>
               <th>{{ isZh ? '创建时间' : 'Created' }}</th>
-              <th></th>
+              <th>{{ isZh ? '操作' : 'Actions' }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="check in pendingData.checks" :key="check.id" class="hover:bg-base-200/50">
-              <td class="text-sm font-medium">{{ check.githubUsername }}</td>
-              <td class="text-sm opacity-70">{{ check.repoOwner }}/{{ check.repoName }}</td>
+            <tr v-for="check in pendingData.checks" :key="check.id">
+              <td>{{ check.githubUsername }}</td>
+              <td class="mono">
+                {{ check.repoOwner }}/{{ check.repoName }}
+              </td>
               <td>
                 <a
                   :href="`https://github.com/${check.repoOwner}/${check.repoName}/pull/${check.prNumber}`"
                   target="_blank"
                   rel="noopener"
-                  class="link link-primary text-sm"
+                  class="link-quiet mono"
                 >
                   #{{ check.prNumber }}
                 </a>
               </td>
-              <td class="text-xs opacity-50">{{ new Date(check.createdAt).toLocaleDateString() }}</td>
+              <td class="mono">
+                {{ new Date(check.createdAt).toLocaleDateString() }}
+              </td>
               <td>
-                <button
-                  class="btn btn-xs btn-ghost gap-1"
-                  :disabled="resetting === check.githubUsername"
-                  @click="resetCooldown(check.githubUsername)"
-                >
-                  <RefreshCw class="w-3 h-3" :class="{ 'animate-spin': resetting === check.githubUsername }" />
-                  {{ isZh ? '重置冷却' : 'Reset Cooldown' }}
-                </button>
+                <div class="row-actions">
+                  <button
+                    class="btn btn-xs"
+                    :disabled="resetting === check.githubUsername"
+                    @click="resetCooldown(check.githubUsername)"
+                  >
+                    <RefreshCw class="btn-icon" :class="{ 'is-spinning': resetting === check.githubUsername }" aria-hidden="true" />
+                    {{ isZh ? '重置冷却' : 'Reset cooldown' }}
+                  </button>
+                </div>
               </td>
             </tr>
           </tbody>
         </table>
       </div>
 
-      <div v-else class="text-center py-8 opacity-50 text-sm">
-        {{ isZh ? '没有等待中的 PR' : 'No pending PRs' }}
-      </div>
-    </div>
+      <p v-else class="empty">
+        {{ isZh ? '没有等待中的 PR。' : 'No pull requests are waiting on a signature.' }}
+      </p>
+    </section>
   </div>
 </template>
+
+<style scoped>
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.admin-h {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.admin-sub {
+  max-width: 40rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.head-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.btn-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.is-spinning {
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-line-soft);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.9rem 1rem;
+  background: var(--color-base-100);
+}
+
+.stat-label {
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.stat-figure {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-family: var(--font-mono);
+  font-size: 1.375rem;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--color-primary);
+}
+
+.queue-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-bottom: 0.6rem;
+}
+
+.queue-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.loading-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding-top: 0.5rem;
+}
+
+.sk-row {
+  height: 2.25rem;
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.25rem 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+@media (min-width: 640px) {
+  .stat-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+</style>

@@ -30,7 +30,7 @@ const bars = computed(() => {
     :viewBox="`0 0 ${width + QUIET_ZONE * 2} 40`"
     preserveAspectRatio="none"
     shape-rendering="crispEdges"
-    class="block h-full w-full"
+    class="barcode"
     aria-hidden="true"
   >
     <rect
@@ -48,6 +48,18 @@ const bars = computed(() => {
 </template>
 
 <style scoped>
+/* A barcode is printed matter: dark bars on light paper, in both themes. The
+   surface is fixed so a light-theme page and a dark-theme page scan alike. */
+.barcode {
+  display: block;
+  width: 100%;
+  height: 100%;
+  padding: 5px 6px;
+  border-radius: 3px;
+  background: #f7f4f7;
+  color: #171618;
+}
+
 /* The code prints left to right, bar by bar, like a label printer laying down the head. */
 .barcode-bar {
   animation: barcode-print 0.16s linear both;

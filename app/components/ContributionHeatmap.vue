@@ -10,7 +10,15 @@ const { data } = await useAsyncData(
 
 const { t } = useI18n()
 
-const levelColors = ['bg-base-300', 'bg-success/30', 'bg-success/50', 'bg-success/70', 'bg-success']
+// Empty days are the page's own surface, not a tint of it; filled days are the
+// one signal colour at five steps, so the grid reads as one hue.
+const levelColors = [
+  'bg-base-300',
+  'bg-primary/20',
+  'bg-primary/40',
+  'bg-primary/65',
+  'bg-primary',
+]
 const cellSize = 11
 const gap = 3
 
@@ -73,23 +81,25 @@ function tooltip(day: { date: string; count: number }) {
 </script>
 
 <template>
-  <div class="card bg-base-200/60 border border-base-content/5 p-5">
-    <div class="flex items-center justify-between mb-4">
-      <p class="text-sm font-medium">{{ totalContributions }} {{ t('contributions.inPastYear') }}</p>
-      <div class="flex items-center gap-1.5 text-xs opacity-50">
+  <section class="plate heatmap">
+    <div class="head">
+      <p class="total">
+        {{ totalContributions }} {{ t('contributions.inPastYear') }}
+      </p>
+      <div class="legend">
         <span>{{ t('contributions.less') }}</span>
-        <span v-for="i in 5" :key="i" class="w-2.5 h-2.5 rounded-[2px]" :class="levelColors[i - 1]" />
+        <span v-for="i in 5" :key="i" class="swatch" :class="levelColors[i - 1]" />
         <span>{{ t('contributions.more') }}</span>
       </div>
     </div>
 
-    <div class="overflow-x-auto">
+    <div class="scroll">
       <!-- Month labels -->
-      <div class="relative h-4 ml-[2.25rem] mb-1">
+      <div class="months">
         <span
           v-for="m in monthLabels"
           :key="m.col"
-          class="absolute text-[10px] opacity-50 top-0"
+          class="month"
           :style="{ left: `${m.col * (cellSize + gap)}px` }"
         >
           {{ m.name }}
@@ -97,13 +107,13 @@ function tooltip(day: { date: string; count: number }) {
       </div>
 
       <!-- Grid -->
-      <div class="flex gap-[3px]">
+      <div class="weeks">
         <!-- Day labels -->
-        <div class="flex flex-col shrink-0" :style="{ gap: `${gap}px`, width: '1.75rem' }">
+        <div class="days" :style="{ gap: `${gap}px` }">
           <div
             v-for="(label, i) in ['', 'Mon', '', 'Wed', '', 'Fri', '']"
             :key="i"
-            class="text-[10px] opacity-50 flex items-center"
+            class="day"
             :style="{ height: `${cellSize}px` }"
           >
             {{ label }}
@@ -111,11 +121,11 @@ function tooltip(day: { date: string; count: number }) {
         </div>
 
         <!-- Weeks -->
-        <div v-for="(week, wi) in grid" :key="wi" class="flex flex-col" :style="{ gap: `${gap}px` }">
+        <div v-for="(week, wi) in grid" :key="wi" class="week" :style="{ gap: `${gap}px` }">
           <div
             v-for="(day, di) in week"
             :key="di"
-            class="rounded-[2px] cursor-default transition-colors"
+            class="cell"
             :class="levelColors[day.level]"
             :style="{ width: `${cellSize}px`, height: `${cellSize}px` }"
             :title="tooltip(day)"
@@ -123,5 +133,89 @@ function tooltip(day: { date: string; count: number }) {
         </div>
       </div>
     </div>
-  </div>
+  </section>
 </template>
+
+<style scoped>
+.heatmap {
+  padding: 1.25rem;
+}
+
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.total {
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-dim);
+}
+
+.legend {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  font-size: 0.6875rem;
+  color: var(--color-faint);
+}
+
+.swatch {
+  display: block;
+  width: 0.625rem;
+  height: 0.625rem;
+  border-radius: 2px;
+}
+
+.scroll {
+  overflow-x: auto;
+}
+
+.months {
+  position: relative;
+  height: 1rem;
+  margin-left: 2.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.month {
+  position: absolute;
+  top: 0;
+  font-size: 0.625rem;
+  color: var(--color-faint);
+}
+
+.weeks {
+  display: flex;
+  gap: 3px;
+}
+
+.days {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  width: 1.75rem;
+}
+
+.day {
+  display: flex;
+  align-items: center;
+  font-size: 0.625rem;
+  color: var(--color-faint);
+}
+
+.week {
+  display: flex;
+  flex-direction: column;
+}
+
+.cell {
+  border-radius: 2px;
+  cursor: default;
+}
+</style>

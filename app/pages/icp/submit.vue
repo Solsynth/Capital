@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import {
   ArrowLeft,
-  Globe,
   Send,
   Plus,
   User,
@@ -70,16 +69,16 @@ const submitError = ref<string | null>(null)
 const submitSuccess = ref(false)
 
 const categoryOptions = [
-  { value: 'official', label: t('categories.official', 'ROY Official') },
-  { value: 'entertainment', label: t('categories.entertainment', 'Entertainment') },
-  { value: 'technology', label: t('categories.technology', 'Technology') },
-  { value: 'education', label: t('categories.education', 'Education') },
-  { value: 'social', label: t('categories.social', 'Social') },
-  { value: 'business', label: t('categories.business', 'Business') },
-  { value: 'personal', label: t('categories.personal', 'Personal') },
-  { value: 'media', label: t('categories.media', 'Media') },
-  { value: 'community', label: t('categories.community', 'Community') },
-  { value: 'tools', label: t('categories.tools', 'Tools') },
+  { value: 'official', label: t('categories.official') },
+  { value: 'entertainment', label: t('categories.entertainment') },
+  { value: 'technology', label: t('categories.technology') },
+  { value: 'education', label: t('categories.education') },
+  { value: 'social', label: t('categories.social') },
+  { value: 'business', label: t('categories.business') },
+  { value: 'personal', label: t('categories.personal') },
+  { value: 'media', label: t('categories.media') },
+  { value: 'community', label: t('categories.community') },
+  { value: 'tools', label: t('categories.tools') },
   { value: 'blog', label: t('categories.blog', 'Blog') },
 ]
 
@@ -147,200 +146,452 @@ function getTypeLabel(type: string) {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-16 max-w-2xl">
-    <NuxtLink
-      :to="localePath('/icp')"
-      class="btn btn-ghost btn-sm mb-8"
-    >
-      <ArrowLeft class="w-4 h-4 mr-1" />
-      {{ t('common.back') }}
-    </NuxtLink>
+  <div>
+    <header class="band">
+      <div class="shell">
+        <NuxtLink
+          :to="localePath('/icp')"
+          class="back"
+        >
+          <ArrowLeft class="back-icon" aria-hidden="true" />
+          {{ t('common.back') }}
+        </NuxtLink>
 
-    <div class="card bg-base-200 p-8">
-      <div class="flex items-center gap-4 mb-8">
-        <Globe class="w-10 h-10 text-primary" />
-        <div>
-          <h1 class="text-3xl font-bold">
-            {{ t('royIcp.submit.title') }}
-          </h1>
-          <p class="opacity-70">
-            {{ t('royIcp.submit.desc') }}
-          </p>
-        </div>
+        <h1 class="title page-title">
+          {{ t('royIcp.submit.title') }}
+        </h1>
+        <p class="lede page-lede">
+          {{ t('royIcp.submit.desc') }}
+        </p>
       </div>
+    </header>
 
-      <div v-if="submitSuccess" class="alert alert-success mb-6">
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span>{{ t('royIcp.submit.success') }}</span>
-      </div>
+    <div class="body">
+      <div class="shell">
+        <p v-if="submitSuccess" class="note note-success outcome">
+          {{ t('royIcp.submit.success') }}
+        </p>
 
-      <div v-if="submitError" class="alert alert-error mb-6">
-        <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" />
-        </svg>
-        <span>{{ submitError }}</span>
-      </div>
+        <p v-if="submitError" class="note note-error outcome">
+          {{ submitError }}
+        </p>
 
-      <form v-if="!submitSuccess" @submit.prevent="handleSubmit" class="space-y-6">
-        <!-- Identity Selection -->
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.submit.selectIdentity') }} *</legend>
+        <form v-if="!submitSuccess" class="plate form" @submit.prevent="handleSubmit">
+          <section class="fieldset">
+            <h2 class="field-label">
+              {{ t('royIcp.submit.selectIdentity') }}
+            </h2>
 
-          <div v-if="identities.length === 0" class="alert alert-warning">
-            <div>
-              <p class="font-bold">{{ t('royIcp.submit.noIdentity') }}</p>
-              <p class="text-sm">{{ t('royIcp.submit.createIdentityFirst') }}</p>
+            <div v-if="identities.length === 0" class="note note-warning identity-empty">
+              <div>
+                <p class="identity-empty-title">
+                  {{ t('royIcp.submit.noIdentity') }}
+                </p>
+                <p class="identity-empty-desc">
+                  {{ t('royIcp.submit.createIdentityFirst') }}
+                </p>
+              </div>
+              <NuxtLink :to="localePath('/icp/identities')" class="btn btn-primary btn-sm">
+                <Plus class="icon" aria-hidden="true" />
+                {{ t('royIcp.submit.createIdentity') }}
+              </NuxtLink>
             </div>
-            <NuxtLink :to="localePath('/icp/identities')" class="btn btn-sm btn-primary">
-              <Plus class="w-4 h-4 mr-1" />
-              {{ t('royIcp.submit.createIdentity') }}
-            </NuxtLink>
-          </div>
 
-          <div v-else class="space-y-2">
-            <label
-              v-for="identity in identities"
-              :key="identity.id"
-              class="flex items-center gap-4 p-4 rounded-lg cursor-pointer transition-all"
-              :class="form.identity_id === identity.id ? 'bg-primary/10 ring-2 ring-primary' : 'bg-base-100 hover:bg-base-300'"
-            >
-              <input
-                v-model="form.identity_id"
-                type="radio"
-                :value="identity.id"
-                class="radio radio-primary"
+            <div v-else class="identity-list">
+              <label
+                v-for="identity in identities"
+                :key="identity.id"
+                class="identity-option"
+                :class="{ 'is-current': form.identity_id === identity.id }"
               >
-              <div class="w-10 h-10 rounded-lg bg-base-200 flex items-center justify-center overflow-hidden">
-                <img v-if="identity.iconUrl" :src="identity.iconUrl" :alt="identity.name" class="w-full h-full object-cover">
-                <component v-else :is="getTypeIcon(identity.type)" class="w-5 h-5 opacity-60" />
-              </div>
-              <div class="flex-1">
-                <div class="flex items-center gap-2">
-                  <span class="font-bold">{{ identity.name }}</span>
-                  <span class="badge badge-sm" :class="identity.type === 'organization' ? 'badge-primary' : 'badge-ghost'">
-                    {{ getTypeLabel(identity.type) }}
+                <input
+                  v-model="form.identity_id"
+                  type="radio"
+                  :value="identity.id"
+                  class="radio radio-primary radio-sm"
+                >
+                <span class="identity-mark">
+                  <img
+                    v-if="identity.iconUrl"
+                    :src="identity.iconUrl"
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                  >
+                  <component
+                    :is="getTypeIcon(identity.type)"
+                    v-else
+                    class="icon"
+                    aria-hidden="true"
+                  />
+                </span>
+                <span class="identity-text">
+                  <span class="identity-name">
+                    {{ identity.name }}
+                    <span class="chip">{{ getTypeLabel(identity.type) }}</span>
                   </span>
-                </div>
-                <p v-if="identity.description" class="text-sm opacity-70">{{ identity.description }}</p>
-              </div>
+                  <span v-if="identity.description" class="identity-desc">
+                    {{ identity.description }}
+                  </span>
+                </span>
+              </label>
+            </div>
+
+            <p class="field-hint">
+              <NuxtLink :to="localePath('/icp/identities')" class="link-quiet">
+                {{ t('royIcp.submit.manageIdentities') }}
+              </NuxtLink>
+            </p>
+          </section>
+
+          <section v-if="form.identity_id" class="fieldset">
+            <label class="check-option">
+              <input v-model="form.updateIdentity" type="checkbox" class="checkbox checkbox-primary checkbox-sm">
+              <span>{{ t('royIcp.submit.identityUpdate') }}</span>
             </label>
-          </div>
 
-          <p class="label mt-2">
-            <NuxtLink :to="localePath('/icp/identities')" class="link link-primary">
-              {{ t('royIcp.submit.manageIdentities') }} →
-            </NuxtLink>
-          </p>
-        </fieldset>
+            <div v-if="form.updateIdentity" class="nested">
+              <div class="field">
+                <label class="field-label" for="identity-name">
+                  {{ t('royIcp.submit.identityName') }}
+                </label>
+                <input id="identity-name" v-model="form.identityName" type="text" class="input">
+              </div>
 
-        <!-- Identity Update Toggle -->
-        <div v-if="form.identity_id" class="space-y-4">
-          <label class="flex items-center gap-3 cursor-pointer">
-            <input v-model="form.updateIdentity" type="checkbox" class="checkbox checkbox-primary">
-            <span class="text-sm font-medium">{{ t('royIcp.submit.identityUpdate') }}</span>
-          </label>
+              <div class="field">
+                <label class="field-label" for="identity-description">
+                  {{ t('royIcp.submit.identityDesc') }}
+                </label>
+                <textarea id="identity-description" v-model="form.identityDescription" class="textarea" rows="3" />
+              </div>
 
-          <div v-if="form.updateIdentity" class="space-y-4 pl-7 border-l-2 border-primary/20">
-            <div>
-              <label class="text-sm opacity-60">{{ t('royIcp.submit.identityName') }}</label>
-              <input v-model="form.identityName" type="text" class="input w-full mt-1">
+              <div class="field">
+                <p class="field-label">
+                  {{ t('royIcp.submit.identityIcon') }}
+                </p>
+                <FileUpload v-model="form.identityIconFileId" compact />
+              </div>
             </div>
+          </section>
 
-            <div>
-              <label class="text-sm opacity-60">{{ t('royIcp.submit.identityDesc') }}</label>
-              <textarea v-model="form.identityDescription" class="textarea h-16 w-full mt-1" />
-            </div>
-
-            <div>
-              <label class="text-sm opacity-60">{{ t('royIcp.submit.identityIcon') }}</label>
-              <FileUpload v-model="form.identityIconFileId" compact class="mt-1" />
-            </div>
-          </div>
-        </div>
-
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.submit.domain') }} *</legend>
-          <input
-            v-model="form.domain"
-            type="text"
-            placeholder="example.com"
-            class="input w-full"
-            required
-          >
-          <p class="label">{{ t('royIcp.submit.domainHint') }}</p>
-        </fieldset>
-
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.submit.siteName') }} *</legend>
-          <input
-            v-model="form.name"
-            type="text"
-            :placeholder="t('royIcp.submit.siteNamePlaceholder')"
-            class="input w-full"
-            required
-          >
-        </fieldset>
-
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.submit.siteUrl') }} *</legend>
-          <input
-            v-model="form.site_url"
-            type="url"
-            placeholder="https://example.com"
-            class="input w-full"
-            required
-          >
-        </fieldset>
-
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.submit.description') }}</legend>
-          <textarea
-            v-model="form.description"
-            :placeholder="t('royIcp.submit.descriptionPlaceholder')"
-            class="textarea h-24 w-full"
-          />
-        </fieldset>
-
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.submit.categories') }}</legend>
-          <div class="flex flex-wrap gap-2">
-            <button
-              v-for="cat in categoryOptions"
-              :key="cat.value"
-              type="button"
-              class="badge badge-lg cursor-pointer transition-all"
-              :class="form.categories.includes(cat.value) ? 'badge-primary' : 'badge-outline hover:badge-primary'"
-              @click="toggleCategory(cat.value)"
+          <section class="fieldset">
+            <label class="field-label" for="site-domain">
+              {{ t('royIcp.submit.domain') }}
+            </label>
+            <input
+              id="site-domain"
+              v-model="form.domain"
+              type="text"
+              placeholder="example.com"
+              class="input"
+              required
             >
-              {{ cat.label }}
+            <p class="field-hint">
+              {{ t('royIcp.submit.domainHint') }}
+            </p>
+          </section>
+
+          <section class="fieldset">
+            <label class="field-label" for="site-name">
+              {{ t('royIcp.submit.siteName') }}
+            </label>
+            <input
+              id="site-name"
+              v-model="form.name"
+              type="text"
+              :placeholder="t('royIcp.submit.siteNamePlaceholder')"
+              class="input"
+              required
+            >
+          </section>
+
+          <section class="fieldset">
+            <label class="field-label" for="site-url">
+              {{ t('royIcp.submit.siteUrl') }}
+            </label>
+            <input
+              id="site-url"
+              v-model="form.site_url"
+              type="url"
+              placeholder="https://example.com"
+              class="input"
+              required
+            >
+          </section>
+
+          <section class="fieldset">
+            <label class="field-label" for="site-description">
+              {{ t('royIcp.submit.description') }}
+            </label>
+            <textarea
+              id="site-description"
+              v-model="form.description"
+              :placeholder="t('royIcp.submit.descriptionPlaceholder')"
+              class="textarea"
+              rows="4"
+            />
+          </section>
+
+          <section class="fieldset">
+            <p class="field-label">
+              {{ t('royIcp.submit.categories') }}
+            </p>
+            <div class="category-chips">
+              <button
+                v-for="cat in categoryOptions"
+                :key="cat.value"
+                type="button"
+                class="chip category-chip"
+                :class="{ 'is-current': form.categories.includes(cat.value) }"
+                :aria-pressed="form.categories.includes(cat.value)"
+                @click="toggleCategory(cat.value)"
+              >
+                {{ cat.label }}
+              </button>
+            </div>
+            <p class="field-hint">
+              {{ t('royIcp.submit.categoriesHint') }}
+            </p>
+          </section>
+
+          <section class="fieldset">
+            <p class="field-label">
+              {{ t('royIcp.submit.siteIcon') }}
+            </p>
+            <FileUpload
+              v-model="form.iconFileId"
+              :hint="t('royIcp.submit.iconHint')"
+            />
+            <p class="field-hint">
+              {{ t('royIcp.submit.iconRecommended') }}
+            </p>
+          </section>
+
+          <div class="submit-row">
+            <button
+              type="submit"
+              class="btn btn-primary"
+              :disabled="isSubmitting || identities.length === 0"
+            >
+              <span v-if="isSubmitting" class="spinner" aria-hidden="true" />
+              <Send v-else class="icon" aria-hidden="true" />
+              {{ t('royIcp.submit.submitBtn') }}
             </button>
           </div>
-          <p class="label">{{ t('royIcp.submit.categoriesHint') }}</p>
-        </fieldset>
-
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.submit.siteIcon') }}</legend>
-          <FileUpload
-            v-model="form.iconFileId"
-            :hint="t('royIcp.submit.iconHint')"
-          />
-          <p class="label">{{ t('royIcp.submit.iconRecommended') }}</p>
-        </fieldset>
-
-        <div class="form-control mt-8">
-          <button
-            type="submit"
-            class="btn btn-primary btn-lg w-full"
-            :disabled="isSubmitting || identities.length === 0"
-          >
-            <span v-if="isSubmitting" class="loading loading-spinner loading-sm" />
-            <Send v-else class="w-5 h-5 mr-2" />
-            {{ t('royIcp.submit.submitBtn') }}
-          </button>
-        </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.band {
+  padding-block: 2rem 2.25rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-faint);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--color-base-content);
+}
+
+.back-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.5vw, 2.375rem);
+}
+
+.page-lede {
+  margin: 0.6rem 0 0;
+}
+
+.body {
+  padding-block: 2rem 4rem;
+}
+
+.outcome {
+  max-width: 40rem;
+  margin: 0 0 1rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 40rem;
+  padding: 1.5rem;
+}
+
+.fieldset {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.identity-empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.identity-empty-title {
+  margin: 0;
+  font-weight: 600;
+}
+
+.identity-empty-desc {
+  margin: 0.15rem 0 0;
+}
+
+.identity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.identity-option {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.7rem 0.85rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-input);
+  cursor: pointer;
+  transition:
+    border-color 140ms ease,
+    background-color 140ms ease;
+}
+
+.identity-option:hover {
+  background: color-mix(in oklab, var(--color-base-200) 60%, transparent);
+}
+
+.identity-option.is-current {
+  border-color: var(--color-primary);
+  background: color-mix(in oklab, var(--color-primary) 8%, transparent);
+}
+
+.identity-mark {
+  display: flex;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-mark);
+  background: var(--color-base-200);
+  color: var(--color-faint);
+}
+
+.identity-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.identity-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.identity-name {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.identity-desc {
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-faint);
+}
+
+.check-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  font-size: 0.875rem;
+  color: var(--color-dim);
+  cursor: pointer;
+}
+
+.nested {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-top: 1rem;
+  padding-left: 1.25rem;
+  border-left: 1px solid var(--color-line);
+}
+
+.category-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.category-chip {
+  padding-block: 0.3rem;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.submit-row {
+  padding-top: 0.5rem;
+}
+
+.spinner {
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 999px;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+</style>

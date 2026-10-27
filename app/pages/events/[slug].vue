@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { Calendar, MapPin, ArrowLeft, Tag, ExternalLink, Clock } from '@lucide/vue'
+import { ArrowLeft, ExternalLink } from '@lucide/vue'
 
 const { t, locale } = useI18n()
 const localePath = useLocalePath()
@@ -114,161 +114,309 @@ function formatTime(dateStr: string) {
   })
 }
 
-function formatDateRange(startDate: string, endDate: string) {
+// The same-day case prints the date once; the time row below carries the
+// hours, so repeating them here would be noise.
+function dateRange(startDate: string, endDate: string) {
   const start = new Date(startDate)
   const end = new Date(endDate)
-
   if (start.toDateString() === end.toDateString()) {
-    return `${formatDate(startDate)} · ${formatTime(startDate)} – ${formatTime(endDate)}`
+    return formatDate(startDate)
   }
-
   return `${formatDate(startDate)} – ${formatDate(endDate)}`
 }
+
+const coverFailed = ref(false)
+
+// The <img> can fail before hydration attaches its handler, so probe the
+// source once more on the client; a missing file leaves the band alone
+// instead of printing a grey box.
+onMounted(() => {
+  const src = event.value?.coverImage
+  if (!src) return
+  const probe = new Image()
+  probe.onerror = () => { coverFailed.value = true }
+  probe.src = src
+})
 </script>
 
 <template>
   <div v-if="event">
-    <section class="relative overflow-hidden border-b border-base-200">
-      <template v-if="event.coverImage">
-        <img
-          :src="event.coverImage"
-          :alt="event.name"
-          class="absolute inset-0 h-full w-full object-cover opacity-30"
-        >
-        <div class="absolute inset-0 bg-linear-to-b from-base-100/40 via-base-100/80 to-base-100" />
-      </template>
-
-      <div class="relative container mx-auto max-w-5xl px-4 py-12 md:py-16">
+    <header class="band">
+      <div class="shell">
         <NuxtLink
           :to="localePath('/events')"
-          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
+          class="back"
         >
-          <ArrowLeft class="h-4 w-4" />
+          <ArrowLeft class="back-icon" aria-hidden="true" />
           {{ t('events.backToEvents') }}
         </NuxtLink>
 
-        <div class="mb-4">
-          <span
-            class="badge"
-            :class="{
-              'badge-primary': event.status === 'upcoming',
-              'badge-secondary': event.status === 'ongoing',
-              'badge-ghost': event.status === 'past',
-            }"
-          >
-            {{ t(`events.${event.status}`) }}
-          </span>
-        </div>
+        <p class="status">
+          <span class="dot" :class="`dot-${event.status}`" />
+          <span class="status-word">{{ t(`events.${event.status}`) }}</span>
+        </p>
 
-        <h1 class="mb-5 max-w-3xl text-3xl font-extrabold tracking-tight md:text-4xl lg:text-5xl">
+        <h1 class="title event-title">
           {{ event.name }}
         </h1>
 
-        <div class="flex flex-wrap gap-x-5 gap-y-2 text-base text-base-content/65">
-          <div class="flex items-center gap-2">
-            <Calendar class="h-4 w-4 shrink-0" />
-            <span>{{ formatDateRange(event.startDate, event.endDate) }}</span>
-          </div>
-          <div v-if="event.location" class="flex items-center gap-2">
-            <MapPin class="h-4 w-4 shrink-0" />
+        <p class="mono facts-line">
+          <span>{{ dateRange(event.startDate, event.endDate) }}</span>
+          <template v-if="event.location">
+            <span class="facts-sep" aria-hidden="true">/</span>
             <span>{{ event.location }}</span>
-          </div>
-        </div>
+          </template>
+        </p>
       </div>
-    </section>
+    </header>
 
-    <section class="px-4 py-12">
-      <div class="container mx-auto max-w-5xl">
-        <div class="grid grid-cols-1 gap-10 lg:grid-cols-3">
-          <div class="lg:col-span-2">
-            <h2 class="mb-3 text-xl font-bold tracking-tight">
-              {{ isZh ? '关于活动' : 'About this event' }}
+    <div v-if="event.coverImage && !coverFailed" class="shell">
+      <figure class="cover">
+        <img
+          :src="event.coverImage"
+          :alt="event.name"
+          loading="lazy"
+          decoding="async"
+          @error="coverFailed = true"
+        >
+      </figure>
+    </div>
+
+    <div class="shell body">
+      <div class="body-grid">
+        <article class="prose article">
+          <h2>{{ isZh ? '关于活动' : 'About this event' }}</h2>
+          <p>{{ event.description }}</p>
+
+          <template v-if="event.tags?.length">
+            <h2>{{ t('events.tags') }}</h2>
+            <div class="tags">
+              <NuxtLink
+                v-for="tag in event.tags"
+                :key="tag"
+                :to="`${localePath('/events')}?tag=${encodeURIComponent(tag)}`"
+                class="chip"
+              >
+                {{ tag }}
+              </NuxtLink>
+            </div>
+          </template>
+        </article>
+
+        <aside class="aside">
+          <section class="plate detail">
+            <h2 class="detail-title">
+              {{ isZh ? '活动详情' : 'Event details' }}
             </h2>
-            <p class="text-base leading-relaxed text-base-content/75 md:text-lg">
-              {{ event.description }}
-            </p>
 
-            <div v-if="event.tags?.length" class="mt-8">
-              <h3 class="mb-3 flex items-center gap-2 text-sm font-semibold text-base-content/70">
-                <Tag class="h-4 w-4" />
-                {{ t('events.tags') }}
-              </h3>
-              <div class="flex flex-wrap gap-2">
-                <NuxtLink
-                  v-for="tag in event.tags"
-                  :key="tag"
-                  :to="`${localePath('/events')}?tag=${encodeURIComponent(tag)}`"
-                  class="badge badge-outline hover:badge-primary"
-                >
-                  {{ tag }}
-                </NuxtLink>
+            <dl class="detail-list">
+              <div class="detail-row">
+                <dt>{{ t('events.date') }}</dt>
+                <dd>{{ dateRange(event.startDate, event.endDate) }}</dd>
               </div>
-            </div>
-          </div>
-
-          <aside>
-            <div class="sticky top-20 rounded-lg border border-base-200 bg-base-100 p-5">
-              <h3 class="mb-4 text-base font-semibold">
-                {{ isZh ? '活动详情' : 'Event details' }}
-              </h3>
-
-              <div class="space-y-4">
-                <div class="flex items-start gap-3">
-                  <Calendar class="mt-0.5 h-4 w-4 shrink-0 text-base-content/50" />
-                  <div>
-                    <p class="text-sm font-medium">
-                      {{ t('events.date') }}
-                    </p>
-                    <p class="text-sm text-base-content/60">
-                      {{ formatDate(event.startDate) }}
-                      <template v-if="event.startDate !== event.endDate">
-                        – {{ formatDate(event.endDate) }}
-                      </template>
-                    </p>
-                  </div>
-                </div>
-
-                <div class="flex items-start gap-3">
-                  <Clock class="mt-0.5 h-4 w-4 shrink-0 text-base-content/50" />
-                  <div>
-                    <p class="text-sm font-medium">
-                      {{ t('events.time') }}
-                    </p>
-                    <p class="text-sm text-base-content/60">
-                      {{ formatTime(event.startDate) }} – {{ formatTime(event.endDate) }}
-                    </p>
-                  </div>
-                </div>
-
-                <div v-if="event.location" class="flex items-start gap-3">
-                  <MapPin class="mt-0.5 h-4 w-4 shrink-0 text-base-content/50" />
-                  <div>
-                    <p class="text-sm font-medium">
-                      {{ t('events.location') }}
-                    </p>
-                    <p class="text-sm text-base-content/60">
-                      {{ event.location }}
-                    </p>
-                  </div>
-                </div>
+              <div class="detail-row">
+                <dt>{{ t('events.time') }}</dt>
+                <dd class="mono">
+                  {{ formatTime(event.startDate) }} – {{ formatTime(event.endDate) }}
+                </dd>
               </div>
-
-              <div v-if="event.registrationUrl" class="mt-6">
-                <a
-                  :href="event.registrationUrl"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="btn w-full gap-1.5"
-                  :class="event.status === 'past' ? 'btn-ghost border border-base-300' : 'btn-primary'"
-                >
-                  {{ event.status === 'past' ? t('events.viewRecording') : t('events.register') }}
-                  <ExternalLink class="h-4 w-4" />
-                </a>
+              <div v-if="event.location" class="detail-row">
+                <dt>{{ t('events.location') }}</dt>
+                <dd>{{ event.location }}</dd>
               </div>
-            </div>
-          </aside>
-        </div>
+            </dl>
+
+            <a
+              v-if="event.registrationUrl"
+              :href="event.registrationUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn action"
+              :class="event.status === 'past' ? 'btn-ghost' : 'btn-primary'"
+            >
+              {{ event.status === 'past' ? t('events.viewRecording') : t('events.register') }}
+              <ExternalLink class="action-icon" aria-hidden="true" />
+            </a>
+          </section>
+        </aside>
       </div>
-    </section>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.band {
+  padding-block: 3.5rem 2.5rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-faint);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.back:hover {
+  color: var(--color-base-content);
+}
+
+.back-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.status {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin: 0 0 0.6rem;
+}
+
+.status-word {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-dim);
+}
+
+.dot-upcoming {
+  background: var(--color-primary);
+}
+
+.dot-ongoing {
+  background: var(--color-success);
+}
+
+.dot-past {
+  background: var(--color-line);
+}
+
+.event-title {
+  margin: 0;
+  max-width: 34rem;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.facts-line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 1rem 0 0;
+  color: var(--color-faint);
+  font-size: 0.8125rem;
+}
+
+.facts-sep {
+  color: var(--color-line);
+}
+
+.cover {
+  margin: 2rem 0 0;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  background: var(--color-base-300);
+}
+
+.cover img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+}
+
+.body {
+  padding-block: 2.5rem 4rem;
+}
+
+.body-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+}
+
+.article {
+  max-width: 34rem;
+}
+
+.article :where(h2) {
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  font-size: 1.0625rem;
+  font-weight: 700;
+}
+
+.article :where(h2:first-child) {
+  margin-top: 0;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.aside {
+  align-self: start;
+}
+
+.detail {
+  padding: 1.25rem;
+}
+
+.detail-title {
+  margin: 0 0 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-faint);
+}
+
+.detail-list {
+  margin: 0;
+}
+
+.detail-row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-line-soft);
+  font-size: 0.8125rem;
+}
+
+.detail-row:last-child {
+  border-bottom: 0;
+}
+
+.detail-row dt {
+  color: var(--color-faint);
+}
+
+.detail-row dd {
+  margin: 0;
+  text-align: right;
+  color: var(--color-base-content);
+}
+
+.action {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+.action-icon {
+  width: 0.9375rem;
+  height: 0.9375rem;
+}
+
+@media (min-width: 900px) {
+  .body-grid {
+    grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+    gap: 4rem;
+  }
+}
+</style>

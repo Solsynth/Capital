@@ -112,7 +112,7 @@ async function handleSubmit() {
     await refresh()
   }
   catch (err: any) {
-    formError.value = err.data?.statusMessage || t('common.error', 'Action failed')
+    formError.value = err.data?.statusMessage || t('common.error')
   }
   finally {
     isSubmitting.value = false
@@ -130,7 +130,7 @@ async function handleDelete(identity: Identity) {
     await refresh()
   }
   catch (err: any) {
-    alert(err.data?.statusMessage || t('common.error', 'Delete failed'))
+    alert(err.data?.statusMessage || t('common.error'))
   }
 }
 
@@ -144,197 +144,443 @@ function getTypeIcon(type: string) {
 </script>
 
 <template>
-  <div class="container mx-auto px-4 py-16 max-w-3xl">
-    <NuxtLink
-      :to="localePath('/icp')"
-      class="btn btn-ghost btn-sm mb-8"
-    >
-      <ArrowLeft class="w-4 h-4 mr-1" />
-      {{ t('royIcp.identities.back') }}
-    </NuxtLink>
+  <div>
+    <header class="band">
+      <div class="shell">
+        <NuxtLink
+          :to="localePath('/icp')"
+          class="back"
+        >
+          <ArrowLeft class="back-icon" aria-hidden="true" />
+          {{ t('royIcp.identities.back') }}
+        </NuxtLink>
 
-    <div class="flex items-center justify-between mb-8">
-      <div class="flex items-center gap-4">
-        <User class="w-10 h-10 text-primary" />
-        <div>
-          <h1 class="text-3xl font-bold">
-            {{ t('royIcp.identities.title') }}
-          </h1>
-          <p class="opacity-70">
-            {{ t('royIcp.identities.desc') }}
-          </p>
-        </div>
-      </div>
-
-      <button
-        class="btn btn-primary"
-        @click="openCreateForm"
-      >
-        <Plus class="w-4 h-4 mr-1" />
-        {{ t('royIcp.identities.new') }}
-      </button>
-    </div>
-
-    <!-- Identity Form Modal -->
-    <div v-if="showForm" class="card bg-base-200 p-6 mb-8">
-      <div class="flex items-center justify-between mb-4">
-        <h2 class="text-xl font-bold">
-          {{ editingIdentity ? t('royIcp.identities.edit') : t('royIcp.identities.create') }}
-        </h2>
-        <button class="btn btn-ghost btn-sm btn-circle" @click="closeForm">
-          <X class="w-4 h-4" />
-        </button>
-      </div>
-
-      <div v-if="formError" class="alert alert-error mb-4">
-        <span>{{ formError }}</span>
-      </div>
-
-      <form @submit.prevent="handleSubmit" class="space-y-6">
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.identities.type') }} *</legend>
-          <div class="flex gap-4">
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
-                v-model="form.type"
-                type="radio"
-                value="individual"
-                class="radio radio-primary"
-              >
-              <User class="w-4 h-4" />
-              {{ t('royIcp.identities.individual') }}
-            </label>
-            <label class="flex items-center gap-2 cursor-pointer">
-              <input
-                v-model="form.type"
-                type="radio"
-                value="organization"
-                class="radio radio-primary"
-              >
-              <Building2 class="w-4 h-4" />
-              {{ t('royIcp.identities.organization') }}
-            </label>
+        <div class="masthead">
+          <div>
+            <h1 class="title page-title">
+              {{ t('royIcp.identities.title') }}
+            </h1>
+            <p class="lede page-lede">
+              {{ t('royIcp.identities.desc') }}
+            </p>
           </div>
-        </fieldset>
 
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.identities.name') }} *</legend>
-          <input
-            v-model="form.name"
-            type="text"
-            :placeholder="form.type === 'organization'
-              ? t('royIcp.identities.namePlaceholderOrg')
-              : t('royIcp.identities.namePlaceholderIndividual')"
-            class="input w-full"
-            required
-          >
-        </fieldset>
-
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.identities.description') }}</legend>
-          <textarea
-            v-model="form.description"
-            :placeholder="t('royIcp.identities.descriptionPlaceholder')"
-            class="textarea h-20 w-full"
-          />
-        </fieldset>
-
-        <fieldset class="fieldset">
-          <legend class="fieldset-legend">{{ t('royIcp.identities.icon') }}</legend>
-          <FileUpload
-            v-model="form.iconFileId"
-            :hint="t('royIcp.identities.iconHint')"
-            compact
-          />
-          <p class="label">{{ t('royIcp.identities.iconRecommended') }}</p>
-        </fieldset>
-
-        <div class="flex gap-4">
           <button
-            type="submit"
-            class="btn btn-primary flex-1"
-            :disabled="isSubmitting"
-          >
-            <span v-if="isSubmitting" class="loading loading-spinner loading-sm" />
-            <Check v-else class="w-4 h-4 mr-1" />
-            {{ editingIdentity ? t('royIcp.identities.save') : t('royIcp.identities.createBtn') }}
-          </button>
-          <button
+            v-if="!showForm"
             type="button"
-            class="btn btn-ghost"
-            @click="closeForm"
+            class="btn btn-primary btn-sm"
+            @click="openCreateForm"
           >
-            {{ t('royIcp.identities.cancel') }}
+            <Plus class="icon" aria-hidden="true" />
+            {{ t('royIcp.identities.new') }}
           </button>
         </div>
-      </form>
-    </div>
+      </div>
+    </header>
 
-    <!-- Identities List -->
-    <div v-if="identities.length === 0 && !showForm" class="card bg-base-200 p-12 text-center">
-      <User class="w-16 h-16 mx-auto mb-4 opacity-30" />
-      <p class="text-lg opacity-60 mb-4">
-        {{ t('royIcp.identities.empty') }}
-      </p>
-      <button class="btn btn-primary" @click="openCreateForm">
-        <Plus class="w-4 h-4 mr-1" />
-        {{ t('royIcp.identities.createFirst') }}
-      </button>
-    </div>
+    <div class="body">
+      <div class="shell">
+        <section v-if="showForm" class="plate form-panel">
+          <div class="form-head">
+            <h2 class="title form-title">
+              {{ editingIdentity ? t('royIcp.identities.edit') : t('royIcp.identities.create') }}
+            </h2>
+            <button
+              type="button"
+              class="btn btn-ghost btn-sm btn-square"
+              :aria-label="t('royIcp.identities.cancel')"
+              @click="closeForm"
+            >
+              <X class="icon" aria-hidden="true" />
+            </button>
+          </div>
 
-    <div v-else class="space-y-4">
-      <div
-        v-for="identity in identities"
-        :key="identity.id"
-        class="card bg-base-200 p-6"
-      >
-        <div class="flex items-start justify-between gap-4">
-          <div class="flex items-start gap-4">
-            <div class="w-12 h-12 rounded-xl overflow-hidden bg-base-100 flex items-center justify-center">
+          <p v-if="formError" class="note note-error">
+            {{ formError }}
+          </p>
+
+          <form class="form" @submit.prevent="handleSubmit">
+            <fieldset class="field">
+              <legend class="field-label">
+                {{ t('royIcp.identities.type') }}
+              </legend>
+              <div class="radio-row">
+                <label class="radio-option">
+                  <input
+                    v-model="form.type"
+                    type="radio"
+                    value="individual"
+                    class="radio radio-primary radio-sm"
+                  >
+                  <User class="icon" aria-hidden="true" />
+                  {{ t('royIcp.identities.individual') }}
+                </label>
+                <label class="radio-option">
+                  <input
+                    v-model="form.type"
+                    type="radio"
+                    value="organization"
+                    class="radio radio-primary radio-sm"
+                  >
+                  <Building2 class="icon" aria-hidden="true" />
+                  {{ t('royIcp.identities.organization') }}
+                </label>
+              </div>
+            </fieldset>
+
+            <div class="field">
+              <label class="field-label" for="identity-name">
+                {{ t('royIcp.identities.name') }}
+              </label>
+              <input
+                id="identity-name"
+                v-model="form.name"
+                type="text"
+                :placeholder="form.type === 'organization'
+                  ? t('royIcp.identities.namePlaceholderOrg')
+                  : t('royIcp.identities.namePlaceholderIndividual')"
+                class="input"
+                required
+              >
+            </div>
+
+            <div class="field">
+              <label class="field-label" for="identity-description">
+                {{ t('royIcp.identities.description') }}
+              </label>
+              <textarea
+                id="identity-description"
+                v-model="form.description"
+                :placeholder="t('royIcp.identities.descriptionPlaceholder')"
+                class="textarea"
+                rows="3"
+              />
+            </div>
+
+            <div class="field">
+              <p class="field-label">
+                {{ t('royIcp.identities.icon') }}
+              </p>
+              <FileUpload
+                v-model="form.iconFileId"
+                :hint="t('royIcp.identities.iconHint')"
+                compact
+              />
+              <p class="field-hint">
+                {{ t('royIcp.identities.iconRecommended') }}
+              </p>
+            </div>
+
+            <div class="form-actions">
+              <button
+                type="submit"
+                class="btn btn-primary btn-sm"
+                :disabled="isSubmitting"
+              >
+                <span v-if="isSubmitting" class="spinner" aria-hidden="true" />
+                <Check v-else class="icon" aria-hidden="true" />
+                {{ editingIdentity ? t('royIcp.identities.save') : t('royIcp.identities.createBtn') }}
+              </button>
+              <button
+                type="button"
+                class="btn btn-ghost btn-sm"
+                @click="closeForm"
+              >
+                {{ t('royIcp.identities.cancel') }}
+              </button>
+            </div>
+          </form>
+        </section>
+
+        <p v-if="identities.length === 0 && !showForm" class="empty">
+          {{ t('royIcp.identities.empty') }}
+          <button type="button" class="link-quiet empty-action" @click="openCreateForm">
+            {{ t('royIcp.identities.createFirst') }}
+          </button>
+        </p>
+
+        <ul v-else-if="identities.length > 0" class="list">
+          <li
+            v-for="identity in identities"
+            :key="identity.id"
+            class="row"
+          >
+            <span class="row-mark">
               <img
                 v-if="identity.icon"
                 :src="identity.icon"
-                :alt="identity.name"
-                class="w-full h-full object-cover"
+                alt=""
+                loading="lazy"
+                decoding="async"
               >
               <component
-                v-else
                 :is="getTypeIcon(identity.type)"
-                class="w-6 h-6 opacity-60"
+                v-else
+                class="icon"
+                aria-hidden="true"
               />
-            </div>
-            <div>
-              <div class="flex items-center gap-2 mb-1">
-                <h3 class="font-bold text-lg">{{ identity.name }}</h3>
-                <span class="badge badge-sm" :class="identity.type === 'organization' ? 'badge-primary' : 'badge-ghost'">
-                  {{ getTypeLabel(identity.type) }}
-                </span>
+            </span>
+
+            <div class="row-text">
+              <div class="row-title">
+                <span class="row-name">{{ identity.name }}</span>
+                <span class="chip">{{ getTypeLabel(identity.type) }}</span>
               </div>
-              <p v-if="identity.description" class="text-sm opacity-70">
+              <p v-if="identity.description" class="row-desc">
                 {{ identity.description }}
               </p>
-              <p class="text-xs opacity-50 mt-2">
-                {{ t('royIcp.identities.created') }}: {{ new Date(identity.created).toLocaleDateString() }}
+              <p class="mono row-meta">
+                {{ t('royIcp.identities.created') }}
+                {{ new Date(identity.created).toLocaleDateString() }}
               </p>
             </div>
-          </div>
 
-          <div class="flex gap-2">
-            <button
-              class="btn btn-ghost btn-sm"
-              @click="openEditForm(identity)"
-            >
-              <Edit class="w-4 h-4" />
-            </button>
-            <button
-              class="btn btn-ghost btn-sm text-error"
-              @click="handleDelete(identity)"
-            >
-              <Trash2 class="w-4 h-4" />
-            </button>
-          </div>
-        </div>
+            <div class="row-actions">
+              <button
+                type="button"
+                class="btn btn-ghost btn-sm btn-square"
+                :aria-label="t('royIcp.identities.edit')"
+                :title="t('royIcp.identities.edit')"
+                @click="openEditForm(identity)"
+              >
+                <Edit class="icon" aria-hidden="true" />
+              </button>
+              <button
+                type="button"
+                class="btn btn-ghost btn-sm btn-square row-delete"
+                :aria-label="t('royIcp.identities.delete')"
+                :title="t('royIcp.identities.delete')"
+                @click="handleDelete(identity)"
+              >
+                <Trash2 class="icon" aria-hidden="true" />
+              </button>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
 </template>
+
+<style scoped>
+.band {
+  padding-block: 2rem 2.25rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.5rem;
+  color: var(--color-faint);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back:hover {
+  color: var(--color-base-content);
+}
+
+.back-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.masthead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.page-title {
+  margin: 0;
+  font-size: clamp(1.75rem, 3.5vw, 2.375rem);
+}
+
+.page-lede {
+  margin: 0.6rem 0 0;
+}
+
+.icon {
+  width: 0.9rem;
+  height: 0.9rem;
+}
+
+.body {
+  padding-block: 2rem 4rem;
+}
+
+.form-panel {
+  padding: 1.25rem 1.5rem 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.form-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.form-title {
+  margin: 0;
+  font-size: 1.0625rem;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  margin-top: 1rem;
+}
+
+.field {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.field-hint {
+  margin: 0.4rem 0 0;
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.radio-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.radio-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.9rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-chip);
+  font-size: 0.875rem;
+  color: var(--color-dim);
+  cursor: pointer;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding-top: 0.25rem;
+}
+
+.spinner {
+  width: 0.8rem;
+  height: 0.8rem;
+  border: 1.5px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 999px;
+  animation: spin 700ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.empty {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 2.25rem 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line-soft);
+  font-size: 0.9375rem;
+  color: var(--color-faint);
+}
+
+.empty-action {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
+}
+
+.row {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding: 1.1rem 0;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.row-mark {
+  display: flex;
+  width: 2.5rem;
+  height: 2.5rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--radius-mark);
+  background: var(--color-base-200);
+  color: var(--color-faint);
+}
+
+.row-mark img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.row-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.row-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.row-name {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+
+.row-desc {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--color-faint);
+}
+
+.row-meta {
+  margin: 0.4rem 0 0;
+}
+
+.row-actions {
+  display: flex;
+  flex-shrink: 0;
+  gap: 0.25rem;
+}
+
+.row-delete {
+  color: var(--color-error);
+}
+</style>

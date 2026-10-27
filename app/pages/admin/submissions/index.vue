@@ -2,13 +2,10 @@
 import {
   CheckCircle,
   XCircle,
-  Clock,
-  Eye,
   Trash2,
   Link,
   ExternalLink,
   ArrowLeftRight,
-  MoreHorizontal,
 } from '@lucide/vue'
 
 const { t, locale } = useI18n()
@@ -209,12 +206,12 @@ async function handleDeleteIdentity() {
   }
 }
 
-function getStatusBadge(status: string) {
+function statusTone(status: string) {
   switch (status) {
-    case 'pending': return 'badge-warning'
-    case 'approved': return 'badge-success'
-    case 'rejected': return 'badge-error'
-    default: return 'badge-ghost'
+    case 'pending': return 'tone-warn'
+    case 'approved': return 'tone-ok'
+    case 'rejected': return 'tone-bad'
+    default: return 'tone-muted'
   }
 }
 
@@ -236,369 +233,766 @@ function getTypeLabel(type: string) {
 
 <template>
   <div>
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold">
+    <div class="admin-head">
+      <h2 class="admin-h">
         {{ t('admin.submissions.title') }}
       </h2>
+      <p class="admin-sub">
+        {{ t('admin.submissions.desc') }}
+      </p>
     </div>
 
-    <div class="tabs tabs-boxed mb-6">
+    <div class="rail" role="tablist" :aria-label="t('admin.submissions.title')">
       <button
-        class="tab"
-        :class="{ 'tab-active': filterStatus === '' }"
-        @click="filterStatus = ''"
+        v-for="option in [
+          { value: '', label: t('admin.submissions.all') },
+          { value: 'pending', label: t('royIcp.mySubmissions.pending') },
+          { value: 'approved', label: t('royIcp.mySubmissions.approved') },
+          { value: 'rejected', label: t('royIcp.mySubmissions.rejected') },
+        ]"
+        :key="option.value || 'all'"
+        type="button"
+        role="tab"
+        class="rail-tab"
+        :class="{ 'is-current': filterStatus === option.value }"
+        :aria-selected="filterStatus === option.value"
+        @click="filterStatus = option.value"
       >
-        {{ t('admin.submissions.all') }}
-      </button>
-      <button
-        class="tab"
-        :class="{ 'tab-active': filterStatus === 'pending' }"
-        @click="filterStatus = 'pending'"
-      >
-        <Clock class="w-4 h-4 mr-1" />
-        {{ t('royIcp.mySubmissions.pending') }}
-      </button>
-      <button
-        class="tab"
-        :class="{ 'tab-active': filterStatus === 'approved' }"
-        @click="filterStatus = 'approved'"
-      >
-        <CheckCircle class="w-4 h-4 mr-1" />
-        {{ t('royIcp.mySubmissions.approved') }}
-      </button>
-      <button
-        class="tab"
-        :class="{ 'tab-active': filterStatus === 'rejected' }"
-        @click="filterStatus = 'rejected'"
-      >
-        <XCircle class="w-4 h-4 mr-1" />
-        {{ t('royIcp.mySubmissions.rejected') }}
+        {{ option.label }}
       </button>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      <!-- Submissions List -->
-      <div class="lg:col-span-1 space-y-3 max-h-[calc(100vh-16rem)] overflow-y-auto px-1 py-1">
-        <div
-          v-for="sub in submissions"
-          :key="sub.id"
-          class="card bg-base-200 hover:bg-base-300 cursor-pointer transition-all p-4 border-2"
-          :class="selectedSubmission?.id === sub.id ? 'border-primary' : 'border-transparent'"
-          @click="selectSubmission(sub)"
-        >
-          <div class="flex items-start justify-between gap-2 mb-2">
-            <div class="flex-1 min-w-0">
-              <h3 class="font-bold truncate">{{ sub.data.name }}</h3>
-              <code class="text-xs opacity-60">{{ sub.data.domain }}</code>
-            </div>
-            <div class="flex flex-col items-end gap-1">
-              <span class="badge badge-sm" :class="getStatusBadge(sub.status)">
-                {{ getStatusLabel(sub.status) }}
-              </span>
-              <span class="badge badge-sm badge-outline">
-                {{ getTypeLabel(sub.type) }}
-              </span>
-            </div>
-          </div>
-          <div class="text-xs opacity-60">
-            <p>{{ sub.user.name || sub.user.email }}</p>
-            <p>{{ new Date(sub.created).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US') }}</p>
-          </div>
-          <!-- Quick actions on list cards -->
-          <div v-if="sub.site_id || sub.data.identity_id" class="flex gap-1 mt-2 pt-2 border-t border-base-content/10" @click.stop>
-            <button
-              v-if="sub.site_id"
-              class="btn btn-ghost btn-xs text-error"
-              :title="t('admin.submissions.deleteSiteWarning')"
-              @click="selectSubmission(sub); deletingSiteId = sub.site_id"
+    <div class="split">
+      <div class="list-col">
+        <ul v-if="submissions.length" class="queue">
+          <li v-for="sub in submissions" :key="sub.id">
+            <div
+              class="queue-item"
+              :class="{ 'is-selected': selectedSubmission?.id === sub.id }"
+              role="button"
+              tabindex="0"
+              @click="selectSubmission(sub)"
+              @keydown.enter.prevent="selectSubmission(sub)"
+              @keydown.space.prevent="selectSubmission(sub)"
             >
-              <Trash2 class="w-3 h-3 mr-1" />
-              {{ t('reviews.delete') }} {{ t('admin.nav.sites') }}
-            </button>
-            <button
-              v-if="sub.data.identity_id"
-              class="btn btn-ghost btn-xs text-error"
-              :title="t('admin.submissions.deleteIdentityWarning')"
-              @click="selectSubmission(sub); deletingIdentityId = sub.data.identity_id"
-            >
-              <Trash2 class="w-3 h-3 mr-1" />
-              {{ t('reviews.delete') }} {{ t('royIcp.site.identity') }}
-            </button>
-          </div>
-        </div>
+              <div class="queue-head">
+                <div class="queue-main">
+                  <p class="queue-name">{{ sub.data.name }}</p>
+                  <p class="mono">{{ sub.data.domain }}</p>
+                </div>
+                <span class="status" :class="statusTone(sub.status)">
+                  <span class="dot" aria-hidden="true" />
+                  {{ getStatusLabel(sub.status) }}
+                </span>
+              </div>
+              <div class="queue-meta">
+                <span class="chip">{{ getTypeLabel(sub.type) }}</span>
+                <span>{{ sub.user.name || sub.user.email }}</span>
+                <span class="mono">{{ new Date(sub.created).toLocaleDateString(locale === 'zh' ? 'zh-CN' : 'en-US') }}</span>
+              </div>
+              <div
+                v-if="sub.site_id || sub.data.identity_id"
+                class="queue-actions"
+                @click.stop
+              >
+                <button
+                  v-if="sub.site_id"
+                  class="btn btn-xs"
+                  :title="t('admin.submissions.deleteSiteWarning')"
+                  @click="selectSubmission(sub); deletingSiteId = sub.site_id"
+                >
+                  <Trash2 class="btn-icon" aria-hidden="true" />
+                  {{ t('reviews.delete') }} {{ t('admin.nav.sites') }}
+                </button>
+                <button
+                  v-if="sub.data.identity_id"
+                  class="btn btn-xs"
+                  :title="t('admin.submissions.deleteIdentityWarning')"
+                  @click="selectSubmission(sub); deletingIdentityId = sub.data.identity_id"
+                >
+                  <Trash2 class="btn-icon" aria-hidden="true" />
+                  {{ t('reviews.delete') }} {{ t('royIcp.site.identity') }}
+                </button>
+              </div>
+            </div>
+          </li>
+        </ul>
 
-        <div v-if="submissions.length === 0" class="card bg-base-200 p-8 text-center">
-          <Eye class="w-12 h-12 mx-auto mb-4 opacity-30" />
-          <p class="opacity-60">{{ t('admin.submissions.noSubmissions') }}</p>
-        </div>
+        <p v-else class="empty">
+          {{ t('admin.submissions.noSubmissions') }}
+        </p>
       </div>
 
-      <!-- Submission Detail -->
-      <div class="lg:col-span-2">
-        <div v-if="selectedSubmission" class="card bg-base-200 p-6 sticky top-20">
-          <div class="flex items-center justify-between mb-6">
-            <h2 class="text-2xl font-bold">{{ selectedSubmission.data.name }}</h2>
-            <div class="flex gap-2">
-              <span class="badge" :class="getStatusBadge(selectedSubmission.status)">
+      <div class="detail-col">
+        <div v-if="selectedSubmission" class="detail">
+          <div class="detail-head">
+            <h3 class="detail-title">
+              {{ selectedSubmission.data.name }}
+            </h3>
+            <div class="detail-tags">
+              <span class="status" :class="statusTone(selectedSubmission.status)">
+                <span class="dot" aria-hidden="true" />
                 {{ getStatusLabel(selectedSubmission.status) }}
               </span>
-              <span class="badge badge-outline">
-                {{ getTypeLabel(selectedSubmission.type) }}
-              </span>
+              <span class="chip">{{ getTypeLabel(selectedSubmission.type) }}</span>
             </div>
           </div>
 
-          <!-- Site Management (for approved submissions with linked site) — shown near top -->
-          <template v-if="selectedSubmission.site_id">
-            <div class="p-4 bg-primary/5 rounded-xl mb-6 border border-primary/20">
-              <h3 class="text-sm font-bold mb-3 flex items-center gap-2">
-                <ExternalLink class="w-4 h-4" />
+          <div v-if="selectedSubmission.site_id" class="plate site-block">
+            <div class="site-head">
+              <h4 class="block-title">
+                <ExternalLink class="block-icon" aria-hidden="true" />
                 {{ t('admin.submissions.siteManagement') }}
-              </h3>
-              <div class="flex items-center justify-between gap-2">
-                <div class="min-w-0">
-                  <p class="text-sm font-bold truncate">{{ selectedSubmission.site_name || selectedSubmission.data.name }}</p>
-                  <p class="text-xs opacity-60">
-                    {{ t('admin.submissions.fillingNo') }}: {{ selectedSubmission.site_filling_no || '-' }}
-                  </p>
-                </div>
-                <div class="flex gap-1 shrink-0">
-                  <NuxtLink
-                    v-if="selectedSubmission.site_filling_no"
-                    :to="localePath(`/icp/${selectedSubmission.site_filling_no}`)"
-                    class="btn btn-ghost btn-xs"
-                  >
-                    <ExternalLink class="w-3 h-3" />
-                  </NuxtLink>
-                  <button
-                    class="btn btn-ghost btn-xs text-error"
-                    @click="deletingSiteId = selectedSubmission.site_id"
-                  >
-                    <Trash2 class="w-3.5 h-3.5 mr-1" />
-                    {{ t('reviews.delete') }}
-                  </button>
-                </div>
-              </div>
-
-              <!-- Reassign Identity inline -->
-              <div class="mt-3 pt-3 border-t border-base-content/10">
-                <div class="flex items-center gap-2 mb-2">
-                  <Link class="w-3.5 h-3.5 opacity-60" />
-                  <span class="text-xs opacity-60">{{ t('admin.submissions.associatedIdentity') }}</span>
-                </div>
-                <div v-if="reassigningSiteId === selectedSubmission.site_id" class="space-y-2">
-                  <select v-model="reassignIdentityId" class="select select-bordered select-sm w-full">
-                    <option value="">
-                      {{ t('admin.submissions.selectIdentity') }}
-                    </option>
-                    <option
-                      v-for="ident in identities"
-                      :key="ident.id"
-                      :value="ident.id"
-                    >
-                      {{ ident.name }} ({{ getIdentityTypeLabel(ident) }}) — {{ ident.user?.email || t('admin.submissions.unknown') }}
-                    </option>
-                  </select>
-                  <div class="flex gap-2">
-                    <button class="btn btn-xs" @click="resetSiteActions">
-                      {{ t('royIcp.identities.cancel') }}
-                    </button>
-                    <button
-                      class="btn btn-primary btn-xs"
-                      :disabled="isReassigning"
-                      @click="handleReassign"
-                    >
-                      <span v-if="isReassigning" class="loading loading-spinner loading-xs" />
-                      {{ t('admin.contests.save') }}
-                    </button>
-                  </div>
-                </div>
-                <div v-else class="flex items-center justify-between">
-                  <span class="text-sm">
-                    <template v-if="selectedSubmission.data.identity_id && getIdentityById(selectedSubmission.data.identity_id)">
-                      {{ getIdentityById(selectedSubmission.data.identity_id)?.name }}
-                      <span class="opacity-50 text-xs">({{ selectedSubmission.data.identity_id.slice(0, 8) }}...)</span>
-                    </template>
-                    <span v-else class="opacity-50">{{ t('admin.submissions.none') }}</span>
-                  </span>
-                  <button
-                    class="btn btn-ghost btn-xs"
-                    @click="startReassign(selectedSubmission.site_id!)"
-                  >
-                    <ArrowLeftRight class="w-3 h-3 mr-1" />
-                    {{ t('admin.submissions.selectIdentity') }}
-                  </button>
-                </div>
+              </h4>
+              <div class="site-actions">
+                <NuxtLink
+                  v-if="selectedSubmission.site_filling_no"
+                  :to="localePath(`/icp/${selectedSubmission.site_filling_no}`)"
+                  class="btn btn-xs"
+                >
+                  <ExternalLink class="btn-icon" aria-hidden="true" />
+                  {{ t('royIcp.site.visit') }}
+                </NuxtLink>
+                <button
+                  class="btn btn-xs"
+                  @click="deletingSiteId = selectedSubmission.site_id"
+                >
+                  <Trash2 class="btn-icon" aria-hidden="true" />
+                  {{ t('reviews.delete') }}
+                </button>
               </div>
             </div>
-          </template>
 
-          <div class="space-y-4 mb-6">
-            <div v-if="selectedSubmission.data.icon_url" class="flex items-center gap-4 mb-4">
-              <div class="w-16 h-16 rounded-xl overflow-hidden border border-base-300">
+            <p class="site-name">
+              {{ selectedSubmission.site_name || selectedSubmission.data.name }}
+            </p>
+            <p class="mono">
+              {{ t('admin.submissions.fillingNo') }}: {{ selectedSubmission.site_filling_no || '-' }}
+            </p>
+
+            <div class="reassign">
+              <p class="field-label reassign-label">
+                <Link class="inline-icon" aria-hidden="true" />
+                {{ t('admin.submissions.associatedIdentity') }}
+              </p>
+              <div v-if="reassigningSiteId === selectedSubmission.site_id" class="reassign-form">
+                <select v-model="reassignIdentityId" class="select select-sm">
+                  <option value="">
+                    {{ t('admin.submissions.selectIdentity') }}
+                  </option>
+                  <option
+                    v-for="ident in identities"
+                    :key="ident.id"
+                    :value="ident.id"
+                  >
+                    {{ ident.name }} ({{ getIdentityTypeLabel(ident) }}) — {{ ident.user?.email || t('admin.submissions.unknown') }}
+                  </option>
+                </select>
+                <div class="reassign-actions">
+                  <button class="btn btn-xs" @click="resetSiteActions">
+                    {{ t('royIcp.identities.cancel') }}
+                  </button>
+                  <button
+                    class="btn btn-xs btn-primary"
+                    :disabled="isReassigning"
+                    @click="handleReassign"
+                  >
+                    <span v-if="isReassigning" class="loading loading-spinner loading-xs" />
+                    {{ t('admin.contests.save') }}
+                  </button>
+                </div>
+              </div>
+              <div v-else class="reassign-current">
+                <span class="reassign-value">
+                  <template v-if="selectedSubmission.data.identity_id && getIdentityById(selectedSubmission.data.identity_id)">
+                    {{ getIdentityById(selectedSubmission.data.identity_id)?.name }}
+                    <span class="mono">({{ selectedSubmission.data.identity_id.slice(0, 8) }}…)</span>
+                  </template>
+                  <span v-else class="reassign-none">{{ t('admin.submissions.none') }}</span>
+                </span>
+                <button class="btn btn-xs" @click="startReassign(selectedSubmission.site_id!)">
+                  <ArrowLeftRight class="btn-icon" aria-hidden="true" />
+                  {{ t('admin.submissions.selectIdentity') }}
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <dl class="facts">
+            <div v-if="selectedSubmission.data.icon_url" class="fact">
+              <dt>{{ t('admin.submissions.siteIcon') }}</dt>
+              <dd>
                 <img
                   :src="selectedSubmission.data.icon_url"
                   :alt="selectedSubmission.data.name"
-                  class="w-full h-full object-cover"
+                  class="fact-icon"
                 >
-              </div>
-              <div>
-                <p class="font-bold">{{ selectedSubmission.data.name }}</p>
-                <p class="text-sm opacity-60">{{ t('admin.submissions.siteIcon') }}</p>
-              </div>
+              </dd>
             </div>
-            <div>
-              <label class="text-sm opacity-60">{{ t('royIcp.submit.domain') }}</label>
-              <p class="font-mono">{{ selectedSubmission.data.domain }}</p>
+            <div class="fact">
+              <dt>{{ t('royIcp.submit.domain') }}</dt>
+              <dd class="mono">
+                {{ selectedSubmission.data.domain }}
+              </dd>
             </div>
-            <div>
-              <label class="text-sm opacity-60">{{ t('royIcp.submit.siteUrl') }}</label>
-              <a :href="selectedSubmission.data.site_url" target="_blank" class="link link-primary">
-                {{ selectedSubmission.data.site_url }}
-              </a>
+            <div class="fact">
+              <dt>{{ t('royIcp.submit.siteUrl') }}</dt>
+              <dd>
+                <a :href="selectedSubmission.data.site_url" target="_blank" rel="noopener" class="link-quiet">
+                  {{ selectedSubmission.data.site_url }}
+                </a>
+              </dd>
             </div>
-            <div v-if="selectedSubmission.data.description">
-              <label class="text-sm opacity-60">{{ t('royIcp.submit.description') }}</label>
-              <p>{{ selectedSubmission.data.description }}</p>
+            <div v-if="selectedSubmission.data.description" class="fact">
+              <dt>{{ t('royIcp.submit.description') }}</dt>
+              <dd>{{ selectedSubmission.data.description }}</dd>
             </div>
-            <div v-if="selectedSubmission.data.categories?.length">
-              <label class="text-sm opacity-60">{{ t('royIcp.site.categories') }}</label>
-              <div class="flex flex-wrap gap-2 mt-1">
-                <span v-for="cat in selectedSubmission.data.categories" :key="cat" class="badge badge-primary">
+            <div v-if="selectedSubmission.data.categories?.length" class="fact">
+              <dt>{{ t('royIcp.site.categories') }}</dt>
+              <dd class="fact-chips">
+                <span v-for="cat in selectedSubmission.data.categories" :key="cat" class="chip">
                   {{ cat }}
                 </span>
-              </div>
+              </dd>
             </div>
-          </div>
-
-          <div class="divider" />
-
-          <!-- Identity Section -->
-          <div v-if="selectedSubmission.data.identity_id" class="mb-6">
-            <label class="text-sm opacity-60">{{ t('royIcp.site.identity') }}</label>
-            <div class="flex items-center justify-between mt-1">
-              <div class="flex items-center gap-2">
-                <p class="font-mono text-sm">{{ selectedSubmission.data.identity_id }}</p>
-                <span v-if="getIdentityById(selectedSubmission.data.identity_id)" class="text-sm opacity-60">
+            <div v-if="selectedSubmission.data.identity_id" class="fact">
+              <dt>{{ t('royIcp.site.identity') }}</dt>
+              <dd class="fact-identity">
+                <span class="mono">{{ selectedSubmission.data.identity_id }}</span>
+                <span v-if="getIdentityById(selectedSubmission.data.identity_id)" class="fact-note">
                   ({{ getIdentityById(selectedSubmission.data.identity_id)?.name }})
                 </span>
-              </div>
-              <button
-                class="btn btn-ghost btn-xs text-error"
-                @click="deletingIdentityId = selectedSubmission.data.identity_id"
-              >
-                <Trash2 class="w-3 h-3 mr-1" />
-                {{ t('reviews.delete') }} {{ t('royIcp.site.identity') }}
-              </button>
+                <button
+                  class="btn btn-xs"
+                  @click="deletingIdentityId = selectedSubmission.data.identity_id"
+                >
+                  <Trash2 class="btn-icon" aria-hidden="true" />
+                  {{ t('reviews.delete') }}
+                </button>
+              </dd>
             </div>
+          </dl>
+
+          <div
+            v-if="selectedSubmission.data.identity_name || selectedSubmission.data.identity_description || selectedSubmission.data.identity_icon_file_id"
+            class="plate identity-block"
+          >
+            <p class="block-title">
+              {{ t('royIcp.mySubmissions.identityUpdates') }}
+            </p>
+            <p v-if="selectedSubmission.data.identity_name" class="identity-line">
+              <span class="identity-key">{{ t('royIcp.identities.name') }}:</span>
+              {{ selectedSubmission.data.identity_name }}
+            </p>
+            <p v-if="selectedSubmission.data.identity_description" class="identity-line">
+              <span class="identity-key">{{ t('royIcp.identities.description') }}:</span>
+              {{ selectedSubmission.data.identity_description }}
+            </p>
+            <p v-if="selectedSubmission.data.identity_icon_file_id" class="identity-line">
+              {{ t('admin.submissions.includesNewIcon') }}
+            </p>
           </div>
 
-          <div v-if="selectedSubmission.data.identity_name || selectedSubmission.data.identity_description || selectedSubmission.data.identity_icon_file_id" class="p-3 bg-primary/10 rounded-lg mb-6">
-            <p class="text-sm font-bold mb-2">{{ t('royIcp.mySubmissions.identityUpdates') }}</p>
-            <div v-if="selectedSubmission.data.identity_name" class="text-sm">
-              <span class="opacity-60">{{ t('royIcp.identities.name') }}:</span> {{ selectedSubmission.data.identity_name }}
-            </div>
-            <div v-if="selectedSubmission.data.identity_description" class="text-sm">
-              <span class="opacity-60">{{ t('royIcp.identities.description') }}:</span> {{ selectedSubmission.data.identity_description }}
-            </div>
-            <p v-if="selectedSubmission.data.identity_icon_file_id" class="text-sm">{{ t('admin.submissions.includesNewIcon') }}</p>
+          <div class="fact">
+            <p class="field-label">
+              {{ t('admin.submissions.submittedBy') }}
+            </p>
+            <p class="submitter">
+              {{ selectedSubmission.user.name || selectedSubmission.user.email }}
+            </p>
+            <p class="mono">
+              {{ selectedSubmission.user.email }}
+            </p>
           </div>
 
-          <div class="divider" />
-
-          <div class="mb-6">
-            <label class="text-sm opacity-60">{{ t('admin.submissions.submittedBy') }}</label>
-            <p>{{ selectedSubmission.user.name || selectedSubmission.user.email }}</p>
-            <p class="text-sm opacity-60">{{ selectedSubmission.user.email }}</p>
-          </div>
-
-          <div v-if="selectedSubmission.status === 'pending'" class="space-y-4">
-            <div class="form-control">
-              <label class="label">
-                <span class="label-text">{{ t('royIcp.mySubmissions.reviewNote') }}</span>
-              </label>
+          <div v-if="selectedSubmission.status === 'pending'" class="review-form">
+            <label>
+              <span class="field-label">{{ t('royIcp.mySubmissions.reviewNote') }}</span>
               <textarea
                 v-model="reviewNote"
                 :placeholder="t('admin.submissions.reviewNotePlaceholder')"
-                class="textarea textarea-bordered w-full h-20"
+                class="textarea h-20"
               />
-            </div>
-
-            <div class="flex gap-4">
+            </label>
+            <div class="review-actions">
               <button
-                class="btn btn-success flex-1"
+                class="btn btn-sm btn-primary"
                 :disabled="isReviewing"
                 @click="handleReview('approve')"
               >
-                <span v-if="isReviewing" class="loading loading-spinner loading-sm" />
-                <CheckCircle v-else class="w-5 h-5 mr-2" />
+                <span v-if="isReviewing" class="loading loading-spinner loading-xs" />
+                <CheckCircle v-else class="btn-icon" aria-hidden="true" />
                 {{ t('admin.submissions.approve') }}
               </button>
               <button
-                class="btn btn-error flex-1"
+                class="btn btn-sm"
                 :disabled="isReviewing"
                 @click="handleReview('reject')"
               >
-                <span v-if="isReviewing" class="loading loading-spinner loading-sm" />
-                <XCircle v-else class="w-5 h-5 mr-2" />
+                <span v-if="isReviewing" class="loading loading-spinner loading-xs" />
+                <XCircle v-else class="btn-icon" aria-hidden="true" />
                 {{ t('admin.submissions.reject') }}
               </button>
             </div>
           </div>
 
-          <div v-else-if="selectedSubmission.review_note" class="mt-4">
-            <label class="text-sm opacity-60">{{ t('royIcp.mySubmissions.reviewNote') }}</label>
-            <p class="bg-base-300 p-3 rounded-lg mt-1">{{ selectedSubmission.review_note }}</p>
+          <div v-else-if="selectedSubmission.review_note" class="review-note">
+            <p class="field-label">
+              {{ t('royIcp.mySubmissions.reviewNote') }}
+            </p>
+            <p class="review-note-body">
+              {{ selectedSubmission.review_note }}
+            </p>
           </div>
         </div>
 
-        <div v-else class="card bg-base-200 p-12 text-center sticky top-20">
-          <Eye class="w-16 h-16 mx-auto mb-4 opacity-30" />
-          <p class="text-lg opacity-60">
-            {{ t('admin.submissions.selectHint') }}
-          </p>
-        </div>
+        <p v-else class="empty detail-empty">
+          {{ t('admin.submissions.selectHint') }}
+        </p>
       </div>
     </div>
 
-    <!-- Delete Site Dialog -->
     <AppDialog
       :open="!!deletingSiteId"
       :title="t('admin.submissions.confirmDeleteSite')"
       max-width="max-w-sm"
       @update:open="!$event && (deletingSiteId = null)"
     >
-      <p class="text-sm">
+      <p class="dialog-copy">
         {{ t('admin.submissions.deleteSiteWarning') }}
       </p>
       <template #footer>
-        <button class="btn" @click="deletingSiteId = null">{{ t('royIcp.identities.cancel') }}</button>
+        <button class="btn" @click="deletingSiteId = null">
+          {{ t('royIcp.identities.cancel') }}
+        </button>
         <button class="btn btn-error" :disabled="isDeletingSite" @click="handleDeleteSite">
-          <span v-if="isDeletingSite" class="loading loading-spinner loading-sm" />
-          <Trash2 v-else class="w-4 h-4 mr-1" />
+          <span v-if="isDeletingSite" class="loading loading-spinner loading-xs" />
+          <Trash2 v-else class="btn-icon" aria-hidden="true" />
           {{ t('reviews.delete') }}
         </button>
       </template>
     </AppDialog>
 
-    <!-- Delete Identity Dialog -->
     <AppDialog
       :open="!!deletingIdentityId"
       :title="t('admin.submissions.confirmDeleteIdentity')"
       max-width="max-w-sm"
       @update:open="!$event && (deletingIdentityId = null)"
     >
-      <p class="text-sm">
+      <p class="dialog-copy">
         {{ t('admin.submissions.deleteIdentityWarning') }}
       </p>
       <template #footer>
-        <button class="btn" @click="deletingIdentityId = null">{{ t('royIcp.identities.cancel') }}</button>
+        <button class="btn" @click="deletingIdentityId = null">
+          {{ t('royIcp.identities.cancel') }}
+        </button>
         <button class="btn btn-error" :disabled="isDeletingIdentity" @click="handleDeleteIdentity">
-          <span v-if="isDeletingIdentity" class="loading loading-spinner loading-sm" />
-          <Trash2 v-else class="w-4 h-4 mr-1" />
+          <span v-if="isDeletingIdentity" class="loading loading-spinner loading-xs" />
+          <Trash2 v-else class="btn-icon" aria-hidden="true" />
           {{ t('reviews.delete') }}
         </button>
       </template>
     </AppDialog>
   </div>
 </template>
+
+<style scoped>
+.admin-head {
+  margin-bottom: 1.25rem;
+}
+
+.admin-h {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.admin-sub {
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.rail {
+  display: flex;
+  gap: 0.125rem;
+  padding: 0.1875rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  border: 1px solid var(--color-line-soft);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-base-200) 45%, transparent);
+}
+
+.rail-tab {
+  padding: 0.375rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-faint);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease;
+}
+
+.rail-tab:hover {
+  color: var(--color-base-content);
+}
+
+.rail-tab.is-current {
+  background: var(--color-base-300);
+  color: var(--color-base-content);
+}
+
+.rail-tab:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.split {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1.5rem;
+}
+
+.queue {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.queue-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.85rem 0.6rem 0.85rem 0.65rem;
+  border-bottom: 1px solid var(--color-line-soft);
+  border-left: 2px solid transparent;
+  cursor: pointer;
+  transition:
+    background-color 140ms ease,
+    border-color 140ms ease;
+}
+
+.queue-item:hover {
+  background: color-mix(in oklab, var(--color-base-200) 55%, transparent);
+}
+
+.queue-item:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.queue-item.is-selected {
+  border-left-color: var(--color-primary);
+  background: color-mix(in oklab, var(--color-primary) 8%, transparent);
+}
+
+.queue-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.6rem;
+}
+
+.queue-main {
+  min-width: 0;
+}
+
+.queue-name {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  letter-spacing: -0.005em;
+}
+
+.queue-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.queue-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  margin-top: 0.2rem;
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status .dot {
+  background: currentColor;
+}
+
+.tone-ok {
+  color: var(--color-success);
+}
+
+.tone-warn {
+  color: var(--color-warning);
+}
+
+.tone-bad {
+  color: var(--color-error);
+}
+
+.tone-muted {
+  color: var(--color-faint);
+}
+
+.detail {
+  display: flex;
+  flex-direction: column;
+  gap: 1.1rem;
+  padding: 1.1rem 1.15rem 1.25rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: color-mix(in oklab, var(--color-base-200) 40%, transparent);
+}
+
+.detail-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.detail-title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+}
+
+.detail-tags {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.site-block {
+  padding: 0.9rem 1rem;
+}
+
+.site-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.block-title {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-dim);
+}
+
+.block-icon {
+  width: 0.8125rem;
+  height: 0.8125rem;
+}
+
+.site-actions {
+  display: flex;
+  gap: 0.3rem;
+}
+
+.site-name {
+  margin: 0.45rem 0 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.reassign {
+  margin-top: 0.85rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.reassign-label {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.inline-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+.reassign-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.reassign-actions {
+  display: flex;
+  gap: 0.4rem;
+}
+
+.reassign-current {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.reassign-value {
+  font-size: 0.8125rem;
+}
+
+.reassign-none {
+  color: var(--color-faint);
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.8rem;
+  margin: 0;
+}
+
+.fact dt {
+  margin: 0 0 0.15rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-faint);
+}
+
+.fact dd {
+  margin: 0;
+  font-size: 0.875rem;
+  word-break: break-word;
+}
+
+.fact-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-mark);
+  object-fit: cover;
+}
+
+.fact-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+
+.fact-identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.fact-note {
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.identity-block {
+  padding: 0.85rem 1rem;
+}
+
+.identity-line {
+  margin: 0.3rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+
+.identity-key {
+  color: var(--color-faint);
+}
+
+.submitter {
+  margin: 0.2rem 0 0;
+  font-size: 0.875rem;
+}
+
+.review-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.review-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.review-note {
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.review-note-body {
+  margin: 0.25rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+
+.dialog-copy {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+
+.btn-icon {
+  width: 0.8125rem;
+  height: 0.8125rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.25rem 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.detail-empty {
+  padding: 2rem 0;
+}
+
+@media (min-width: 1024px) {
+  .split {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: start;
+  }
+
+  .detail {
+    position: sticky;
+    top: 4.5rem;
+  }
+}
+</style>

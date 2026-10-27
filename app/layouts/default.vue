@@ -1,7 +1,6 @@
 <script setup lang="ts">
 const { locale, t } = useI18n()
 const route = useRoute()
-const localePath = useLocalePath()
 
 const lang = computed(() => locale.value as string)
 const siteName = computed(() => t('seo.siteName'))
@@ -72,13 +71,12 @@ useSchemaOrg([
 
 <template>
   <AppToast>
-    <div class="min-h-screen flex flex-col">
+    <div class="site">
+      <a href="#main" class="skip">{{ t('nav.skipToContent') }}</a>
+
       <AppNavbar banner-height="0px" />
 
-      <main
-        class="flex-1"
-        style="margin-top: var(--site-page-offset, 64px);"
-      >
+      <main id="main" class="site-main">
         <slot />
       </main>
 
@@ -89,17 +87,33 @@ useSchemaOrg([
   </AppToast>
 </template>
 
-<script lang="ts">
-if (import.meta.client) {
-  const savedTheme = localStorage.getItem('theme')
-  if (savedTheme) {
-    document.documentElement.setAttribute('data-theme', savedTheme)
-  }
-  else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-    document.documentElement.setAttribute('data-theme', 'dark')
-  }
-  else {
-    document.documentElement.setAttribute('data-theme', 'light')
-  }
+<style scoped>
+.site {
+  display: flex;
+  min-height: 100dvh;
+  flex-direction: column;
 }
-</script>
+
+.site-main {
+  flex: 1;
+  margin-top: var(--site-page-offset);
+}
+
+.skip {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 60;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--radius-chip);
+  background: var(--color-base-300);
+  color: var(--color-base-content);
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.skip:focus {
+  left: 1rem;
+  top: calc(var(--site-page-offset) + 0.75rem);
+}
+</style>

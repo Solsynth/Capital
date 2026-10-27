@@ -1,21 +1,12 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
-import {
-  CodeXml,
-  ExternalLink,
-  Bug,
-  ArrowLeft,
-  Tag,
-  Folder,
-  MessageSquare,
-} from "@lucide/vue";
-import StarRating from "~/components/StarRating.vue";
+import { CodeXml } from "@lucide/vue";
 import ProductDownloadsCta from "~/components/ProductDownloadsCta.vue";
 import ReviewSummary from "~/components/ReviewSummary.vue";
 import ReviewForm from "~/components/ReviewForm.vue";
 import ReviewList from "~/components/ReviewList.vue";
 import { useProductReviews } from "~/composables/useProductReviews";
 import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
+
 
 const { t, locale } = useI18n();
 const localePath = useLocalePath();
@@ -103,6 +94,30 @@ const title = computed(() => product.value?.title || "");
 const description = computed(() => product.value?.description || "");
 const hasPage = computed(() => product.value?.hasPage !== false);
 
+// The fact ledger beside the title: only what the content actually declares.
+function stampDate(value?: string): string | null {
+  if (!value) return null;
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return value;
+  return new Intl.DateTimeFormat(locale.value === "zh" ? "zh-CN" : "en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
+}
+
+const facts = computed(() => {
+  const p = product.value;
+  if (!p) return [];
+  const rows: Array<{ label: string; value: string; mono?: boolean }> = [];
+  if (p.series) rows.push({ label: t("products.series"), value: p.series });
+  if (p.version) rows.push({ label: t("product.version"), value: `v${p.version}`, mono: true });
+  const released = stampDate(p.releasedDate);
+  if (released) rows.push({ label: t("product.releasedLabel"), value: released, mono: true });
+  if (p.tags?.length) rows.push({ label: t("products.tags"), value: String(p.tags.length), mono: true });
+  return rows;
+});
+
 definePageMeta({
   title: "",
   description: "",
@@ -160,491 +175,415 @@ useSchemaOrg([
 ]);
 </script>
 
+
 <template>
   <div v-if="product">
-    <!-- Variant 1: Has markdown content -->
-    <template v-if="hasContent">
-      <div
-        class="relative min-h-[56vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
-      >
-        <NuxtImg
-          :src="product.background"
-          class="absolute inset-0 w-full h-full object-cover -z-10 opacity-80"
-          :alt="title"
-          width="1920"
-          height="1080"
-          format="webp"
-          :style="{ viewTransitionName: `product-hero-${slug}` }"
-          loading="eager"
-          decoding="async"
-        />
-        <div
-          class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"
-        />
+    <header class="masthead">
+      <div class="shell">
+        <nav class="crumbs" :aria-label="t('products.title')">
+          <NuxtLink :to="localePath('/products')" class="crumb">
+            {{ t('products.title') }}
+          </NuxtLink>
+          <span class="crumb-sep" aria-hidden="true">/</span>
+          <span class="crumb-current">{{ title }}</span>
+        </nav>
 
-        <div class="relative container mx-auto px-4 pb-14 pt-40">
-          <div class="max-w-2xl">
-            <NuxtImg
-              :src="product.icon"
-              class="w-14 h-14 rounded-2xl shadow-lg mb-5"
-              :alt="title"
-              width="56"
-              height="56"
-              format="webp"
-              loading="eager"
-              decoding="async"
-            />
-            <p v-if="product.series" class="eyebrow mb-3">{{ product.series }}</p>
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
+        <div class="masthead-grid">
+          <div class="masthead-main">
+            <div class="ident">
+              <NuxtImg
+                :src="product.icon"
+                class="ident-mark"
+                :alt="''"
+                width="56"
+                height="56"
+                format="webp"
+                loading="eager"
+                decoding="async"
+              />
+              <span v-if="product.series" class="ident-series">{{ product.series }}</span>
+            </div>
+
+            <h1 class="display masthead-title">
               {{ title }}
             </h1>
-            <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed">
+            <p class="masthead-lede">
               {{ description }}
             </p>
-            <div class="mt-7 flex flex-wrap items-center gap-3">
+
+            <div class="masthead-actions">
               <a
                 v-if="product.url"
                 :href="product.url"
                 target="_blank"
-                class="btn btn-primary btn-md rounded-full px-6 gap-2"
+                rel="noopener"
+                class="btn btn-primary action"
               >
-                <ExternalLink class="w-4 h-4" />
-                {{ t("product.open") }}
+                {{ hasPage ? t('product.open') : t('product.getStarted') }}
               </a>
               <a
                 v-if="product.repo"
                 :href="product.repo"
                 target="_blank"
-                class="btn btn-ghost rounded-full px-5 gap-2"
+                rel="noopener"
+                class="btn btn-ghost action"
               >
-                <CodeXml class="w-4 h-4" />
-                {{ t("product.github") }}
+                <CodeXml class="action-icon" aria-hidden="true" />
+                {{ t('product.github') }}
               </a>
+              <NuxtLink
+                v-if="hasPage"
+                :to="localePath(`/products/${slug}/releases`)"
+                class="btn btn-ghost action"
+              >
+                {{ t('product.releases') }}
+              </NuxtLink>
             </div>
           </div>
+
+          <!-- Facts print as a ledger, one row per attribute, with the value
+               right-aligned so versions and dates line up when scanned. -->
+          <dl v-if="facts.length" class="facts">
+            <div v-for="fact in facts" :key="fact.label" class="fact">
+              <dt>{{ fact.label }}</dt>
+              <dd :class="{ mono: fact.mono }">{{ fact.value }}</dd>
+            </div>
+          </dl>
         </div>
       </div>
+    </header>
 
-      <div class="container mx-auto px-4 py-12">
-        <article class="prose prose-lg max-w-3xl mx-auto">
+    <div class="shell">
+      <figure class="cover">
+        <NuxtImg
+          :src="product.background"
+          class="cover-img"
+          :alt="title"
+          width="1600"
+          height="760"
+          sizes="sm:100vw"
+          format="webp"
+          :style="{ viewTransitionName: `product-hero-${slug}` }"
+          loading="eager"
+          decoding="async"
+        />
+      </figure>
+    </div>
+
+    <div class="shell body">
+      <div class="body-grid">
+        <article v-if="hasContent" class="prose">
           <ContentRenderer :value="product" />
         </article>
-      </div>
-    </template>
 
-    <!-- Variant 2: hasPage but no content -->
-    <template v-else-if="hasPage">
-      <div
-        class="relative min-h-[56vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
-      >
-        <NuxtImg
-          :src="product.background"
-          class="absolute inset-0 w-full h-full object-cover -z-10 opacity-80"
-          :alt="title"
-          width="1920"
-          height="1080"
-          format="webp"
-          :style="{ viewTransitionName: `product-hero-${slug}` }"
-          loading="eager"
-          decoding="async"
-        />
-        <div
-          class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"
-        />
-
-        <div class="relative container mx-auto px-4 pb-14 pt-40">
-          <div class="max-w-2xl">
-            <NuxtImg
-              :src="product.icon"
-              class="w-14 h-14 rounded-2xl shadow-lg mb-5"
-              :alt="title"
-              width="56"
-              height="56"
-              format="webp"
-              loading="eager"
-              decoding="async"
-            />
-            <p v-if="product.series" class="eyebrow mb-3">{{ product.series }}</p>
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
-              {{ title }}
-            </h1>
-            <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed">
-              {{ description }}
-            </p>
-            <div class="mt-7 flex flex-wrap items-center gap-3">
-              <a
-                v-if="product.url"
-                :href="product.url"
-                target="_blank"
-                class="btn btn-primary btn-md rounded-full px-6"
-              >
-                {{ t("product.getStarted") }}
-              </a>
-              <a
-                v-if="product.repo"
-                :href="product.repo"
-                target="_blank"
-                class="btn btn-ghost rounded-full px-5 gap-2"
-              >
-                <CodeXml class="w-4 h-4" />
-                {{ t("product.github") }}
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="container mx-auto px-4 py-24">
-        <section class="mb-16">
-          <div class="max-w-2xl">
-            <p class="eyebrow mb-3">{{ title }}</p>
-            <h2 class="text-3xl font-semibold tracking-tight">
-              {{ lang === "zh" ? `为什么选择 ${title}？` : `Why ${title}?` }}
-            </h2>
-            <p class="mt-4 opacity-70 leading-relaxed">
-              {{
-                lang === "zh"
-                  ? "为创作者、开发者和连接者打造的平台。体验一个理解您热爱的平台。"
-                  : "Built for those who create, code, and connect. Experience a platform that understands your passions."
-              }}
-            </p>
-          </div>
-
-          <div class="mt-14 grid md:grid-cols-2 gap-x-10 gap-y-10">
-            <div class="border-t border-base-content/10 pt-6">
-              <h3 class="font-semibold">
-                {{ lang === "zh" ? "开发者优先" : "Developer First" }}
-              </h3>
-              <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
-                {{
-                  lang === "zh"
-                    ? "原生语法高亮、代码片段分享，与您喜爱的开发工具无缝集成。"
-                    : "Native syntax highlighting, code snippet sharing, and seamless integration with your favorite dev tools."
-                }}
-              </p>
-            </div>
-            <div class="border-t border-base-content/10 pt-6">
-              <h3 class="font-semibold">OpenAPI</h3>
-              <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
-                {{
-                  lang === "zh"
-                    ? "完全文档化的 API，透明的速率限制和风险控制。开发自己应用的绝佳起点！"
-                    : "Fully documented API, transparent rate limiting and risk control. Great start for developing your own app!"
-                }}
-              </p>
-            </div>
-            <div class="border-t border-base-content/10 pt-6">
-              <h3 class="font-semibold">ACG Culture</h3>
-              <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
-                {{
-                  lang === "zh"
-                    ? "动漫、游戏爱好者的专属空间。分享您的作品、评论和热情。"
-                    : "A dedicated space for Anime, Comic, and Game enthusiasts. Share your art, reviews, and passion."
-                }}
-              </p>
-            </div>
-            <div class="border-t border-base-content/10 pt-6">
-              <h3 class="font-semibold">
-                {{ lang === "zh" ? "友好的社区" : "Friendly Community" }}
-              </h3>
-              <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
-                {{
-                  lang === "zh"
-                    ? "加入志同道合者的活力社区。分享知识、提出问题、建立联系。"
-                    : "Join a vibrant community of like-minded individuals. Share knowledge, ask questions, and connect."
-                }}
-              </p>
-            </div>
-          </div>
-        </section>
-
-        <section
-          class="border-t border-base-content/10 pt-10 mb-16 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
-        >
-          <div class="max-w-xl">
-            <h2 class="text-2xl font-semibold tracking-tight">
-              {{ t("product.startJourney") }}
-            </h2>
-            <p class="mt-1.5 opacity-60">{{ t("product.available") }}</p>
-          </div>
-          <div class="flex flex-wrap items-center gap-3 shrink-0">
-            <a
-              v-if="product.url"
-              :href="product.url"
-              target="_blank"
-              class="btn btn-primary rounded-full gap-2"
-            >
-              <ExternalLink class="w-4 h-4" />
-              {{ t("product.openBrowser") }}
-            </a>
-            <a
-              v-if="product.repo"
-              :href="product.repo"
-              target="_blank"
-              class="btn btn-ghost rounded-full gap-2"
-            >
-              <CodeXml class="w-4 h-4" />
-              {{ t("product.viewGithub") }}
-            </a>
-          </div>
-        </section>
-
-        <section
-          class="border-t border-base-content/10 pt-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
-        >
-          <div class="max-w-xl">
-            <h2 class="text-2xl font-semibold tracking-tight">
-              {{ t("product.needHelp") }}
-            </h2>
-            <p class="mt-1.5 opacity-60">
-              {{
-                lang === "zh"
-                  ? "请通过客户服务中心或 GitHub 报告问题。"
-                  : "Feel free to contact your customer service or report a bug on GitHub."
-              }}
-            </p>
-          </div>
-          <a
-            v-if="product.repo"
-            :href="`${product.repo}/issues`"
-            target="_blank"
-            class="btn btn-outline rounded-full gap-2 shrink-0"
-          >
-            <Bug class="w-4 h-4" />
-            {{ t("product.reportIssue") }}
-          </a>
-        </section>
-      </div>
-    </template>
-
-    <!-- Variant 3: Simple card (no page) -->
-    <template v-else>
-      <div
-        class="relative min-h-[56vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
-      >
-        <NuxtImg
-          :src="product.background"
-          class="absolute inset-0 w-full h-full object-cover -z-10 opacity-80"
-          :alt="title"
-          width="1920"
-          height="1080"
-          format="webp"
-          loading="eager"
-          decoding="async"
-          :style="{ viewTransitionName: `product-hero-${slug}` }"
-        />
-        <div
-          class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent"
-        />
-
-        <div class="relative container mx-auto px-4 pb-14 pt-40">
-          <div class="max-w-2xl">
-            <NuxtImg
-              :src="product.icon"
-              class="w-14 h-14 rounded-2xl shadow-lg mb-5"
-              :alt="title"
-              width="56"
-              height="56"
-              format="webp"
-              loading="eager"
-              decoding="async"
-            />
-            <p v-if="product.series" class="eyebrow mb-3">{{ product.series }}</p>
-            <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight">
-              {{ title }}
-            </h1>
-            <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed">
-              {{ description }}
-            </p>
-            <div class="mt-7 flex flex-wrap items-center gap-3">
-              <a
-                v-if="product.url"
-                :href="product.url"
-                target="_blank"
-                class="btn btn-primary btn-md rounded-full px-6 gap-2"
-              >
-                <ExternalLink class="w-4 h-4" />
-                {{ t("product.open") }}
-              </a>
-              <a
-                v-if="product.repo"
-                :href="product.repo"
-                target="_blank"
-                class="btn btn-ghost rounded-full px-5 gap-2"
-              >
-                <CodeXml class="w-4 h-4" />
-                {{ t("product.github") }}
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="container mx-auto px-4 py-12">
-        <div class="card bg-base-200 p-8 max-w-2xl mx-auto">
-          <div class="flex items-center gap-3 mb-4">
-            <NuxtImg
-              :src="product.icon"
-              class="w-12 h-12 rounded-lg"
-              :alt="title"
-              width="48"
-              height="48"
-              format="webp"
-              loading="lazy"
-              decoding="async"
-            />
-            <div>
-              <h2 class="text-xl font-bold">
-                {{ title }}
-              </h2>
-              <span v-if="product.version" class="text-sm opacity-60"
-                >v{{ product.version }}</span
-              >
-            </div>
-          </div>
-
-          <p class="opacity-80 mb-6">
-            {{ description }}
+        <article v-else class="prose">
+          <h2>{{ lang === 'zh' ? `为什么选择 ${title}？` : `Why ${title}?` }}</h2>
+          <p>
+            {{
+              lang === 'zh'
+                ? '为创作者、开发者和连接者打造的平台。体验一个理解您热爱的平台。'
+                : 'Built for those who create, code, and connect. Experience a platform that understands your passions.'
+            }}
           </p>
 
-          <div
-            v-if="product.tags?.length > 0 || product.series"
-            class="flex flex-wrap gap-2 mb-6"
-          >
-            <NuxtLink
-              v-if="product.series"
-              :to="`${localePath('/products')}?series=${encodeURIComponent(product.series)}`"
-              class="badge badge-primary badge-sm"
-            >
-              <Folder class="w-3 h-3 mr-1" />
-              {{ product.series }}
-            </NuxtLink>
+          <h3>{{ lang === 'zh' ? '开发者优先' : 'Developer first' }}</h3>
+          <p>
+            {{
+              lang === 'zh'
+                ? '原生语法高亮、代码片段分享，与您喜爱的开发工具无缝集成。'
+                : 'Native syntax highlighting, code snippet sharing, and seamless integration with your favorite dev tools.'
+            }}
+          </p>
+
+          <h3>{{ lang === 'zh' ? '友好的社区' : 'A friendly community' }}</h3>
+          <p>
+            {{
+              lang === 'zh'
+                ? '加入志同道合者的活力社区。分享知识、提出问题、建立联系。'
+                : 'Join a vibrant community of like-minded individuals. Share knowledge, ask questions, and connect.'
+            }}
+          </p>
+        </article>
+
+        <aside v-if="product.tags?.length" class="tags" :aria-label="t('products.tags')">
+          <h2 class="tags-title">
+            {{ t('products.tags') }}
+          </h2>
+          <div class="tags-list">
             <NuxtLink
               v-for="tag in product.tags"
               :key="tag"
               :to="`${localePath('/products')}?tag=${encodeURIComponent(tag)}`"
-              class="badge badge-outline badge-sm hover:badge-primary"
+              class="chip"
             >
-              <Tag class="w-3 h-3 mr-1" />
               {{ tag }}
             </NuxtLink>
           </div>
-
-          <div class="flex flex-wrap gap-4 text-sm">
-            <a
-              v-if="product.url"
-              :href="product.url"
-              target="_blank"
-              class="btn btn-primary btn-sm"
-            >
-              <ExternalLink class="w-4 h-4" />
-              {{ t("product.visitWebsite") }}
-            </a>
-            <a
-              v-if="product.repo"
-              :href="product.repo"
-              target="_blank"
-              class="btn btn-outline btn-sm"
-            >
-              <CodeXml class="w-4 h-4" />
-              {{ t("product.sourceCode") }}
-            </a>
-            <NuxtLink
-              :to="localePath('/products')"
-              class="btn btn-ghost btn-sm"
-            >
-              <ArrowLeft class="w-4 h-4" />
-              {{ t("products.backToProducts") }}
-            </NuxtLink>
-          </div>
-
-          <p v-if="product.releasedDate" class="text-sm opacity-60 mt-4">
-            {{ t("product.released") }} {{ product.releasedDate }}
-          </p>
-        </div>
+        </aside>
       </div>
-    </template>
+    </div>
 
-    <!-- ==================== Downloads CTA ==================== -->
     <ProductDownloadsCta :slug="slug" :product-title="product?.title" />
 
-    <!-- ==================== Reviews Section ==================== -->
-    <section class="container mx-auto px-4 pb-24">
-      <div class="max-w-xl mb-10">
-        <p class="eyebrow mb-3">{{ t("reviews.title") }}</p>
-        <h2 class="text-3xl font-semibold tracking-tight">
-          {{ t("reviews.shareExperience") }}
-        </h2>
+    <section class="reviews">
+      <div class="shell">
+        <div class="reviews-head">
+          <h2 class="reviews-title">
+            {{ t('reviews.title') }}
+          </h2>
+          <ReviewForm
+            v-model="reviewForm"
+            v-model:open="reviewFormOpen"
+            :submitting="submitting"
+            :existing-review="!!myReview"
+            @submit="handleSubmitReview"
+            @delete="handleDeleteReview"
+          >
+            <template #trigger>
+              <button
+                v-if="!myReview && !myReviewLoading"
+                type="button"
+                class="btn btn-sm"
+                @click="openReviewForm"
+              >
+                {{ t('reviews.writeReview') }}
+              </button>
+              <button
+                v-else-if="!myReviewLoading"
+                type="button"
+                class="btn btn-sm btn-ghost"
+                @click="openReviewForm"
+              >
+                {{ t('reviews.editReview') }}
+              </button>
+            </template>
+          </ReviewForm>
+        </div>
+
+        <ReviewSummary
+          v-if="summary"
+          :average="summary.average"
+          :count="summary.count"
+          :distribution="{
+            fiveStar: summary.fiveStar,
+            fourStar: summary.fourStar,
+            threeStar: summary.threeStar,
+            twoStar: summary.twoStar,
+            oneStar: summary.oneStar,
+          }"
+          class="reviews-summary"
+        />
+
+        <ReviewList
+          :reviews="reviews"
+          :sort="sort"
+          :loading="reviewsLoading"
+          :page="page"
+          :total-pages="totalPages"
+          @update:sort="setSort"
+          @helpful="handleHelpful"
+          @next-page="nextPage"
+          @prev-page="prevPage"
+        />
       </div>
-
-      <!-- Review Summary -->
-      <ReviewSummary
-        v-if="summary"
-        :average="summary.average"
-        :count="summary.count"
-        :distribution="{
-          fiveStar: summary.fiveStar,
-          fourStar: summary.fourStar,
-          threeStar: summary.threeStar,
-          twoStar: summary.twoStar,
-          oneStar: summary.oneStar,
-        }"
-        class="mb-6"
-      />
-
-      <!-- Write Review Form -->
-      <div v-if="!myReviewLoading" class="mb-6">
-        <ReviewForm
-          v-model="reviewForm"
-          v-model:open="reviewFormOpen"
-          :submitting="submitting"
-          :existing-review="!!myReview"
-          @submit="handleSubmitReview"
-          @delete="handleDeleteReview"
-        >
-          <template #trigger>
-            <span
-              v-if="!myReview"
-              class="btn btn-primary btn-sm gap-2"
-              @click="openReviewForm"
-            >
-              <MessageSquare class="w-4 h-4" />
-              {{ t("reviews.writeReview") }}
-            </span>
-            <span
-              v-else
-              class="btn btn-outline btn-sm gap-2"
-              @click="openReviewForm"
-            >
-              <MessageSquare class="w-4 h-4" />
-              {{ t("reviews.editReview") }}
-            </span>
-          </template>
-        </ReviewForm>
-      </div>
-
-      <!-- Reviews List -->
-      <ReviewList
-        :reviews="reviews"
-        :sort="sort"
-        :loading="reviewsLoading"
-        :page="page"
-        :total-pages="totalPages"
-        @update:sort="setSort"
-        @helpful="handleHelpful"
-        @next-page="nextPage"
-        @prev-page="prevPage"
-      />
     </section>
   </div>
 </template>
 
 <style scoped>
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.5;
+.masthead {
+  padding-block: 2rem 1.75rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.8125rem;
+}
+
+.crumb {
+  color: var(--color-faint);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.crumb:hover,
+.crumb:focus-visible {
+  color: var(--color-base-content);
+}
+
+.crumb-sep {
+  color: var(--color-line);
+}
+
+.crumb-current {
+  color: var(--color-dim);
+}
+
+.masthead-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2rem;
+}
+
+.ident {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.ident-mark {
+  width: 3rem;
+  height: 3rem;
+  border-radius: var(--radius-mark);
+  object-fit: cover;
+  background: var(--color-base-300);
+}
+
+.ident-series {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-faint);
+}
+
+.masthead-title {
+  margin: 0;
+  font-size: clamp(2.25rem, 5vw, 3.25rem);
+}
+
+.masthead-lede {
+  margin: 1rem 0 0;
+  max-width: 34rem;
+  font-size: 1.125rem;
+  line-height: 1.55;
+  color: var(--color-dim);
+}
+
+.masthead-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.75rem;
+}
+
+.action {
+  padding-inline: 1.25rem;
+}
+
+.action-icon {
+  width: 0.9375rem;
+  height: 0.9375rem;
+}
+
+.facts {
+  margin: 0;
+  align-self: start;
+  border-top: 1px solid var(--color-line);
+}
+
+.fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0;
+  border-bottom: 1px solid var(--color-line-soft);
+  font-size: 0.8125rem;
+}
+
+.fact dt {
+  color: var(--color-faint);
+}
+
+.fact dd {
+  margin: 0;
+  text-align: right;
+  color: var(--color-base-content);
+}
+
+.cover {
+  margin: 0;
+  margin-top: 2rem;
+  overflow: hidden;
+  border-radius: var(--radius-card);
+  border: 1px solid var(--color-line-soft);
+  background: var(--color-base-200);
+}
+
+.cover-img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 7;
+  object-fit: cover;
+}
+
+.body {
+  padding-top: 2.5rem;
+}
+
+.body-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+}
+
+.tags-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-faint);
+}
+
+.tags-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.reviews {
+  margin-top: 3.5rem;
+  padding-top: 2.5rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.reviews-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.reviews-title {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.reviews-summary {
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 900px) {
+  .masthead {
+    padding-block: 2.5rem 2.25rem;
+  }
+
+  .masthead-grid {
+    grid-template-columns: minmax(0, 1fr) 16rem;
+    gap: 3rem;
+  }
+
+  .body-grid {
+    grid-template-columns: minmax(0, 42rem) minmax(0, 1fr);
+    gap: 4rem;
+  }
 }
 </style>

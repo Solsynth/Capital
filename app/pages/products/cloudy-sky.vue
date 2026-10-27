@@ -1,534 +1,154 @@
 <script setup lang="ts">
 import {
   Bell,
-  Bug,
   CheckCircle,
-  CodeXml,
-  Download,
   MessageSquare,
   RefreshCw,
   Shield,
   Smartphone,
-  Star,
   Wifi,
   Zap,
-} from "@lucide/vue";
-import ReviewSummary from "~/components/ReviewSummary.vue";
-import ProductDownloadsCta from "~/components/ProductDownloadsCta.vue";
-import ReviewForm from "~/components/ReviewForm.vue";
-import ReviewList from "~/components/ReviewList.vue";
-import { useProductReviews } from "~/composables/useProductReviews";
-import { useProductReviewSubmission } from "~/composables/useProductReviewSubmission";
+} from '@lucide/vue'
 
-const { t } = useI18n();
-const localePath = useLocalePath();
+const { t } = useI18n()
+const localePath = useLocalePath()
 
-const PRODUCT_SLUG = "cloudy-sky";
+const PRODUCT_SLUG = 'cloudy-sky'
+const REPO_URL = 'https://github.com/Solsynth/CloudySky'
 
-const aboutCards = [
-  {
-    icon: Bell,
-    titleKey: "cloudySky.aboutCard.notifications.title",
-    descKey: "cloudySky.aboutCard.notifications.desc",
-  },
-  {
-    icon: Shield,
-    titleKey: "cloudySky.aboutCard.secure.title",
-    descKey: "cloudySky.aboutCard.secure.desc",
-  },
-  {
-    icon: Zap,
-    titleKey: "cloudySky.aboutCard.realtime.title",
-    descKey: "cloudySky.aboutCard.realtime.desc",
-  },
-] as const;
+const aboutCards = computed(() => [
+  { icon: Bell, title: t('cloudySky.aboutCard.notifications.title'), desc: t('cloudySky.aboutCard.notifications.desc') },
+  { icon: Shield, title: t('cloudySky.aboutCard.secure.title'), desc: t('cloudySky.aboutCard.secure.desc') },
+  { icon: Zap, title: t('cloudySky.aboutCard.realtime.title'), desc: t('cloudySky.aboutCard.realtime.desc') },
+])
 
-const features = [
-  {
-    key: "oidc",
-    icon: Shield,
-    titleKey: "cloudySky.features.oidc.title",
-    descKey: "cloudySky.features.oidc.desc",
-  },
-  {
-    key: "sse",
-    icon: Zap,
-    titleKey: "cloudySky.features.sse.title",
-    descKey: "cloudySky.features.sse.desc",
-  },
-  {
-    key: "grouping",
-    icon: MessageSquare,
-    titleKey: "cloudySky.features.grouping.title",
-    descKey: "cloudySky.features.grouping.desc",
-  },
-  {
-    key: "media",
-    icon: Smartphone,
-    titleKey: "cloudySky.features.media.title",
-    descKey: "cloudySky.features.media.desc",
-  },
-  {
-    key: "reply",
-    icon: RefreshCw,
-    titleKey: "cloudySky.features.reply.title",
-    descKey: "cloudySky.features.reply.desc",
-  },
-  {
-    key: "settings",
-    icon: Wifi,
-    titleKey: "cloudySky.features.settings.title",
-    descKey: "cloudySky.features.settings.desc",
-  },
-] as const;
+const features = computed(() => [
+  { icon: Shield, title: t('cloudySky.features.oidc.title'), desc: t('cloudySky.features.oidc.desc') },
+  { icon: Zap, title: t('cloudySky.features.sse.title'), desc: t('cloudySky.features.sse.desc') },
+  { icon: MessageSquare, title: t('cloudySky.features.grouping.title'), desc: t('cloudySky.features.grouping.desc') },
+  { icon: Smartphone, title: t('cloudySky.features.media.title'), desc: t('cloudySky.features.media.desc') },
+  { icon: RefreshCw, title: t('cloudySky.features.reply.title'), desc: t('cloudySky.features.reply.desc') },
+  { icon: Wifi, title: t('cloudySky.features.settings.title'), desc: t('cloudySky.features.settings.desc') },
+])
 
-const {
-  reviews,
-  summary,
-  loading: reviewsLoading,
-  sort,
-  setSort,
-  page,
-  totalPages,
-  nextPage,
-  prevPage,
-  refresh: refreshReviews,
-} = useProductReviews(PRODUCT_SLUG);
-
-const {
-  myReview,
-  loading: myReviewLoading,
-  submitting,
-  fetchMyReview,
-  submit,
-  update,
-  remove,
-} = useProductReviewSubmission(PRODUCT_SLUG);
-
-const reviewFormOpen = ref(false);
-const reviewForm = ref({
-  rating: 0,
-  title: "",
-  content: "",
-  isRecommended: null as boolean | null,
-});
-
-onMounted(async () => {
-  await Promise.all([fetchMyReview(), refreshReviews()]);
-});
-
-function openReviewForm() {
-  if (myReview.value) {
-    reviewForm.value = {
-      rating: myReview.value.rating,
-      title: myReview.value.title || "",
-      content: myReview.value.content || "",
-      isRecommended: myReview.value.isRecommended,
-    };
-  } else {
-    reviewForm.value = {
-      rating: 0,
-      title: "",
-      content: "",
-      isRecommended: null,
-    };
-  }
-  reviewFormOpen.value = true;
-}
-
-async function handleSubmitReview() {
-  if (reviewForm.value.rating === 0) return;
-  try {
-    if (myReview.value) {
-      await update(reviewForm.value);
-    } else {
-      await submit(reviewForm.value);
-    }
-    reviewFormOpen.value = false;
-    await refreshReviews();
-  } catch {
-    // error handled by composable
-  }
-}
-
-async function handleDeleteReview() {
-  try {
-    await remove();
-    reviewFormOpen.value = false;
-    await refreshReviews();
-  } catch {
-    // error handled by composable
-  }
-}
-
-async function handleHelpful(id: string) {
-  await $fetch(`/api/products/${PRODUCT_SLUG}/reviews/${id}/helpful`, {
-    method: "POST",
-  });
-  await refreshReviews();
-}
+const requirements = computed(() => [
+  { title: t('cloudySky.requirements.android.title'), desc: t('cloudySky.requirements.android.desc') },
+  { title: t('cloudySky.requirements.account.title'), desc: t('cloudySky.requirements.account.desc') },
+  { title: t('cloudySky.requirements.battery.title'), desc: t('cloudySky.requirements.battery.desc') },
+])
 
 definePageMeta({
-  title: "CloudySky",
-  description: "Official Solar Network Android push notification companion app.",
-});
+  title: 'CloudySky',
+  description: 'Official Solar Network Android push notification companion app.',
+})
 
 useSeoMeta({
-  description: () => t("cloudySky.tagline"),
-});
+  description: () => t('cloudySky.tagline'),
+})
 
-defineOgImage("UniOgImage", {
-  title: "CloudySky",
-  description: () => t("cloudySky.tagline"),
-  iconImage: "/images/cloudy-sky/icon.png",
-  backgroundImage: "/images/cloudy-sky/main-visual.svg",
-});
+defineOgImage('UniOgImage', {
+  title: 'CloudySky',
+  description: () => t('cloudySky.tagline'),
+  iconImage: '/images/cloudy-sky/icon.png',
+  backgroundImage: '/images/cloudy-sky/main-visual.svg',
+})
 </script>
 
 <template>
-  <div class="cloudy-sky-page">
-    <!-- Hero -->
-    <section
-      class="relative min-h-[60vh] flex items-end overflow-hidden -mt-(--site-page-offset,64px)"
-    >
-      <NuxtImg
-        src="/images/cloudy-sky/main-visual.svg"
-        class="absolute inset-0 w-full h-full object-cover object-center -z-10 opacity-70"
-        width="1920"
-        height="1080"
-        loading="eager"
-        fetchpriority="high"
-        format="webp"
-        alt=""
-        style="view-transition-name: product-hero-cloudy-sky"
-      />
-      <div
-        class="absolute inset-0 bg-linear-to-t from-base-100 via-base-100/50 to-transparent dark:via-base-100/55"
-      />
-
-      <div class="relative container mx-auto px-4 pb-14 pt-40">
-        <div class="hero-rise max-w-2xl">
-          <NuxtImg
-            src="/images/cloudy-sky/icon.png"
-            class="w-14 h-14 rounded-2xl shadow-lg mb-5"
-            alt="CloudySky"
-            width="56"
-            height="56"
-            format="webp"
-            loading="eager"
-            decoding="async"
-          />
-          <p class="eyebrow mb-3">
-            Android &middot; {{ t("cloudySky.openSource") }}
-          </p>
-          <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight">
-            CloudySky
-          </h1>
-          <p class="mt-3 text-base sm:text-lg opacity-75 leading-relaxed max-w-xl">
-            {{ t("cloudySky.tagline") }}
-          </p>
-          <p class="mt-5 font-mono text-sm opacity-70" aria-hidden="true">
-            <span class="text-primary">⇅</span> sse://push.solian.app
-          </p>
-          <div class="mt-7 flex flex-wrap items-center gap-3">
-            <NuxtLink
-              :to="localePath(`/products/${PRODUCT_SLUG}/releases`)"
-              class="btn btn-primary btn-md rounded-full px-6 gap-2"
-            >
-              <Download class="w-4 h-4" aria-hidden="true" />
-              {{ t("releasePage.downloads") }}
-            </NuxtLink>
-            <a
-              href="https://github.com/Solsynth/CloudySky"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-ghost rounded-full px-5 gap-2"
-            >
-              <CodeXml class="w-4 h-4" />
-              GitHub
-            </a>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- About -->
-    <section class="container mx-auto px-4 py-24">
-      <div class="max-w-2xl">
-        <p class="eyebrow mb-3">{{ t("cloudySky.about.badge") }}</p>
-        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
-          {{ t("cloudySky.about.title") }}
-        </h2>
-        <p class="mt-4 opacity-70 leading-relaxed">
-          {{ t("cloudySky.about.desc") }}
-        </p>
-      </div>
-
-      <div class="mt-14 grid md:grid-cols-3 gap-x-10 gap-y-10">
-        <div
-          v-for="card in aboutCards"
-          :key="card.titleKey"
-          class="pt-6 border-t border-base-content/10"
-        >
-          <component
-            :is="card.icon"
-            class="w-5 h-5 text-primary mb-3"
-            aria-hidden="true"
-          />
-          <h3 class="font-semibold">{{ t(card.titleKey) }}</h3>
-          <p class="mt-1.5 text-sm opacity-60 leading-relaxed">
-            {{ t(card.descKey) }}
-          </p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Features -->
-    <section class="container mx-auto px-4 py-24">
-      <div class="max-w-2xl">
-        <p class="eyebrow mb-3">{{ t("cloudySky.features.badge") }}</p>
-        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
-          {{ t("cloudySky.features.title") }}
-        </h2>
-        <p class="mt-4 opacity-70 leading-relaxed">
-          {{ t("cloudySky.features.desc") }}
-        </p>
-      </div>
-
-      <ul class="mt-14 grid sm:grid-cols-2 lg:grid-cols-3 gap-x-10">
-        <li
-          v-for="feature in features"
-          :key="feature.key"
-          class="flex items-start gap-4 py-5 border-t border-base-content/10"
-        >
-          <component
-            :is="feature.icon"
-            class="w-5 h-5 mt-0.5 text-primary shrink-0"
-            aria-hidden="true"
-          />
-          <div class="min-w-0">
-            <h3 class="text-sm font-semibold">{{ t(feature.titleKey) }}</h3>
-            <p class="mt-1 text-sm opacity-55 leading-relaxed">
-              {{ t(feature.descKey) }}
-            </p>
-          </div>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Requirements -->
-    <section class="container mx-auto px-4 pb-24">
-      <div class="max-w-2xl">
-        <p class="eyebrow mb-3">{{ t("cloudySky.requirements.title") }}</p>
-      </div>
-      <ul class="mt-8 grid sm:grid-cols-3 gap-x-10">
-        <li class="flex items-start gap-3 py-4 border-t border-base-content/10">
-          <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
-          <div>
-            <p class="font-medium text-sm">{{ t("cloudySky.requirements.android.title") }}</p>
-            <p class="text-sm opacity-55 leading-relaxed">{{ t("cloudySky.requirements.android.desc") }}</p>
-          </div>
-        </li>
-        <li class="flex items-start gap-3 py-4 border-t border-base-content/10">
-          <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
-          <div>
-            <p class="font-medium text-sm">{{ t("cloudySky.requirements.account.title") }}</p>
-            <p class="text-sm opacity-55 leading-relaxed">{{ t("cloudySky.requirements.account.desc") }}</p>
-          </div>
-        </li>
-        <li class="flex items-start gap-3 py-4 border-t border-base-content/10">
-          <CheckCircle class="w-5 h-5 text-success shrink-0 mt-0.5" />
-          <div>
-            <p class="font-medium text-sm">{{ t("cloudySky.requirements.battery.title") }}</p>
-            <p class="text-sm opacity-55 leading-relaxed">{{ t("cloudySky.requirements.battery.desc") }}</p>
-          </div>
-        </li>
-      </ul>
-    </section>
-
-    <!-- Downloads -->
-    <ProductDownloadsCta :slug="PRODUCT_SLUG" product-title="CloudySky" />
-
-    <!-- Reviews -->
-    <section class="container mx-auto px-4 pb-24">
-      <div class="max-w-xl mb-12">
-        <p class="eyebrow mb-3">{{ t("reviews.title") }}</p>
-        <h2 class="text-3xl md:text-4xl font-semibold tracking-tight">
-          {{ t("reviews.shareExperience") }}
-        </h2>
-      </div>
-
-      <div
-        class="grid lg:grid-cols-[minmax(260px,320px)_minmax(0,1fr)] gap-6 lg:gap-8 items-start"
-      >
-        <aside
-          class="card bg-base-200 border border-base-content/5 p-6 lg:sticky lg:top-24"
-        >
-          <ReviewSummary
-            v-if="summary"
-            :average="summary.average"
-            :count="summary.count"
-            :distribution="{
-              fiveStar: summary.fiveStar,
-              fourStar: summary.fourStar,
-              threeStar: summary.threeStar,
-              twoStar: summary.twoStar,
-              oneStar: summary.oneStar,
-            }"
-          />
-          <div
-            v-else-if="reviewsLoading || myReviewLoading"
-            class="animate-pulse space-y-3 py-2"
-          >
-            <div class="h-10 w-16 bg-base-300 rounded mx-auto" />
-            <div class="h-3 w-full bg-base-300 rounded" />
-            <div class="h-3 w-full bg-base-300 rounded" />
-            <div class="h-3 w-4/5 bg-base-300 rounded" />
-          </div>
-          <div v-else class="text-center py-2">
-            <p class="text-3xl font-bold tabular-nums mb-1">&mdash;</p>
-            <p class="text-xs opacity-50">
-              {{ t("reviews.summary.count", { count: 0 }) }}
-            </p>
-          </div>
-
-          <div class="divider my-4" />
-
-          <div v-if="myReview && !myReviewLoading" class="mb-4">
-            <p class="text-xs opacity-50 mb-2">{{ t("reviews.editReview") }}</p>
-            <div
-              class="flex items-center gap-2 rounded-lg bg-base-100 border border-base-content/5 px-3 py-2"
-            >
-              <StarRating :model-value="myReview.rating" size="xs" readonly />
-              <span class="text-sm font-medium tabular-nums"
-                >{{ myReview.rating }}/5</span
-              >
-            </div>
-          </div>
-
-          <div v-if="!myReviewLoading">
-            <ReviewForm
-              v-model="reviewForm"
-              v-model:open="reviewFormOpen"
-              :submitting="submitting"
-              :existing-review="!!myReview"
-              @submit="handleSubmitReview"
-              @delete="handleDeleteReview"
-            >
-              <template #trigger>
-                <button
-                  v-if="!myReview"
-                  type="button"
-                  class="btn btn-primary w-full gap-2"
-                  @click="openReviewForm"
-                >
-                  <Star class="w-4 h-4" />
-                  {{ t("reviews.writeReview") }}
-                </button>
-                <button
-                  v-else
-                  type="button"
-                  class="btn btn-outline w-full gap-2"
-                  @click="openReviewForm"
-                >
-                  <Star class="w-4 h-4" />
-                  {{ t("reviews.editReview") }}
-                </button>
-              </template>
-            </ReviewForm>
-          </div>
-          <div v-else class="h-10 bg-base-300 rounded-lg animate-pulse" />
-        </aside>
-
-        <div class="min-w-0">
-          <ReviewList
-            :reviews="reviews"
-            :sort="sort"
-            :loading="reviewsLoading"
-            :page="page"
-            :total-pages="totalPages"
-            @update:sort="setSort"
-            @helpful="handleHelpful"
-            @next-page="nextPage"
-            @prev-page="prevPage"
-          />
-        </div>
-      </div>
-    </section>
-
-    <!-- Help -->
-    <section class="container mx-auto px-4 pb-24">
-      <div
-        class="border-t border-base-content/10 pt-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6"
-      >
-        <div class="max-w-xl">
-          <h2 class="text-2xl font-semibold tracking-tight">
-            {{ t("cloudySky.help.title") }}
+  <ProductLanding
+    :slug="PRODUCT_SLUG"
+    title="CloudySky"
+    :tagline="t('cloudySky.tagline')"
+    icon="/images/cloudy-sky/icon.png"
+    background="/images/cloudy-sky/main-visual.svg"
+    :badges="['Android', t('cloudySky.openSource')]"
+    prompt="sse://push.solian.app"
+    :primary-label="t('releasePage.downloads')"
+    :to="localePath(`/products/${PRODUCT_SLUG}/releases`)"
+    :repo="REPO_URL"
+    :about-title="t('cloudySky.about.title')"
+    :about-desc="t('cloudySky.about.desc')"
+    :about-cards="aboutCards"
+    :features-title="t('cloudySky.features.title')"
+    :features-desc="t('cloudySky.features.desc')"
+    :features="features"
+  >
+    <template #after-features>
+      <section class="band">
+        <div class="shell">
+          <h2 class="band-title">
+            {{ t('cloudySky.requirements.title') }}
           </h2>
-          <p class="mt-1.5 opacity-60">{{ t("cloudySky.help.desc") }}</p>
+          <ul class="req-grid">
+            <li v-for="item in requirements" :key="item.title" class="req">
+              <CheckCircle class="req-icon" aria-hidden="true" />
+              <div>
+                <h3 class="req-title">{{ item.title }}</h3>
+                <p class="req-desc">{{ item.desc }}</p>
+              </div>
+            </li>
+          </ul>
         </div>
-        <a
-          href="https://github.com/Solsynth/CloudySky/issues"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="btn btn-outline btn-md rounded-full gap-2 shrink-0"
-        >
-          <Bug class="w-4 h-4" />
-          {{ t("royIcpFilling.help.reportIssue") }}
-        </a>
-      </div>
-    </section>
-  </div>
+      </section>
+    </template>
+  </ProductLanding>
 </template>
 
 <style scoped>
-.cloudy-sky-page {
-  --color-primary: oklch(58% 0.09 245deg);
-  --color-primary-content: oklch(96% 0.02 245deg);
+.band {
+  padding-top: 3.5rem;
 }
 
-::global([data-theme="dark"]) .cloudy-sky-page {
-  --color-primary: oklch(74% 0.09 245deg);
-  --color-primary-content: oklch(16% 0.03 245deg);
+.band-title {
+  margin: 0 0 1.25rem;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
 }
 
-.eyebrow {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.5;
+.req-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
 }
 
-/* One orchestrated moment: hero content rises on load */
-.hero-rise > * {
-  animation: hero-rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;
+.req {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.65rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--color-line-soft);
 }
 
-.hero-rise > *:nth-child(2) {
-  animation-delay: 0.06s;
-}
-.hero-rise > *:nth-child(3) {
-  animation-delay: 0.12s;
-}
-.hero-rise > *:nth-child(4) {
-  animation-delay: 0.18s;
-}
-.hero-rise > *:nth-child(5) {
-  animation-delay: 0.24s;
-}
-.hero-rise > *:nth-child(6) {
-  animation-delay: 0.3s;
+.req-icon {
+  width: 0.9375rem;
+  height: 0.9375rem;
+  margin-top: 0.15rem;
+  flex-shrink: 0;
+  color: var(--color-success);
 }
 
-@keyframes hero-rise {
-  from {
-    opacity: 0;
-    transform: translateY(14px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+.req-title {
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.req-desc {
+  margin: 0.2rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--color-faint);
+}
+
+@media (min-width: 768px) {
+  .req-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0 2.5rem;
   }
 }
 </style>

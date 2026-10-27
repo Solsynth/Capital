@@ -1,8 +1,7 @@
 <script setup lang="ts">
-import { User, GitPullRequest, Loader2, CircleDot, GitCommitHorizontal, Unlink, Trophy } from '@lucide/vue'
-
 const { t } = useI18n()
 const route = useRoute()
+const localePath = useLocalePath()
 const username = computed(() => route.params.username as string)
 
 const { data: profile, status } = await useAsyncData(
@@ -18,117 +17,293 @@ useSeoMeta({
     ? `${profile.value.solarDisplayName}'s contribution profile on Solsynth.`
     : '',
 })
+
+const initial = computed(() => profile.value?.solarDisplayName?.[0] ?? '?')
 </script>
 
 <template>
-  <div class="min-h-[calc(100dvh-200px)]">
-    <!-- Loading -->
-    <div v-if="status === 'pending'" class="flex justify-center py-24">
-      <Loader2 class="w-8 h-8 animate-spin text-primary" />
+  <div>
+    <div v-if="status === 'pending'" class="shell loading">
+      <span class="skeleton loading-banner" />
+      <span class="skeleton loading-line" />
+      <span class="skeleton loading-line short" />
     </div>
 
-    <!-- Not found -->
-    <div v-else-if="!profile" class="flex flex-col items-center justify-center py-24">
-      <User class="w-12 h-12 mb-4 text-base-content/20" />
-      <p class="text-lg opacity-60">{{ t('contributions.profileNotFound') }}</p>
+    <div v-else-if="!profile" class="shell empty">
+      <p class="empty-title">
+        {{ t('contributions.profileNotFound') }}
+      </p>
+      <NuxtLink :to="localePath('/contributions')" class="link-quiet">
+        {{ t('contributions.backToLeaderboard') }}
+      </NuxtLink>
     </div>
 
     <template v-else>
-      <!-- Hero header -->
-      <div class="relative">
+      <header class="shell head">
         <div
-          v-if="profile.background"
-          class="h-56 md:h-56 bg-cover bg-center -mt-(--site-page-offset,64px)"
-          :style="{ backgroundImage: `url(${profile.background})` }"
+          class="banner"
+          :style="profile.background ? { backgroundImage: `url(${profile.background})` } : undefined"
         />
-        <div v-else class="h-56 md:h-56 bg-linear-to-r from-primary/20 via-secondary/20 to-accent/20" />
 
-        <div class="container mx-auto max-w-3xl px-6">
-          <div class="relative -mt-12 mb-6 flex items-end gap-4 pt-6">
-            <div class="shrink-0">
-              <img
-                v-if="profile.avatar"
-                :src="profile.avatar"
-                :alt="profile.solarDisplayName"
-                class="w-24 h-24 rounded-2xl object-cover ring-4 ring-base-100 shadow-lg"
+        <div class="ident">
+          <span class="avatar-frame">
+            <img
+              v-if="profile.avatar"
+              :src="profile.avatar"
+              :alt="profile.solarDisplayName"
+              class="avatar"
+              loading="eager"
+              decoding="async"
+            >
+            <span v-else class="avatar avatar-empty" aria-hidden="true">{{ initial }}</span>
+          </span>
+
+          <div class="ident-text">
+            <h1 class="title name">
+              {{ profile.solarDisplayName }}
+            </h1>
+            <p class="handles">
+              <a
+                :href="`https://solian.app/@${profile.solarUsername}`"
+                target="_blank"
+                rel="noopener"
+                class="handle"
               >
-              <div v-else class="w-24 h-24 rounded-2xl bg-base-300 flex items-center justify-center ring-4 ring-base-100 shadow-lg">
-                <span class="text-3xl font-bold text-base-content/30">{{ profile.solarDisplayName?.[0] ?? '?' }}</span>
-              </div>
-            </div>
-
-            <div class="min-w-0 pb-1">
-              <h1 class="text-2xl font-bold truncate">{{ profile.solarDisplayName }}</h1>
-              <div class="flex items-center gap-3 mt-1 flex-wrap">
-                <a
-                  :href="`https://solian.app/@${profile.solarUsername}`"
-                  target="_blank"
-                  rel="noopener"
-                  class="text-sm text-primary/70 hover:text-primary transition-colors"
+                @{{ profile.solarUsername }}
+              </a>
+              <a
+                v-if="profile.githubUsername"
+                :href="`https://github.com/${profile.githubUsername}`"
+                target="_blank"
+                rel="noopener"
+                class="handle handle-github"
+              >
+                <img
+                  :src="`https://github.com/${profile.githubUsername}.png`"
+                  :alt="''"
+                  class="handle-avatar"
+                  loading="lazy"
+                  decoding="async"
                 >
-                  @{{ profile.solarUsername }}
-                </a>
-                <a
-                  v-if="profile.githubUsername"
-                  :href="`https://github.com/${profile.githubUsername}`"
-                  target="_blank"
-                  rel="noopener"
-                  class="flex items-center gap-1.5 text-sm text-base-content/60 hover:text-base-content transition-colors"
-                >
-                  <img
-                    :src="`https://github.com/${profile.githubUsername}.png`"
-                    :alt="profile.githubUsername"
-                    class="w-5 h-5 rounded-full"
-                  >
-                  {{ profile.githubUsername }}
-                </a>
-              </div>
-            </div>
+                {{ profile.githubUsername }}
+              </a>
+            </p>
           </div>
         </div>
-      </div>
+      </header>
 
-      <!-- Main content -->
-      <div class="container mx-auto max-w-3xl px-6 pb-16">
-        <!-- Not linked -->
-        <div v-if="!profile.linked" class="alert">
-          <Unlink class="w-5 h-5" />
-          <span>{{ t('contributions.notLinked') }}</span>
-        </div>
+      <div class="shell body">
+        <p v-if="!profile.linked" class="note note-warning">
+          {{ t('contributions.notLinked') }}
+        </p>
 
         <template v-else>
-          <!-- Stats grid -->
-          <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
-            <!-- Rank -->
-            <div class="card bg-base-200/60 border border-base-content/5 p-4 text-center">
-              <Trophy class="w-6 h-6 mx-auto mb-1.5 text-primary" />
-              <p class="text-xl font-bold tabular-nums">#{{ profile.rank }}</p>
-              <p class="text-xs opacity-50">{{ t('contributions.rank') }}</p>
+          <dl class="figures">
+            <div class="figure">
+              <dt>{{ t('contributions.rank') }}</dt>
+              <dd class="mono">
+                #{{ profile.rank }}
+              </dd>
             </div>
-
-            <div class="card bg-base-200/60 border border-base-content/5 p-4 text-center">
-              <GitPullRequest class="w-6 h-6 mx-auto mb-1.5 text-info" />
-              <p class="text-xl font-bold tabular-nums">{{ profile.prCount }}</p>
-              <p class="text-xs opacity-50">{{ t('contributions.pullRequests') }}</p>
+            <div class="figure">
+              <dt>{{ t('contributions.pullRequests') }}</dt>
+              <dd class="mono">
+                {{ profile.prCount }}
+              </dd>
             </div>
-
-            <div class="card bg-base-200/60 border border-base-content/5 p-4 text-center">
-              <CircleDot class="w-6 h-6 mx-auto mb-1.5 text-warning" />
-              <p class="text-xl font-bold tabular-nums">{{ profile.issueCount }}</p>
-              <p class="text-xs opacity-50">{{ t('contributions.issues') }}</p>
+            <div class="figure">
+              <dt>{{ t('contributions.issues') }}</dt>
+              <dd class="mono">
+                {{ profile.issueCount }}
+              </dd>
             </div>
-
-            <div class="card bg-base-200/60 border border-base-content/5 p-4 text-center">
-              <GitCommitHorizontal class="w-6 h-6 mx-auto mb-1.5 text-success" />
-              <p class="text-xl font-bold tabular-nums">{{ profile.commitCount }}</p>
-              <p class="text-xs opacity-50">{{ t('contributions.commits') }}</p>
+            <div class="figure">
+              <dt>{{ t('contributions.commits') }}</dt>
+              <dd class="mono">
+                {{ profile.commitCount }}
+              </dd>
             </div>
-          </div>
+          </dl>
 
-          <!-- Heatmap -->
-          <ContributionHeatmap v-if="profile.githubUsername" :username="profile.solarUsername" class="mb-6" />
+          <ContributionHeatmap
+            v-if="profile.githubUsername"
+            :username="profile.solarUsername"
+            class="heatmap"
+          />
         </template>
       </div>
     </template>
   </div>
 </template>
+
+<style scoped>
+.loading {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding-block: 2.5rem 4rem;
+}
+
+.loading-banner {
+  height: 11rem;
+  border-radius: var(--radius-card);
+}
+
+.loading-line {
+  height: 1.25rem;
+  max-width: 24rem;
+}
+
+.loading-line.short {
+  max-width: 14rem;
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding-block: 4rem;
+}
+
+.empty-title {
+  margin: 0;
+  font-size: 1.0625rem;
+  color: var(--color-dim);
+}
+
+.head {
+  padding-top: 2rem;
+}
+
+.banner {
+  height: 11rem;
+  border-radius: var(--radius-card);
+  background-color: var(--color-base-300);
+  background-position: center;
+  background-size: cover;
+}
+
+.ident {
+  display: flex;
+  align-items: flex-end;
+  gap: 1.1rem;
+  margin-top: -2.5rem;
+  padding-inline: 0.75rem;
+}
+
+/* The frame is the page surface, not a border: it separates the avatar from
+   whatever the banner happens to be. */
+.avatar-frame {
+  display: block;
+  flex: none;
+  padding: 3px;
+  border-radius: calc(var(--radius-card) + 3px);
+  background: var(--color-base-100);
+}
+
+.avatar {
+  display: block;
+  width: 6rem;
+  height: 6rem;
+  border-radius: var(--radius-card);
+  background: var(--color-base-300);
+  object-fit: cover;
+}
+
+.avatar-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--color-faint);
+}
+
+.ident-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  min-width: 0;
+  padding-bottom: 0.35rem;
+}
+
+.name {
+  margin: 0;
+  font-size: clamp(1.5rem, 3vw, 1.875rem);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.handles {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.9rem;
+  margin: 0;
+  font-size: 0.8125rem;
+}
+
+.handle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--color-faint);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.handle:hover {
+  color: var(--color-primary);
+}
+
+.handle-avatar {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 999px;
+  background: var(--color-base-300);
+  object-fit: cover;
+}
+
+.body {
+  padding-block: 2.25rem 4rem;
+}
+
+.figures {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem 2rem;
+  margin: 0 0 2.25rem;
+}
+
+.figure {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.figure dt {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-faint);
+}
+
+.figure dd {
+  margin: 0;
+  font-size: 1.25rem;
+  line-height: 1.1;
+  color: var(--color-base-content);
+}
+
+.heatmap {
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 640px) {
+  .figures {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    max-width: 34rem;
+  }
+}
+</style>

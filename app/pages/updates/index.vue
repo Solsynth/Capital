@@ -1,17 +1,7 @@
 <script setup lang="ts">
-import {
-  Calendar,
-  Paperclip,
-  Eye,
-  MessageCircle,
-  Heart,
-  ArrowRight,
-  Hash,
-  X,
-  Loader2,
-} from '@lucide/vue'
+import { Loader2 } from '@lucide/vue'
 
-const { t } = useI18n()
+const { t, locale } = useI18n()
 const localePath = useLocalePath()
 const route = useRoute()
 
@@ -49,7 +39,18 @@ useSchemaOrg([
   }),
 ])
 
-const { getPosts, getRealmPosts, formatDate, truncateContent, getAttachmentUrl } = useApi()
+const { getPosts, getRealmPosts, getAttachmentUrl } = useApi()
+
+// A fixed-width stamp: the log's date column lines up like a ledger.
+function formatStamp(value: string): string {
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return ''
+  return new Intl.DateTimeFormat(locale.value === 'zh' ? 'zh-CN' : 'en-CA', {
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+  }).format(date)
+}
 
 const PAGE_SIZE = 20
 
@@ -141,10 +142,27 @@ const filteredPosts = computed(() => {
   )
 })
 
-function getDisplayTitle(post: { title: string, content: string }): string | null {
-  if (post.title?.trim())
-    return post.title
-  return null
+// A post without a title prints its opening words as the line; the excerpt is
+// then omitted rather than repeating the same sentence under it.
+const TITLE_WORDS = 90
+
+function flatten(content: string): string {
+  return (content ?? '').replace(/[#*`>_\-\n]+/g, ' ').replace(/\s+/g, ' ').trim()
+}
+
+function clip(text: string, limit: number): string {
+  if (text.length <= limit) return text
+  const cut = text.lastIndexOf(' ', limit)
+  return `${text.slice(0, cut > 0 ? cut : limit).trimEnd()}…`
+}
+
+function getDisplayTitle(post: { title: string, content: string }): string {
+  return post.title?.trim() || clip(flatten(post.content), TITLE_WORDS)
+}
+
+function getExcerpt(post: { title: string, content: string }): string {
+  if (!post.title?.trim()) return ''
+  return clip(flatten(post.content), 180)
 }
 
 function isImageAttachment(attachment: { mime_type: string }): boolean {
@@ -192,249 +210,331 @@ function switchTab(tab: 'official' | 'community') {
 
 <template>
   <div>
-    <section class="border-b border-base-200 px-4 py-16 md:py-20">
-      <div class="container mx-auto max-w-5xl">
-        <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
+    <header class="band">
+      <div class="shell">
+        <h1 class="title page-title">
           {{ t('updates.title') }}
         </h1>
-        <p class="max-w-2xl text-lg text-base-content/65 md:text-xl">
+        <p class="lede page-lede">
           {{ t('updates.subtitle') }}
         </p>
       </div>
-    </section>
+    </header>
 
-    <section class="px-4 py-10">
-      <div class="container mx-auto max-w-5xl">
-        <div class="mb-8 flex gap-1 border-b border-base-200">
-          <button
-            type="button"
-            class="border-b-2 px-4 py-2.5 text-sm font-medium transition-colors"
-            :class="activeTab === 'official'
-              ? 'border-primary text-primary'
-              : 'border-transparent text-base-content/55 hover:text-base-content/80'"
-            @click="switchTab('official')"
-          >
-            {{ t('updates.tabs.official') }}
-          </button>
-          <button
-            type="button"
-            class="border-b-2 px-4 py-2.5 text-sm font-medium transition-colors"
-            :class="activeTab === 'community'
-              ? 'border-primary text-primary'
-              : 'border-transparent text-base-content/55 hover:text-base-content/80'"
-            @click="switchTab('community')"
-          >
-            {{ t('updates.tabs.community') }}
-          </button>
+    <section class="body">
+      <div class="shell">
+        <div class="controls">
+          <div class="rail" role="tablist" :aria-label="t('updates.title')">
+            <button
+              v-for="tab in (['official', 'community'] as const)"
+              :key="tab"
+              type="button"
+              role="tab"
+              class="rail-tab"
+              :class="{ 'is-current': activeTab === tab }"
+              :aria-selected="activeTab === tab"
+              @click="switchTab(tab)"
+            >
+              {{ t(`updates.tabs.${tab}`) }}
+            </button>
+          </div>
+
+          <div v-if="allTags.length > 0" class="tags">
+            <button
+              v-for="tag in allTags"
+              :key="tag.slug"
+              type="button"
+              class="chip"
+              :class="{ 'is-current': selectedTag === tag.slug }"
+              :aria-pressed="selectedTag === tag.slug"
+              @click="selectTag(tag.slug)"
+            >
+              {{ getTagName(tag) }}
+            </button>
+            <button
+              v-if="selectedTag"
+              type="button"
+              class="chip filter-clear"
+              @click="clearTag"
+            >
+              {{ t('updates.clearFilter') }}
+            </button>
+          </div>
         </div>
 
-        <div
-          v-if="allTags.length > 0"
-          class="mb-8 flex flex-wrap items-center gap-2"
-        >
-          <button
-            v-for="tag in allTags"
-            :key="tag.slug"
-            type="button"
-            class="badge badge-sm gap-1 cursor-pointer border transition-colors"
-            :class="selectedTag === tag.slug
-              ? 'badge-primary border-primary'
-              : 'badge-ghost border-base-300 hover:border-base-content/20'"
-            @click="selectTag(tag.slug)"
-          >
-            <Hash class="h-3 w-3" />
-            {{ getTagName(tag) }}
-          </button>
-          <button
-            v-if="selectedTag"
-            type="button"
-            class="badge badge-sm badge-ghost gap-1 cursor-pointer text-error"
-            @click="clearTag"
-          >
-            <X class="h-3 w-3" />
-            {{ t('updates.clearFilter') }}
-          </button>
-        </div>
+        <p v-if="!filteredPosts?.length && !isLoading" class="log-empty">
+          {{ t('updates.noUpdates') }}
+        </p>
 
-        <div
-          v-if="!filteredPosts?.length"
-          class="rounded-lg border border-dashed border-base-300 px-6 py-16 text-center"
-        >
-          <p class="mb-4 text-base text-base-content/55">
-            {{ t('updates.noUpdates') }}
-          </p>
-          <button
-            v-if="selectedTag"
-            type="button"
-            class="btn btn-ghost btn-sm"
-            @click="clearTag"
-          >
-            {{ t('updates.clearFilter') }}
-          </button>
-          <NuxtLink
-            v-else
-            :to="localePath('/')"
-            class="btn btn-primary btn-sm"
-          >
-            {{ t('about.backToHome') }}
-          </NuxtLink>
-        </div>
+        <ol v-else class="log">
+          <li v-for="post in filteredPosts" :key="post.id" class="log-row">
+            <NuxtLink :to="localePath(`/updates/${post.id}`)" class="log-link">
+              <time class="mono log-date" :datetime="post.published_at">{{ formatStamp(post.published_at) }}</time>
 
-        <div v-else class="grid grid-cols-1 gap-5 md:grid-cols-2">
-          <NuxtLink
-            v-for="post in filteredPosts"
-            :key="post.id"
-            :to="localePath(`/updates/${post.id}`)"
-            class="group flex flex-col overflow-hidden rounded-lg border border-base-200 bg-base-100 transition-colors duration-150 hover:border-base-300"
-          >
-            <div
-              v-if="post.attachments.length > 0 && isImageAttachment(post.attachments[0])"
-              class="aspect-video w-full overflow-hidden border-b border-base-200"
-            >
-              <img
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                :alt="post.attachments[0].name"
-                class="h-full w-full object-cover"
-                loading="lazy"
-              >
-            </div>
-            <div
-              v-else-if="post.attachments.length > 0 && isVideoAttachment(post.attachments[0])"
-              class="w-full overflow-hidden border-b border-base-200"
-            >
-              <video
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                class="aspect-video w-full object-cover"
-                controls
-                preload="metadata"
-                @click.stop
-              />
-            </div>
-            <div
-              v-else-if="post.attachments.length > 0 && isAudioAttachment(post.attachments[0])"
-              class="border-b border-base-200 bg-base-200/40 p-3"
-            >
-              <audio
-                :src="getAttachmentUrl(post.attachments[0].id)"
-                class="w-full"
-                controls
-                preload="metadata"
-                @click.stop
-              />
-            </div>
-
-            <div class="flex flex-1 flex-col gap-3 p-5">
-              <div class="flex items-center gap-3">
-                <div v-if="post.publisher?.picture" class="avatar">
-                  <div class="h-8 w-8 rounded-full">
-                    <img
-                      :src="getAttachmentUrl(post.publisher.picture.id)"
-                      :alt="post.publisher.nick"
-                      class="h-full w-full rounded-full object-cover"
-                    >
-                  </div>
-                </div>
-                <div v-else class="avatar avatar-placeholder">
-                  <div
-                    class="h-8 w-8 rounded-full text-xs font-medium"
-                    :class="activeTab === 'official'
-                      ? 'bg-primary text-primary-content'
-                      : 'bg-secondary text-secondary-content'"
-                  >
-                    {{ getInitials(post.publisher?.nick || 'Unknown') }}
-                  </div>
-                </div>
-                <div class="min-w-0 flex-1">
-                  <span class="block truncate text-sm font-semibold">
-                    {{ post.publisher?.nick || 'Unknown' }}
+              <span class="log-body">
+                <span class="log-title">{{ getDisplayTitle(post) }}</span>
+                <span v-if="getExcerpt(post)" class="log-excerpt">{{ getExcerpt(post) }}</span>
+                <span class="log-meta">
+                  <span class="log-avatar" aria-hidden="true">{{ getInitials(post.publisher?.nick || 'Unknown') }}</span>
+                  {{ post.publisher?.nick || 'Unknown' }}
+                  <template v-if="post.tags.length">
+                    <span class="log-sep" aria-hidden="true">/</span>
+                    {{ post.tags.slice(0, 2).map(getTagName).join(', ') }}
+                  </template>
+                  <span v-if="post.views_unique" class="log-views">
+                    {{ post.views_unique }} {{ t('updates.views') }}
                   </span>
-                </div>
-                <span class="flex shrink-0 items-center gap-1 text-xs text-base-content/40">
-                  <Calendar class="h-3.5 w-3.5" />
-                  {{ formatDate(post.published_at) }}
                 </span>
-              </div>
+              </span>
 
-              <h2
-                v-if="getDisplayTitle(post)"
-                class="line-clamp-2 text-lg font-bold leading-snug transition-colors group-hover:text-primary"
+              <span
+                v-if="post.attachments.length > 0 && isImageAttachment(post.attachments[0])"
+                class="log-thumb"
+                aria-hidden="true"
               >
-                {{ getDisplayTitle(post) }}
-              </h2>
+                <img :src="getAttachmentUrl(post.attachments[0].id)" alt="" loading="lazy" decoding="async">
+              </span>
+            </NuxtLink>
+          </li>
+        </ol>
 
-              <p class="line-clamp-3 flex-1 text-sm text-base-content/60">
-                {{ truncateContent(post.content, 200) }}
-              </p>
-
-              <div v-if="post.tags.length > 0" class="flex flex-wrap gap-1.5">
-                <span
-                  v-for="tag in post.tags.slice(0, 4)"
-                  :key="tag.id"
-                  class="badge badge-ghost badge-sm gap-0.5"
-                >
-                  <Hash class="h-2.5 w-2.5" />
-                  {{ getTagName(tag) }}
-                </span>
-                <span
-                  v-if="post.tags.length > 4"
-                  class="badge badge-ghost badge-sm opacity-50"
-                >
-                  +{{ post.tags.length - 4 }}
-                </span>
-              </div>
-
-              <div class="mt-auto flex items-center gap-4 text-xs text-base-content/40">
-                <span
-                  v-if="post.attachments.length > 0"
-                  class="flex items-center gap-1"
-                >
-                  <Paperclip class="h-3.5 w-3.5" />
-                  {{ t('home.updates.attachments', { count: post.attachments.length }) }}
-                </span>
-                <span class="flex items-center gap-1">
-                  <Eye class="h-3.5 w-3.5" />
-                  {{ post.views_unique }}
-                </span>
-                <span
-                  v-if="Object.keys(post.reactions_count).length > 0"
-                  class="flex items-center gap-1"
-                >
-                  <Heart class="h-3.5 w-3.5" />
-                  {{ Object.values(post.reactions_count).reduce((a, b) => a + b, 0) }}
-                </span>
-                <span
-                  v-if="post.replies_count > 0"
-                  class="flex items-center gap-1"
-                >
-                  <MessageCircle class="h-3.5 w-3.5" />
-                  {{ post.replies_count }}
-                </span>
-                <span class="ml-auto flex items-center gap-1 text-base-content/50 transition-colors group-hover:text-primary">
-                  <ArrowRight class="h-3.5 w-3.5" />
-                </span>
-              </div>
-            </div>
-          </NuxtLink>
-        </div>
-
-        <div
-          v-if="hasMore && !selectedTag"
-          class="mt-10 text-center"
-        >
+        <div v-if="hasMore && !selectedTag" class="more">
           <button
             type="button"
-            class="btn btn-ghost gap-2 border border-base-300"
+            class="btn"
             :disabled="isLoading"
             @click="loadMore"
           >
-            <Loader2
-              v-if="isLoading"
-              class="h-4 w-4 animate-spin"
-            />
-            <span>{{ isLoading ? t('updates.loading') : t('updates.loadMore') }}</span>
+            <Loader2 v-if="isLoading" class="more-spinner" aria-hidden="true" />
+            {{ isLoading ? t('updates.loading') : t('updates.loadMore') }}
           </button>
         </div>
       </div>
     </section>
   </div>
 </template>
+
+<style scoped>
+.band {
+  padding-block: 3.5rem 2.5rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.page-title {
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  margin: 0;
+}
+
+.page-lede {
+  margin: 0.75rem 0 0;
+}
+
+.body {
+  padding-block: 2rem 0;
+}
+
+.controls {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  margin-bottom: 1.75rem;
+}
+
+.rail {
+  display: flex;
+  align-self: flex-start;
+  max-width: 100%;
+  overflow-x: auto;
+  gap: 0.125rem;
+  padding: 0.1875rem;
+  border: 1px solid var(--color-line-soft);
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-base-200) 45%, transparent);
+}
+
+.rail-tab {
+  padding: 0.375rem 0.9rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--color-faint);
+  font-family: inherit;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease;
+}
+
+.rail-tab:hover {
+  color: var(--color-base-content);
+}
+
+.rail-tab.is-current {
+  background: var(--color-base-300);
+  color: var(--color-base-content);
+}
+
+.rail-tab:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.filter-clear {
+  color: var(--color-error);
+  border-color: color-mix(in oklab, var(--color-error) 40%, transparent);
+}
+
+.log-row {
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.log-link {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 0.5rem;
+  padding: 1.1rem 0.5rem 1.1rem 0;
+  color: inherit;
+  text-decoration: none;
+  transition: background-color 140ms ease;
+}
+
+.log-link:hover {
+  background: color-mix(in oklab, var(--color-base-200) 55%, transparent);
+}
+
+.log-link:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+}
+
+.log-date {
+  color: var(--color-faint);
+}
+
+.log-body {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-width: 0;
+}
+
+.log-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--color-base-content);
+  letter-spacing: -0.005em;
+}
+
+.log-link:hover .log-title {
+  color: var(--color-primary);
+}
+
+.log-excerpt {
+  display: -webkit-box;
+  overflow: hidden;
+  font-size: 0.8125rem;
+  line-height: 1.55;
+  color: var(--color-faint);
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.log-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.15rem;
+  font-size: 0.75rem;
+  color: var(--color-faint);
+}
+
+.log-avatar {
+  display: inline-flex;
+  width: 1.125rem;
+  height: 1.125rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-base-300) 80%, transparent);
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  color: var(--color-dim);
+}
+
+.log-sep {
+  color: var(--color-line);
+}
+
+.log-views {
+  margin-left: auto;
+}
+
+.log-thumb {
+  display: none;
+}
+
+.log-empty {
+  margin: 0;
+  padding: 2.5rem 0;
+  border-top: 1px solid var(--color-line);
+  border-bottom: 1px solid var(--color-line-soft);
+  font-size: 0.9375rem;
+  color: var(--color-faint);
+}
+
+.more {
+  display: flex;
+  justify-content: center;
+  padding-top: 1.5rem;
+}
+
+.more-spinner {
+  width: 0.875rem;
+  height: 0.875rem;
+  animation: spin 900ms linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 768px) {
+  .log-link {
+    grid-template-columns: 6.5rem minmax(0, 1fr) 7rem;
+    align-items: start;
+    gap: 1.5rem;
+    padding-block: 1.15rem;
+  }
+
+  .log-date {
+    padding-top: 0.2rem;
+  }
+
+  .log-thumb {
+    display: block;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    border-radius: var(--radius-mark);
+    background: var(--color-base-300);
+  }
+
+  .log-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+</style>

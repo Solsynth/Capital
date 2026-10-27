@@ -4,10 +4,8 @@ import {
   Code,
   Users,
   Sparkles,
-  CodeXml,
   ArrowLeft,
-  AlertTriangle,
-  ExternalLink,
+  ArrowUpRight,
 } from '@lucide/vue'
 
 const { t } = useI18n()
@@ -31,107 +29,54 @@ const values = [
   { icon: Sparkles, key: 'fun' },
 ]
 
+// A readout, not a hero metric: the numbers sit on one line, in the mono face,
+// the way the homepage prints its own figures.
 const stats = computed(() => [
-  { value: 2, suffix: '+', label: t('about.stats.years') },
-  { value: 3, suffix: '+', label: t('about.stats.products') },
-  { value: 1, suffix: 'K+', label: t('about.stats.users') },
-  { value: 100, suffix: '%', label: t('about.stats.passion') },
+  { value: '02', suffix: '+', label: t('about.stats.years') },
+  { value: '03', suffix: '+', label: t('about.stats.products') },
+  { value: '1K', suffix: '+', label: t('about.stats.users') },
+  { value: '100', suffix: '%', label: t('about.stats.passion') },
 ])
-
-const counterRefs = ref<HTMLElement[]>([])
-
-onMounted(() => {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    counterRefs.value.forEach((el) => {
-      el.textContent = el.getAttribute('data-target') || '0'
-    })
-    return
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animateCounter(entry.target as HTMLElement)
-          observer.unobserve(entry.target)
-        }
-      })
-    },
-    { threshold: 0.4 },
-  )
-
-  counterRefs.value.forEach(el => observer.observe(el))
-})
-
-function animateCounter(el: HTMLElement) {
-  const target = Number.parseInt(el.getAttribute('data-target') || '0', 10)
-  const duration = 1200
-  const start = performance.now()
-
-  const update = (now: number) => {
-    const progress = Math.min((now - start) / duration, 1)
-    const eased = 1 - (1 - progress) ** 3
-    el.textContent = Math.floor(eased * target).toString()
-    if (progress < 1)
-      requestAnimationFrame(update)
-    else
-      el.textContent = target.toString()
-  }
-
-  requestAnimationFrame(update)
-}
 </script>
 
 <template>
-  <div>
-    <!-- Header -->
-    <section class="border-b border-base-200 px-4 py-16 md:py-20">
-      <div class="container mx-auto max-w-3xl">
-        <NuxtLink
-          :to="localePath('/')"
-          class="btn btn-ghost btn-sm mb-8 -ml-2 gap-1.5 text-base-content/60"
-        >
-          <ArrowLeft class="h-4 w-4" />
-          {{ t('about.backToHome') }}
-        </NuxtLink>
+  <div class="about">
+    <header class="shell masthead">
+      <NuxtLink :to="localePath('/')" class="back">
+        <ArrowLeft class="back-icon" aria-hidden="true" />
+        {{ t('about.backToHome') }}
+      </NuxtLink>
 
-        <h1 class="mb-3 text-4xl font-extrabold tracking-tight md:text-5xl">
-          {{ t('about.title') }}
-        </h1>
-        <p class="max-w-xl text-lg text-base-content/65 md:text-xl">
-          {{ t('about.subtitle') }}
-        </p>
-      </div>
-    </section>
+      <h1 class="display masthead-title">
+        {{ t('about.title') }}
+      </h1>
+      <p class="lede masthead-lede">
+        {{ t('about.subtitle') }}
+      </p>
+    </header>
 
-    <!-- Mission -->
-    <section class="px-4 py-14">
-      <div class="container mx-auto max-w-3xl">
-        <h2 class="mb-4 text-2xl font-bold tracking-tight">
-          {{ t('about.mission.title') }}
-        </h2>
-        <div class="space-y-4 text-base leading-relaxed text-base-content/80 md:text-lg">
+    <section class="shell block">
+      <h2 class="section-label">
+        {{ t('about.mission.title') }}
+      </h2>
+
+      <div class="split">
+        <div class="measure mission">
           <p>{{ t('about.mission.p1') }}</p>
           <p>{{ t('about.mission.p2') }}</p>
         </div>
-      </div>
-    </section>
 
-    <!-- Did you know -->
-    <section class="px-4 pb-14">
-      <div class="container mx-auto max-w-3xl">
-        <div class="rounded-lg border border-base-200 bg-base-200/40 p-5 md:p-6">
-          <h2 class="mb-3 flex items-center gap-2 text-base font-semibold">
-            <Sparkles class="h-4 w-4 text-base-content/50" />
+        <div class="aside">
+          <h3 class="aside-title">
             {{ t('about.didYouKnow.title') }}
-          </h2>
-          <ul class="space-y-2 text-sm text-base-content/70">
-            <li class="flex items-start gap-2">
-              <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-base-content/40" />
+          </h3>
+          <ul class="aside-list">
+            <li class="aside-item">
+              <span class="dot aside-dot" aria-hidden="true" />
               <span>{{ t('about.didYouKnow.solsynth') }}</span>
             </li>
-            <li class="flex items-start gap-2">
-              <span class="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-base-content/40" />
+            <li class="aside-item">
+              <span class="dot aside-dot" aria-hidden="true" />
               <span>{{ t('about.didYouKnow.chinese') }}</span>
             </li>
           </ul>
@@ -139,166 +84,446 @@ function animateCounter(el: HTMLElement) {
       </div>
     </section>
 
-    <!-- Values -->
-    <section class="border-y border-base-200 bg-base-200/30 px-4 py-14">
-      <div class="container mx-auto max-w-5xl">
-        <h2 class="mb-8 text-center text-2xl font-bold tracking-tight">
-          {{ t('about.values.title') }}
-        </h2>
+    <section class="shell block">
+      <h2 class="section-label">
+        {{ t('about.values.title') }}
+      </h2>
 
-        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <div
-            v-for="value in values"
-            :key="value.key"
-            class="rounded-lg border border-base-200 bg-base-100 p-5"
+      <ul class="values">
+        <li v-for="value in values" :key="value.key" class="value-row">
+          <component :is="value.icon" class="value-icon" aria-hidden="true" />
+          <span class="value-title">
+            {{ t(`about.values.${value.key}.title`) }}
+          </span>
+          <span class="value-desc">
+            {{ t(`about.values.${value.key}.desc`) }}
+          </span>
+        </li>
+      </ul>
+    </section>
+
+    <section class="shell block">
+      <dl class="readout">
+        <div v-for="stat in stats" :key="stat.label" class="readout-cell">
+          <dt class="readout-label">
+            {{ stat.label }}
+          </dt>
+          <dd class="readout-figure">
+            <span>{{ stat.value }}</span><span class="readout-suffix">{{ stat.suffix }}</span>
+          </dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="shell block">
+      <div class="note note-warning llc">
+        <h2 class="llc-title">
+          {{ t('about.llc.title') }}
+        </h2>
+        <p>{{ t('about.llc.p1') }}</p>
+        <p>{{ t('about.llc.p2') }}</p>
+        <p class="llc-emphasis">{{ t('about.llc.p3') }}</p>
+      </div>
+    </section>
+
+    <section class="shell block">
+      <h2 class="section-label">
+        {{ t('about.team.title') }}
+      </h2>
+
+      <ul class="people">
+        <li v-for="member in team" :key="member.name" class="person">
+          <img
+            :src="member.avatar"
+            :alt="member.name"
+            class="person-avatar"
+            width="56"
+            height="56"
+            loading="lazy"
           >
-            <div class="mb-3 flex h-9 w-9 items-center justify-center rounded-md border border-base-200 bg-base-200/60">
-              <component :is="value.icon" class="h-4 w-4 text-base-content/70" />
-            </div>
-            <h3 class="mb-1.5 text-base font-semibold">
-              {{ t(`about.values.${value.key}.title`) }}
-            </h3>
-            <p class="text-sm leading-relaxed text-base-content/55">
-              {{ t(`about.values.${value.key}.desc`) }}
+
+          <div class="person-body">
+            <p class="person-name">
+              {{ member.name }}
             </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Stats -->
-    <section class="border-b border-base-200 px-4 py-10">
-      <div class="container mx-auto max-w-3xl">
-        <div class="grid grid-cols-2 divide-base-300 md:grid-cols-4 md:divide-x">
-          <div
-            v-for="(stat, index) in stats"
-            :key="stat.label"
-            class="px-4 py-4 text-center md:py-2"
-            :class="index % 2 === 1 ? 'max-md:border-l max-md:border-base-300' : ''"
-          >
-            <div class="text-3xl font-extrabold tracking-tight tabular-nums md:text-4xl">
-              <span
-                ref="counterRefs"
-                class="counter"
-                :data-target="stat.value"
-              >0</span>{{ stat.suffix }}
-            </div>
-            <div class="mt-1 text-sm text-base-content/55">
-              {{ stat.label }}
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- LLC note -->
-    <section class="px-4 py-12">
-      <div class="container mx-auto max-w-3xl">
-        <div class="flex gap-3 rounded-lg border border-warning/25 bg-warning/5 p-4 md:p-5">
-          <AlertTriangle class="mt-0.5 h-5 w-5 shrink-0 text-warning" />
-          <div class="min-w-0">
-            <h3 class="mb-1.5 font-semibold">
-              {{ t('about.llc.title') }}
-            </h3>
-            <div class="space-y-1.5 text-sm leading-relaxed text-base-content/75">
-              <p>{{ t('about.llc.p1') }}</p>
-              <p>{{ t('about.llc.p2') }}</p>
-              <p class="font-medium text-base-content/90">
-                {{ t('about.llc.p3') }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Team -->
-    <section class="border-t border-base-200 bg-base-200/30 px-4 py-14">
-      <div class="container mx-auto max-w-5xl">
-        <h2 class="mb-8 text-center text-2xl font-bold tracking-tight">
-          {{ t('about.team.title') }}
-        </h2>
-
-        <div class="mx-auto flex max-w-3xl flex-col gap-5 sm:flex-row sm:flex-wrap sm:justify-center">
-          <div
-            v-for="member in team"
-            :key="member.name"
-            class="flex w-full max-w-sm flex-col rounded-lg border border-base-200 bg-base-100 p-6 sm:w-[calc(50%-0.625rem)]"
-          >
-            <div class="mb-4 flex items-center gap-3">
-              <img
-                :src="member.avatar"
-                :alt="member.name"
-                class="h-14 w-14 rounded-full object-cover"
-                loading="lazy"
-              >
-              <div class="min-w-0">
-                <h3 class="truncate text-lg font-bold">
-                  {{ member.name }}
-                </h3>
-                <span class="badge badge-sm badge-ghost mt-0.5">{{ member.role }}</span>
-              </div>
-            </div>
-
-            <p class="mb-5 flex-1 text-sm leading-relaxed text-base-content/65">
+            <p class="person-role">
+              {{ member.role }}
+            </p>
+            <p class="person-bio">
               {{ member.bio }}
             </p>
 
-            <div class="flex flex-wrap gap-2">
+            <p class="person-links">
               <a
                 v-if="member.profileUrl"
                 :href="member.profileUrl"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn btn-ghost btn-sm gap-1.5 border border-base-300"
+                class="person-link link-quiet"
               >
-                <ExternalLink class="h-3.5 w-3.5" />
                 {{ t('about.team.profile') }}
+                <ArrowUpRight class="person-link-icon" aria-hidden="true" />
               </a>
               <a
                 v-if="member.github"
                 :href="member.github"
                 target="_blank"
                 rel="noopener noreferrer"
-                class="btn btn-ghost btn-sm gap-1.5 border border-base-300"
+                class="person-link link-quiet"
               >
-                <CodeXml class="h-3.5 w-3.5" />
                 GitHub
+                <ArrowUpRight class="person-link-icon" aria-hidden="true" />
               </a>
-            </div>
+            </p>
           </div>
+        </li>
 
-          <!-- Hiring -->
-          <div class="flex w-full max-w-sm flex-col rounded-lg border border-dashed border-base-300 bg-base-100/60 p-6 sm:w-[calc(50%-0.625rem)]">
-            <div class="mb-4 flex items-center gap-3">
-              <div class="flex h-14 w-14 items-center justify-center rounded-full border border-base-200 bg-base-200/60 text-xl font-semibold text-base-content/40">
-                ?
-              </div>
-              <div>
-                <h3 class="text-lg font-bold">
-                  {{ t('about.hiring.title') }}
-                </h3>
-                <p class="text-sm text-base-content/55">
-                  {{ t('about.hiring.subtitle') }}
-                </p>
-              </div>
-            </div>
+        <li class="person">
+          <span class="person-avatar person-avatar-empty" aria-hidden="true">?</span>
 
-            <div class="mb-5 flex-1 space-y-2 text-sm leading-relaxed text-base-content/65">
-              <p>{{ t('about.hiring.roles') }}</p>
-              <p>{{ t('about.hiring.note') }}</p>
-              <p>{{ t('about.hiring.cta') }}</p>
-            </div>
-
-            <a
-              href="mailto:lily@solsynth.dev"
-              class="btn btn-primary btn-sm self-start"
-            >
-              {{ t('about.hiring.email') }}
-            </a>
+          <div class="person-body">
+            <p class="person-name">
+              {{ t('about.hiring.title') }}
+            </p>
+            <p class="person-role">
+              {{ t('about.hiring.subtitle') }}
+            </p>
+            <p class="person-bio">
+              {{ t('about.hiring.roles') }}
+            </p>
+            <p class="person-bio person-note">
+              {{ t('about.hiring.note') }}
+            </p>
+            <p class="person-hire">
+              {{ t('about.hiring.cta') }}
+              <a href="mailto:lily@solsynth.dev" class="link-quiet">{{ t('about.hiring.email') }}</a>
+            </p>
           </div>
-        </div>
-      </div>
+        </li>
+      </ul>
     </section>
   </div>
 </template>
+
+<style scoped>
+.about {
+  padding-bottom: 4rem;
+}
+
+.masthead {
+  padding-block: 3.5rem 2.5rem;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 1.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-faint);
+  text-decoration: none;
+  transition: color 140ms ease;
+}
+
+.back:hover,
+.back:focus-visible {
+  color: var(--color-base-content);
+}
+
+.back-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.masthead-title {
+  margin: 0;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+}
+
+.masthead-lede {
+  margin: 0.75rem 0 0;
+}
+
+.block {
+  padding-block: 2rem;
+}
+
+.split {
+  display: grid;
+  gap: 2rem;
+  margin-top: 1.25rem;
+}
+
+.mission {
+  font-size: 0.9375rem;
+  line-height: 1.75;
+  color: var(--color-dim);
+}
+
+.mission p {
+  margin: 0;
+}
+
+.mission p + p {
+  margin-top: 1rem;
+}
+
+.aside-title {
+  margin: 0 0 0.75rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+
+.aside-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.6rem;
+  max-width: 30rem;
+}
+
+.aside-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--color-faint);
+}
+
+.aside-dot {
+  margin-top: 0.46rem;
+  background: var(--color-line);
+}
+
+.values {
+  margin: 1.25rem 0 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid var(--color-line);
+}
+
+.value-row {
+  display: grid;
+  grid-template-columns: 1.25rem minmax(0, 1fr);
+  gap: 0.35rem 0.9rem;
+  padding-block: 1rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.value-icon {
+  width: 1rem;
+  height: 1rem;
+  margin-top: 0.2rem;
+  color: var(--color-faint);
+}
+
+.value-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+
+.value-desc {
+  grid-column: 2;
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  color: var(--color-faint);
+}
+
+.readout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.5rem;
+  margin: 0;
+}
+
+.readout-cell {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.readout-label {
+  order: 2;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.readout-figure {
+  order: 1;
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-base-content);
+  font-variant-numeric: tabular-nums;
+}
+
+.readout-suffix {
+  color: var(--color-dim);
+}
+
+.llc {
+  display: grid;
+  gap: 0.5rem;
+  max-width: 34rem;
+  padding: 1rem 1.125rem;
+}
+
+.llc-title {
+  margin: 0;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-warning);
+}
+
+.llc p {
+  margin: 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-dim);
+}
+
+.llc-emphasis {
+  color: var(--color-base-content);
+  font-weight: 600;
+}
+
+.people {
+  margin: 1.75rem 0 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 2rem;
+}
+
+.person {
+  display: grid;
+  grid-template-columns: 3.5rem minmax(0, 1fr);
+  gap: 1.25rem;
+  align-items: start;
+}
+
+.person-avatar {
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  object-fit: cover;
+  background: var(--color-base-300);
+}
+
+.person-avatar-empty {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  color: var(--color-faint);
+}
+
+.person-body {
+  min-width: 0;
+}
+
+.person-name {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--color-base-content);
+  letter-spacing: -0.01em;
+}
+
+.person-role {
+  margin: 0.15rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.person-bio {
+  margin: 0.65rem 0 0;
+  max-width: 34rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--color-dim);
+}
+
+.person-note {
+  margin-top: 0.35rem;
+  color: var(--color-faint);
+}
+
+.person-hire {
+  margin: 0.65rem 0 0;
+  max-width: 34rem;
+  font-size: 0.875rem;
+  line-height: 1.7;
+  color: var(--color-dim);
+}
+
+.person-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.15rem;
+  margin: 0.75rem 0 0;
+}
+
+.person-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.person-link-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+}
+
+@media (min-width: 768px) {
+  .value-row {
+    grid-template-columns: 1.25rem minmax(0, 15rem) minmax(0, 1fr);
+    align-items: baseline;
+    padding-block: 0.95rem;
+  }
+
+  .value-desc {
+    grid-column: 3;
+  }
+
+  .readout {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .readout-cell {
+    padding-inline: 1.5rem;
+    border-left: 1px solid var(--color-line-soft);
+  }
+
+  .readout-cell:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+
+@media (min-width: 1024px) {
+  .split {
+    grid-template-columns: minmax(0, 34rem) minmax(0, 1fr);
+    gap: 4rem;
+  }
+
+  .block {
+    padding-block: 2.5rem;
+  }
+}
+</style>

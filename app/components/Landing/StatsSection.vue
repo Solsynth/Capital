@@ -1,80 +1,96 @@
 <script setup lang="ts">
-const { t } = useI18n()
+const { t, locale } = useI18n()
+
+// A readout, not a hero metric: four facts printed as one line of the
+// instrument, so the numbers support the page instead of headlining it.
+const years = computed(() => new Date().getFullYear() - 2024)
 
 const stats = computed(() => [
-  { value: 2, suffix: '+', label: t('home.stats.years') },
-  { value: 3, suffix: '+', label: t('home.stats.products') },
-  { value: 1, suffix: 'K+', label: t('home.stats.users') },
-  { value: 100, suffix: '%', label: t('home.stats.passion') },
+  { value: String(Math.max(2, years.value)).padStart(2, '0'), suffix: '+', label: t('home.stats.years') },
+  { value: '07', suffix: '', label: t('home.stats.products') },
+  { value: '1K', suffix: '+', label: t('home.stats.users') },
+  { value: '100', suffix: '%', label: t('home.stats.passion') },
 ])
 
-const counterRefs = ref<HTMLElement[]>([])
-
-onMounted(() => {
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    counterRefs.value.forEach((el) => {
-      el.textContent = el.getAttribute('data-target') || '0'
-    })
-    return
-  }
-
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          animateCounter(entry.target as HTMLElement)
-          observer.unobserve(entry.target)
-        }
-      })
-    },
-    { threshold: 0.4 },
-  )
-
-  counterRefs.value.forEach(el => observer.observe(el))
-})
-
-function animateCounter(el: HTMLElement) {
-  const target = Number.parseInt(el.getAttribute('data-target') || '0', 10)
-  const duration = 1200
-  const start = performance.now()
-
-  const update = (now: number) => {
-    const progress = Math.min((now - start) / duration, 1)
-    // ease-out cubic
-    const eased = 1 - (1 - progress) ** 3
-    el.textContent = Math.floor(eased * target).toString()
-    if (progress < 1)
-      requestAnimationFrame(update)
-    else
-      el.textContent = target.toString()
-  }
-
-  requestAnimationFrame(update)
-}
+const ariaLabel = computed(() =>
+  locale.value === 'zh' ? '我们的数据' : 'Solsynth by the numbers',
+)
 </script>
 
 <template>
-  <section class="border-y border-base-200 bg-base-200/40 px-4 py-10">
-    <div class="container mx-auto">
-      <div class="grid grid-cols-2 divide-base-300 md:grid-cols-4 md:divide-x">
-        <div
-          v-for="(stat, index) in stats"
-          :key="stat.label"
-          class="px-4 py-4 text-center md:py-2"
-          :class="index % 2 === 1 ? 'max-md:border-l max-md:border-base-300' : ''"
-        >
-          <div class="text-3xl font-extrabold tracking-tight tabular-nums text-base-content md:text-4xl">
-            <span
-              ref="counterRefs"
-              class="counter"
-              :data-target="stat.value"
-            >0</span>{{ stat.suffix }}
-          </div>
-          <div class="mt-1 text-sm text-base-content/55">
+  <section class="readout" :aria-label="ariaLabel">
+    <div class="shell">
+      <dl class="readout-grid">
+        <div v-for="stat in stats" :key="stat.label" class="readout-cell">
+          <dt class="readout-label">
             {{ stat.label }}
-          </div>
+          </dt>
+          <dd class="readout-figure">
+            <span>{{ stat.value }}</span><span class="readout-suffix">{{ stat.suffix }}</span>
+          </dd>
         </div>
-      </div>
+      </dl>
     </div>
   </section>
 </template>
+
+<style scoped>
+.readout {
+  padding-block: 1.5rem;
+  border-bottom: 1px solid var(--color-line-soft);
+}
+
+.readout-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.9rem 1.5rem;
+  margin: 0;
+}
+
+.readout-cell {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+
+.readout-label {
+  order: 2;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.readout-figure {
+  order: 1;
+  display: flex;
+  align-items: baseline;
+  margin: 0;
+  font-family: var(--font-mono);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-base-content);
+  font-variant-numeric: tabular-nums;
+}
+
+.readout-suffix {
+  color: var(--color-dim);
+}
+
+@media (min-width: 768px) {
+  .readout-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0;
+  }
+
+  .readout-cell {
+    padding-inline: 1.5rem;
+    border-left: 1px solid var(--color-line-soft);
+  }
+
+  .readout-cell:first-child {
+    padding-left: 0;
+    border-left: 0;
+  }
+}
+</style>

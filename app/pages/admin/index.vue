@@ -109,64 +109,149 @@ const statCards = computed(() => [
 
 <template>
   <div>
-    <h2 class="text-2xl font-bold mb-6">
-      Dashboard
+    <h2 class="admin-h">
+      {{ t('admin.panel.dashboard') }}
     </h2>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="stat-row">
       <NuxtLink
         v-for="card in statCards"
         :key="card.label"
         :to="card.to"
-        class="card bg-base-200 hover:bg-base-300 transition-colors p-4"
+        class="stat"
       >
-        <div class="flex items-center gap-4">
-          <div class="w-12 h-12 rounded-xl flex items-center justify-center" :class="card.bg">
-            <component :is="card.icon" class="w-6 h-6" :class="card.color" />
-          </div>
-          <div>
-            <p class="text-sm opacity-60">{{ card.label }}</p>
-            <p class="text-2xl font-bold">{{ card.value }}</p>
-          </div>
-        </div>
+        <span class="stat-label">{{ card.label }}</span>
+        <span class="stat-figure">
+          <component :is="card.icon" class="stat-icon" aria-hidden="true" />
+          {{ card.value }}
+        </span>
       </NuxtLink>
     </div>
 
-    <div class="card bg-base-200 p-6">
-      <h3 class="font-bold mb-4">
-        Quick Actions
+    <section class="actions">
+      <h3 class="admin-h admin-h-sm">
+        {{ t('admin.panel.quickActions') }}
       </h3>
-      <div class="flex flex-wrap gap-3">
-        <NuxtLink to="/admin/submissions?status=pending" class="btn btn-outline btn-sm">
-          <FileText class="w-4 h-4 mr-1" />
-          Review Submissions
+      <div class="actions-row">
+        <NuxtLink to="/admin/submissions?status=pending" class="btn btn-sm">
+          <FileText class="btn-icon" aria-hidden="true" />
+          {{ t('admin.panel.reviewSubmissions') }}
         </NuxtLink>
-        <NuxtLink to="/admin/users" class="btn btn-outline btn-sm">
-          <Users class="w-4 h-4 mr-1" />
-          Manage Users
+        <NuxtLink to="/admin/users" class="btn btn-sm">
+          <Users class="btn-icon" aria-hidden="true" />
+          {{ t('admin.panel.manageUsers') }}
         </NuxtLink>
-        <NuxtLink to="/admin/sites" class="btn btn-outline btn-sm">
-          <Globe class="w-4 h-4 mr-1" />
-          View Sites
+        <NuxtLink to="/admin/sites" class="btn btn-sm">
+          <Globe class="btn-icon" aria-hidden="true" />
+          {{ t('admin.panel.viewSites') }}
         </NuxtLink>
-        <NuxtLink to="/admin/contests" class="btn btn-outline btn-sm">
-          <Trophy class="w-4 h-4 mr-1" />
+        <NuxtLink to="/admin/contests" class="btn btn-sm">
+          <Trophy class="btn-icon" aria-hidden="true" />
           {{ t('admin.contests.manageContests') }}
         </NuxtLink>
-        <button class="btn btn-outline btn-sm" @click="importFromPb">
-          <span v-if="importing" class="loading loading-spinner loading-xs mr-1" />
-          <Download v-else class="w-4 h-4 mr-1" />
-          Import from PocketBase
+        <button class="btn btn-sm" @click="importFromPb">
+          <span v-if="importing" class="loading loading-spinner loading-xs" />
+          <Download v-else class="btn-icon" aria-hidden="true" />
+          {{ t('admin.panel.importPocketbase') }}
         </button>
       </div>
-      <div v-if="importResult" class="mt-3 text-sm">
-        <span v-if="importResult.success" class="text-success">
-          Done: {{ importResult.identities?.imported ?? 0 }} identities, {{ importResult.sites?.imported ?? 0 }} sites, {{ importResult.assetsUploaded ?? 0 }} assets uploaded to R2
-        </span>
-        <span v-else class="text-error">
-          {{ importResult.error || 'Import failed' }}
-        </span>
-      </div>
-    </div>
+
+      <p v-if="importResult" class="note" :class="importResult.success ? 'note-success' : 'note-error'">
+        <template v-if="importResult.success">
+          {{ t('admin.panel.importDone', {
+            identities: importResult.identities?.imported ?? 0,
+            sites: importResult.sites?.imported ?? 0,
+            assets: importResult.assetsUploaded ?? 0,
+          }) }}
+        </template>
+        <template v-else>
+          {{ importResult.error || t('admin.panel.importFailed') }}
+        </template>
+      </p>
+    </section>
   </div>
 </template>
+
+<style scoped>
+.admin-h {
+  margin: 0 0 1.25rem;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.admin-h-sm {
+  font-size: 0.9375rem;
+  margin-bottom: 0.9rem;
+}
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  overflow: hidden;
+  margin-bottom: 2rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-line-soft);
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem 1.1rem;
+  background: var(--color-base-100);
+  text-decoration: none;
+  transition: background-color 140ms ease;
+}
+
+.stat:hover {
+  background: color-mix(in oklab, var(--color-base-200) 70%, transparent);
+}
+
+.stat-label {
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.stat-figure {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-mono);
+  font-size: 1.5rem;
+  font-weight: 500;
+  color: var(--color-base-content);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat-icon {
+  width: 0.9375rem;
+  height: 0.9375rem;
+  color: var(--color-primary);
+}
+
+.actions {
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.actions-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+}
+
+.btn-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+@media (min-width: 640px) {
+  .stat-row {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+</style>

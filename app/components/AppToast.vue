@@ -33,28 +33,87 @@ provide('toast', { addToast })
       v-for="toast in toasts"
       :key="toast.id"
       v-model:open="toast.open"
-      :class="[
-        'card bg-base-100 border shadow-lg p-4 min-w-72 max-w-sm',
-        toast.type === 'success' ? 'border-success/30' :
-        toast.type === 'error' ? 'border-error/30' :
-        'border-base-content/10',
-      ]"
+      class="toast"
+      :class="`toast-${toast.type}`"
     >
-      <div class="flex items-start gap-3">
-        <div class="flex-1">
-          <ToastTitle v-if="toast.title" class="text-sm font-semibold mb-0.5">
+      <div class="toast-body">
+        <div class="toast-text">
+          <ToastTitle v-if="toast.title" class="toast-title">
             {{ toast.title }}
           </ToastTitle>
-          <ToastDescription class="text-sm opacity-80">
+          <ToastDescription class="toast-message">
             {{ toast.message }}
           </ToastDescription>
         </div>
-        <ToastClose class="btn btn-ghost btn-xs btn-circle shrink-0 mt-0.5">
+        <ToastClose class="btn btn-ghost btn-xs btn-square toast-close">
           ✕
         </ToastClose>
       </div>
     </ToastRoot>
 
-    <ToastViewport class="fixed bottom-4 right-4 z-[9999] flex flex-col gap-2 w-max max-w-sm outline-none" />
+    <ToastViewport class="viewport" />
   </ToastProvider>
 </template>
+
+<style scoped>
+.viewport {
+  position: fixed;
+  right: 1rem;
+  bottom: 1rem;
+  z-index: 9999;
+  display: flex;
+  width: max-content;
+  max-width: 22rem;
+  flex-direction: column;
+  gap: 0.5rem;
+  outline: none;
+}
+
+.toast {
+  min-width: 16rem;
+  padding: 0.75rem 0.85rem;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-card);
+  background: var(--color-base-200);
+}
+
+.toast-success {
+  border-color: color-mix(in oklab, var(--color-success) 40%, transparent);
+}
+
+.toast-error {
+  border-color: color-mix(in oklab, var(--color-error) 40%, transparent);
+}
+
+.toast-body {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.toast-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.toast-title {
+  margin: 0 0 0.1rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-base-content);
+}
+
+.toast-message {
+  margin: 0;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-dim);
+}
+
+.toast-close {
+  margin-top: -0.15rem;
+  margin-right: -0.2rem;
+  flex-shrink: 0;
+  color: var(--color-faint);
+}
+</style>

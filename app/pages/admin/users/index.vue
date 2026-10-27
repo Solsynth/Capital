@@ -1,18 +1,14 @@
 <script setup lang="ts">
 import {
-  Users,
   Mail,
-  CheckCircle,
-  FileText,
-  Globe,
   Search,
   Edit,
   Trash2,
   Check,
+  RefreshCw,
 } from '@lucide/vue'
 
 const { locale } = useI18n()
-const localePath = useLocalePath()
 const lang = computed(() => locale.value)
 const isZh = computed(() => lang.value === 'zh')
 
@@ -100,93 +96,98 @@ async function confirmDelete() {
 
 <template>
   <div>
-    <div class="flex items-center justify-between mb-6">
-      <h2 class="text-2xl font-bold">{{ isZh ? '用户管理' : 'Users' }}</h2>
-      <button class="btn btn-outline btn-sm" @click="refresh()">{{ isZh ? '刷新' : 'Refresh' }}</button>
+    <div class="head">
+      <div>
+        <h2 class="admin-h">
+          {{ isZh ? '用户管理' : 'Users' }}
+        </h2>
+        <p class="admin-sub">
+          {{ isZh ? '账号、邮箱验证状态与提交统计。' : 'Accounts, email verification, and submission totals.' }}
+        </p>
+      </div>
+      <button class="btn btn-sm" @click="refresh()">
+        <RefreshCw class="btn-icon" aria-hidden="true" />
+        {{ isZh ? '刷新' : 'Refresh' }}
+      </button>
     </div>
 
-    <div class="relative max-w-md mb-6">
-      <Search class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 opacity-50" />
+    <div class="search">
+      <Search class="search-icon" aria-hidden="true" />
       <input
         v-model="searchQuery"
-        type="text"
-        class="input input-bordered w-full pl-10"
-        :placeholder="isZh ? '搜索用户...' : 'Search users...'"
+        type="search"
+        class="input search-input"
+        :placeholder="isZh ? '搜索用户…' : 'Search users…'"
       >
     </div>
 
-    <!-- Edit Dialog -->
     <AppDialog
       :open="!!editingUser"
-      :title="isZh ? '编辑用户' : 'Edit User'"
+      :title="isZh ? '编辑用户' : 'Edit user'"
       max-width="max-w-md"
       @update:open="!$event && (editingUser = null)"
     >
-      <div class="space-y-4">
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '用户名' : 'Name' }} *</span></label>
-          <input v-model="editForm.name" type="text" class="input input-bordered w-full" required>
-        </div>
-        <div class="form-control">
-          <label class="label"><span class="label-text">{{ isZh ? '邮箱' : 'Email' }} *</span></label>
-          <input v-model="editForm.email" type="email" class="input input-bordered w-full" required>
-        </div>
-        <label class="cursor-pointer label justify-start gap-3">
-          <input v-model="editForm.emailVerified" type="checkbox" class="checkbox checkbox-primary">
-          <span class="label-text">{{ isZh ? '邮箱已验证' : 'Email Verified' }}</span>
+      <div class="form-stack">
+        <label>
+          <span class="field-label">{{ isZh ? '用户名' : 'Name' }}</span>
+          <input v-model="editForm.name" type="text" class="input" required>
+        </label>
+        <label>
+          <span class="field-label">{{ isZh ? '邮箱' : 'Email' }}</span>
+          <input v-model="editForm.email" type="email" class="input" required>
+        </label>
+        <label class="check">
+          <input v-model="editForm.emailVerified" type="checkbox">
+          <span>{{ isZh ? '邮箱已验证' : 'Email verified' }}</span>
         </label>
       </div>
       <template #footer>
-        <button class="btn" @click="editingUser = null">{{ isZh ? '取消' : 'Cancel' }}</button>
+        <button class="btn" @click="editingUser = null">
+          {{ isZh ? '取消' : 'Cancel' }}
+        </button>
         <button
           class="btn btn-primary"
           :disabled="isSaving || !editForm.name || !editForm.email"
           @click="saveEdit"
         >
-          <span v-if="isSaving" class="loading loading-spinner loading-sm" />
-          <Check v-else class="w-4 h-4 mr-1" />
+          <span v-if="isSaving" class="loading loading-spinner loading-xs" />
+          <Check v-else class="btn-icon" aria-hidden="true" />
           {{ isZh ? '保存' : 'Save' }}
         </button>
       </template>
     </AppDialog>
 
-    <!-- Delete Confirm Dialog -->
     <AppDialog
       :open="!!deletingUser"
-      :title="isZh ? '确认删除' : 'Confirm Delete'"
+      :title="isZh ? '确认删除' : 'Confirm delete'"
       max-width="max-w-sm"
       @update:open="!$event && (deletingUser = null)"
     >
-      <p class="text-sm">
+      <p class="dialog-copy">
         {{ isZh
           ? `确定要删除用户"${deletingUser?.name || deletingUser?.email}"吗？此操作不可撤销。`
           : `Are you sure you want to delete "${deletingUser?.name || deletingUser?.email}"? This cannot be undone.`
         }}
       </p>
       <template #footer>
-        <button class="btn" @click="deletingUser = null">{{ isZh ? '取消' : 'Cancel' }}</button>
+        <button class="btn" @click="deletingUser = null">
+          {{ isZh ? '取消' : 'Cancel' }}
+        </button>
         <button class="btn btn-error" :disabled="isDeleting" @click="confirmDelete">
-          <span v-if="isDeleting" class="loading loading-spinner loading-sm" />
-          <Trash2 v-else class="w-4 h-4 mr-1" />
+          <span v-if="isDeleting" class="loading loading-spinner loading-xs" />
+          <Trash2 v-else class="btn-icon" aria-hidden="true" />
           {{ isZh ? '删除' : 'Delete' }}
         </button>
       </template>
     </AppDialog>
 
-    <!-- Empty state -->
-    <div v-if="filteredUsers.length === 0" class="card bg-base-200 p-12 text-center">
-      <Users class="w-16 h-16 mx-auto mb-4 opacity-30" />
-      <p class="text-lg opacity-60">{{ isZh ? '暂无用户' : 'No users found' }}</p>
-    </div>
-
-    <!-- Users table -->
-    <div v-else class="overflow-x-auto">
-      <table class="table table-zebra">
+    <div v-if="filteredUsers.length" class="table-wrap">
+      <table class="ledger">
         <thead>
           <tr>
             <th>{{ isZh ? '用户' : 'User' }}</th>
             <th>{{ isZh ? '邮箱' : 'Email' }}</th>
-            <th>{{ isZh ? '邮箱验证' : 'Verified' }}</th>
+            <th>{{ isZh ? '已验证' : 'Verified' }}</th>
             <th>{{ isZh ? '提交数' : 'Submissions' }}</th>
             <th>{{ isZh ? '站点数' : 'Sites' }}</th>
             <th>{{ isZh ? '注册时间' : 'Joined' }}</th>
@@ -196,55 +197,49 @@ async function confirmDelete() {
         <tbody>
           <tr v-for="u in filteredUsers" :key="u.id">
             <td>
-              <div class="flex items-center gap-3">
-                <img
-                  v-if="u.image"
-                  :src="u.image"
-                  :alt="u.name"
-                  class="w-8 h-8 rounded-full object-cover"
-                >
-                <div v-else class="w-8 h-8 rounded-full bg-neutral text-neutral-content flex items-center justify-center text-xs font-bold">
+              <div class="entity">
+                <img v-if="u.image" :src="u.image" :alt="u.name" class="entity-avatar">
+                <span v-else class="entity-avatar entity-initial">
                   {{ u.name?.charAt(0)?.toUpperCase() || '?' }}
-                </div>
-                <div>
-                  <p class="font-bold text-sm">{{ u.name || (isZh ? '未设置' : 'Not set') }}</p>
-                  <p class="text-xs opacity-60 font-mono">{{ u.id.slice(0, 8) }}…</p>
-                </div>
+                </span>
+                <span class="entity-text">
+                  <span class="entity-name">{{ u.name || (isZh ? '未设置' : 'Not set') }}</span>
+                  <span class="mono">{{ u.id.slice(0, 8) }}…</span>
+                </span>
               </div>
             </td>
             <td>
-              <div class="flex items-center gap-1">
-                <Mail class="w-3 h-3 opacity-50" />
-                <span class="text-sm">{{ u.email }}</span>
-              </div>
-            </td>
-            <td>
-              <CheckCircle class="w-4 h-4" :class="u.emailVerified ? 'text-success' : 'text-base-300'" />
-            </td>
-            <td>
-              <div class="flex items-center gap-1">
-                <FileText class="w-3 h-3 opacity-50" />
-                <span>{{ u.submissionCount }}</span>
-              </div>
-            </td>
-            <td>
-              <div class="flex items-center gap-1">
-                <Globe class="w-3 h-3 opacity-50" />
-                <span>{{ u.siteCount }}</span>
-              </div>
-            </td>
-            <td>
-              <span class="text-sm opacity-60">
-                {{ new Date(u.created).toLocaleDateString(isZh ? 'zh-CN' : 'en-US') }}
+              <span class="cell-mail">
+                <Mail class="cell-icon" aria-hidden="true" />
+                {{ u.email }}
               </span>
             </td>
             <td>
-              <div class="flex gap-1">
-                <button class="btn btn-ghost btn-xs" @click="startEdit(u)">
-                  <Edit class="w-3 h-3" />
+              <span v-if="u.emailVerified" class="status status-ok">
+                <span class="dot" aria-hidden="true" />
+                {{ isZh ? '已验证' : 'Verified' }}
+              </span>
+              <span v-else class="status status-muted">
+                <span class="dot" aria-hidden="true" />
+                {{ isZh ? '未验证' : 'Unverified' }}
+              </span>
+            </td>
+            <td class="numeric">
+              {{ u.submissionCount }}
+            </td>
+            <td class="numeric">
+              {{ u.siteCount }}
+            </td>
+            <td class="mono">
+              {{ new Date(u.created).toLocaleDateString(isZh ? 'zh-CN' : 'en-US') }}
+            </td>
+            <td>
+              <div class="row-actions">
+                <button class="btn btn-xs" :title="isZh ? '编辑' : 'Edit'" @click="startEdit(u)">
+                  <Edit class="btn-icon" aria-hidden="true" />
                 </button>
-                <button class="btn btn-ghost btn-xs text-error" @click="deletingUser = u">
-                  <Trash2 class="w-3 h-3" />
+                <button class="btn btn-xs" :title="isZh ? '删除' : 'Delete'" @click="deletingUser = u">
+                  <Trash2 class="btn-icon" aria-hidden="true" />
                 </button>
               </div>
             </td>
@@ -252,5 +247,184 @@ async function confirmDelete() {
         </tbody>
       </table>
     </div>
+
+    <p v-else class="empty">
+      {{ searchQuery
+        ? (isZh ? '没有匹配的用户。清空搜索以查看全部。' : 'No users match that search. Clear the search to see them all.')
+        : (isZh ? '暂无用户。' : 'No users yet.')
+      }}
+    </p>
   </div>
 </template>
+
+<style scoped>
+.head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+}
+
+.admin-h {
+  margin: 0;
+  font-size: 1.375rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.admin-sub {
+  max-width: 40rem;
+  margin: 0.35rem 0 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.btn-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.search {
+  position: relative;
+  max-width: 22rem;
+  margin-bottom: 1.25rem;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 0.75rem;
+  width: 0.875rem;
+  height: 0.875rem;
+  color: var(--color-faint);
+  transform: translateY(-50%);
+  pointer-events: none;
+}
+
+.search-input {
+  padding-left: 2.15rem;
+}
+
+.form-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.check {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+  cursor: pointer;
+}
+
+.check input {
+  width: 0.9rem;
+  height: 0.9rem;
+  accent-color: var(--color-primary);
+}
+
+.dialog-copy {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.entity {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  min-width: 11rem;
+}
+
+.entity-avatar {
+  width: 1.75rem;
+  height: 1.75rem;
+  flex-shrink: 0;
+  border-radius: 999px;
+  object-fit: cover;
+}
+
+.entity-initial {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-base-300);
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-dim);
+}
+
+.entity-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  font-size: 0.8125rem;
+}
+
+.entity-name {
+  font-weight: 600;
+  color: var(--color-base-content);
+}
+
+.cell-mail {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  color: var(--color-dim);
+}
+
+.cell-icon {
+  width: 0.75rem;
+  height: 0.75rem;
+  color: var(--color-faint);
+}
+
+.status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status .dot {
+  background: currentColor;
+}
+
+.status-ok {
+  color: var(--color-success);
+}
+
+.status-muted {
+  color: var(--color-faint);
+}
+
+.numeric {
+  font-variant-numeric: tabular-nums;
+}
+
+.row-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.3rem;
+}
+
+.empty {
+  margin: 0;
+  padding: 1.5rem 0;
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+</style>

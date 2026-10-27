@@ -1,14 +1,5 @@
 <script setup lang="ts">
-import {
-  Activity,
-  ArrowLeft,
-  Clock,
-  Gamepad2,
-  RefreshCw,
-  Server,
-  Users,
-  Wifi,
-} from "@lucide/vue";
+import { ArrowLeft, RefreshCw, Server } from "@lucide/vue";
 
 type StatsPayload = {
   available: boolean;
@@ -73,105 +64,139 @@ useSeoMeta({ title: "GoatCraft Server Stats" });
 </script>
 
 <template>
-  <main class="min-h-[calc(100vh-var(--site-page-offset,64px))] bg-base-100">
-    <div class="container mx-auto max-w-6xl px-4 py-8 sm:py-12">
-      <div class="mb-10 flex flex-wrap items-start justify-between gap-4">
+  <main class="stats-page">
+    <div class="shell">
+      <header class="stats-head">
         <div>
-          <NuxtLink to="/products/goatcraft#status" class="btn btn-ghost btn-sm -ml-3 gap-2">
-            <ArrowLeft class="h-4 w-4" />
+          <NuxtLink
+            to="/products/goatcraft#status"
+            class="link-quiet back"
+          >
+            <ArrowLeft class="back-icon" aria-hidden="true" />
             GoatCraft
           </NuxtLink>
-          <p class="eyebrow mt-5 mb-2">GoatCraft</p>
-          <h1 class="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1 class="title stats-title">
             {{ t("goatCraft.stats.title") }}
           </h1>
-          <p class="mt-2 opacity-65">{{ t("goatCraft.stats.desc") }}</p>
+          <p class="stats-lede">
+            {{ t("goatCraft.stats.desc") }}
+          </p>
         </div>
-        <button type="button" class="btn btn-outline btn-sm gap-2" :disabled="status === 'pending'" @click="refresh">
-          <RefreshCw class="h-4 w-4" :class="status === 'pending' ? 'animate-spin' : ''" />
-          刷新数据
+        <button
+          type="button"
+          class="btn btn-sm gap-2"
+          :disabled="status === 'pending'"
+          @click="refresh"
+        >
+          <RefreshCw
+            class="refresh-icon"
+            :class="status === 'pending' ? 'is-spinning' : ''"
+            aria-hidden="true"
+          />
+          {{ t("goatCraft.stats.refresh") }}
         </button>
-      </div>
+      </header>
 
       <template v-if="available && stats">
-        <div class="mb-6 flex flex-wrap items-center gap-3 text-sm">
-          <span class="flex items-center gap-2 font-medium text-success">
-            <span class="h-2 w-2 rounded-full bg-success" />
-            服务器在线
-          </span>
-          <span class="opacity-50">更新于 {{ formatDate(stats.fetchedAt) }}</span>
-        </div>
+        <p class="status-line">
+          <span class="dot status-dot" />
+          <span>{{ t("goatCraft.stats.serverOnline") }}</span>
+          <span class="mono status-stamp">{{ formatDate(stats.fetchedAt) }}</span>
+        </p>
 
-        <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
-          <section class="rounded-lg border border-base-content/10 bg-base-200 p-5 sm:p-6">
-            <Users class="mb-5 h-5 w-5 text-primary" />
-            <p class="text-sm opacity-60">{{ t("goatCraft.stats.online") }}</p>
-            <p class="mt-1 text-4xl font-bold tabular-nums text-primary">{{ stats.onlineCount }}</p>
-          </section>
-          <section class="rounded-lg border border-base-content/10 bg-base-200 p-5 sm:p-6">
-            <Gamepad2 class="mb-5 h-5 w-5 text-primary" />
-            <p class="text-sm opacity-60">{{ t("goatCraft.stats.totalPlayers") }}</p>
-            <p class="mt-1 text-4xl font-bold tabular-nums">{{ stats.totalPlayers ?? "—" }}</p>
-          </section>
-          <section class="rounded-lg border border-base-content/10 bg-base-200 p-5 sm:p-6">
-            <Clock class="mb-5 h-5 w-5 text-primary" />
-            <p class="text-sm opacity-60">{{ t("goatCraft.stats.serverUptime") }}</p>
-            <p class="mt-1 text-3xl font-bold tabular-nums">{{ formatDuration(stats.serverUptimeMs) }}</p>
-          </section>
-          <section class="rounded-lg border border-base-content/10 bg-base-200 p-5 sm:p-6">
-            <Wifi class="mb-5 h-5 w-5 text-primary" />
-            <p class="text-sm opacity-60">{{ t("goatCraft.stats.websocket") }}</p>
-            <p class="mt-1 truncate text-2xl font-bold capitalize">{{ stats.websocketState || "—" }}</p>
-          </section>
-        </div>
+        <dl class="readout">
+          <div class="readout-cell">
+            <dt class="readout-label">{{ t("goatCraft.stats.online") }}</dt>
+            <dd class="readout-figure is-lead">
+              {{ stats.onlineCount }}
+            </dd>
+          </div>
+          <div class="readout-cell">
+            <dt class="readout-label">
+              {{ t("goatCraft.stats.totalPlayers") }}
+            </dt>
+            <dd class="readout-figure">
+              {{ stats.totalPlayers ?? "—" }}
+            </dd>
+          </div>
+          <div class="readout-cell">
+            <dt class="readout-label">
+              {{ t("goatCraft.stats.serverUptime") }}
+            </dt>
+            <dd class="readout-figure">
+              {{ formatDuration(stats.serverUptimeMs) }}
+            </dd>
+          </div>
+          <div class="readout-cell">
+            <dt class="readout-label">
+              {{ t("goatCraft.stats.websocket") }}
+            </dt>
+            <dd class="readout-figure">
+              {{ stats.websocketState || "—" }}
+            </dd>
+          </div>
+        </dl>
 
-        <div class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">
-          <section class="rounded-lg border border-base-content/10 bg-base-200 p-5 sm:p-6">
-            <div class="mb-5 flex items-center justify-between gap-4">
-              <div class="flex items-center gap-2 font-semibold">
-                <Users class="h-5 w-5 text-primary" />
+        <div class="detail-grid">
+          <section class="detail">
+            <div class="detail-head">
+              <h2 class="detail-title">
                 {{ t("goatCraft.stats.playersOnline") }}
-              </div>
-              <span class="text-sm opacity-60">{{ stats.onlinePlayers.length }} 名已列出</span>
+              </h2>
+              <span class="mono">{{ stats.onlinePlayers.length }}</span>
             </div>
-            <div v-if="stats.onlinePlayers.length" class="flex flex-wrap gap-2">
-              <span v-for="player in stats.onlinePlayers" :key="player.uuid || player.name" class="rounded-md border border-base-content/10 bg-base-100 px-3 py-2 text-sm font-medium">
+            <ul v-if="stats.onlinePlayers.length" class="player-list">
+              <li
+                v-for="player in stats.onlinePlayers"
+                :key="player.uuid || player.name"
+                class="player"
+              >
+                <span class="dot player-dot" />
                 {{ player.name }}
-              </span>
-            </div>
-            <p v-else class="rounded-lg border border-dashed border-base-content/15 px-4 py-10 text-center text-sm opacity-60">
+              </li>
+            </ul>
+            <p v-else class="detail-empty">
               {{ t("goatCraft.stats.noPlayers") }}
             </p>
           </section>
 
-          <section class="rounded-lg border border-base-content/10 bg-base-200 p-5 sm:p-6">
-            <div class="mb-5 flex items-center gap-2 font-semibold">
-              <Activity class="h-5 w-5 text-primary" />
-              服务详情
-            </div>
-            <dl class="space-y-4 text-sm">
-              <div class="flex items-center justify-between gap-4">
-                <dt class="opacity-60">监控</dt>
-                <dd>{{ stats.metricsEnabled ? "已启用" : "未启用" }}</dd>
-              </div>
-              <div class="flex items-center justify-between gap-4">
-                <dt class="opacity-60">API 运行时间</dt>
-                <dd class="font-medium tabular-nums">{{ formatDuration(stats.apiUptimeMs) }}</dd>
-              </div>
-              <div class="border-t border-base-content/10 pt-4">
-                <dt class="mb-1 opacity-60">API 启动时间</dt>
-                <dd class="break-words font-medium">{{ formatDate(stats.apiStartedAt) }}</dd>
-              </div>
-            </dl>
+          <section class="detail">
+            <h2 class="detail-title">
+              {{ t("goatCraft.serverInfo.title") }}
+            </h2>
+            <table class="ledger">
+              <tbody>
+                <tr>
+                  <th scope="row">{{ t("goatCraft.stats.metrics") }}</th>
+                  <td>{{ stats.metricsEnabled ? t("goatCraft.stats.metricsOn") : t("goatCraft.stats.metricsOff") }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">{{ t("goatCraft.stats.apiUptime") }}</th>
+                  <td class="mono">{{ formatDuration(stats.apiUptimeMs) }}</td>
+                </tr>
+                <tr>
+                  <th scope="row">{{ t("goatCraft.stats.apiStartedAt") }}</th>
+                  <td class="mono">
+                    {{ stats.apiStartedAt ? formatDate(stats.apiStartedAt) : "—" }}
+                  </td>
+                </tr>
+              </tbody>
+            </table>
           </section>
         </div>
       </template>
 
-      <section v-else class="rounded-lg border border-base-content/10 bg-base-200 px-6 py-16 text-center">
-        <Server class="mx-auto mb-4 h-10 w-10 opacity-35" />
-        <h2 class="text-lg font-semibold">暂时无法取得服务器状态</h2>
-        <p class="mt-2 text-sm opacity-60">
-          {{ data?.reason === "not_configured" ? t("goatCraft.stats.notConfigured") : t("goatCraft.stats.unavailable") }}
+      <section v-else class="stats-unavailable">
+        <Server class="empty-icon" aria-hidden="true" />
+        <h2 class="detail-title">
+          {{ t("goatCraft.stats.unavailableTitle") }}
+        </h2>
+        <p class="detail-empty">
+          {{
+            data?.reason === "not_configured"
+              ? t("goatCraft.stats.notConfigured")
+              : t("goatCraft.stats.unavailable")
+          }}
         </p>
       </section>
     </div>
@@ -179,11 +204,197 @@ useSeoMeta({ title: "GoatCraft Server Stats" });
 </template>
 
 <style scoped>
-.eyebrow {
+.stats-page {
+  padding-block: 2.5rem 4rem;
+}
+
+.stats-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.stats-title {
+  margin: 1.25rem 0 0;
+  font-size: clamp(1.75rem, 3.5vw, 2.25rem);
+}
+
+.stats-lede {
+  margin: 0.6rem 0 0;
+  max-width: 32rem;
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--color-dim);
+}
+
+.refresh-icon {
+  width: 0.875rem;
+  height: 0.875rem;
+}
+
+.is-spinning {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.status-line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.45rem;
+  margin: 0 0 1.25rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.status-dot,
+.player-dot {
+  background: var(--color-success);
+}
+
+.status-stamp {
+  margin-left: 0.35rem;
+}
+
+.readout {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1px;
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--color-line-soft);
+  border-radius: var(--radius-card);
+  background: var(--color-line-soft);
+}
+
+.readout-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  padding: 1rem 1.15rem 1.15rem;
+  background: var(--color-base-100);
+}
+
+.readout-label {
+  font-size: 0.8125rem;
+  color: var(--color-faint);
+}
+
+.readout-figure {
+  margin: 0;
   font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  opacity: 0.5;
+  font-size: 1.5rem;
+  font-variant-numeric: tabular-nums;
+  line-height: 1.2;
+}
+
+.readout-figure.is-lead {
+  color: var(--color-primary);
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 2.5rem;
+  margin-top: 2.5rem;
+}
+
+.detail-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.detail-title {
+  margin: 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.player-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1.25rem;
+  margin: 1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.player {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.9375rem;
+  font-weight: 600;
+}
+
+.detail-empty {
+  margin: 0.75rem 0 0;
+  font-size: 0.9375rem;
+  color: var(--color-faint);
+}
+
+.ledger {
+  margin-top: 1rem;
+}
+
+.ledger th {
+  text-align: left;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-faint);
+  letter-spacing: 0;
+}
+
+.stats-unavailable {
+  padding-top: 2rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.empty-icon {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--color-faint);
+}
+
+@media (min-width: 640px) {
+  .readout {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .stats-page {
+    padding-block: 3rem 5rem;
+  }
+
+  .detail-grid {
+    grid-template-columns: minmax(0, 1fr) 22rem;
+    gap: 3.5rem;
+  }
 }
 </style>

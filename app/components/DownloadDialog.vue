@@ -79,82 +79,69 @@ function keepToastsClickable(event: any) {
 <template>
   <DialogRoot :open="open" @update:open="open = $event">
     <DialogPortal>
-      <DialogOverlay class="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm" />
+      <DialogOverlay class="scrim" />
       <DialogContent
-        class="fixed top-1/2 left-1/2 z-50 w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 border-0 bg-transparent p-0 shadow-none focus:outline-none"
+        class="sheet"
         @pointer-down-outside="keepToastsClickable"
       >
-        <!-- The modal is the waybill: bands of the ticket, torn above the action stub. -->
-        <div class="rounded-2xl shadow-2xl">
-          <div class="ticket-sheet rounded-t-2xl border-x border-t border-base-content/10 bg-base-100">
-            <div class="flex items-start justify-between gap-3 px-5 pt-4 pb-4">
-              <div class="min-w-0">
-                <ExpressMark />
-                <DialogTitle class="mt-2.5 text-lg font-bold">{{ t("downloadDialog.title") }}</DialogTitle>
-                <DialogDescription class="mt-0.5 text-sm opacity-60">{{ subtitle }}</DialogDescription>
-              </div>
-              <DialogClose class="btn btn-ghost btn-square btn-sm -mt-0.5 -mr-1 shrink-0" :aria-label="t('downloadDialog.close')">
-                <X class="h-4 w-4" aria-hidden="true" />
-              </DialogClose>
-            </div>
+        <div class="sheet-head">
+          <div class="min-w-0">
+            <ExpressMark />
+            <DialogTitle class="sheet-title">{{ t("downloadDialog.title") }}</DialogTitle>
+            <DialogDescription class="sheet-subtitle">{{ subtitle }}</DialogDescription>
+          </div>
+          <DialogClose class="btn btn-ghost btn-square btn-sm close" :aria-label="t('downloadDialog.close')">
+            <X class="h-4 w-4" aria-hidden="true" />
+          </DialogClose>
+        </div>
 
-            <dl
-              v-if="artifact"
-              class="grid grid-cols-2 gap-x-4 gap-y-3.5 border-t border-dashed border-base-content/15 px-5 py-3.5"
+        <dl v-if="artifact" class="fields">
+          <div v-for="field in fields" :key="field.label" :class="field.wide ? 'field wide' : 'field'">
+            <dt class="field-label">{{ field.label }}</dt>
+            <dd class="field-value">{{ field.value }}</dd>
+          </div>
+        </dl>
+
+        <div v-if="artifact?.hash" class="block">
+          <div class="block-head">
+            <p class="field-label">{{ t("downloadDialog.waybill.seal") }}</p>
+            <button
+              type="button"
+              class="btn btn-ghost btn-xs btn-square shrink-0"
+              :aria-label="copied ? t('downloadDialog.copied') : t('downloadDialog.copyChecksum')"
+              @click="copyChecksum"
             >
-              <div v-for="field in fields" :key="field.label" :class="field.wide ? 'col-span-2' : ''">
-                <dt class="waybill-label">{{ field.label }}</dt>
-                <dd class="waybill-value mt-1 break-all">{{ field.value }}</dd>
-              </div>
-            </dl>
-
-            <div v-if="artifact?.hash" class="border-t border-dashed border-base-content/15 px-5 py-3.5">
-              <div class="flex items-center justify-between gap-3">
-                <p class="waybill-label">{{ t("downloadDialog.waybill.seal") }}</p>
-                <button
-                  type="button"
-                  class="btn btn-ghost btn-xs btn-square shrink-0"
-                  :aria-label="copied ? t('downloadDialog.copied') : t('downloadDialog.copyChecksum')"
-                  @click="copyChecksum"
-                >
-                  <Check v-if="copied" class="w-3.5 h-3.5 text-success" aria-hidden="true" />
-                  <Copy v-else class="w-3.5 h-3.5" aria-hidden="true" />
-                </button>
-              </div>
-              <code class="mt-1.5 block font-mono text-[11px] break-all">{{ artifact.hash }}</code>
-              <p class="mt-1.5 text-[11px] opacity-55">{{ t("downloadDialog.verifyHint") }}</p>
-            </div>
-
-            <div v-if="sealNumber" class="border-t border-dashed border-base-content/15 px-5 pt-3 pb-2.5">
-              <div class="h-12 text-base-content">
-                <ExpressBarcode :value="sealNumber" />
-              </div>
-              <div class="mt-1.5 flex items-baseline justify-between gap-3">
-                <p class="font-mono text-[10px] uppercase tracking-[0.16em] opacity-55">{{ sealNumber }}</p>
-                <div v-if="dispatchedAt" class="flex items-baseline gap-1.5">
-                  <span class="waybill-label">{{ t("downloadDialog.waybill.dispatched") }}</span>
-                  <span class="font-mono text-[11px] tabular-nums opacity-70">{{ dispatchedAt }}</span>
-                </div>
-              </div>
-            </div>
-
-            <!-- Tear line, notched out of the ticket edges by the sheet/stub masks. -->
-            <div class="border-t border-dashed border-base-content/20" aria-hidden="true" />
+              <Check v-if="copied" class="h-3.5 w-3.5 text-success" aria-hidden="true" />
+              <Copy v-else class="h-3.5 w-3.5" aria-hidden="true" />
+            </button>
           </div>
+          <code class="mono seal">{{ artifact.hash }}</code>
+          <p class="hint">{{ t("downloadDialog.verifyHint") }}</p>
+        </div>
 
-          <div class="ticket-stub rounded-b-2xl border-x border-b border-base-content/10 bg-base-100">
-            <div class="flex items-center justify-between gap-3 px-5 py-3.5">
-              <p v-if="receipt?.url" class="min-w-0 text-sm">
-                <span class="opacity-60">{{ t("downloadDialog.didNotStart") }}</span>
-                <a :href="receipt.url" rel="noopener noreferrer" class="link link-primary ml-1">
-                  {{ t("downloadDialog.downloadAgain") }}
-                </a>
-              </p>
-              <button type="button" class="btn btn-primary btn-sm shrink-0" @click="open = false">
-                {{ t("downloadDialog.close") }}
-              </button>
+        <div v-if="sealNumber" class="block">
+          <div class="barcode">
+            <ExpressBarcode :value="sealNumber" />
+          </div>
+          <div class="barcode-meta">
+            <p class="mono">{{ sealNumber }}</p>
+            <div v-if="dispatchedAt" class="barcode-time">
+              <span class="field-label">{{ t("downloadDialog.waybill.dispatched") }}</span>
+              <span class="mono">{{ dispatchedAt }}</span>
             </div>
           </div>
+        </div>
+
+        <div class="sheet-foot">
+          <p v-if="receipt?.url" class="min-w-0 text-sm">
+            <span class="foot-note">{{ t("downloadDialog.didNotStart") }}</span>
+            <a :href="receipt.url" rel="noopener noreferrer" class="link-quiet ml-1">
+              {{ t("downloadDialog.downloadAgain") }}
+            </a>
+          </p>
+          <button type="button" class="btn btn-primary btn-sm shrink-0" @click="open = false">
+            {{ t("downloadDialog.close") }}
+          </button>
         </div>
       </DialogContent>
     </DialogPortal>
@@ -162,41 +149,149 @@ function keepToastsClickable(event: any) {
 </template>
 
 <style scoped>
-/*
- * Ticket edges: a quarter-disc cut out of each facing corner, so the paired halves read as
- * one half-round notch punched on the tear line. Browsers without mask-composite simply
- * keep square corners.
- */
-.ticket-sheet,
-.ticket-stub {
-  --notch: 9px;
-  mask-composite: intersect;
+.scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: color-mix(in oklab, #141316 68%, transparent);
+  backdrop-filter: blur(3px);
 }
 
-.ticket-sheet {
-  mask-image:
-    radial-gradient(circle var(--notch) at left bottom, transparent 98%, #000 100%),
-    radial-gradient(circle var(--notch) at right bottom, transparent 98%, #000 100%);
+.sheet {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 50;
+  width: calc(100% - 2rem);
+  max-width: 27rem;
+  max-height: calc(100dvh - 3rem);
+  overflow-y: auto;
+  border: 1px solid var(--color-line);
+  border-radius: var(--radius-sheet);
+  background: var(--color-base-200);
+  transform: translate(-50%, -50%);
+  outline: none;
 }
 
-.ticket-stub {
-  mask-image:
-    radial-gradient(circle var(--notch) at left top, transparent 98%, #000 100%),
-    radial-gradient(circle var(--notch) at right top, transparent 98%, #000 100%);
+.sheet-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 1.25rem 1.375rem 1rem;
 }
 
-.waybill-label {
-  font-family: var(--font-mono);
-  font-size: 0.625rem;
-  line-height: 1.4;
-  text-transform: uppercase;
-  letter-spacing: 0.16em;
-  opacity: 0.5;
+.sheet-title {
+  margin: 0.6rem 0 0;
+  font-size: 1.0625rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
 }
 
-.waybill-value {
+.sheet-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--color-faint);
+}
+
+.close {
+  margin-top: -0.15rem;
+  margin-right: -0.35rem;
+  flex-shrink: 0;
+}
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.85rem 1rem;
+  margin: 0;
+  padding: 0.9rem 1.375rem 1rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.field {
+  min-width: 0;
+}
+
+.field.wide {
+  grid-column: span 2;
+}
+
+.field-label {
+  margin: 0;
+}
+
+.field-value {
+  margin: 0.15rem 0 0;
   font-family: var(--font-mono);
   font-size: 0.75rem;
-  line-height: 1.4;
+  line-height: 1.45;
+  color: var(--color-base-content);
+  overflow-wrap: anywhere;
+}
+
+.block {
+  padding: 0.9rem 1.375rem 1rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.block-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+}
+
+.seal {
+  display: block;
+  margin-top: 0.3rem;
+  font-size: 0.6875rem;
+  line-height: 1.5;
+  color: var(--color-dim);
+  overflow-wrap: anywhere;
+}
+
+.hint {
+  margin: 0.35rem 0 0;
+  font-size: 0.6875rem;
+  color: var(--color-faint);
+}
+
+.barcode {
+  height: 3rem;
+}
+
+.barcode-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.4rem 0.75rem;
+  margin-top: 0.4rem;
+}
+
+.barcode-time {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.barcode-time .field-label {
+  margin: 0;
+}
+
+.sheet-foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.9rem 1.375rem 1.1rem;
+  border-top: 1px solid var(--color-line-soft);
+}
+
+.foot-note {
+  color: var(--color-faint);
 }
 </style>
