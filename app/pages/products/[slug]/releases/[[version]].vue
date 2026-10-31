@@ -235,11 +235,13 @@ useSchemaOrg([
           class="versions"
           :style="{ viewTransitionName: transitionName('release-versions') }"
         >
-          <h2 class="versions-head">
-            <Layers class="head-icon" aria-hidden="true" />
-            {{ t('releasePage.allVersions') }}
+          <div class="versions-header">
+            <div class="versions-title-wrap">
+              <Layers class="head-icon" aria-hidden="true" />
+              <h2 class="versions-head">{{ t('releasePage.allVersions') }}</h2>
+            </div>
             <span v-if="releases.length" class="mono versions-count">{{ releases.length }}</span>
-          </h2>
+          </div>
 
           <ol v-if="releases.length" class="versions-list">
             <li v-for="(entry, index) in releases" :key="entry.id">
@@ -250,19 +252,18 @@ useSchemaOrg([
                 :aria-current="entry.version === release?.version ? 'page' : undefined"
                 :style="{ viewTransitionName: transitionName('release-version', entry.version) }"
               >
-                <span class="version-line">
-                  <span class="mono version-number">v{{ entry.version }}</span>
-                  <span v-if="index === 0" class="version-tag is-latest">{{ t('releasePage.latest') }}</span>
-                  <span v-if="entry.isPrerelease" class="version-tag">{{ t('releases.prerelease') }}</span>
-                  <span
-                    v-if="entry.artifacts.length && entry.artifactsExpired"
-                    class="version-tag is-expired"
-                  >
-                    {{ t('releases.expired') }}
-                  </span>
-                </span>
-                <span class="version-meta">
-                  <span v-if="entry.title && entry.title !== entry.version" class="version-title">{{ entry.title }}</span>
+                <div class="version-row">
+                  <div class="version-badge-group">
+                    <span class="mono version-number">v{{ entry.version }}</span>
+                    <span v-if="index === 0" class="version-tag is-latest">{{ t('releasePage.latest') }}</span>
+                    <span v-if="entry.isPrerelease" class="version-tag is-prerelease">{{ t('releases.prerelease') }}</span>
+                    <span
+                      v-if="entry.artifacts.length && entry.artifactsExpired"
+                      class="version-tag is-expired"
+                    >
+                      {{ t('releases.expired') }}
+                    </span>
+                  </div>
                   <time
                     v-if="formatDate(entry.releasedAt, { year: 'numeric', month: 'short' })"
                     :datetime="entry.releasedAt || ''"
@@ -270,7 +271,10 @@ useSchemaOrg([
                   >
                     {{ formatDate(entry.releasedAt, { year: 'numeric', month: 'short' }) }}
                   </time>
-                </span>
+                </div>
+                <p v-if="entry.title && entry.title !== entry.version" class="version-title">
+                  {{ entry.title }}
+                </p>
               </NuxtLink>
             </li>
           </ol>
@@ -281,7 +285,7 @@ useSchemaOrg([
 
           <NuxtLink :to="localePath(`/products/${slug}`)" class="versions-back">
             <ArrowLeft class="back-icon" aria-hidden="true" />
-            {{ t('releasePage.backToProduct', { name: productTitle }) }}
+            <span>{{ t('releasePage.backToProduct', { name: productTitle }) }}</span>
           </NuxtLink>
         </nav>
 
@@ -496,135 +500,210 @@ useSchemaOrg([
   gap: 2rem;
 }
 
-.versions-head {
+.versions {
+  display: flex;
+  flex-direction: column;
+}
+
+.versions-header {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin: 0 0 0.75rem;
+  justify-content: space-between;
+  margin-bottom: 0.75rem;
+}
+
+.versions-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.versions-head {
+  margin: 0;
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--color-faint);
+  letter-spacing: 0.01em;
 }
 
 .head-icon {
   width: 0.9375rem;
   height: 0.9375rem;
+  color: var(--color-faint);
+  flex-shrink: 0;
 }
 
 .versions-count {
-  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.25rem;
+  height: 1.25rem;
+  padding-inline: 0.35rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-base-300) 60%, transparent);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  color: var(--color-dim);
 }
 
 .versions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--color-line);
 }
 
 .version {
-  display: block;
-  padding: 0.6rem 0.5rem 0.6rem 0;
-  border-bottom: 1px solid var(--color-line-soft);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: var(--radius-chip, 12px);
+  border: 0;
+  background: transparent;
   color: inherit;
   text-decoration: none;
-  transition: background-color 140ms ease;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease;
 }
 
 .version:hover {
-  background: color-mix(in oklab, var(--color-base-200) 60%, transparent);
+  background: color-mix(in oklab, var(--color-base-300) 55%, transparent);
 }
 
 .version.is-current {
   background: color-mix(in oklab, var(--color-primary) 14%, transparent);
 }
 
-.version-line {
+:global([data-theme="stargate-light"]) .version.is-current {
+  background: color-mix(in oklab, var(--color-primary) 12%, transparent);
+}
+
+.version-row {
   display: flex;
-  flex-wrap: wrap;
   align-items: center;
-  gap: 0.35rem;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.version-badge-group {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  min-width: 0;
 }
 
 .version-number {
   font-size: 0.8125rem;
+  font-weight: 600;
   color: var(--color-base-content);
+  letter-spacing: -0.01em;
 }
 
 .version.is-current .version-number {
   color: var(--color-primary);
-  font-weight: 500;
+  font-weight: 700;
 }
 
 .version-tag {
-  padding: 0.05rem 0.4rem;
-  border: 1px solid var(--color-line);
+  display: inline-flex;
+  align-items: center;
+  padding: 0.05rem 0.45rem;
   border-radius: 999px;
   font-size: 0.625rem;
   font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  border: 0;
   color: var(--color-faint);
+  background: color-mix(in oklab, var(--color-base-300) 60%, transparent);
 }
 
 .version-tag.is-latest {
-  border-color: color-mix(in oklab, var(--color-primary) 45%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 20%, transparent);
   color: var(--color-primary);
 }
 
+.version-tag.is-prerelease {
+  background: color-mix(in oklab, var(--color-warning) 20%, transparent);
+  color: var(--color-warning);
+}
+
 .version-tag.is-expired {
-  border-color: color-mix(in oklab, var(--color-error) 45%, transparent);
+  background: color-mix(in oklab, var(--color-error) 20%, transparent);
   color: var(--color-error);
 }
 
-.version-meta {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-  margin-top: 0.15rem;
-  font-size: 0.75rem;
+.version-date {
+  font-size: 0.6875rem;
   color: var(--color-faint);
+  flex-shrink: 0;
+}
+
+.version.is-current .version-date {
+  color: color-mix(in oklab, var(--color-primary) 65%, var(--color-faint));
 }
 
 .version-title {
-  min-width: 0;
-  flex: 1;
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-dim);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1.4;
 }
 
-.version-date {
-  margin-left: auto;
-  flex-shrink: 0;
+.version.is-current .version-title {
+  color: var(--color-base-content);
 }
 
 .versions-empty {
   margin: 0;
-  padding: 1.5rem 0;
-  border-top: 1px solid var(--color-line);
-  font-size: 0.875rem;
+  padding: 1.5rem 0.75rem;
+  border-radius: var(--radius-chip, 12px);
+  border: 1px dashed var(--color-line-soft);
+  text-align: center;
+  font-size: 0.8125rem;
   color: var(--color-faint);
 }
 
 .versions-back {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
-  margin-top: 1rem;
+  gap: 0.45rem;
+  margin-top: 1.25rem;
+  padding: 0.4rem 0.6rem;
+  border-radius: var(--radius-chip, 12px);
   font-size: 0.8125rem;
   font-weight: 600;
   color: var(--color-faint);
   text-decoration: none;
-  transition: color 140ms ease;
+  transition:
+    color 140ms ease,
+    background-color 140ms ease;
 }
 
 .versions-back:hover,
 .versions-back:focus-visible {
   color: var(--color-base-content);
+  background: color-mix(in oklab, var(--color-base-300) 45%, transparent);
+}
+
+.versions-back:hover .back-icon {
+  transform: translateX(-2px);
 }
 
 .back-icon {
   width: 0.875rem;
   height: 0.875rem;
+  transition: transform 140ms ease;
 }
 
 .detail {
@@ -722,15 +801,27 @@ useSchemaOrg([
 }
 
 .artifacts {
-  margin: 0.9rem 0 0;
+  margin: 1rem 0 0;
   padding: 0;
   list-style: none;
-  border-top: 1px solid var(--color-line);
+  border-radius: var(--radius-card, 16px);
+  border: 1px solid var(--color-line-soft);
+  background: color-mix(in oklab, var(--color-base-200) 40%, transparent);
+  overflow: hidden;
 }
 
 .artifact {
-  padding: 0.9rem 0;
+  padding: 0.85rem 1.125rem;
   border-bottom: 1px solid var(--color-line-soft);
+  transition: background-color 140ms ease;
+}
+
+.artifact:last-child {
+  border-bottom: 0;
+}
+
+.artifact:hover {
+  background: color-mix(in oklab, var(--color-base-300) 35%, transparent);
 }
 
 .artifact-main {
@@ -742,11 +833,18 @@ useSchemaOrg([
 
 .artifact-platform {
   color: var(--color-base-content);
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  min-width: 4.5rem;
 }
 
 .artifact-arch {
-  color: var(--color-faint);
+  display: inline-flex;
+  align-items: center;
+  padding: 0.1rem 0.45rem;
+  border-radius: 4px;
+  background: color-mix(in oklab, var(--color-base-300) 60%, transparent);
+  color: var(--color-dim);
   font-size: 0.6875rem;
   text-transform: lowercase;
 }
@@ -757,16 +855,19 @@ useSchemaOrg([
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.75rem;
+  font-size: 0.8125rem;
   color: var(--color-dim);
 }
 
 .artifact-size {
   color: var(--color-faint);
+  font-size: 0.75rem;
+  margin-left: auto;
 }
 
 .artifact-download {
   flex-shrink: 0;
+  border-radius: 9999px;
 }
 
 .download-icon {
@@ -784,7 +885,8 @@ useSchemaOrg([
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 1.25rem;
-  margin-top: 0.5rem;
+  margin-top: 0.4rem;
+  padding-left: 0.1rem;
   color: var(--color-faint);
   font-size: 0.6875rem;
 }
@@ -794,9 +896,7 @@ useSchemaOrg([
 }
 
 .store-listings {
-  margin-top: 1.25rem;
-  padding-top: 1.25rem;
-  border-top: 1px solid var(--color-line-soft);
+  margin-top: 2rem;
 }
 
 .detail-source {

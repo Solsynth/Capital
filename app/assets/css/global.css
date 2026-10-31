@@ -147,7 +147,7 @@
   html {
     /* Height of the fixed header; sections that run a photograph under the
        header read this instead of hardcoding a nav height. */
-    --site-page-offset: 3.5rem;
+    --site-page-offset: 4.25rem;
 
     background: var(--color-base-100);
     scroll-behavior: smooth;
