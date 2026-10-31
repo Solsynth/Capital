@@ -116,8 +116,7 @@ defineOgImage('UniOgImage', {
           </span>
 
           <span class="byline-name">{{ post.publisher?.nick || 'Unknown' }}</span>
-          <span class="byline-sep" aria-hidden="true">/</span>
-          <time class="mono byline-date" :datetime="post.published_at">{{ publishedStamp }}</time>
+          <time class="mono byline-date mb-0.75" :datetime="post.published_at">{{ publishedStamp }}</time>
           <template v-if="post.edited_at">
             <span class="byline-sep" aria-hidden="true">/</span>
             <span class="byline-edited">{{ isZh ? '已编辑' : 'edited' }}</span>

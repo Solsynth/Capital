@@ -1,210 +1,216 @@
 <script setup lang="ts">
-import { Loader2 } from '@lucide/vue'
+import { Loader2 } from "@lucide/vue";
 
-const { t, locale } = useI18n()
-const localePath = useLocalePath()
-const route = useRoute()
+const { t, locale } = useI18n();
+const localePath = useLocalePath();
+const route = useRoute();
 
 definePageMeta({
-  description: '',
-})
+  description: "",
+});
 
 useSeoMeta({
-  title: () => `${t('seo.updates.title')}`,
-  description: () => t('seo.updates.description'),
-})
+  title: () => `${t("seo.updates.title")}`,
+  description: () => t("seo.updates.description"),
+});
 
-defineOgImage('UniOgImage', {
-  title: t('updates.title'),
-  description: t('seo.updates.description'),
-})
+defineOgImage("UniOgImage", {
+  title: t("updates.title"),
+  description: t("seo.updates.description"),
+});
 
 useSchemaOrg([
   defineWebPage({
-    name: () => t('seo.updates.title'),
-    description: () => t('seo.updates.description'),
+    name: () => t("seo.updates.title"),
+    description: () => t("seo.updates.description"),
     url: () => `https://solsynth.dev${route.path}`,
   }),
   defineBreadcrumb({
     itemListElement: [
       {
-        name: t('seo.home.title'),
-        item: 'https://solsynth.dev',
+        name: t("seo.home.title"),
+        item: "https://solsynth.dev",
       },
       {
-        name: t('seo.updates.title'),
+        name: t("seo.updates.title"),
         item: () => `https://solsynth.dev${route.path}`,
       },
     ],
   }),
-])
+]);
 
-const { getPosts, getRealmPosts, getAttachmentUrl } = useApi()
+const { getPosts, getRealmPosts, getAttachmentUrl } = useApi();
 
 // A fixed-width stamp: the log's date column lines up like a ledger.
 function formatStamp(value: string): string {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return ''
-  return new Intl.DateTimeFormat(locale.value === 'zh' ? 'zh-CN' : 'en-CA', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(date)
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat(locale.value === "zh" ? "zh-CN" : "en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(date);
 }
 
-const PAGE_SIZE = 20
+const PAGE_SIZE = 20;
 
-const activeTab = ref<'official' | 'community'>('official')
-const selectedTag = ref<string | null>(null)
-const officialPage = ref(0)
-const communityPage = ref(0)
-const officialLoading = ref(false)
-const communityLoading = ref(false)
-const officialHasMore = ref(true)
-const communityHasMore = ref(true)
+const activeTab = ref<"official" | "community">("official");
+const selectedTag = ref<string | null>(null);
+const officialPage = ref(0);
+const communityPage = ref(0);
+const officialLoading = ref(false);
+const communityLoading = ref(false);
+const officialHasMore = ref(true);
+const communityHasMore = ref(true);
 
-const officialPosts = ref<Awaited<ReturnType<typeof getPosts>>>([])
-const communityPosts = ref<Awaited<ReturnType<typeof getRealmPosts>>>([])
+const officialPosts = ref<Awaited<ReturnType<typeof getPosts>>>([]);
+const communityPosts = ref<Awaited<ReturnType<typeof getRealmPosts>>>([]);
 
 async function loadOfficialPosts(reset = false) {
-  if (officialLoading.value)
-    return
-  if (!reset && !officialHasMore.value)
-    return
+  if (officialLoading.value) return;
+  if (!reset && !officialHasMore.value) return;
 
-  officialLoading.value = true
-  const skip = reset ? 0 : officialPosts.value.length
-  const newPosts = await getPosts(PAGE_SIZE, skip)
+  officialLoading.value = true;
+  const skip = reset ? 0 : officialPosts.value.length;
+  const newPosts = await getPosts(PAGE_SIZE, skip);
 
   if (reset) {
-    officialPosts.value = newPosts
-    officialPage.value = 1
-  }
-  else {
-    officialPosts.value = [...officialPosts.value, ...newPosts]
-    officialPage.value++
+    officialPosts.value = newPosts;
+    officialPage.value = 1;
+  } else {
+    officialPosts.value = [...officialPosts.value, ...newPosts];
+    officialPage.value++;
   }
 
-  officialHasMore.value = newPosts.length === PAGE_SIZE
-  officialLoading.value = false
+  officialHasMore.value = newPosts.length === PAGE_SIZE;
+  officialLoading.value = false;
 }
 
 async function loadCommunityPosts(reset = false) {
-  if (communityLoading.value)
-    return
-  if (!reset && !communityHasMore.value)
-    return
+  if (communityLoading.value) return;
+  if (!reset && !communityHasMore.value) return;
 
-  communityLoading.value = true
-  const skip = reset ? 0 : communityPosts.value.length
-  const newPosts = await getRealmPosts('solsynth', PAGE_SIZE, skip)
+  communityLoading.value = true;
+  const skip = reset ? 0 : communityPosts.value.length;
+  const newPosts = await getRealmPosts("solsynth", PAGE_SIZE, skip);
 
   if (reset) {
-    communityPosts.value = newPosts
-    communityPage.value = 1
-  }
-  else {
-    communityPosts.value = [...communityPosts.value, ...newPosts]
-    communityPage.value++
+    communityPosts.value = newPosts;
+    communityPage.value = 1;
+  } else {
+    communityPosts.value = [...communityPosts.value, ...newPosts];
+    communityPage.value++;
   }
 
-  communityHasMore.value = newPosts.length === PAGE_SIZE
-  communityLoading.value = false
+  communityHasMore.value = newPosts.length === PAGE_SIZE;
+  communityLoading.value = false;
 }
 
-await loadOfficialPosts()
-await loadCommunityPosts()
+await loadOfficialPosts();
+await loadCommunityPosts();
 
-const currentPosts = computed(() => activeTab.value === 'official' ? officialPosts.value : communityPosts.value)
-const isLoading = computed(() => activeTab.value === 'official' ? officialLoading.value : communityLoading.value)
-const hasMore = computed(() => activeTab.value === 'official' ? officialHasMore.value : communityHasMore.value)
+const currentPosts = computed(() =>
+  activeTab.value === "official" ? officialPosts.value : communityPosts.value,
+);
+const isLoading = computed(() =>
+  activeTab.value === "official"
+    ? officialLoading.value
+    : communityLoading.value,
+);
+const hasMore = computed(() =>
+  activeTab.value === "official"
+    ? officialHasMore.value
+    : communityHasMore.value,
+);
 
 const allTags = computed(() => {
-  if (!currentPosts.value)
-    return []
-  const tagMap = new Map<string, { slug: string, name: string | null }>()
+  if (!currentPosts.value) return [];
+  const tagMap = new Map<string, { slug: string; name: string | null }>();
   for (const post of currentPosts.value) {
     for (const tag of post.tags) {
       if (!tagMap.has(tag.slug))
-        tagMap.set(tag.slug, { slug: tag.slug, name: tag.name })
+        tagMap.set(tag.slug, { slug: tag.slug, name: tag.name });
     }
   }
-  return Array.from(tagMap.values())
-})
+  return Array.from(tagMap.values());
+});
 
 const filteredPosts = computed(() => {
-  if (!currentPosts.value)
-    return []
-  if (!selectedTag.value)
-    return currentPosts.value
-  return currentPosts.value.filter(post =>
-    post.tags.some(tag => tag.slug === selectedTag.value),
-  )
-})
+  if (!currentPosts.value) return [];
+  if (!selectedTag.value) return currentPosts.value;
+  return currentPosts.value.filter((post) =>
+    post.tags.some((tag) => tag.slug === selectedTag.value),
+  );
+});
 
 // A post without a title prints its opening words as the line; the excerpt is
 // then omitted rather than repeating the same sentence under it.
-const TITLE_WORDS = 90
+const TITLE_WORDS = 90;
 
 function flatten(content: string): string {
-  return (content ?? '').replace(/[#*`>_\-\n]+/g, ' ').replace(/\s+/g, ' ').trim()
+  return (content ?? "")
+    .replace(/[#*`>_\-\n]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function clip(text: string, limit: number): string {
-  if (text.length <= limit) return text
-  const cut = text.lastIndexOf(' ', limit)
-  return `${text.slice(0, cut > 0 ? cut : limit).trimEnd()}…`
+  if (text.length <= limit) return text;
+  const cut = text.lastIndexOf(" ", limit);
+  return `${text.slice(0, cut > 0 ? cut : limit).trimEnd()}…`;
 }
 
-function getDisplayTitle(post: { title: string, content: string }): string {
-  return post.title?.trim() || clip(flatten(post.content), TITLE_WORDS)
+function getDisplayTitle(post: { title: string; content: string }): string {
+  return post.title?.trim() || clip(flatten(post.content), TITLE_WORDS);
 }
 
-function getExcerpt(post: { title: string, content: string }): string {
-  if (!post.title?.trim()) return ''
-  return clip(flatten(post.content), 180)
+function getExcerpt(post: { title: string; content: string }): string {
+  if (!post.title?.trim()) return "";
+  return clip(flatten(post.content), 180);
 }
 
 function isImageAttachment(attachment: { mime_type: string }): boolean {
-  return attachment.mime_type?.startsWith('image/') ?? false
+  return attachment.mime_type?.startsWith("image/") ?? false;
 }
 
 function isVideoAttachment(attachment: { mime_type: string }): boolean {
-  return attachment.mime_type?.startsWith('video/') ?? false
+  return attachment.mime_type?.startsWith("video/") ?? false;
 }
 
 function isAudioAttachment(attachment: { mime_type: string }): boolean {
-  return attachment.mime_type?.startsWith('audio/') ?? false
+  return attachment.mime_type?.startsWith("audio/") ?? false;
 }
 
 function getInitials(name: string): string {
-  if (!name || name === 'Unknown')
-    return '?'
-  return name.split(' ').map(n => n[0]).join('').toUpperCase().slice(0, 2)
+  if (!name || name === "Unknown") return "?";
+  return name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 }
 
-function getTagName(tag: { slug: string, name: string | null }): string {
-  return tag.name || tag.slug
+function getTagName(tag: { slug: string; name: string | null }): string {
+  return tag.name || tag.slug;
 }
 
 function selectTag(slug: string) {
-  selectedTag.value = selectedTag.value === slug ? null : slug
+  selectedTag.value = selectedTag.value === slug ? null : slug;
 }
 
 function clearTag() {
-  selectedTag.value = null
+  selectedTag.value = null;
 }
 
 function loadMore() {
-  if (activeTab.value === 'official')
-    loadOfficialPosts()
-  else
-    loadCommunityPosts()
+  if (activeTab.value === "official") loadOfficialPosts();
+  else loadCommunityPosts();
 }
 
-function switchTab(tab: 'official' | 'community') {
-  activeTab.value = tab
-  selectedTag.value = null
+function switchTab(tab: "official" | "community") {
+  activeTab.value = tab;
+  selectedTag.value = null;
 }
 </script>
 
@@ -213,10 +219,10 @@ function switchTab(tab: 'official' | 'community') {
     <header class="band">
       <div class="shell">
         <h1 class="title page-title">
-          {{ t('updates.title') }}
+          {{ t("updates.title") }}
         </h1>
         <p class="lede page-lede">
-          {{ t('updates.subtitle') }}
+          {{ t("updates.subtitle") }}
         </p>
       </div>
     </header>
@@ -226,7 +232,7 @@ function switchTab(tab: 'official' | 'community') {
         <div class="controls">
           <div class="rail" role="tablist" :aria-label="t('updates.title')">
             <button
-              v-for="tab in (['official', 'community'] as const)"
+              v-for="tab in ['official', 'community'] as const"
               :key="tab"
               type="button"
               role="tab"
@@ -257,42 +263,65 @@ function switchTab(tab: 'official' | 'community') {
               class="chip filter-clear"
               @click="clearTag"
             >
-              {{ t('updates.clearFilter') }}
+              {{ t("updates.clearFilter") }}
             </button>
           </div>
         </div>
 
         <p v-if="!filteredPosts?.length && !isLoading" class="log-empty">
-          {{ t('updates.noUpdates') }}
+          {{ t("updates.noUpdates") }}
         </p>
 
         <ol v-else class="log">
           <li v-for="post in filteredPosts" :key="post.id" class="log-row">
             <NuxtLink :to="localePath(`/updates/${post.id}`)" class="log-link">
-              <time class="mono log-date" :datetime="post.published_at">{{ formatStamp(post.published_at) }}</time>
+              <time class="mono log-date" :datetime="post.published_at">{{
+                formatStamp(post.published_at)
+              }}</time>
 
               <span class="log-body">
                 <span class="log-title">{{ getDisplayTitle(post) }}</span>
-                <span v-if="getExcerpt(post)" class="log-excerpt">{{ getExcerpt(post) }}</span>
+                <span v-if="getExcerpt(post)" class="log-excerpt">{{
+                  getExcerpt(post)
+                }}</span>
                 <span class="log-meta">
-                  <span class="log-avatar" aria-hidden="true">{{ getInitials(post.publisher?.nick || 'Unknown') }}</span>
-                  {{ post.publisher?.nick || 'Unknown' }}
+                  <span v-if="post.publisher?.picture" class="log-avatar">
+                    <img
+                      :src="getAttachmentUrl(post.publisher.picture.id)"
+                      :alt="''"
+                      loading="lazy"
+                      decoding="async"
+                      class="rounded-xl"
+                    />
+                  </span>
+                  <span v-else class="log-avatar" aria-hidden="true">{{
+                    getInitials(post.publisher?.nick || "Unknown")
+                  }}</span>
+                  {{ post.publisher?.nick || "Unknown" }}
                   <template v-if="post.tags.length">
                     <span class="log-sep" aria-hidden="true">/</span>
-                    {{ post.tags.slice(0, 2).map(getTagName).join(', ') }}
+                    {{ post.tags.slice(0, 2).map(getTagName).join(", ") }}
                   </template>
                   <span v-if="post.views_unique" class="log-views">
-                    {{ post.views_unique }} {{ t('updates.views') }}
+                    {{ post.views_unique }} {{ t("updates.views") }}
                   </span>
                 </span>
               </span>
 
               <span
-                v-if="post.attachments.length > 0 && isImageAttachment(post.attachments[0])"
+                v-if="
+                  post.attachments.length > 0 &&
+                  isImageAttachment(post.attachments[0])
+                "
                 class="log-thumb"
                 aria-hidden="true"
               >
-                <img :src="getAttachmentUrl(post.attachments[0].id)" alt="" loading="lazy" decoding="async">
+                <img
+                  :src="getAttachmentUrl(post.attachments[0].id)"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                />
               </span>
             </NuxtLink>
           </li>
@@ -306,7 +335,7 @@ function switchTab(tab: 'official' | 'community') {
             @click="loadMore"
           >
             <Loader2 v-if="isLoading" class="more-spinner" aria-hidden="true" />
-            {{ isLoading ? t('updates.loading') : t('updates.loadMore') }}
+            {{ isLoading ? t("updates.loading") : t("updates.loadMore") }}
           </button>
         </div>
       </div>

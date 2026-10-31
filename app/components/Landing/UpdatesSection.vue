@@ -1,77 +1,101 @@
 <script setup lang="ts">
-const { t, locale } = useI18n()
-const localePath = useLocalePath()
-const { getPosts, getRealmPosts, getAttachmentUrl } = useApi()
+const { t, locale } = useI18n();
+const localePath = useLocalePath();
+const { getPosts, getRealmPosts, getAttachmentUrl } = useApi();
 
-const { data: officialPosts } = await useAsyncData('updates-home-official', () => getPosts(6, 0))
-const { data: communityPosts } = await useAsyncData('updates-home-community', () => getRealmPosts('solsynth', 6, 0))
+const { data: officialPosts } = await useAsyncData(
+  "updates-home-official",
+  () => getPosts(6, 0),
+);
+const { data: communityPosts } = await useAsyncData(
+  "updates-home-community",
+  () => getRealmPosts("solsynth", 6, 0),
+);
 
-const activeTab = ref<'official' | 'community'>('official')
+const activeTab = ref<"official" | "community">("official");
 
 const sections = computed(() => [
   {
-    key: 'official' as const,
-    label: t('home.updates.officialTitle'),
+    key: "official" as const,
+    label: t("home.updates.officialTitle"),
     posts: officialPosts.value ?? [],
   },
   {
-    key: 'community' as const,
-    label: t('home.updates.communityTitle'),
+    key: "community" as const,
+    label: t("home.updates.communityTitle"),
     posts: communityPosts.value ?? [],
   },
-])
+]);
 
-const current = computed(() => sections.value.find(section => section.key === activeTab.value))
+const current = computed(() =>
+  sections.value.find((section) => section.key === activeTab.value),
+);
 
 // A dated log row rather than a card: the page already carries photographs in
 // the hero and every product page, so the news feed stays typographic.
 function stamp(value: string): string {
-  const date = new Date(value)
-  if (Number.isNaN(date.getTime())) return ''
-  return new Intl.DateTimeFormat(locale.value === 'zh' ? 'zh-CN' : 'en-CA', {
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-  }).format(date).replace(/\//g, '-')
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "";
+  return new Intl.DateTimeFormat(locale.value === "zh" ? "zh-CN" : "en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  })
+    .format(date)
+    .replace(/\//g, "-");
 }
 
 // A post without a title prints its opening words as the line; the excerpt is
 // then omitted rather than repeating the same sentence under it.
-const TITLE_WORDS = 90
+const TITLE_WORDS = 90;
 
 function flatten(content: string): string {
-  return (content ?? '').replace(/[#*`>_\-\n]+/g, ' ').replace(/\s+/g, ' ').trim()
+  return (content ?? "")
+    .replace(/[#*`>_\-\n]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
 }
 
 function clip(text: string, limit: number): string {
-  if (text.length <= limit) return text
-  const cut = text.lastIndexOf(' ', limit)
-  return `${text.slice(0, cut > 0 ? cut : limit).trimEnd()}…`
+  if (text.length <= limit) return text;
+  const cut = text.lastIndexOf(" ", limit);
+  return `${text.slice(0, cut > 0 ? cut : limit).trimEnd()}…`;
 }
 
-function displayTitle(post: { title: string, content: string }): string {
-  return post.title?.trim() || clip(flatten(post.content), TITLE_WORDS)
+function displayTitle(post: { title: string; content: string }): string {
+  return post.title?.trim() || clip(flatten(post.content), TITLE_WORDS);
 }
 
-function excerpt(post: { title: string, content: string }): string {
-  if (!post.title?.trim()) return ''
-  return clip(flatten(post.content), 130)
+function excerpt(post: { title: string; content: string }): string {
+  if (!post.title?.trim()) return "";
+  return clip(flatten(post.content), 130);
 }
 
-function cover(post: { attachments: Array<{ id: string, mime_type?: string, file_meta?: { mime_type?: string } }> }): string | null {
-  const first = post.attachments?.[0]
-  if (!first) return null
-  const mime = first.mime_type ?? first.file_meta?.mime_type ?? ''
-  return mime.startsWith('image/') ? getAttachmentUrl(first.id) : null
+function cover(post: {
+  attachments: Array<{
+    id: string;
+    mime_type?: string;
+    file_meta?: { mime_type?: string };
+  }>;
+}): string | null {
+  const first = post.attachments?.[0];
+  if (!first) return null;
+  const mime = first.mime_type ?? first.file_meta?.mime_type ?? "";
+  return mime.startsWith("image/") ? getAttachmentUrl(first.id) : null;
 }
 
 function publisherName(post: { publisher?: { nick?: string } }): string {
-  return post.publisher?.nick || 'Solsynth'
+  return post.publisher?.nick || "Solsynth";
 }
 
 function initials(name: string): string {
-  if (!name || name === 'Unknown') return '?'
-  return name.split(' ').map(part => part[0]).join('').toUpperCase().slice(0, 2)
+  if (!name || name === "Unknown") return "?";
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .join("")
+    .toUpperCase()
+    .slice(0, 2);
 }
 </script>
 
@@ -80,7 +104,7 @@ function initials(name: string): string {
     <div class="shell">
       <div class="updates-head">
         <h2 class="updates-title">
-          {{ t('home.updates.title') }}
+          {{ t("home.updates.title") }}
         </h2>
 
         <!-- A capsule rail, the console's tab form: the active tab is filled,
@@ -104,35 +128,55 @@ function initials(name: string): string {
       <ol v-if="current?.posts.length" class="log">
         <li v-for="post in current.posts" :key="post.id" class="log-row">
           <NuxtLink :to="localePath(`/updates/${post.id}`)" class="log-link">
-            <time class="mono log-date" :datetime="post.published_at">{{ stamp(post.published_at) }}</time>
+            <time class="mono log-date" :datetime="post.published_at">{{
+              stamp(post.published_at)
+            }}</time>
 
             <span class="log-body">
               <span class="log-title">{{ displayTitle(post) }}</span>
-              <span v-if="excerpt(post)" class="log-excerpt">{{ excerpt(post) }}</span>
+              <span v-if="excerpt(post)" class="log-excerpt">{{
+                excerpt(post)
+              }}</span>
               <span class="log-meta">
-                <span class="log-avatar" aria-hidden="true">{{ initials(publisherName(post)) }}</span>
+                <span v-if="post.publisher?.picture" class="log-avatar">
+                  <img
+                    :src="getAttachmentUrl(post.publisher.picture.id)"
+                    :alt="''"
+                    loading="lazy"
+                    decoding="async"
+                    class="rounded-xl"
+                  />
+                </span>
+                <span v-else class="log-avatar" aria-hidden="true">
+                  {{ initials(publisherName(post)) }}
+                </span>
                 {{ publisherName(post) }}
                 <template v-if="post.tags?.length">
                   <span class="log-sep" aria-hidden="true">/</span>
-                  {{ post.tags.slice(0, 2).map(tag => tag.name || tag.slug).join(', ') }}
+                  {{
+                    post.tags
+                      .slice(0, 2)
+                      .map((tag) => tag.name || tag.slug)
+                      .join(", ")
+                  }}
                 </template>
               </span>
             </span>
 
             <span v-if="cover(post)" class="log-thumb" aria-hidden="true">
-              <img :src="cover(post)!" alt="" loading="lazy" decoding="async">
+              <img :src="cover(post)!" alt="" loading="lazy" decoding="async" />
             </span>
           </NuxtLink>
         </li>
       </ol>
 
       <p v-else-if="!current?.posts.length" class="log-empty">
-        {{ t('updates.noUpdates') }}
+        {{ t("updates.noUpdates") }}
       </p>
 
       <div class="updates-foot">
         <NuxtLink :to="localePath('/updates')" class="updates-all">
-          {{ t('home.updates.viewAll') }}
+          {{ t("home.updates.viewAll") }}
         </NuxtLink>
       </div>
     </div>
