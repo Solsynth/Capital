@@ -1,4 +1,4 @@
-const DEFAULT_DISTRIBUTION_API_BASE_URL = "https://api.solian.app/dist"
+const DEFAULT_DISTRIBUTION_API_BASE_URL = "https://dx.solsynth.dev/api"
 
 interface DistributionArtifact {
   id?: string
