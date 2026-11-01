@@ -64,7 +64,7 @@ const filterStatus = ref<string>((route.query.status as string) || 'pending')
 
 const { data: submissionsData, refresh } = await useAsyncData(
   `admin-submissions-${filterStatus.value}`,
-  () => $fetch<{ submissions: Submission[] }>('/api/admin/icp/submissions', {
+  () => useRequestFetch()<{ submissions: Submission[] }>('/api/admin/icp/submissions', {
     params: { status: filterStatus.value || undefined },
   }),
   { watch: [filterStatus] }
@@ -72,7 +72,7 @@ const { data: submissionsData, refresh } = await useAsyncData(
 
 const { data: identitiesData } = await useAsyncData(
   'admin-submissions-identities',
-  () => $fetch<{ identities: Identity[] }>('/api/admin/icp/identities'),
+  () => useRequestFetch()<{ identities: Identity[] }>('/api/admin/icp/identities'),
 )
 
 const submissions = computed(() => submissionsData.value?.submissions ?? [])
@@ -397,7 +397,7 @@ function getTypeLabel(type: string) {
                     :disabled="isReassigning"
                     @click="handleReassign"
                   >
-                    <span v-if="isReassigning" class="loading loading-spinner loading-xs" />
+                    <span v-if="isReassigning" class="spinner" />
                     {{ t('admin.contests.save') }}
                   </button>
                 </div>
@@ -520,7 +520,7 @@ function getTypeLabel(type: string) {
                 :disabled="isReviewing"
                 @click="handleReview('approve')"
               >
-                <span v-if="isReviewing" class="loading loading-spinner loading-xs" />
+                <span v-if="isReviewing" class="spinner" />
                 <CheckCircle v-else class="btn-icon" aria-hidden="true" />
                 {{ t('admin.submissions.approve') }}
               </button>
@@ -529,7 +529,7 @@ function getTypeLabel(type: string) {
                 :disabled="isReviewing"
                 @click="handleReview('reject')"
               >
-                <span v-if="isReviewing" class="loading loading-spinner loading-xs" />
+                <span v-if="isReviewing" class="spinner" />
                 <XCircle v-else class="btn-icon" aria-hidden="true" />
                 {{ t('admin.submissions.reject') }}
               </button>
@@ -566,7 +566,7 @@ function getTypeLabel(type: string) {
           {{ t('royIcp.identities.cancel') }}
         </button>
         <button class="btn btn-error" :disabled="isDeletingSite" @click="handleDeleteSite">
-          <span v-if="isDeletingSite" class="loading loading-spinner loading-xs" />
+          <span v-if="isDeletingSite" class="spinner" />
           <Trash2 v-else class="btn-icon" aria-hidden="true" />
           {{ t('reviews.delete') }}
         </button>
@@ -587,7 +587,7 @@ function getTypeLabel(type: string) {
           {{ t('royIcp.identities.cancel') }}
         </button>
         <button class="btn btn-error" :disabled="isDeletingIdentity" @click="handleDeleteIdentity">
-          <span v-if="isDeletingIdentity" class="loading loading-spinner loading-xs" />
+          <span v-if="isDeletingIdentity" class="spinner" />
           <Trash2 v-else class="btn-icon" aria-hidden="true" />
           {{ t('reviews.delete') }}
         </button>

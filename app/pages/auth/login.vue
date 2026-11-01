@@ -112,19 +112,4 @@ async function handleSolianSignIn() {
   height: 1.1rem;
   border-radius: 4px;
 }
-
-.spinner {
-  width: 0.85rem;
-  height: 0.85rem;
-  border: 1.5px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 999px;
-  animation: spin 700ms linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 </style>

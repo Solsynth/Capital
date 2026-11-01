@@ -28,7 +28,7 @@ interface User {
 
 const { data: usersData, refresh } = await useAsyncData(
   'admin-users',
-  () => $fetch<{ users: User[] }>('/api/admin/icp/users'),
+  () => useRequestFetch()<{ users: User[] }>('/api/admin/icp/users'),
 )
 
 const users = computed(() => usersData.value?.users ?? [])
@@ -150,7 +150,7 @@ async function confirmDelete() {
           :disabled="isSaving || !editForm.name || !editForm.email"
           @click="saveEdit"
         >
-          <span v-if="isSaving" class="loading loading-spinner loading-xs" />
+          <span v-if="isSaving" class="spinner" />
           <Check v-else class="btn-icon" aria-hidden="true" />
           {{ isZh ? '保存' : 'Save' }}
         </button>
@@ -174,7 +174,7 @@ async function confirmDelete() {
           {{ isZh ? '取消' : 'Cancel' }}
         </button>
         <button class="btn btn-error" :disabled="isDeleting" @click="confirmDelete">
-          <span v-if="isDeleting" class="loading loading-spinner loading-xs" />
+          <span v-if="isDeleting" class="spinner" />
           <Trash2 v-else class="btn-icon" aria-hidden="true" />
           {{ isZh ? '删除' : 'Delete' }}
         </button>

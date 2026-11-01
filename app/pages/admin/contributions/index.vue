@@ -16,12 +16,12 @@ useHead({ title: computed(() => isZh.value ? '贡献管理' : 'Contributions Adm
 
 // Stats
 const { data: stats, refresh: refreshStats } = await useAsyncData('admin-contrib-stats', () =>
-  $fetch<any>('/api/admin/contrib/stats'),
+  useRequestFetch()<any>('/api/admin/contrib/stats'),
 )
 
 // Pending checks
 const { data: pendingData, refresh: refreshPending, status: pendingStatus } = await useAsyncData('admin-contrib-pending', () =>
-  $fetch<any>('/api/admin/contrib/pending?status=pending'),
+  useRequestFetch()<any>('/api/admin/contrib/pending?status=pending'),
 )
 
 // Reset cooldown

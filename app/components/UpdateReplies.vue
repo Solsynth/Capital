@@ -19,7 +19,7 @@
           slot="sign-in"
           class="block w-full rounded-xl border border-base-300/40 bg-base-200/30 px-4 py-3 text-center text-sm text-base-content/60"
         >
-          <NuxtLink class="link link-primary" :to="localePath('/auth/login')">
+          <NuxtLink class="link" :to="localePath('/auth/login')">
             {{ t('login.title') }}
           </NuxtLink>
           {{ t('updates.signInToReply') }}

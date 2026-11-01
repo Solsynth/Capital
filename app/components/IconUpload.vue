@@ -108,7 +108,7 @@ function handleRemove() {
         v-if="isUploading"
         class="absolute inset-0 bg-black/50 flex items-center justify-center"
       >
-        <span class="loading loading-spinner loading-sm text-white" />
+        <span class="spinner text-white" />
       </div>
     </div>
 

@@ -16,7 +16,7 @@ if (import.meta.server) {
 // Check if user is admin via API
 const { data: adminCheck } = await useAsyncData(
   'admin-check',
-  () => $fetch<{ isAdmin: boolean }>('/api/auth/role').catch(() => ({ isAdmin: false })),
+  () => useRequestFetch()<{ isAdmin: boolean }>('/api/auth/role').catch(() => ({ isAdmin: false })),
   { watch: [session] }
 )
 const isAdmin = computed(() => adminCheck.value?.isAdmin ?? false)

@@ -6,7 +6,7 @@ const username = computed(() => route.params.username as string)
 
 const { data: profile, status } = await useAsyncData(
   `contribution-${username.value}`,
-  () => $fetch<any>(`/api/contribution/${username.value}`),
+  () => useRequestFetch()<any>(`/api/contribution/${username.value}`),
 )
 
 useSeoMeta({

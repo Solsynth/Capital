@@ -12,7 +12,7 @@ const route = useRoute()
 const slug = computed(() => route.params.slug as string)
 
 const { data: submissions, refresh: refreshSubmissions } = await useAsyncData(`admin-submissions-${slug.value}`, () => {
-  return $fetch('/api/admin/contests/submissions', {
+  return useRequestFetch()('/api/admin/contests/submissions', {
     query: { contest_id: slug.value },
   })
 })
@@ -143,7 +143,7 @@ const rejectedSubmissions = computed(() => submissions.value?.submissions?.filte
           {{ t('admin.contests.allSubmissions') }}
         </NuxtLink>
         <button class="btn btn-sm btn-primary" :disabled="saving" type="submit">
-          <span v-if="saving" class="loading loading-spinner loading-xs" />
+          <span v-if="saving" class="spinner" />
           <Save v-else class="btn-icon" aria-hidden="true" />
           {{ t('admin.contests.save') }}
         </button>

@@ -388,7 +388,7 @@
   "royIcp.identities.deleteConfirm": "确定要删除身份 '{name}' 吗？",
   "royIcp.identities.delete": "删除",
   "royIcp.mySubmissions.title": "我的提交",
-  "royIcp.mySubmissions.desc": "查看您的站点提交状态",
+  "royIcp.mySubmissions.desc": "您的备案站点，按备案主体分组",
   "royIcp.mySubmissions.new": "新建提交",
   "royIcp.mySubmissions.empty": "暂无提交",
   "royIcp.mySubmissions.submitNew": "提交新站点",
@@ -1375,5 +1375,11 @@
     "blog": "博客"
   },
   "home.updates.attachments_one": "{count} 个附件",
-  "home.updates.attachments_other": "{count} 个附件"
+  "home.updates.attachments_other": "{count} 个附件",
+  "royIcp.mySubmissions.sites": "我的站点",
+  "royIcp.mySubmissions.sitesEmpty": "暂无已通过的站点",
+  "royIcp.mySubmissions.unassigned": "未关联主体",
+  "royIcp.mySubmissions.editSite": "编辑",
+  "royIcp.mySubmissions.history": "提交记录",
+  "royIcp.mySubmissions.historyEmpty": "暂无提交记录"
 }

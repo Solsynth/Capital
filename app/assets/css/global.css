@@ -1,7 +1,25 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
+/* daisyUI supplies the form controls (`.btn`, `.input`, `.select`,
+   `.textarea`, `.radio`, `.checkbox`) and the navbar's `.dropdown`. Everything
+   else it ships is excluded, because its CSS is unscoped and its class names
+   are generic — `.steps`, `.step`, `.status`, `.stat`, `.avatar`, `.list`,
+   `.loading`, `.skeleton`, `.fieldset`, `.filter`, `.hero` — so any component
+   left switched on silently restyles pages that use that word for their own
+   layout. Keep this list in sync when a page starts using a daisyUI component. */
 @plugin 'daisyui' {
   themes: false;
+  exclude: [
+    'alert', 'aura', 'avatar', 'badge', 'breadcrumbs', 'calendar',
+    'card', 'carousel', 'chat', 'collapse', 'countdown', 'diff', 'divider',
+    'dock', 'drawer', 'fab', 'fieldset', 'fileinput', 'filter', 'footer',
+    'hero', 'hover3d', 'hovergallery', 'indicator', 'kbd', 'label', 'link',
+    'list', 'loading', 'mask', 'megamenu', 'mockup', 'modal', 'navbar', 'otp',
+    'radialprogress', 'range', 'rating', 'skeleton', 'stack', 'stat', 'status',
+    'steps', 'swap', 'tab', 'table', 'textrotate', 'timeline', 'toast',
+    'toggle', 'tooltip', 'validator',
+    'join', 'glass', 'radius', 'typography'
+  ];
 }
 
 /* Solsynth's site reads as the same product family as the Solarpass console
@@ -332,9 +350,12 @@
     @apply border-warning/40 bg-warning/10 text-warning;
   }
 
-  /* Chip: a tag, a version, a filter. Capsule, hairline, no fill. */
+  /* Chip: a tag, a version, a filter. Capsule, hairline, no fill. It never
+     breaks its own label across lines: a two-word tag that wraps reads as two
+     chips stacked, and a chip in a table cell then sets the row height. */
   .chip {
     @apply inline-flex items-center gap-1 rounded-full border border-line px-2.5 py-0.5 text-2xs font-semibold text-dim;
+    white-space: nowrap;
     transition:
       color 140ms ease,
       border-color 140ms ease,
@@ -420,12 +441,39 @@
     text-decoration-color: var(--color-faint);
   }
 
+  /* A link inside a paragraph of UI text: the accent colour, underlined, so it
+     is still a link without relying on colour alone. */
+  .link {
+    @apply text-primary underline underline-offset-4;
+    transition: color 140ms ease;
+  }
+
+  .link:hover {
+    @apply text-base-content;
+  }
+
   /* The brand mark is the app icon itself. It is a white badge with a dark
      glyph, so it reads on either theme without a tinted variant; a hairline
      keeps its edge from disappearing on the light field. */
   .brand-mark {
     border-radius: 6px;
     box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-line) 70%, transparent);
+  }
+
+  /* One busy indicator for every control that waits on a request. It inherits
+     `currentColor`, so it reads on a filled button and on a ghost one without
+     a variant. */
+  .spinner {
+    @apply inline-block size-[0.8rem] shrink-0 rounded-full;
+    border: 1.5px solid currentColor;
+    border-top-color: transparent;
+    animation: spin 700ms linear infinite;
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
   }
 
   /* A surface that has not resolved yet still shows its layout. */

@@ -17,7 +17,7 @@
         widget's configuration error instead of leaking it.
       -->
       <span slot="error" class="text-sm">
-        <NuxtLink class="link link-primary" :to="localePath('/auth/login')">
+        <NuxtLink class="link" :to="localePath('/auth/login')">
           {{ t('updates.signInToReact') }}
         </NuxtLink>
       </span>

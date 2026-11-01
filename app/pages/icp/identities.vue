@@ -33,7 +33,7 @@ interface Identity {
 
 const { data: identitiesData, refresh } = await useAsyncData(
   'icp-identities',
-  () => $fetch<{ identities: Identity[] }>('/api/icp/identities'),
+  () => useRequestFetch()<{ identities: Identity[] }>('/api/icp/identities'),
 )
 
 const identities = computed(() => identitiesData.value?.identities ?? [])
@@ -473,21 +473,6 @@ function getTypeIcon(type: string) {
   flex-wrap: wrap;
   gap: 0.5rem;
   padding-top: 0.25rem;
-}
-
-.spinner {
-  width: 0.8rem;
-  height: 0.8rem;
-  border: 1.5px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 999px;
-  animation: spin 700ms linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 
 .empty {

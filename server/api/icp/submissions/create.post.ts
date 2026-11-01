@@ -37,6 +37,22 @@ export default defineEventHandler(async (event) => {
       throw createError({ statusCode: 404, statusMessage: 'Identity not found or does not belong to you' })
     }
 
+    // An update is a proposal to change an existing site, so the site has to
+    // belong to the person proposing it. Without this, any signed-in user could
+    // rewrite another account's listing by quoting its site id.
+    if (type === 'update') {
+      const ownedSite = await db
+        .select({ id: icpSite.id })
+        .from(icpSite)
+        .where(and(eq(icpSite.id, body.site_id), eq(icpSite.userId, session.user.id)))
+        .limit(1)
+        .then(rows => rows[0])
+
+      if (!ownedSite) {
+        throw createError({ statusCode: 404, statusMessage: 'Site not found or does not belong to you' })
+      }
+    }
+
     // For create submissions, check if domain already exists
     if (type === 'create') {
       const existing = await db

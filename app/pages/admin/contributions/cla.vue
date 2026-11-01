@@ -9,7 +9,7 @@ definePageMeta({ layout: 'admin', middleware: 'auth' })
 useHead({ title: computed(() => isZh.value ? 'CLA 签署记录' : 'CLA Signatures') })
 
 const { data, status, refresh } = await useAsyncData('admin-cla-sigs', () =>
-  $fetch<any>('/api/admin/contrib/cla'),
+  useRequestFetch()<any>('/api/admin/contrib/cla'),
 )
 </script>
 

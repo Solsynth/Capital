@@ -23,8 +23,8 @@ useHead({
 
 const { data: stats } = await useAsyncData('admin-stats', async () => {
   const [submissions, sites, contests] = await Promise.all([
-    $fetch<{ submissions: any[] }>('/api/admin/icp/submissions').catch(() => ({ submissions: [] })),
-    $fetch<{ sites: any[] }>('/api/icp/sites').catch(() => ({ sites: [] })),
+    useRequestFetch()<{ submissions: any[] }>('/api/admin/icp/submissions').catch(() => ({ submissions: [] })),
+    useRequestFetch()<{ sites: any[] }>('/api/icp/sites').catch(() => ({ sites: [] })),
     $fetch<{ states: Record<string, any> }>('/api/contests').catch(() => ({ states: {} })),
   ])
 
@@ -150,7 +150,7 @@ const statCards = computed(() => [
           {{ t('admin.contests.manageContests') }}
         </NuxtLink>
         <button class="btn btn-sm" @click="importFromPb">
-          <span v-if="importing" class="loading loading-spinner loading-xs" />
+          <span v-if="importing" class="spinner" />
           <Download v-else class="btn-icon" aria-hidden="true" />
           {{ t('admin.panel.importPocketbase') }}
         </button>

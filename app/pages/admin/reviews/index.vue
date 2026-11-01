@@ -41,7 +41,7 @@ const pageSize = 20
 const { data: reviewsData, refresh, status: loadStatus } = await useAsyncData(
   `admin-reviews-${statusFilter.value}-${page.value}`,
   async () => {
-    const result = await $fetch("/api/admin/reviews", {
+    const result = await useRequestFetch()("/api/admin/reviews", {
       query: {
         status: statusFilter.value,
         limit: pageSize,

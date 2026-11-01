@@ -36,7 +36,7 @@ interface Identity {
 
 const { data: identitiesData } = await useAsyncData(
   'icp-identities-for-submit',
-  () => $fetch<{ identities: Identity[] }>('/api/icp/identities'),
+  () => useRequestFetch()<{ identities: Identity[] }>('/api/icp/identities'),
 )
 
 const identities = computed(() => identitiesData.value?.identities ?? [])
@@ -578,20 +578,5 @@ function getTypeLabel(type: string) {
 
 .submit-row {
   padding-top: 0.5rem;
-}
-
-.spinner {
-  width: 0.8rem;
-  height: 0.8rem;
-  border: 1.5px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 999px;
-  animation: spin 700ms linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
 }
 </style>

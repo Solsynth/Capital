@@ -31,7 +31,7 @@ interface Identity {
 
 const { data, error } = await useAsyncData(
   `icp-site-edit-${fillingNo.value}`,
-  () => $fetch<{ site: any }>('/api/icp/site', {
+  () => useRequestFetch()<{ site: any }>('/api/icp/site', {
     params: { filling_no: fillingNo.value },
   }),
 )
@@ -44,7 +44,7 @@ const site = computed(() => data.value?.site)
 
 const { data: identitiesData } = await useAsyncData(
   'icp-identities-for-edit',
-  () => $fetch<{ identities: Identity[] }>('/api/icp/identities'),
+  () => useRequestFetch()<{ identities: Identity[] }>('/api/icp/identities'),
 )
 
 const identities = computed(() => identitiesData.value?.identities ?? [])
@@ -279,7 +279,7 @@ function getTypeLabel(type: string) {
 
       <div class="submit-row">
         <button type="submit" class="btn btn-primary" :disabled="isSubmitting">
-          <span v-if="isSubmitting" class="loading loading-spinner loading-xs" />
+          <span v-if="isSubmitting" class="spinner" />
           <Send v-else class="submit-icon" aria-hidden="true" />
           {{ t('royIcp.edit.submitBtn') }}
         </button>

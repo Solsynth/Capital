@@ -33,13 +33,13 @@ interface UserOption { id: string; name: string; email: string }
 
 const { data: identitiesData, refresh } = await useAsyncData(
   'admin-identities',
-  () => $fetch<{ identities: Identity[] }>('/api/admin/icp/identities'),
+  () => useRequestFetch()<{ identities: Identity[] }>('/api/admin/icp/identities'),
 )
 
 // Fetch users for reassociation dropdown
 const { data: usersData } = await useAsyncData(
   'admin-users-list',
-  () => $fetch<{ users: UserOption[] }>('/api/admin/icp/users'),
+  () => useRequestFetch()<{ users: UserOption[] }>('/api/admin/icp/users'),
 )
 
 const identities = computed(() => identitiesData.value?.identities ?? [])
@@ -262,7 +262,7 @@ async function confirmDelete() {
           :disabled="isSaving || !editForm.name"
           @click="saveEdit"
         >
-          <span v-if="isSaving" class="loading loading-spinner loading-xs" />
+          <span v-if="isSaving" class="spinner" />
           <Check v-else class="btn-icon" aria-hidden="true" />
           {{ isZh ? '保存' : 'Save' }}
         </button>
@@ -286,7 +286,7 @@ async function confirmDelete() {
           {{ isZh ? '取消' : 'Cancel' }}
         </button>
         <button class="btn btn-error" :disabled="isDeleting" @click="confirmDelete">
-          <span v-if="isDeleting" class="loading loading-spinner loading-xs" />
+          <span v-if="isDeleting" class="spinner" />
           <Trash2 v-else class="btn-icon" aria-hidden="true" />
           {{ isZh ? '删除' : 'Delete' }}
         </button>

@@ -31,7 +31,7 @@ interface Site {
 
 const { data: sitesData, refresh } = await useAsyncData(
   'admin-sites',
-  () => $fetch<{ sites: Site[] }>('/api/icp/sites'),
+  () => useRequestFetch()<{ sites: Site[] }>('/api/icp/sites'),
 )
 
 const sites = computed(() => sitesData.value?.sites ?? [])
@@ -173,7 +173,7 @@ async function saveEdit() {
           :disabled="isSaving || !editForm.name || !editForm.domain || !editForm.siteUrl"
           @click="saveEdit"
         >
-          <span v-if="isSaving" class="loading loading-spinner loading-xs" />
+          <span v-if="isSaving" class="spinner" />
           <Check v-else class="btn-icon" aria-hidden="true" />
           {{ isZh ? '保存' : 'Save' }}
         </button>

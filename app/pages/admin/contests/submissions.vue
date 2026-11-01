@@ -16,7 +16,7 @@ const { data, refresh } = await useAsyncData('admin-submissions', () => {
   const query: Record<string, string> = {}
   if (statusFilter.value) query.status = statusFilter.value
   if (contestFilter.value) query.contest_id = contestFilter.value
-  return $fetch('/api/admin/contests/submissions', { query })
+  return useRequestFetch()('/api/admin/contests/submissions', { query })
 })
 
 const { data: contests } = await useAsyncData('admin-contests-list', async () => {

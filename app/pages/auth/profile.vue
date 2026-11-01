@@ -455,19 +455,4 @@ useSeoMeta({
     gap: 1.1rem 2rem;
   }
 }
-
-.spinner {
-  width: 0.75rem;
-  height: 0.75rem;
-  border: 1.5px solid currentColor;
-  border-top-color: transparent;
-  border-radius: 999px;
-  animation: spin 700ms linear infinite;
-}
-
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
 </style>
