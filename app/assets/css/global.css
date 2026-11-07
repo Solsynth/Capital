@@ -6,7 +6,11 @@
    are generic — `.steps`, `.step`, `.status`, `.stat`, `.avatar`, `.list`,
    `.loading`, `.skeleton`, `.fieldset`, `.filter`, `.hero` — so any component
    left switched on silently restyles pages that use that word for their own
-   layout. Keep this list in sync when a page starts using a daisyUI component. */
+   layout. Keep this list in sync when a page starts using a daisyUI component.
+
+   `megamenu` stays out of this list: in daisyUI 5.7.50 excluding it also
+   drops the `.menu` component, and the navbar's popovers are `.menu` lists.
+   Every class it defines is `megamenu*`, so emitting it restyles nothing. */
 @plugin 'daisyui' {
   themes: false;
   exclude: [
@@ -14,7 +18,7 @@
     'card', 'carousel', 'chat', 'collapse', 'countdown', 'diff', 'divider',
     'dock', 'drawer', 'fab', 'fieldset', 'fileinput', 'filter', 'footer',
     'hero', 'hover3d', 'hovergallery', 'indicator', 'kbd', 'label', 'link',
-    'list', 'loading', 'mask', 'megamenu', 'mockup', 'modal', 'navbar', 'otp',
+    'list', 'loading', 'mask', 'mockup', 'modal', 'navbar', 'otp',
     'radialprogress', 'range', 'rating', 'skeleton', 'stack', 'stat', 'status',
     'steps', 'swap', 'tab', 'table', 'textrotate', 'timeline', 'toast',
     'toggle', 'tooltip', 'validator',
