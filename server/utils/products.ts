@@ -1,5 +1,6 @@
 import { db } from "#server/utils/db"
 import { productReview, user } from "#server/db"
+import { alias } from "drizzle-orm/pg-core"
 import { and, desc, eq, inArray, sql } from "drizzle-orm"
 
 
@@ -22,6 +23,11 @@ export interface UpdateReviewInput {
   status?: string
 }
 
+export interface ReviewReplyInput {
+  reply: string | null
+  replyBy?: string | null
+}
+
 export async function getReviewsForProduct(slug: string, opts?: { limit?: number; offset?: number; sort?: "newest" | "helpful" }) {
   const limit = opts?.limit ?? 10
   const offset = opts?.offset ?? 0
@@ -32,7 +38,21 @@ export async function getReviewsForProduct(slug: string, opts?: { limit?: number
     : [desc(productReview.createdAt)]
 
   return db
-    .select()
+    .select({
+      id: productReview.id,
+      slug: productReview.slug,
+      userId: productReview.userId,
+      rating: productReview.rating,
+      title: productReview.title,
+      content: productReview.content,
+      isRecommended: productReview.isRecommended,
+      helpfulCount: productReview.helpfulCount,
+      status: productReview.status,
+      reply: productReview.reply,
+      replyAt: productReview.replyAt,
+      createdAt: productReview.createdAt,
+      updatedAt: productReview.updatedAt,
+    })
     .from(productReview)
     .where(
       and(
@@ -180,6 +200,27 @@ export async function updateReview(id: string, data: UpdateReviewInput) {
   return review
 }
 
+/**
+ * Attach (or clear, with an empty reply) the official team response shown
+ * under the review. `replyBy` records the admin who wrote it and is cleared
+ * together with the text so a stale byline never survives.
+ */
+export async function setReviewReply(id: string, data: ReviewReplyInput) {
+  const text = data.reply?.trim() ? data.reply.trim() : null
+  const [review] = await db
+    .update(productReview)
+    .set({
+      reply: text,
+      replyBy: text ? data.replyBy ?? null : null,
+      replyAt: text ? new Date() : null,
+      updatedAt: new Date(),
+    })
+    .where(eq(productReview.id, id))
+    .returning()
+
+  return review
+}
+
 export async function deleteReview(id: string) {
   await db
     .delete(productReview)
@@ -218,6 +259,7 @@ export async function getAllReviews(opts?: AdminReviewFilters) {
   }
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined
+  const replyAuthor = alias(user, "reply_author")
 
   const rows = await db
     .select({
@@ -230,6 +272,9 @@ export async function getAllReviews(opts?: AdminReviewFilters) {
       isRecommended: productReview.isRecommended,
       helpfulCount: productReview.helpfulCount,
       status: productReview.status,
+      reply: productReview.reply,
+      replyAt: productReview.replyAt,
+      replyByName: replyAuthor.name,
       createdAt: productReview.createdAt,
       updatedAt: productReview.updatedAt,
       userName: user.name,
@@ -238,6 +283,7 @@ export async function getAllReviews(opts?: AdminReviewFilters) {
     })
     .from(productReview)
     .leftJoin(user, eq(productReview.userId, user.id))
+    .leftJoin(replyAuthor, eq(productReview.replyBy, replyAuthor.id))
     .where(whereClause)
     .orderBy(desc(productReview.createdAt))
     .limit(limit)

@@ -8,6 +8,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Star,
+  MessageSquare,
 } from "@lucide/vue"
 import { ref } from "vue"
 
@@ -27,6 +28,9 @@ interface Review {
   status: string
   createdAt: Date
   updatedAt: Date
+  reply: string | null
+  replyAt: Date | null
+  replyByName: string | null
   userName: string | null
   userEmail: string | null
   userImage: string | null
@@ -82,6 +86,42 @@ async function updateStatus(id: string, status: string) {
     console.error(e)
   } finally {
     updating.value = null
+  }
+}
+const replyingReview = ref<Review | null>(null)
+const replyDraft = ref("")
+const savingReply = ref(false)
+const replyError = ref<string | null>(null)
+
+function openReply(review: Review) {
+  replyingReview.value = review
+  replyDraft.value = review.reply ?? ""
+  replyError.value = null
+}
+
+async function saveReply(clear = false) {
+  const review = replyingReview.value
+  if (!review || savingReply.value) return
+
+  const reply = clear ? null : replyDraft.value.trim()
+  if (!clear && reply && reply.length > 4000) {
+    replyError.value = t("reviews.replyTooLong")
+    return
+  }
+
+  savingReply.value = true
+  replyError.value = null
+  try {
+    await $fetch(`/api/admin/reviews/${review.id}`, {
+      method: "PATCH",
+      body: { reply },
+    })
+    replyingReview.value = null
+    await refresh()
+  } catch (e: any) {
+    replyError.value = e?.data?.statusMessage || t("common.error")
+  } finally {
+    savingReply.value = false
   }
 }
 
@@ -208,6 +248,10 @@ function formatDate(date: Date | string) {
                 <p class="mono">
                   {{ formatDate(review.createdAt) }}
                 </p>
+                <p v-if="review.reply" class="review-reply">
+                  <MessageSquare class="reply-icon" aria-hidden="true" />
+                  <span>{{ review.reply }}</span>
+                </p>
               </div>
             </td>
             <td>
@@ -259,6 +303,14 @@ function formatDate(date: Date | string) {
                 </button>
                 <button
                   class="btn btn-xs"
+                  :title="review.reply ? t('reviews.editReply') : t('reviews.replyToReview')"
+                  :disabled="updating === review.id"
+                  @click="openReply(review)"
+                >
+                  <MessageSquare class="btn-icon" :class="{ 'is-active': review.reply }" aria-hidden="true" />
+                </button>
+                <button
+                  class="btn btn-xs"
                   :title="t('reviews.delete')"
                   :disabled="updating === review.id"
                   @click="deleteReview(review.id)"
@@ -297,6 +349,53 @@ function formatDate(date: Date | string) {
         <ChevronRight class="btn-icon" aria-hidden="true" />
       </button>
     </div>
+
+    <AppDialog
+      :open="!!replyingReview"
+      :title="replyingReview?.reply ? t('reviews.editReply') : t('reviews.replyToReview')"
+      :description="t('reviews.replyDialogDesc')"
+      @update:open="!$event && (replyingReview = null)"
+    >
+      <div class="reply-form">
+        <p v-if="replyingReview" class="reply-quote">
+          <span class="reply-quote-name">{{ replyingReview.userName ?? t("reviews.anonymous") }}</span>
+          {{ replyingReview.title || replyingReview.content || t("reviews.noContent") }}
+        </p>
+        <label class="reply-field">
+          <span class="field-label">{{ t("reviews.yourReply") }}</span>
+          <textarea
+            v-model="replyDraft"
+            class="textarea h-32"
+            maxlength="4000"
+            :placeholder="t('reviews.replyPlaceholder')"
+          />
+        </label>
+        <p v-if="replyError" class="reply-error">{{ replyError }}</p>
+      </div>
+
+      <template #footer>
+        <button
+          v-if="replyingReview?.reply"
+          class="btn btn-ghost mr-auto"
+          :disabled="savingReply"
+          @click="saveReply(true)"
+        >
+          {{ t("reviews.removeReply") }}
+        </button>
+        <button class="btn" @click="replyingReview = null">
+          {{ t("common.cancel") }}
+        </button>
+        <button
+          class="btn btn-primary"
+          :disabled="savingReply || !replyDraft.trim()"
+          @click="saveReply()"
+        >
+          <span v-if="savingReply" class="spinner" />
+          <CheckCircle v-else class="btn-icon" aria-hidden="true" />
+          {{ t("reviews.saveReply") }}
+        </button>
+      </template>
+    </AppDialog>
   </div>
 </template>
 
@@ -525,5 +624,65 @@ function formatDate(date: Date | string) {
   font-family: var(--font-mono);
   font-size: 0.75rem;
   color: var(--color-faint);
+}
+
+.review-reply {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.3rem;
+  max-width: 20rem;
+  margin: 0.15rem 0 0;
+  font-size: 0.75rem;
+  line-height: 1.45;
+  color: var(--color-primary);
+}
+
+.review-reply span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.reply-icon {
+  width: 0.7rem;
+  height: 0.7rem;
+  flex-shrink: 0;
+  margin-top: 0.15rem;
+}
+
+.reply-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.reply-quote {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  margin: 0;
+  padding: 0.6rem 0.75rem;
+  border-left: 2px solid var(--color-line);
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--color-faint);
+}
+
+.reply-quote-name {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-dim);
+}
+
+.reply-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.reply-error {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--color-error);
 }
 </style>

@@ -7,6 +7,8 @@ interface Review {
   content: string
   isRecommended: boolean | null
   helpfulCount: number
+  reply: string | null
+  replyAt: Date | string | null
   status: string
   createdAt: Date | string
   updatedAt: Date | string

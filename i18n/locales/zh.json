@@ -688,7 +688,17 @@
     "pageOf": "第 {page} 页，共 {total} 页",
     "actions": "操作",
     "previousPage": "上一页",
-    "nextPage": "下一页"
+    "nextPage": "下一页",
+    "officialReply": "官方回复",
+    "teamName": "Solsynth 团队",
+    "replyToReview": "回复评价",
+    "editReply": "编辑回复",
+    "yourReply": "你的回复",
+    "replyPlaceholder": "写下针对这条评价的官方回复…",
+    "saveReply": "保存回复",
+    "removeReply": "删除回复",
+    "replyDialogDesc": "回复将公开显示在产品页的这条评价下方。",
+    "replyTooLong": "回复不能超过 4000 个字符。"
   },
   "admin": {
     "submissions": {

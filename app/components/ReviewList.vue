@@ -9,6 +9,8 @@ interface Review {
   content: string
   isRecommended: boolean | null
   helpfulCount: number
+  reply: string | null
+  replyAt: Date | string | null
   createdAt: Date | string
   user?: {
     id: string
@@ -94,6 +96,8 @@ const sortOptions = [
         :is-recommended="review.isRecommended"
         :helpful-count="review.helpfulCount"
         :created-at="review.createdAt"
+        :reply="review.reply"
+        :reply-at="review.replyAt"
         @helpful="emit('helpful', $event)"
       />
     </div>

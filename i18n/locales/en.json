@@ -689,7 +689,17 @@
     "pageOf": "Page {page} of {total}",
     "actions": "Actions",
     "previousPage": "Previous page",
-    "nextPage": "Next page"
+    "nextPage": "Next page",
+    "officialReply": "Official reply",
+    "teamName": "Solsynth Team",
+    "replyToReview": "Reply to review",
+    "editReply": "Edit reply",
+    "yourReply": "Your reply",
+    "replyPlaceholder": "Write the official response to this review…",
+    "saveReply": "Save reply",
+    "removeReply": "Remove reply",
+    "replyDialogDesc": "The reply appears publicly under the review on the product page.",
+    "replyTooLong": "Reply exceeds 4000 characters."
   },
   "admin": {
     "submissions": {

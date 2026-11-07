@@ -341,6 +341,9 @@ export const productReview = pgTable("product_reviews", {
   isRecommended: boolean("is_recommended"),
   helpfulCount: integer("helpful_count").notNull().default(0),
   status: text("status").notNull().default("published"),
+  reply: text("reply"),
+  replyBy: text("reply_by").references(() => user.id, { onDelete: "set null" }),
+  replyAt: timestamp("reply_at"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
   updatedAt: timestamp("updated_at")
     .defaultNow()

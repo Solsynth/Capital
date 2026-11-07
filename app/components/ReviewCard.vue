@@ -12,6 +12,8 @@ interface Props {
   helpfulCount?: number
   createdAt: Date | string
   isRecommended?: boolean | null
+  reply?: string | null
+  replyAt?: Date | string | null
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -33,6 +35,15 @@ const formattedDate = computed(() =>
     day: "2-digit",
   }).format(new Date(props.createdAt)),
 )
+
+const formattedReplyDate = computed(() => {
+  if (!props.replyAt) return ""
+  return new Intl.DateTimeFormat(locale.value === "zh" ? "zh-CN" : "en-CA", {
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(props.replyAt))
+})
 </script>
 
 <template>
@@ -64,6 +75,18 @@ const formattedDate = computed(() =>
       {{ content }}
     </p>
 
+    <div v-if="reply" class="review-reply">
+      <header class="review-reply-head">
+        <span class="review-reply-badge">{{ t("reviews.officialReply") }}</span>
+        <span class="review-reply-name">{{ t("reviews.teamName") }}</span>
+        <time v-if="formattedReplyDate" class="mono review-reply-date" :datetime="String(replyAt)">
+          {{ formattedReplyDate }}
+        </time>
+      </header>
+      <p class="review-reply-body">
+        {{ reply }}
+      </p>
+    </div>
     <footer class="review-foot">
       <button type="button" class="review-helpful" @click="emit('helpful', id)">
         <ThumbsUp class="helpful-icon" aria-hidden="true" />
@@ -158,6 +181,51 @@ const formattedDate = computed(() =>
   margin: 0.35rem 0 0;
   font-size: 0.9375rem;
   line-height: 1.65;
+  color: var(--color-dim);
+  white-space: pre-wrap;
+}
+
+.review-reply {
+  margin-top: 0.85rem;
+  padding: 0.7rem 0.85rem;
+  border-left: 2px solid var(--color-primary);
+  border-radius: 0 var(--radius-chip) var(--radius-chip) 0;
+  background: color-mix(in oklab, var(--color-base-300) 45%, transparent);
+}
+
+.review-reply-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.review-reply-badge {
+  padding: 0.05rem 0.4rem;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-primary) 16%, transparent);
+  color: var(--color-primary);
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.review-reply-name {
+  font-size: 0.8125rem;
+  font-weight: 600;
+}
+
+.review-reply-date {
+  margin-left: auto;
+  font-size: 0.6875rem;
+  color: var(--color-faint);
+}
+
+.review-reply-body {
+  margin: 0.35rem 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
   color: var(--color-dim);
   white-space: pre-wrap;
 }

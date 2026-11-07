@@ -99,6 +99,13 @@
       "when": 1783500000000,
       "tag": "0014_drop_product_releases",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1794068700000,
+      "tag": "0015_admin_review_reply",
+      "breakpoints": true
     }
   ]
 }
