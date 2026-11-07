@@ -481,9 +481,7 @@ function getTypeIcon(type: string) {
   align-items: baseline;
   gap: 0.5rem;
   margin: 0;
-  padding: 2.25rem 0;
-  border-top: 1px solid var(--color-line);
-  border-bottom: 1px solid var(--color-line-soft);
+  padding-block: 0.75rem 1.5rem;
   font-size: 0.9375rem;
   color: var(--color-faint);
 }

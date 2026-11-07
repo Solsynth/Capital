@@ -429,9 +429,8 @@ async function fetchSearch(raw: string) {
   align-items: baseline;
   gap: 0.5rem;
   margin: 0;
-  padding: 2.25rem 0;
+  padding-block: 1.5rem;
   border-top: 1px solid var(--color-line);
-  border-bottom: 1px solid var(--color-line-soft);
   font-size: 0.9375rem;
   color: var(--color-faint);
 }
