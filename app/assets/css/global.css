@@ -8,9 +8,11 @@
    left switched on silently restyles pages that use that word for their own
    layout. Keep this list in sync when a page starts using a daisyUI component.
 
-   `megamenu` stays out of this list: in daisyUI 5.7.50 excluding it also
-   drops the `.menu` component, and the navbar's popovers are `.menu` lists.
-   Every class it defines is `megamenu*`, so emitting it restyles nothing. */
+   Two names stay out of this list. `megamenu`: in daisyUI 5.7.50 excluding
+   it also drops the `.menu` component, and the navbar's popovers are `.menu`
+   lists; every class it defines is `megamenu*`, so emitting it restyles nothing.
+   `typography`: it is what supplies `.prose` its variables, and without it prose
+   falls back to the plugin's light-theme ink on this dark canvas. */
 @plugin 'daisyui' {
   themes: false;
   exclude: [
@@ -22,7 +24,7 @@
     'radialprogress', 'range', 'rating', 'skeleton', 'stack', 'stat', 'status',
     'steps', 'swap', 'tab', 'table', 'textrotate', 'timeline', 'toast',
     'toggle', 'tooltip', 'validator',
-    'join', 'glass', 'radius', 'typography'
+    'join', 'glass', 'radius'
   ];
 }
 
