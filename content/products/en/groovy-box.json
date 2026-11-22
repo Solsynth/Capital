@@ -1,8 +1,8 @@
 {
   "title": "GroovyBox",
-  "description": "A local-first Flutter music player for OpenSubsonic, Jellyfin, Apple Music, NetEase Cloud Music, and imported audio — with offline caching, synced lyrics, and dynamic color.",
+  "description": "A local-first Flutter music player for OpenSubsonic, Jellyfin, Apple Music, and imported audio — with offline caching, synced lyrics, and dynamic color.",
   "icon": "/images/groovy-box/icon.png",
-  "background": "/images/groovy-box/main-visual.svg",
+  "background": "/images/groovy-box/main-visual.webp",
   "repo": "https://src.solsynth.dev/Solsynth/GroovyBox",
   "distributionProductId": "03605b4d-c25c-4380-9cb5-87e47c6997ab",
   "hasPage": true,

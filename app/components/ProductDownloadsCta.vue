@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { Download } from "@lucide/vue"
+import { Download, ExternalLink } from "@lucide/vue"
 import type { ProductRelease } from "~/types/release"
+import { APP_STORE_AVAILABILITY } from "~/utils/appStore"
 
 const props = defineProps<{
   slug: string
@@ -11,6 +12,7 @@ const { t, locale } = useI18n()
 const localePath = useLocalePath()
 
 const releasesHref = computed(() => localePath(`/products/${props.slug}/releases`))
+const testflightUrl = computed(() => APP_STORE_AVAILABILITY[props.slug]?.testflight ?? null)
 const latest = ref<ProductRelease | null>(null)
 
 const platforms = computed(() => {
@@ -77,6 +79,16 @@ onMounted(async () => {
             <Download class="action-icon" aria-hidden="true" />
             {{ t("productDownloadsCta.browse") }}
           </NuxtLink>
+          <a
+            v-if="testflightUrl"
+            :href="testflightUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn"
+          >
+            <ExternalLink class="action-icon" aria-hidden="true" />
+            {{ t("productDownloadsCta.testflight") }}
+          </a>
         </div>
       </div>
     </div>
@@ -133,6 +145,10 @@ onMounted(async () => {
 }
 
 .downloads-action {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
   flex-shrink: 0;
 }
 

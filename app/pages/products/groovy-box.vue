@@ -53,7 +53,7 @@ const features = computed(() =>
 definePageMeta({
   title: 'GroovyBox',
   description:
-    'A local-first Flutter music player for OpenSubsonic, Jellyfin, Apple Music, NetEase Cloud Music, and imported audio.',
+    'A local-first Flutter music player for OpenSubsonic, Jellyfin, Apple Music, and imported audio.',
 })
 
 useSeoMeta({
@@ -64,7 +64,7 @@ defineOgImage('UniOgImage', {
   title: 'GroovyBox',
   description: () => t('groovyBox.tagline'),
   iconImage: '/images/groovy-box/icon.png',
-  backgroundImage: '/images/groovy-box/main-visual.svg',
+  backgroundImage: '/images/groovy-box/main-visual-og.png',
 })
 </script>
 
@@ -74,7 +74,7 @@ defineOgImage('UniOgImage', {
     title="GroovyBox"
     :tagline="t('groovyBox.tagline')"
     icon="/images/groovy-box/icon.png"
-    background="/images/groovy-box/main-visual.svg"
+    background="/images/groovy-box/main-visual.webp"
     :badges="[t('groovyBox.badgeOpenSubsonic'), t('groovyBox.badgeOffline'), t('groovyBox.badgeLyrics')]"
     prompt="groovybox --local-first"
     :primary-label="t('groovyBox.download.btn')"

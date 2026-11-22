@@ -619,7 +619,9 @@
     "title": "Get {product}",
     "body": "Release notes, checksums and a build for your platform — all on the release pages.",
     "appStore": "Also on the App Store",
-    "browse": "Release pages"
+    "beta": "Beta testing",
+    "browse": "Release pages",
+    "testflight": "Join TestFlight"
   },
   "downloadDialog": {
     "title": "Your download has started",
@@ -1172,7 +1174,7 @@
     }
   },
   "groovyBox": {
-    "tagline": "A local-first Flutter music player for OpenSubsonic, Jellyfin, Apple Music, NetEase Cloud Music, and imported audio — with offline caching, synced lyrics, and dynamic color.",
+    "tagline": "A local-first Flutter music player for OpenSubsonic, Jellyfin, Apple Music, and imported audio — with offline caching, synced lyrics, and dynamic color.",
     "badgeOpenSubsonic": "OpenSubsonic & more",
     "badgeOffline": "Local-first & offline",
     "badgeLyrics": "Synced lyrics",
@@ -1180,12 +1182,12 @@
     "about": {
       "badge": "About",
       "title": "Your music library, independent of the server",
-      "desc": "GroovyBox streams from OpenSubsonic-compatible servers (Navidrome, Jellyfin, Gonic, Airsonic), Jellyfin, Apple Music, and self-hosted NetEase Cloud Music bridges, while also playing audio imported directly from your device. Every song, lyric, cached response, and play event lives in a single local SQLite catalog — so disconnecting a source never erases your history, and your music keeps playing even when the network drops."
+      "desc": "GroovyBox streams from OpenSubsonic-compatible servers (Navidrome, Jellyfin, Gonic, Airsonic), Jellyfin, and Apple Music, while also playing audio imported directly from your device. Every song, lyric, cached response, and play event lives in a single local SQLite catalog — so disconnecting a source never erases your history, and your music keeps playing even when the network drops."
     },
     "aboutCard": {
       "sources": {
         "title": "Unified multi-source layer",
-        "desc": "OpenSubsonic, Jellyfin, Apple Music, NetEase Cloud Music, and local files mapped onto one provider-neutral library."
+        "desc": "OpenSubsonic, Jellyfin, Apple Music, and local files mapped onto one provider-neutral library."
       },
       "localFirst": {
         "title": "Local-first SQLite catalog",
@@ -1201,8 +1203,8 @@
       "title": "Built for listening across every library",
       "desc": "One player, one local catalog, and seamless fallback across every source you connect.",
       "providers": {
-        "title": "Five source types, one library",
-        "desc": "Connect OpenSubsonic, Jellyfin, Apple Music (via MusicKit), a self-hosted NetEase Cloud Music bridge, or local device storage."
+        "title": "Four source types, one library",
+        "desc": "Connect OpenSubsonic, Jellyfin, Apple Music (via MusicKit), or local device storage."
       },
       "catalog": {
         "title": "Canonical track identity",
@@ -1218,7 +1220,7 @@
       },
       "lyrics": {
         "title": "Synced lyrics & translation",
-        "desc": "Apple Music–style scrolling lyrics from servers, LRCLIB, or NetEase, with local romanization and optional Google or Solar Network AI translation."
+        "desc": "Apple Music–style scrolling lyrics from servers or LRCLIB, with local romanization and optional Google or Solar Network AI translation."
       },
       "dynamicColor": {
         "title": "Dynamic cover color",

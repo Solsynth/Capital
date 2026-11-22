@@ -618,7 +618,9 @@
     "title": "获取 {product}",
     "body": "更新说明、校验和各平台安装包都在发布页面。",
     "appStore": "也上架了 App Store",
-    "browse": "发布页面"
+    "beta": "测试版体验",
+    "browse": "发布页面",
+    "testflight": "加入 TestFlight"
   },
   "downloadDialog": {
     "title": "下载已开始",
@@ -1171,7 +1173,7 @@
     }
   },
   "groovyBox": {
-    "tagline": "本地优先的 Flutter 音乐播放器，支持 OpenSubsonic、Jellyfin、Apple Music、网易云音乐与本地导入音频 —— 自带离线缓存、逐行歌词与动态取色。",
+    "tagline": "本地优先的 Flutter 音乐播放器，支持 OpenSubsonic、Jellyfin、Apple Music 与本地导入音频 —— 自带离线缓存、逐行歌词与动态取色。",
     "badgeOpenSubsonic": "多源曲库",
     "badgeOffline": "本地优先 & 离线",
     "badgeLyrics": "逐行歌词",
@@ -1179,12 +1181,12 @@
     "about": {
       "badge": "关于",
       "title": "不依附于单一服务器的音乐曲库",
-      "desc": "GroovyBox 支持从 OpenSubsonic 兼容服务器（Navidrome、Jellyfin、Gonic、Airsonic）、Jellyfin、Apple Music 以及自建网易云音乐桥接服务串流播放，也能直接导入设备本地音频。所有歌曲、歌词、接口缓存与播放记录都保存在本地同一个 SQLite 曲库中 —— 即使断开某个音源，你的历史依然保留；就算没有网络，音乐也能继续播放。"
+      "desc": "GroovyBox 支持从 OpenSubsonic 兼容服务器（Navidrome、Jellyfin、Gonic、Airsonic）、Jellyfin 与 Apple Music 串流播放，也能直接导入设备本地音频。所有歌曲、歌词、接口缓存与播放记录都保存在本地同一个 SQLite 曲库中 —— 即使断开某个音源，你的历史依然保留；就算没有网络，音乐也能继续播放。"
     },
     "aboutCard": {
       "sources": {
         "title": "统一的多音源抽象层",
-        "desc": "将 OpenSubsonic、Jellyfin、Apple Music、网易云音乐与本地文件映射到同一套音源无关的曲库模型。"
+        "desc": "将 OpenSubsonic、Jellyfin、Apple Music 与本地文件映射到同一套音源无关的曲库模型。"
       },
       "localFirst": {
         "title": "本地优先的 SQLite 曲库",
@@ -1200,8 +1202,8 @@
       "title": "为跨曲库聆听体验而设计",
       "desc": "一个播放器、一个本地曲库，以及在多个音源之间的无缝回退。",
       "providers": {
-        "title": "五种音源，一个曲库",
-        "desc": "同时接入 OpenSubsonic、Jellyfin、Apple Music（MusicKit）、自建网易云音乐桥接服务以及本地文件。"
+        "title": "四种音源，一个曲库",
+        "desc": "同时接入 OpenSubsonic、Jellyfin、Apple Music（MusicKit）以及本地文件。"
       },
       "catalog": {
         "title": "跨源曲目指纹合并",
@@ -1217,7 +1219,7 @@
       },
       "lyrics": {
         "title": "逐行歌词与翻译",
-        "desc": "支持服务器、LRCLIB 与网易云歌词，提供本地罗马音注音，以及可选的 Google 或 Solar Network AI 歌词翻译。"
+        "desc": "支持服务器与 LRCLIB 歌词，提供本地罗马音注音，以及可选的 Google 或 Solar Network AI 歌词翻译。"
       },
       "dynamicColor": {
         "title": "封面动态取色",

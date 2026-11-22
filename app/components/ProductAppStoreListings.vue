@@ -1,9 +1,12 @@
 <script setup lang="ts">
+import { ExternalLink } from "@lucide/vue"
 import { APP_STORE_AVAILABILITY, appStoreBadgeSrc } from "~/utils/appStore"
 
 const props = defineProps<{ slug: string }>()
 
 const { t, locale } = useI18n()
+
+const testflightUrl = computed(() => APP_STORE_AVAILABILITY[props.slug]?.testflight ?? null)
 
 const listings = computed(() => {
   const availability = APP_STORE_AVAILABILITY[props.slug]
@@ -21,9 +24,9 @@ const uniqueNotices = computed(() => [...new Set(listings.value.map((listing) =>
 </script>
 
 <template>
-  <div v-if="listings.length" class="listings">
+  <div v-if="listings.length || testflightUrl" class="listings">
     <p class="listings-label">
-      {{ t('productDownloadsCta.appStore') }}
+      {{ listings.length ? t('productDownloadsCta.appStore') : t('productDownloadsCta.beta') }}
     </p>
     <div class="listings-row">
       <a
@@ -49,6 +52,16 @@ const uniqueNotices = computed(() => [...new Set(listings.value.map((listing) =>
           :height="listing.src.height"
           class="store-badge app-store-badge-dark"
         >
+      </a>
+      <a
+        v-if="testflightUrl"
+        :href="testflightUrl"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="btn btn-sm testflight-btn"
+      >
+        <ExternalLink class="testflight-icon" aria-hidden="true" />
+        {{ t('productDownloadsCta.testflight') }}
       </a>
     </div>
     <p v-for="notice in uniqueNotices" :key="notice" class="listings-note">
@@ -85,6 +98,11 @@ const uniqueNotices = computed(() => [...new Set(listings.value.map((listing) =>
 .store-badge {
   height: 2.5rem;
   width: auto;
+}
+
+.testflight-icon {
+  width: 0.9375rem;
+  height: 0.9375rem;
 }
 
 .listings-note {

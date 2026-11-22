@@ -15,9 +15,13 @@ export type AppStoreListing = {
 export type AppStoreAvailability = {
   ios?: AppStoreListing;
   macos?: AppStoreListing;
+  testflight?: string;
 };
 
 export const APP_STORE_AVAILABILITY: Record<string, AppStoreAvailability> = {
+  "groovy-box": {
+    testflight: "https://testflight.apple.com/join/N3Yswzvv",
+  },
   "maid-kit": {
     ios: {
       url: "https://apps.apple.com/app/id6793576897",
@@ -29,6 +33,10 @@ export const APP_STORE_AVAILABILITY: Record<string, AppStoreAvailability> = {
       labelKey: "maidKit.download.macos.appStore",
       badge: "macos",
     },
+    testflight: "https://testflight.apple.com/join/fVQB3qq5",
+  },
+  "sol-watt": {
+    testflight: "https://testflight.apple.com/join/dyVshZhu",
   },
   "solar-network": {
     ios: {
@@ -43,6 +51,7 @@ export const APP_STORE_AVAILABILITY: Record<string, AppStoreAvailability> = {
       badge: "macos",
       noticeKey: "solarNetwork.download.cnNotice",
     },
+    testflight: "https://testflight.apple.com/join/YJ0lmN6O",
   },
 };
 

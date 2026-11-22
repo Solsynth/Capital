@@ -408,6 +408,7 @@ useSchemaOrg([
           <div v-else class="section-empty">
             <p class="empty-title">{{ t('releases.noReleases') }}</p>
             <p>{{ loadFailed ? t('releasePage.loadFailed') : t('releasePage.emptyHint') }}</p>
+            <ProductAppStoreListings :slug="slug" class="store-listings" />
           </div>
         </div>
       </div>
