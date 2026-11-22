@@ -1171,82 +1171,82 @@
       "desc": "Found a bug or have feedback? Open an issue on GitHub and we'll take a look."
     }
   },
-  "persynth": {
-    "tagline": "A quiet island-style desktop pet companion — an ASCII face with a mood of its own, and a Personality Core you can talk to.",
-    "badgeIsland": "Island window",
-    "badgeAscii": "ASCII face",
-    "badgePlugins": "Plugin-powered",
+  "groovyBox": {
+    "tagline": "A local-first Flutter music player for OpenSubsonic, Jellyfin, Apple Music, NetEase Cloud Music, and imported audio — with offline caching, synced lyrics, and dynamic color.",
+    "badgeOpenSubsonic": "OpenSubsonic & more",
+    "badgeOffline": "Local-first & offline",
+    "badgeLyrics": "Synced lyrics",
     "sourceCta": "Source",
     "about": {
       "badge": "About",
-      "title": "A companion that lives on your desktop",
-      "desc": "Persynth is a desktop-first companion that lives in a floating, always-on-top island window. Its face is drawn in ASCII, it keeps its own energy and affection, and it reacts to being fed, played with or put to rest — all simulated on your machine, so the pet is alive even when nothing is talking to it. Sign in with your Solar Network account and the same character opens a conversation surface with a Personality Core agent: streamed replies, reasoning traces and tool traces, typed chat on every platform, and voice input on Android, iOS and the web."
+      "title": "Your music library, independent of the server",
+      "desc": "GroovyBox streams from OpenSubsonic-compatible servers (Navidrome, Jellyfin, Gonic, Airsonic), Jellyfin, Apple Music, and self-hosted NetEase Cloud Music bridges, while also playing audio imported directly from your device. Every song, lyric, cached response, and play event lives in a single local SQLite catalog — so disconnecting a source never erases your history, and your music keeps playing even when the network drops."
     },
     "aboutCard": {
-      "island": {
-        "title": "Island window",
-        "desc": "A frameless 340x420 window that skips the taskbar and stays on top, living beside a larger conversation console."
+      "sources": {
+        "title": "Unified multi-source layer",
+        "desc": "OpenSubsonic, Jellyfin, Apple Music, NetEase Cloud Music, and local files mapped onto one provider-neutral library."
       },
-      "localLife": {
-        "title": "A life simulated locally",
-        "desc": "Energy, affection and eight moods decay and recover on your own machine, so the pet keeps living with the network unplugged."
+      "localFirst": {
+        "title": "Local-first SQLite catalog",
+        "desc": "Canonical tracks, HTTP answer caching, downloaded streams, and play history live on your device for instant offline playback."
       },
-      "core": {
-        "title": "Personality Core",
-        "desc": "An OpenAI-compatible endpoint on your Solar Network account gives the character a memory and a bond score — no separate API key."
+      "glacier": {
+        "title": "Glacier paper & liquid glass",
+        "desc": "Seeded by the icon's teal or each track's cover art, with tonal island cards and a floating liquid-glass now-playing dock."
       }
     },
     "features": {
       "badge": "Features",
-      "title": "A pet, a console and a plugin host",
-      "desc": "Every capability is a plugin with its own switch: what is off is never offered to the model.",
-      "face": {
-        "title": "A face made of text",
-        "desc": "Face parts such as 0.0, 0-0 and 0^0, configurable and persisted locally on your machine."
+      "title": "Built for listening across every library",
+      "desc": "One player, one local catalog, and seamless fallback across every source you connect.",
+      "providers": {
+        "title": "Five source types, one library",
+        "desc": "Connect OpenSubsonic, Jellyfin, Apple Music (via MusicKit), a self-hosted NetEase Cloud Music bridge, or local device storage."
       },
-      "moods": {
-        "title": "Moods and stats",
-        "desc": "Neutral, happy, sad, sleepy, curious, excited, lonely and focused — driven by energy and affection."
+      "catalog": {
+        "title": "Canonical track identity",
+        "desc": "Two servers carrying the same recording merge into one canonical track with separate source links, preserving history across sources."
       },
-      "care": {
-        "title": "Feed, play, rest",
-        "desc": "Interactions that move the numbers, with idle decay that keeps running while you are away."
+      "import": {
+        "title": "Local audio import",
+        "desc": "Copy MP3, FLAC, M4A, and other tracks into app storage with automatic ID3/Vorbis/MP4 tag, embedded cover, and lyrics extraction."
       },
-      "chat": {
-        "title": "Personality Core chat",
-        "desc": "Streamed replies from an OpenAI-compatible chat completions endpoint, authenticated with your Solar Network token."
+      "offline": {
+        "title": "Offline cache & downloads",
+        "desc": "Every JSON library read is cached locally for offline browsing, and individual tracks, albums, or playlists can be downloaded for offline play."
       },
-      "traces": {
-        "title": "Reasoning and tool traces",
-        "desc": "The console shows what the agent thought and which tools it called, folded away until you want them."
+      "lyrics": {
+        "title": "Synced lyrics & translation",
+        "desc": "Apple Music–style scrolling lyrics from servers, LRCLIB, or NetEase, with local romanization and optional Google or Solar Network AI translation."
       },
-      "voice": {
-        "title": "Voice and keyboard",
-        "desc": "Typed chat on every platform, speech-to-text on Android, iOS and the web."
+      "dynamicColor": {
+        "title": "Dynamic cover color",
+        "desc": "Material Color Utilities scores each playing cover to seed the app's color scheme, falling back to GroovyBox teal for coverless tracks."
       },
-      "harness": {
-        "title": "A validated behaviour harness",
-        "desc": "The model may only change mood, face, status and animation through a checked JSON directive, so the pet stays coherent."
+      "smartShuffle": {
+        "title": "Smart shuffle",
+        "desc": "Generates a balanced mix from hearts, play history, and curated shelves, interleaved by artist with genre and mood buckets."
       },
-      "switches": {
-        "title": "One switch per plugin",
-        "desc": "A plugin owns its tools, its prompt text and the on/off switch — a capability boundary, not a preference."
+      "dashboard": {
+        "title": "Customizable dashboard",
+        "desc": "Reorder, fold, or hide Explore shelves and pin favorite playlists as their own sections right on the home screen."
       },
-      "sets": {
-        "title": "Nine Solar Network sets",
-        "desc": "Feed, messages, notifications, calendar, rituals, profile, wallet, mail and boards — off by default, loaded on demand."
+      "infinite": {
+        "title": "Infinite playback",
+        "desc": "When the queue ends, GroovyBox asks the last track's source for similar songs and appends them automatically."
       },
-      "sandbox": {
-        "title": "JavaScript script plugins",
-        "desc": "Drop in a folder with a manifest and a main script; it runs in its own QuickJS sandbox and is quarantined if it crashes."
+      "preferred": {
+        "title": "Preferred library & fallback",
+        "desc": "Pick a preferred source for playback so mixed queues stream from your highest-quality copy, with automatic fallback if a source fails."
       },
-      "webtools": {
-        "title": "Web tools from your own IP",
-        "desc": "Built-in web search and fetch run on your machine, so answers arrive without bot-check walls."
+      "stats": {
+        "title": "Listening stats",
+        "desc": "Aggregate SQL queries over play events track total plays, listening time, top artists, top tracks, and recent plays."
       },
-      "bond": {
-        "title": "Bond dashboard",
-        "desc": "The affection score with its level and latest reason, plus a reset that clears that agent's memories and history."
+      "desktop": {
+        "title": "Desktop & media controls",
+        "desc": "Frameless desktop window shell, full keyboard shortcuts in the player, and system media session integration on every platform."
       }
     },
     "download": {
@@ -1254,7 +1254,7 @@
     },
     "help": {
       "title": "Need help?",
-      "desc": "Found a bug, or wrote a plugin worth sharing? Open an issue in the repository and we will take a look."
+      "desc": "Found a bug or have a feature idea? Open an issue in the repository and we will take a look."
     }
   },
   "solWatt": {

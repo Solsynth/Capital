@@ -1170,82 +1170,82 @@
       "desc": "发现问题或有反馈？请在 GitHub 上提交 Issue，我们会处理。"
     }
   },
-  "persynth": {
-    "tagline": "安静的“小岛”桌面宠物伙伴 —— ASCII 的表情、自己的情绪，还有一个可以聊天的 Personality Core。",
-    "badgeIsland": "浮动小岛窗口",
-    "badgeAscii": "ASCII 表情",
-    "badgePlugins": "全插件架构",
+  "groovyBox": {
+    "tagline": "本地优先的 Flutter 音乐播放器，支持 OpenSubsonic、Jellyfin、Apple Music、网易云音乐与本地导入音频 —— 自带离线缓存、逐行歌词与动态取色。",
+    "badgeOpenSubsonic": "多源曲库",
+    "badgeOffline": "本地优先 & 离线",
+    "badgeLyrics": "逐行歌词",
     "sourceCta": "源码",
     "about": {
       "badge": "关于",
-      "title": "一个住在桌面上的伙伴",
-      "desc": "Persynth 是一款桌面优先的伙伴应用，住在一个可浮于最前、无边框的“小岛”窗口里。它的脸是 ASCII 拼出来的，有自己的精力与好感度，会对喂食、玩耍和休息作出反应 —— 这些都在你的机器上模拟，所以即使断网，它依然“活着”。用 Solar Network 账号登录后，同一个角色会打开对话界面，与 Personality Core 智能体交流：流式回复、推理轨迹与工具轨迹；所有平台都能打字聊天，Android、iOS 与 Web 还支持语音输入。"
+      "title": "不依附于单一服务器的音乐曲库",
+      "desc": "GroovyBox 支持从 OpenSubsonic 兼容服务器（Navidrome、Jellyfin、Gonic、Airsonic）、Jellyfin、Apple Music 以及自建网易云音乐桥接服务串流播放，也能直接导入设备本地音频。所有歌曲、歌词、接口缓存与播放记录都保存在本地同一个 SQLite 曲库中 —— 即使断开某个音源，你的历史依然保留；就算没有网络，音乐也能继续播放。"
     },
     "aboutCard": {
-      "island": {
-        "title": "小岛窗口",
-        "desc": "340x420 的无边框窗口，不占任务栏、始终置顶，与更大的对话控制台并存。"
+      "sources": {
+        "title": "统一的多音源抽象层",
+        "desc": "将 OpenSubsonic、Jellyfin、Apple Music、网易云音乐与本地文件映射到同一套音源无关的曲库模型。"
       },
-      "localLife": {
-        "title": "在本地演算的一生",
-        "desc": "精力、好感度与八种情绪都在你自己的机器上消长，拔掉网线它依然在生活。"
+      "localFirst": {
+        "title": "本地优先的 SQLite 曲库",
+        "desc": "标准化曲目信息、HTTP 响应缓存、离线下载与播放事件全部保存在本机，断网也能流畅浏览与播放。"
       },
-      "core": {
-        "title": "Personality Core",
-        "desc": "基于你的 Solar Network 账号提供兼容 OpenAI 的接口，让角色拥有记忆与亲密度分数 —— 无需另外准备 API Key。"
+      "glacier": {
+        "title": "冰川纸张与液态玻璃",
+        "desc": "以应用图标的青色或当前专辑封面动态取色，搭配温润的 Island 卡片与悬浮液态玻璃播放栏。"
       }
     },
     "features": {
       "badge": "功能",
-      "title": "一只宠物、一个控制台、一个插件宿主",
-      "desc": "每一项能力都是一个带开关的插件：关掉的插件不会被交给模型。",
-      "face": {
-        "title": "用文字拼出的脸",
-        "desc": "像 0.0、0-0、0^0 这样的表情组件，可配置并保存在本地。"
+      "title": "为跨曲库聆听体验而设计",
+      "desc": "一个播放器、一个本地曲库，以及在多个音源之间的无缝回退。",
+      "providers": {
+        "title": "五种音源，一个曲库",
+        "desc": "同时接入 OpenSubsonic、Jellyfin、Apple Music（MusicKit）、自建网易云音乐桥接服务以及本地文件。"
       },
-      "moods": {
-        "title": "情绪与数值",
-        "desc": "平静、开心、难过、困倦、好奇、兴奋、孤单与专注 —— 由精力与好感度驱动。"
+      "catalog": {
+        "title": "跨源曲目指纹合并",
+        "desc": "不同服务器上的同一首录音会自动关联到同一条本地曲目记录，跨音源保留歌词与播放历史。"
       },
-      "care": {
-        "title": "喂食、玩耍、休息",
-        "desc": "交互会改变数值，而你不在时它也会自己消耗。"
+      "import": {
+        "title": "本地音频导入",
+        "desc": "将设备上的音频复制进应用存储，自动在后台解析 ID3 / Vorbis / MP4 标签、内嵌封面与歌词。"
       },
-      "chat": {
-        "title": "Personality Core 对话",
-        "desc": "通过兼容 OpenAI 的 chat completions 接口流式回复，使用你的 Solar Network 令牌鉴权。"
+      "offline": {
+        "title": "离线缓存与下载",
+        "desc": "所有曲库 JSON 读取均会本地缓存以便离线浏览，并支持单曲、整张专辑或歌单的离线下载。"
       },
-      "traces": {
-        "title": "推理与工具轨迹",
-        "desc": "控制台会展示智能体的思考过程与调用的工具，默认折叠，需要时展开。"
+      "lyrics": {
+        "title": "逐行歌词与翻译",
+        "desc": "支持服务器、LRCLIB 与网易云歌词，提供本地罗马音注音，以及可选的 Google 或 Solar Network AI 歌词翻译。"
       },
-      "voice": {
-        "title": "语音与键盘",
-        "desc": "所有平台都可打字聊天，Android、iOS 与 Web 还支持语音转文字。"
+      "dynamicColor": {
+        "title": "封面动态取色",
+        "desc": "使用 Material Color Utilities 提取当前播放封面的主色调并驱动全局配色，无封面时自动回归标志性的青色。"
       },
-      "harness": {
-        "title": "经过校验的行为架构",
-        "desc": "模型只能通过校验过的 JSON 指令改变情绪、表情、状态与动画，宠物因此始终自洽。"
+      "smartShuffle": {
+        "title": "智能随机漫游",
+        "desc": "综合红心收藏、播放历史与精选推荐生成混音队列，自动打散同艺人曲目并提供流派与情绪分区。"
       },
-      "switches": {
-        "title": "每个插件一个开关",
-        "desc": "插件拥有自己的工具、提示词与开关 —— 它是能力边界，而不只是偏好设置。"
+      "dashboard": {
+        "title": "可定制探索主页",
+        "desc": "自由调整探索页各栏目的顺序、折叠或隐藏状态，并将喜欢的歌单固定为独立栏目。"
       },
-      "sets": {
-        "title": "九组 Solar Network 能力",
-        "desc": "动态、消息、通知、日程、日常仪式、个人资料、钱包、邮件与看板 —— 默认全关，按需加载。"
+      "infinite": {
+        "title": "无限续播",
+        "desc": "当播放队列播完时，自动向最后一首歌的来源请求相似曲目并追加到队列末尾。"
       },
-      "sandbox": {
-        "title": "JavaScript 脚本插件",
-        "desc": "放一个含 manifest 与主脚本的文件夹即可；它运行在独立的 QuickJS 沙箱中，崩溃时会被隔离。"
+      "preferred": {
+        "title": "首选音源与自动回退",
+        "desc": "可指定首选播放音源，混合歌单也会优先从音质最好的源打开，失败时自动尝试其他可用副本。"
       },
-      "webtools": {
-        "title": "从你自己的 IP 联网",
-        "desc": "内置的网络搜索与网页获取在本机执行，不会撞上机器人验证墙。"
+      "stats": {
+        "title": "听歌统计",
+        "desc": "基于播放事件表的聚合查询，实时展示累计播放次数、聆听时长、最常听艺人、热门单曲与最近播放。"
       },
-      "bond": {
-        "title": "亲密度看板",
-        "desc": "查看好感度分数、等级与最近一次变化原因，并可重置该智能体的记忆与会话历史。"
+      "desktop": {
+        "title": "桌面体验与媒体控制",
+        "desc": "无边框桌面窗口外壳、播放器全键盘快捷键支持，以及全平台系统媒体会话与锁屏控制。"
       }
     },
     "download": {
@@ -1253,7 +1253,7 @@
     },
     "help": {
       "title": "需要帮助？",
-      "desc": "发现了 Bug，或写了一个值得分享的插件？在仓库里提一个 Issue，我们会看看。"
+      "desc": "发现了 Bug 或有功能建议？欢迎在代码仓库提交 Issue，我们会尽快查看。"
     }
   },
   "solWatt": {

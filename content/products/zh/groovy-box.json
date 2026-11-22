@@ -1,0 +1,22 @@
+{
+  "title": "GroovyBox",
+  "description": "本地优先的 Flutter 音乐播放器，支持 OpenSubsonic、Jellyfin、Apple Music、网易云音乐与本地导入音频 —— 自带离线缓存、逐行歌词与动态取色。",
+  "icon": "/images/groovy-box/icon.png",
+  "background": "/images/groovy-box/main-visual.svg",
+  "repo": "https://src.solsynth.dev/Solsynth/GroovyBox",
+  "distributionProductId": "03605b4d-c25c-4380-9cb5-87e47c6997ab",
+  "hasPage": true,
+  "tags": [
+    "Music",
+    "OpenSubsonic",
+    "Offline",
+    "Lyrics",
+    "macOS",
+    "Windows",
+    "Linux",
+    "Android",
+    "iOS"
+  ],
+  "series": "GroovyBox",
+  "color": "#2EB0C7"
+}
