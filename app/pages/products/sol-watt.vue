@@ -67,7 +67,7 @@ defineOgImage('UniOgImage', {
   title: 'SolWatt',
   description: () => t('solWatt.tagline'),
   iconImage: '/images/sol-watt/icon.png',
-  backgroundImage: '/images/sol-watt/main-visual.svg',
+  backgroundImage: '/images/sol-watt/main-visual-og.png',
 })
 </script>
 
@@ -77,7 +77,7 @@ defineOgImage('UniOgImage', {
     title="SolWatt"
     :tagline="t('solWatt.tagline')"
     icon="/images/sol-watt/icon.png"
-    background="/images/sol-watt/main-visual.svg"
+    background="/images/sol-watt/main-visual.webp"
     :badges="[t('solWatt.badgeWorkspace'), t('solWatt.badgeDesktop'), t('solWatt.openSource')]"
     prompt="solwatt attach solar-network"
     :primary-label="t('solWatt.download.btn')"

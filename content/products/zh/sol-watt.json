@@ -2,7 +2,7 @@
   "title": "SolWatt",
   "description": "Solar Network 工作区客户端 —— 会话式邮件、看板与团队云盘，集于一款桌面优先的应用。",
   "icon": "/images/sol-watt/icon.png",
-  "background": "/images/sol-watt/main-visual.svg",
+  "background": "/images/sol-watt/main-visual.webp",
   "repo": "https://src.solsynth.dev/SoSYS/SolWatt",
   "distributionProductId": "cbe8b5c1-5956-4ac3-8a7d-37f4d9a0fdab",
   "hasPage": true,
