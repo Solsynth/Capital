@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 640" fill="none">
+  <style>
+    .brand-main { fill: #1f1f22; }
+    @media (prefers-color-scheme: dark) {
+      .brand-main { fill: #ffffff; }
+    }
+  </style>
+  <path
+    class="brand-main"
+    d="M183.98 320.33A214 214 0 1 1 312 458.67A137.5 137.5 0 0 0 183.98 320.33Z"
+  />
+  <path
+    fill="#f98900"
+    d="M312 458.67A137.5 137.5 0 1 1 183.98 320.33A214 214 0 0 0 312 458.67Z"
+  />
+</svg>

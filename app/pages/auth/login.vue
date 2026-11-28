@@ -29,7 +29,7 @@ async function handleSolianSignIn() {
 <template>
   <div class="page">
     <div class="sheet">
-      <img src="/favicon.png" alt="" class="brand-mark mark" width="40" height="40">
+      <BrandMark class="brand-mark mark" width="40" height="40" />
 
       <h1 class="title page-title">
         {{ t('login.title') }}
@@ -48,11 +48,7 @@ async function handleSolianSignIn() {
         :disabled="isLoading"
         @click="handleSolianSignIn"
       >
-        <img
-          src="/favicon-64.png"
-          alt=""
-          class="btn-mark"
-        >
+        <BrandMark monochrome class="btn-mark" />
         <span v-if="isLoading" class="spinner" aria-hidden="true" />
         <span v-else>{{ t('login.solian') }}</span>
       </button>
@@ -84,7 +80,7 @@ async function handleSolianSignIn() {
   width: 1.75rem;
   height: 1.75rem;
   margin: 0 auto 1.25rem;
-  color: var(--color-primary);
+  color: var(--color-base-content);
 }
 
 .page-title {

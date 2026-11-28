@@ -229,6 +229,11 @@ gtag('config', 'G-61P6XB5BQS');`,
       link: [
         {
           rel: "icon",
+          type: "image/svg+xml",
+          href: "/favicon.svg",
+        },
+        {
+          rel: "icon",
           type: "image/png",
           href: "/favicon-64.png",
         },

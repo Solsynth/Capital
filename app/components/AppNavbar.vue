@@ -214,13 +214,11 @@ onBeforeUnmount(() => {
           class="brand"
           :aria-label="t('nav.brandName')"
         >
-          <img
-            src="/favicon.png"
-            alt=""
+          <BrandMark
             class="brand-mark brand-glyph"
             width="24"
             height="24"
-          >
+          />
           <span class="brand-name">{{ t("nav.brandName") }}</span>
         </NuxtLink>
 

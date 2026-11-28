@@ -46,7 +46,7 @@ const localeOptions = computed(() =>
     <div class="shell">
       <div class="footer-grid">
         <div class="footer-brand">
-          <img src="/favicon.png" alt="" class="brand-mark footer-glyph" width="24" height="24">
+          <BrandMark class="brand-mark footer-glyph" width="24" height="24" />
           <p class="footer-name">
             Solsynth
           </p>
@@ -155,7 +155,7 @@ const localeOptions = computed(() =>
   display: block;
   width: 1.5rem;
   height: 1.5rem;
-  color: var(--color-faint);
+  color: var(--color-base-content);
 }
 
 .footer-name {

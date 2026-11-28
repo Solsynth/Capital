@@ -29,11 +29,9 @@
 }
 
 /* Solsynth's site reads as the same product family as the Solarpass console
-   (`Stargate/docs/design-system.md`). The palette is Solian's own ramp, seeded
-   from indigo and flattened by `_seedPaper` to a near-neutral lavender-gray,
-   so the ground moves with the accent instead of sitting on a fixed beige.
-   Indigo (`primary`) is the one signal colour; state colours appear only when
-   state needs them. */
+   (`Stargate/docs/design-system.md`). The palette pairs a near-neutral
+   obsidian/paper ground with Solsynth amber-orange (`primary`) as the one
+   signal colour; state colours appear only when state needs them. */
 @plugin 'daisyui/theme' {
   name: 'stargate';
   default: true;
@@ -49,8 +47,8 @@
   --console-faint: #97959b;
   --console-dim: #c8c5ca;
 
-  --color-primary: #bac3ff;
-  --color-primary-content: #222c61;
+  --color-primary: #f98900;
+  --color-primary-content: #171618;
   --color-secondary: #c3c5dd;
   --color-secondary-content: #2d2f42;
   --color-accent: #d9bfcf;
@@ -94,7 +92,7 @@
   --console-faint: #636367;
   --console-dim: #4b4b4f;
 
-  --color-primary: #515b92;
+  --color-primary: #c76b00;
   --color-primary-content: #ffffff;
   --color-secondary: #5b5d72;
   --color-secondary-content: #ffffff;
@@ -458,12 +456,12 @@
     @apply text-base-content;
   }
 
-  /* The brand mark is the app icon itself. It is a white badge with a dark
-     glyph, so it reads on either theme without a tinted variant; a hairline
-     keeps its edge from disappearing on the light field. */
+  /* The brand mark uses `currentColor` for the primary circle so it inverts
+     automatically between dark and light themes, paired with the fixed
+     brand orange accent circle. */
   .brand-mark {
-    border-radius: 6px;
-    box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-line) 70%, transparent);
+    display: inline-block;
+    flex-shrink: 0;
   }
 
   /* One busy indicator for every control that waits on a request. It inherits

@@ -19,6 +19,7 @@ const {
       font-family: &quot;Nunito&quot;, &quot;Noto Sans SC&quot;, sans-serif;
       position: relative;
       overflow: hidden;
+      background-color: #171618;
     "
   >
     <!-- Background image -->
@@ -31,21 +32,38 @@ const {
         height: 100%;
         object-fit: cover;
         object-position: center;
-        opacity: 0.35;
+        opacity: 0.28;
       "
       alt=""
     />
 
-    <!-- Dark overlay -->
+    <!-- Warm obsidian overlay -->
     <div
       style="
         position: absolute;
         inset: 0;
         background: linear-gradient(
           135deg,
-          rgba(15, 23, 42, 0.85) 0%,
-          rgba(30, 41, 59, 0.75) 50%,
-          rgba(15, 23, 42, 0.85) 100%
+          rgba(23, 22, 24, 0.9) 0%,
+          rgba(29, 29, 32, 0.78) 50%,
+          rgba(23, 22, 24, 0.92) 100%
+        );
+      "
+    />
+
+    <!-- Subtle orange ambient glow -->
+    <div
+      style="
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 680px;
+        height: 680px;
+        transform: translate(-50%, -55%);
+        background: radial-gradient(
+          circle,
+          rgba(249, 137, 0, 0.14) 0%,
+          rgba(249, 137, 0, 0) 68%
         );
       "
     />
@@ -69,7 +87,7 @@ const {
       style="position: relative; z-index: 1"
     >
       <!-- Logo -->
-      <div style="margin-bottom: 32px">
+      <div style="margin-bottom: 28px">
         <img
           v-if="iconImage"
           :src="iconImage"
@@ -77,23 +95,32 @@ const {
           class="rounded-2xl"
           style="width: 120px; height: 120px; filter: invert(1) brightness(10)"
         />
-        <img
+        <svg
           v-else
-          src="/favicon-64.png"
-          alt="Solsynth"
-          style="width: 120px; height: 120px; filter: invert(1) brightness(10)"
-        />
+          viewBox="0 0 640 640"
+          fill="none"
+          style="width: 120px; height: 120px"
+        >
+          <path
+            d="M183.98 320.33A214 214 0 1 1 312 458.67A137.5 137.5 0 0 0 183.98 320.33Z"
+            fill="#ffffff"
+          />
+          <path
+            d="M312 458.67A137.5 137.5 0 1 1 183.98 320.33A214 214 0 0 0 312 458.67Z"
+            fill="#f98900"
+          />
+        </svg>
       </div>
 
       <!-- Title -->
       <h1
-        class="text-white"
         style="
+          color: #edeaee;
           font-size: 64px;
           font-weight: 800;
           letter-spacing: -1px;
           margin: 0 0 12px 0;
-          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
         "
       >
         {{ title }}
@@ -102,12 +129,12 @@ const {
       <!-- Description -->
       <p
         v-if="description"
-        class="text-slate-400"
         style="
+          color: #c8c5ca;
           font-size: 24px;
           font-weight: 400;
           margin: 0;
-          max-width: 600px;
+          max-width: 640px;
           text-align: center;
           line-height: 1.4;
         "
@@ -124,7 +151,7 @@ const {
         left: 0;
         right: 0;
         height: 4px;
-        background: linear-gradient(90deg, #6366f1, #3b82f6, #8b5cf6);
+        background: linear-gradient(90deg, #f98900 0%, #fdba55 50%, #f98900 100%);
       "
     />
   </div>

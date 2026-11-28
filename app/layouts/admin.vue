@@ -96,7 +96,7 @@ const navSections = computed<NavSection[]>(() => [
     <header class="admin-bar">
       <div class="admin-bar-inner">
         <NuxtLink :to="localePath('/')" class="admin-home" :aria-label="t('nav.brandName')">
-          <img src="/favicon.png" alt="" class="brand-mark admin-glyph" width="20" height="20">
+          <BrandMark class="brand-mark admin-glyph" width="20" height="20" />
           <span class="admin-brand">Solsynth</span>
         </NuxtLink>
 
