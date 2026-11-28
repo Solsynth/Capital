@@ -1,17 +1,22 @@
+# Bring in the same bun version that generated bun.lock.
+FROM oven/bun:1.4.4-alpine AS bun
+
 FROM node:26-alpine AS builder
 
 WORKDIR /app
 
-COPY package.json package-lock.json ./
+COPY --from=bun /usr/local/bin/bun /usr/local/bin/bun
+
+COPY package.json bun.lock ./
 # The vendored @solsynth/sunkenland tarball is a `file:` dependency.
 COPY vendor ./vendor
-RUN npm ci
+RUN bun install --frozen-lockfile
 
 ENV NITRO_DATA_DIR=/data/nitro
 RUN mkdir -p /data/nitro
 
 COPY . .
-RUN npm run build
+RUN bun run build
 
 FROM node:26-alpine AS runner
 

@@ -5,24 +5,24 @@ Solsynth official website — built with Nuxt 4, Tailwind CSS, DaisyUI, Better A
 ## Prerequisites
 
 - **Node.js** ≥ 22.12.0
-- **npm** (or your preferred package manager)
+- **bun** 1.4+ (the repo tracks `bun.lock`)
 - **SQLite** (default, zero-config) or **PostgreSQL** (for production)
 
 ## Quick Start
 
 ```bash
 # 1. Install dependencies
-npm install
+bun install
 
 # 2. Copy and fill in environment variables
 cp .env.example .env
 
 # 3. Run database migrations
-npx drizzle-kit generate
-npx drizzle-kit migrate
+bunx drizzle-kit generate
+bunx drizzle-kit migrate
 
 # 4. Start dev server
-npm run dev
+bun run dev
 ```
 
 The site runs at `http://localhost:3000` by default.
